@@ -36,10 +36,10 @@ private slots:
     void setGain(int value);
     void setBacklight(bool value);
 
-    void openVideos();
+    //void openVideos();
 
     void updateDeviceDropdown();
     void updateDevice(int deviceIndex);
-    void updateSpaceRemaining();
+    /*void updateSpaceRemaining();*/
 
 };

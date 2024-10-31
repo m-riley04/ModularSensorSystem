@@ -25,7 +25,18 @@ void MainWindow::initWidgets() {
 }
 
 void MainWindow::initSignals() {
-    connect(ui.dropdownDevice, &QComboBox::currentIndexChanged, &MainWindow::updateDevice);
+    // Dropdown
+    connect(ui.dropdownDevice, &QComboBox::currentIndexChanged, this, &MainWindow::updateDevice);
+
+    // Sliders
+    connect(ui.sliderBrightness, &QSlider::valueChanged, this, &MainWindow::setBrightness);
+    connect(ui.sliderContrast, &QSlider::valueChanged, this, &MainWindow::setContrast);
+    connect(ui.sliderSaturation, &QSlider::valueChanged, this, &MainWindow::setSaturation);
+    connect(ui.sliderGain, &QSlider::valueChanged, this, &MainWindow::setGain);
+    connect(ui.checkboxBacklight, &QCheckBox::checkStateChanged, this, &MainWindow::setBacklight);
+
+    // Buttons
+    connect(ui.buttonRecord, &QPushButton::clicked, this, &MainWindow::record);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -75,5 +86,29 @@ void MainWindow::setGain(int value) {
 }
 
 void MainWindow::setBacklight(bool value) {
+
+}
+
+void MainWindow::setCameraDevice() {
+
+}
+
+void MainWindow::startCamera() {
+
+}
+
+void MainWindow::stopCamera() {
+
+}
+
+void MainWindow::record() {
+    
+}
+
+void MainWindow::pause() {
+
+}
+
+void MainWindow::stop() {
 
 }
