@@ -18,6 +18,28 @@ private:
     QMediaCaptureSession captureSession;
     QMediaRecorder* mediaRecorder;
 
-    void init();
+    void initWidgets();
+    void initSignals();
+
+private slots:
+    void setCameraDevice();
+    void startCamera();
+    void stopCamera();
+
+    void record();
+    void pause();
+    void stop();
+
+    void setBrightness(int value);
+    void setContrast(int value);
+    void setSaturation(int value);
+    void setGain(int value);
+    void setBacklight(bool value);
+
+    void openVideos();
+
+    void updateDeviceDropdown();
+    void updateDevice(int deviceIndex);
+    void updateSpaceRemaining();
 
 };
