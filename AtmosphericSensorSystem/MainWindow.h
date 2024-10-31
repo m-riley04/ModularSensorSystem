@@ -14,7 +14,10 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    QCamera * camera;
+    QCamera* camera;
     QMediaCaptureSession captureSession;
+    QMediaRecorder* mediaRecorder;
+
+    void init();
 
 };
