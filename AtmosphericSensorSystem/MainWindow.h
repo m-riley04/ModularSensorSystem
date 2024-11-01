@@ -8,6 +8,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtMultimedia>
 #include <QFileDialog>
+#include <opencv2/opencv.hpp>
 #include "ui_MainWindow.h"
 
 class MainWindow : public QMainWindow
@@ -20,13 +21,13 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    QCamera* camera;
-    QMediaCaptureSession captureSession;
-    QMediaRecorder* mediaRecorder;
+    cv::VideoCapture camera;
     QUrl outputDir;
+    QTimer* frameTimer;
 
     void initWidgets();
     void initSignals();
+    void displayFrame(const cv::Mat& frame);
 
 private slots:
     void setCameraDevice();

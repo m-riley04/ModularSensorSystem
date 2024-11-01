@@ -9,21 +9,17 @@ bool checkCameraAvailability()
 }
 
 void MainWindow::initWidgets() {
-    // Initialize recorder
-    mediaRecorder = new QMediaRecorder();
-    connect(mediaRecorder, &QMediaRecorder::recorderStateChanged, this, &MainWindow::updateRecorderState);
-
-    // Initialize the camera
-    bool hasCamera = checkCameraAvailability();
-
-    if (hasCamera) {
-        camera = new QCamera(QMediaDevices::defaultVideoInput());
-        captureSession.setCamera(camera);
-        captureSession.setVideoOutput(ui.video);
-        captureSession.setRecorder(mediaRecorder);
-
-        camera->start(); // to start the camera
-    }
+    // Initialize the timer to capture frames
+    frameTimer = new QTimer(this);
+    connect(frameTimer, &QTimer::timeout, this, [this]() {
+        if (camera.isOpened()) {
+            cv::Mat frame;
+            camera >> frame;
+            if (!frame.empty()) {
+                displayFrame(frame);
+            }
+        }
+        });
     
     // Initialize the devices dropdown
     updateDeviceDropdown();
@@ -68,18 +64,32 @@ MainWindow::~MainWindow()
 void MainWindow::updateDeviceDropdown() {
     ui.dropdownDevice->clear();
     QStringList deviceNames;
-    for (auto& device : QMediaDevices::videoInputs()) {
-        deviceNames.push_back(device.description());
+    for (int i = 0; i < 10; i++) {
+        cv::VideoCapture _tempCam(i);
+        if (_tempCam.isOpened()) {
+            deviceNames.push_back(QString("Camera %1").arg(i));
+            _tempCam.release();
+        }
     }
     ui.dropdownDevice->insertItems(0, deviceNames);
 }
 
 void MainWindow::updateDevice(int deviceIndex) {
-    camera = new QCamera(QMediaDevices::videoInputs()[deviceIndex]);
-    captureSession.setCamera(camera);
-    captureSession.setVideoOutput(ui.video);
+    if (camera.isOpened()) {
+        camera.release();
+    }
 
-    startCamera();
+    camera.open(deviceIndex);
+
+    if (camera.isOpened()) {
+        startCamera();
+    }
+}
+
+void MainWindow::displayFrame(const cv::Mat& frame) {
+    // Convert the frame to QImage for displaying in QLabel
+    QImage image(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
+    ui.video->setPixmap(QPixmap::fromImage(image).scaled(ui.video->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void MainWindow::updateRecorderState(QMediaRecorder::RecorderState state) {
@@ -97,23 +107,33 @@ void MainWindow::updateRecorderState(QMediaRecorder::RecorderState state) {
 }
 
 void MainWindow::setBrightness(int value) {
-    
+    if (camera.isOpened()) {
+        camera.set(cv::CAP_PROP_BRIGHTNESS, value / 100.0);
+    }
 }
 
 void MainWindow::setContrast(int value) {
-
+    if (camera.isOpened()) {
+        camera.set(cv::CAP_PROP_CONTRAST, value / 100.0);
+    }
 }
 
 void MainWindow::setSaturation(int value) {
-
+    if (camera.isOpened()) {
+        camera.set(cv::CAP_PROP_SATURATION, value / 100.0);
+    }
 }
 
 void MainWindow::setGain(int value) {
-
+    if (camera.isOpened()) {
+        camera.set(cv::CAP_PROP_GAIN, value);
+    }
 }
 
 void MainWindow::setBacklight(bool value) {
-    
+    if (camera.isOpened()) {
+        camera.set(cv::CAP_PROP_BACKLIGHT, value ? 1 : 0);
+    }
 }
 
 void MainWindow::setCameraDevice() {
@@ -121,23 +141,28 @@ void MainWindow::setCameraDevice() {
 }
 
 void MainWindow::startCamera() {
-    camera->start();
+    if (camera.isOpened()) {
+        frameTimer->start(30);  // Adjust the interval for desired frame rate
+    }
 }
 
 void MainWindow::stopCamera() {
-    camera->stop();
+    frameTimer->stop();
+    if (camera.isOpened()) {
+        camera.release();
+    }
 }
 
 void MainWindow::record() {
-    mediaRecorder->record();
+    //mediaRecorder->record();
 }
 
 void MainWindow::pause() {
-    mediaRecorder->pause();
+    //mediaRecorder->pause();
 }
 
 void MainWindow::stop() {
-    mediaRecorder->stop();
+    //mediaRecorder->stop();
     
 }
 
@@ -147,7 +172,6 @@ void MainWindow::openOutputDirectory() {
 
 void MainWindow::setOutputDirectory() {
     outputDir = QFileDialog::getExistingDirectoryUrl(this, "Select the output directory");
-    if (!outputDir.isEmpty()) {
-        mediaRecorder->setOutputLocation(outputDir);
-    }
+    
+    // TODO: Set output directory for CV 
 }
