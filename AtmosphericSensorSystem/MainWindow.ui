@@ -60,7 +60,7 @@
      <string>Record</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="buttonOpenVideos">
+   <widget class="QPushButton" name="buttonOpenOutputDirectory">
     <property name="geometry">
      <rect>
       <x>100</x>
@@ -237,7 +237,7 @@
      <string>0</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="buttonOpenVideos_2">
+   <widget class="QPushButton" name="buttonSetOutputDirectory">
     <property name="geometry">
      <rect>
       <x>200</x>

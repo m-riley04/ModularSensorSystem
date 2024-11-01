@@ -9,8 +9,9 @@ bool checkCameraAvailability()
 }
 
 void MainWindow::initWidgets() {
-    // Initialize the devices dropdown
-    updateDeviceDropdown();
+    // Initialize recorder
+    mediaRecorder = new QMediaRecorder();
+    connect(mediaRecorder, &QMediaRecorder::recorderStateChanged, this, &MainWindow::updateRecorderState);
 
     // Initialize the camera
     bool hasCamera = checkCameraAvailability();
@@ -19,9 +20,20 @@ void MainWindow::initWidgets() {
         camera = new QCamera(QMediaDevices::defaultVideoInput());
         captureSession.setCamera(camera);
         captureSession.setVideoOutput(ui.video);
+        captureSession.setRecorder(mediaRecorder);
 
         camera->start(); // to start the camera
     }
+    
+    // Initialize the devices dropdown
+    updateDeviceDropdown();
+
+    // Initialize the display settings
+    ui.sliderBrightness->setValue(DEFAULT_BRIGHTNESS);
+    ui.sliderContrast->setValue(DEFAULT_CONTRAST);
+    ui.sliderSaturation->setValue(DEFAULT_SATURATION);
+    ui.sliderGain->setValue(DEFAULT_GAIN);
+    ui.checkboxBacklight->setChecked(false);
 }
 
 void MainWindow::initSignals() {
@@ -37,15 +49,16 @@ void MainWindow::initSignals() {
 
     // Buttons
     connect(ui.buttonRecord, &QPushButton::clicked, this, &MainWindow::record);
+    connect(ui.buttonOpenOutputDirectory, &QPushButton::clicked, this, &MainWindow::openOutputDirectory);
+    connect(ui.buttonSetOutputDirectory, &QPushButton::clicked, this, &MainWindow::setOutputDirectory);
 }
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    initWidgets();
     initSignals();
-
+    initWidgets();
 }
 
 MainWindow::~MainWindow()
@@ -66,7 +79,21 @@ void MainWindow::updateDevice(int deviceIndex) {
     captureSession.setCamera(camera);
     captureSession.setVideoOutput(ui.video);
 
-    camera->start(); // to start the camera
+    startCamera();
+}
+
+void MainWindow::updateRecorderState(QMediaRecorder::RecorderState state) {
+    switch (state) {
+        case QMediaRecorder::StoppedState:
+            ui.buttonRecord->setEnabled(true);
+            break;
+        case QMediaRecorder::PausedState:
+            ui.buttonRecord->setEnabled(true);
+            break;
+        case QMediaRecorder::RecordingState:
+            ui.buttonRecord->setEnabled(false);
+            break;
+    }
 }
 
 void MainWindow::setBrightness(int value) {
@@ -86,7 +113,7 @@ void MainWindow::setGain(int value) {
 }
 
 void MainWindow::setBacklight(bool value) {
-
+    
 }
 
 void MainWindow::setCameraDevice() {
@@ -94,21 +121,33 @@ void MainWindow::setCameraDevice() {
 }
 
 void MainWindow::startCamera() {
-
+    camera->start();
 }
 
 void MainWindow::stopCamera() {
-
+    camera->stop();
 }
 
 void MainWindow::record() {
-    
+    mediaRecorder->record();
 }
 
 void MainWindow::pause() {
-
+    mediaRecorder->pause();
 }
 
 void MainWindow::stop() {
+    mediaRecorder->stop();
+    
+}
 
+void MainWindow::openOutputDirectory() {
+    QDesktopServices::openUrl(outputDir);
+}
+
+void MainWindow::setOutputDirectory() {
+    outputDir = QFileDialog::getExistingDirectoryUrl(this, "Select the output directory");
+    if (!outputDir.isEmpty()) {
+        mediaRecorder->setOutputLocation(outputDir);
+    }
 }
