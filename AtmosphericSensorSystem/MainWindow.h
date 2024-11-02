@@ -1,16 +1,25 @@
 #pragma once
 
-#define DEFAULT_BRIGHTNESS 100
-#define DEFAULT_CONTRAST 100
-#define DEFAULT_SATURATION 100
+#define DEFAULT_BRIGHTNESS 0
+#define DEFAULT_CONTRAST 10
+#define DEFAULT_SATURATION 10
 #define DEFAULT_GAIN 100
 #define DEFAULT_BACKLIGHT 0
+#define DEFAULT_WHITE_BALANCE 4500
+#define DEFAULT_AUTO_EXPOSURE 1
 
 #include <QtWidgets/QMainWindow>
 #include <QtMultimedia>
 #include <QFileDialog>
+#include <qmessagebox.h>
 #include <opencv2/opencv.hpp>
 #include "ui_MainWindow.h"
+
+enum State {
+    STATE_IDLE,
+    STATE_RECORDING,
+    STATE_PAUSED,
+};
 
 class MainWindow : public QMainWindow
 {
@@ -23,8 +32,10 @@ public:
 private:
     Ui::MainWindowClass ui;
     cv::VideoCapture camera;
+    cv::VideoWriter videoWriter;
     QUrl outputDir;
     QTimer* frameTimer;
+    State state;
 
     void initWidgets();
     void initSignals();
@@ -46,6 +57,7 @@ private slots:
     void setSaturation(int value);
     void setGain(int value);
     void setBacklight(bool value);
+    void setAutoExposure(bool value);
     /*void setFPS();
     void setFrameWidth();
     void setFrameHeight();
@@ -53,7 +65,6 @@ private slots:
     void setExposure();
     void setSharpness();
     void setGamma();
-    void setAutoExposure(bool value);
     void setBitrate();*/
 
     void openOutputDirectory();

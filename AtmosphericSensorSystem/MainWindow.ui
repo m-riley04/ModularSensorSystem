@@ -6,42 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1017</width>
-    <height>580</height>
+    <width>1297</width>
+    <height>838</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QComboBox" name="dropdownDevice">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>30</y>
-      <width>381</width>
-      <height>24</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelDevice">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>10</y>
-      <width>151</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Device</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="buttonRecord">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>360</y>
+      <y>740</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -54,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>360</y>
+      <y>740</y>
       <width>91</width>
       <height>24</height>
      </rect>
@@ -63,152 +40,11 @@
      <string>Open Videos</string>
     </property>
    </widget>
-   <widget class="QSlider" name="sliderBrightness">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>100</y>
-      <width>331</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>255</number>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Orientation::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelDevice_2">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>80</y>
-      <width>151</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Brightness</string>
-    </property>
-   </widget>
-   <widget class="QSlider" name="sliderContrast">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>150</y>
-      <width>331</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>255</number>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Orientation::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelDevice_3">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>130</y>
-      <width>151</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Contrast</string>
-    </property>
-   </widget>
-   <widget class="QSlider" name="sliderSaturation">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>200</y>
-      <width>331</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>255</number>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Orientation::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelDevice_4">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>180</y>
-      <width>151</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Saturation</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkboxBacklight">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>330</y>
-      <width>78</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Backlight</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelDevice_5">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>230</y>
-      <width>151</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Gain</string>
-    </property>
-   </widget>
-   <widget class="QSlider" name="sliderGain">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>250</y>
-      <width>331</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>255</number>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Orientation::Horizontal</enum>
-    </property>
-   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>400</y>
+      <y>780</y>
       <width>101</width>
       <height>16</height>
      </rect>
@@ -221,7 +57,7 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>400</y>
+      <y>780</y>
       <width>101</width>
       <height>16</height>
      </rect>
@@ -234,7 +70,7 @@
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>360</y>
+      <y>740</y>
       <width>131</width>
       <height>24</height>
      </rect>
@@ -248,108 +84,300 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>571</width>
-      <height>331</height>
+      <width>851</width>
+      <height>691</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: black;</string>
     </property>
     <property name="text">
      <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBox">
+   <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>940</x>
-      <y>90</y>
-      <width>61</width>
-      <height>31</height>
+      <x>870</x>
+      <y>0</y>
+      <width>421</width>
+      <height>391</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBox_2">
-    <property name="geometry">
-     <rect>
-      <x>940</x>
-      <y>140</y>
-      <width>61</width>
-      <height>31</height>
-     </rect>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
     </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBox_3">
-    <property name="geometry">
-     <rect>
-      <x>940</x>
-      <y>190</y>
-      <width>61</width>
-      <height>31</height>
-     </rect>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
     </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBox_4">
-    <property name="geometry">
-     <rect>
-      <x>940</x>
-      <y>240</y>
-      <width>61</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkboxAutoExposure">
-    <property name="geometry">
-     <rect>
-      <x>690</x>
-      <y>330</y>
-      <width>78</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Backlight</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelDevice_6">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>280</y>
-      <width>151</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Exposure</string>
-    </property>
-   </widget>
-   <widget class="QSlider" name="sliderGain_2">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>300</y>
-      <width>331</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>255</number>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Orientation::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBox_5">
-    <property name="geometry">
-     <rect>
-      <x>940</x>
-      <y>290</y>
-      <width>61</width>
-      <height>31</height>
-     </rect>
-    </property>
+    <widget class="QCheckBox" name="checkboxAutoExposure">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>330</y>
+       <width>111</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Auto-Exposure</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelDevice">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>151</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Device</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>90</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelDevice_6">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>280</y>
+       <width>151</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Exposure</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_4">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>240</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelDevice_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>151</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Gain</string>
+     </property>
+    </widget>
+    <widget class="QSlider" name="sliderSaturation">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>200</y>
+       <width>331</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>15</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_5">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>290</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_3">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>190</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelDevice_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>151</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Brightness</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkboxBacklight">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>330</y>
+       <width>78</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Backlight</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelDevice_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>180</y>
+       <width>151</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Saturation</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_2">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>140</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="dropdownDevice">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>381</width>
+       <height>24</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSlider" name="sliderContrast">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>150</y>
+       <width>331</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>20</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QSlider" name="sliderGain">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>250</y>
+       <width>331</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>100</number>
+     </property>
+     <property name="maximum">
+      <number>4000</number>
+     </property>
+     <property name="value">
+      <number>100</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QSlider" name="sliderBrightness">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>331</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>-64</number>
+     </property>
+     <property name="maximum">
+      <number>64</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QSlider" name="sliderGain_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>300</y>
+       <width>331</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>-11</number>
+     </property>
+     <property name="maximum">
+      <number>-5</number>
+     </property>
+     <property name="value">
+      <number>-11</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelDevice_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>130</y>
+       <width>151</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Contrast</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -357,7 +385,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1017</width>
+     <width>1297</width>
      <height>21</height>
     </rect>
    </property>

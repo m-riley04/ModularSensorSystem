@@ -29,7 +29,8 @@ void MainWindow::initWidgets() {
     ui.sliderContrast->setValue(DEFAULT_CONTRAST);
     ui.sliderSaturation->setValue(DEFAULT_SATURATION);
     ui.sliderGain->setValue(DEFAULT_GAIN);
-    ui.checkboxBacklight->setChecked(false);
+    ui.checkboxBacklight->setChecked(DEFAULT_BACKLIGHT);
+    ui.checkboxAutoExposure->setChecked(DEFAULT_AUTO_EXPOSURE);
 }
 
 void MainWindow::initSignals() {
@@ -42,6 +43,7 @@ void MainWindow::initSignals() {
     connect(ui.sliderSaturation, &QSlider::valueChanged, this, &MainWindow::setSaturation);
     connect(ui.sliderGain, &QSlider::valueChanged, this, &MainWindow::setGain);
     connect(ui.checkboxBacklight, &QCheckBox::checkStateChanged, this, &MainWindow::setBacklight);
+    connect(ui.checkboxAutoExposure, &QCheckBox::checkStateChanged, this, &MainWindow::setAutoExposure);
 
     // Buttons
     connect(ui.buttonRecord, &QPushButton::clicked, this, &MainWindow::record);
@@ -90,6 +92,11 @@ void MainWindow::displayFrame(const cv::Mat& frame) {
     // Convert the frame to QImage for displaying in QLabel
     QImage image(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
     ui.video->setPixmap(QPixmap::fromImage(image).scaled(ui.video->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
+    // Write frame to video file if recording
+    if (state == STATE_RECORDING && videoWriter.isOpened()) {
+        videoWriter.write(frame);
+    }
 }
 
 void MainWindow::updateRecorderState(QMediaRecorder::RecorderState state) {
@@ -132,7 +139,13 @@ void MainWindow::setGain(int value) {
 
 void MainWindow::setBacklight(bool value) {
     if (camera.isOpened()) {
-        camera.set(cv::CAP_PROP_BACKLIGHT, value ? 1 : 0);
+        camera.set(cv::CAP_PROP_BACKLIGHT, value);
+    }
+}
+
+void MainWindow::setAutoExposure(bool value) {
+    if (camera.isOpened()) {
+        camera.set(cv::CAP_PROP_AUTO_EXPOSURE, value);
     }
 }
 
@@ -159,7 +172,34 @@ void MainWindow::stopCamera() {
 }
 
 void MainWindow::record() {
-    //mediaRecorder->record();
+    /// TODO: Maybe rename this from "record" or make a "toggleRecording" slot
+    if (state == STATE_RECORDING) {
+        stop();
+    }
+
+    if (camera.isOpened()) {
+        QString filename = QFileDialog::getSaveFileName(this, "Save Video", outputDir.toString(), "Video Files (*.avi *.mp4)");
+
+        if (!filename.isEmpty()) {
+            // Set up VideoWriter with file path, codec, frame rate, and frame size
+            int frameWidth = static_cast<int>(camera.get(cv::CAP_PROP_FRAME_WIDTH));
+            int frameHeight = static_cast<int>(camera.get(cv::CAP_PROP_FRAME_HEIGHT));
+            double fps = 30.0; // Set desired frame rate
+
+            // Use an appropriate codec, e.g., 'MJPG' for .avi, 'MP4V' for .mp4
+            videoWriter.open(filename.toStdString(), cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), fps, cv::Size(frameWidth, frameHeight), true);
+
+            if (videoWriter.isOpened()) {
+                state = STATE_RECORDING;
+                ui.buttonRecord->setText("Stop");
+                //ui.buttonPause->setEnabled(true);
+                //ui.buttonStop->setEnabled(true);
+            }
+            else {
+                QMessageBox::warning(this, "Recording Error", "Failed to open video file for recording.");
+            }
+        }
+    }
 }
 
 void MainWindow::pause() {
@@ -167,8 +207,10 @@ void MainWindow::pause() {
 }
 
 void MainWindow::stop() {
-    //mediaRecorder->stop();
-    
+    videoWriter.release(); // Stop recording
+    ui.buttonRecord->setText("Record");
+    state = STATE_IDLE;
+    QMessageBox::information(this, "Recording Stopped", "Video recording has been stopped and saved.");
 }
 
 void MainWindow::openOutputDirectory() {
@@ -176,7 +218,8 @@ void MainWindow::openOutputDirectory() {
 }
 
 void MainWindow::setOutputDirectory() {
-    outputDir = QFileDialog::getExistingDirectoryUrl(this, "Select the output directory");
-    
-    // TODO: Set output directory for CV 
+    QUrl temp = QFileDialog::getExistingDirectoryUrl(this, "Select the output directory");
+    if (temp.isEmpty()) {
+        outputDir = temp;
+    }
 }
