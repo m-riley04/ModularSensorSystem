@@ -96,10 +96,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="CameraPropertiesWindow.ui" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraPropertiesWindow.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="CameraPropertiesWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Camera.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
