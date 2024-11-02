@@ -108,19 +108,19 @@ void MainWindow::updateRecorderState(QMediaRecorder::RecorderState state) {
 
 void MainWindow::setBrightness(int value) {
     if (camera.isOpened()) {
-        camera.set(cv::CAP_PROP_BRIGHTNESS, value / 100.0);
+        camera.set(cv::CAP_PROP_BRIGHTNESS, value);
     }
 }
 
 void MainWindow::setContrast(int value) {
     if (camera.isOpened()) {
-        camera.set(cv::CAP_PROP_CONTRAST, value / 100.0);
+        camera.set(cv::CAP_PROP_CONTRAST, value);
     }
 }
 
 void MainWindow::setSaturation(int value) {
     if (camera.isOpened()) {
-        camera.set(cv::CAP_PROP_SATURATION, value / 100.0);
+        camera.set(cv::CAP_PROP_SATURATION, value);
     }
 }
 
@@ -138,6 +138,11 @@ void MainWindow::setBacklight(bool value) {
 
 void MainWindow::setCameraDevice() {
 
+}
+
+void MainWindow::restartCamera() {
+    stopCamera();
+    startCamera();
 }
 
 void MainWindow::startCamera() {

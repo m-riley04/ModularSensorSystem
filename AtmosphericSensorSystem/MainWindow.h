@@ -1,9 +1,10 @@
 #pragma once
 
-#define DEFAULT_BRIGHTNESS 50
-#define DEFAULT_CONTRAST 50
-#define DEFAULT_SATURATION 5
-#define DEFAULT_GAIN 200
+#define DEFAULT_BRIGHTNESS 100
+#define DEFAULT_CONTRAST 100
+#define DEFAULT_SATURATION 100
+#define DEFAULT_GAIN 100
+#define DEFAULT_BACKLIGHT 0
 
 #include <QtWidgets/QMainWindow>
 #include <QtMultimedia>
@@ -31,6 +32,8 @@ private:
 
 private slots:
     void setCameraDevice();
+
+    void restartCamera();
     void startCamera();
     void stopCamera();
 
@@ -43,6 +46,15 @@ private slots:
     void setSaturation(int value);
     void setGain(int value);
     void setBacklight(bool value);
+    /*void setFPS();
+    void setFrameWidth();
+    void setFrameHeight();
+    void setHue();
+    void setExposure();
+    void setSharpness();
+    void setGamma();
+    void setAutoExposure(bool value);
+    void setBitrate();*/
 
     void openOutputDirectory();
     void setOutputDirectory();
