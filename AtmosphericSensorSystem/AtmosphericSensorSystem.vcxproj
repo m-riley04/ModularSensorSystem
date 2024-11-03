@@ -105,10 +105,10 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="CameraPropertiesWindow.h" />
+    <QtMoc Include="Camera.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Camera.h" />
+    <QtMoc Include="CameraPropertiesWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

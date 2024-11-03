@@ -40,18 +40,18 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CameraPropertiesWindow.cpp">
+    <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="CameraPropertiesWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="CameraPropertiesWindow.h">
+    <QtMoc Include="Camera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Camera.h">
+    <QtMoc Include="CameraPropertiesWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
