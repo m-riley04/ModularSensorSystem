@@ -1,7 +1,7 @@
 #include "CameraPropertiesWindow.h"
 
 CameraPropertiesWindow::CameraPropertiesWindow(QWidget *parent)
-	: QWidget(parent)
+	: QDialog(parent)
 {
 	ui.setupUi(this);
 }

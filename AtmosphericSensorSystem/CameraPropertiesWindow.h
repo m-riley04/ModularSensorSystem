@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QWidget>
+#include <QDialog>
 #include "ui_CameraPropertiesWindow.h"
 
-class CameraPropertiesWindow : public QWidget
+class CameraPropertiesWindow : public QDialog
 {
 	Q_OBJECT
 
