@@ -14,6 +14,7 @@
 #include <qmessagebox.h>
 #include <opencv2/opencv.hpp>
 #include "Camera.h"
+#include "CameraPropertiesWindow.h"
 #include "ui_MainWindow.h"
 
 class MainWindow : public QMainWindow
@@ -28,6 +29,7 @@ private:
     Ui::MainWindowClass ui;
     Camera* camera;
     QUrl outputDir;
+    QTimer* frameTimer;
 
     void initWidgets();
     void initSignals();

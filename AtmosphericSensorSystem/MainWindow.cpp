@@ -2,16 +2,15 @@
 
 void MainWindow::initWidgets() {
     // Initialize the timer to capture frames
-    /*frameTimer = new QTimer(this);
     connect(frameTimer, &QTimer::timeout, this, [this]() {
-        if (camera.isOpened()) {
+        if (camera->isOpened()) {
             cv::Mat frame;
-            camera >> frame;
+            *camera >> frame;
             if (!frame.empty()) {
                 displayFrame(frame);
             }
         }
-        });*/
+        });
     
     // Initialize the devices dropdown
     updateDeviceDropdown();
@@ -47,13 +46,20 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+
+    // Initialize Camera
+    camera = new Camera(this);
+    frameTimer = camera->getFrameTimer();
+
+    // Initialize signals
     initSignals();
+
+    // Initialize widgets
     initWidgets();
 }
 
 MainWindow::~MainWindow()
 {}
-
 
 void MainWindow::updateDeviceDropdown() {
     ui.dropdownDevice->clear();
@@ -90,12 +96,12 @@ void MainWindow::displayFrame(const cv::Mat& frame) {
 }
 
 void MainWindow::openOutputDirectory() {
-    QDesktopServices::openUrl(outputDir);
+    QDesktopServices::openUrl(camera->getOutputDirectory());
 }
 
 void MainWindow::setOutputDirectory() {
     QUrl temp = QFileDialog::getExistingDirectoryUrl(this, "Select the output directory");
-    if (temp.isEmpty()) {
-        outputDir = temp;
+    if (!temp.isEmpty()) {
+        camera->setOutputDirectory(temp);
     }
 }
