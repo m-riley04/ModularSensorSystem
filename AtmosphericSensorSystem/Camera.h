@@ -22,7 +22,7 @@ private:
     cv::Mat frame;
     QUrl outputDir; /// TODO: Maybe change this to QDir 
     QTimer* frameTimer;
-    CameraState state = CAMERA_IDLE;
+    CameraState _state = CAMERA_IDLE;
 
 public:
 	Camera(QObject *parent);
@@ -35,6 +35,14 @@ public:
     QUrl& getOutputDirectory();
     QTimer* getFrameTimer();
     CameraState& getState();
+
+    int brightness();
+    int contrast();
+    int saturation();
+    int gain();
+    bool backlight();
+    bool autoExposure();
+    
 
     Camera& operator >> (cv::Mat& image);
 
@@ -50,7 +58,7 @@ signals:
     void recordingError();
 
 public slots:
-    void setVideoDevice();
+    void setVideoDevice(int deviceIndex);
 
     void restart();
     void start();

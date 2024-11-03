@@ -406,6 +406,7 @@
     <property name="title">
      <string>Options</string>
     </property>
+    <addaction name="actionCameraProperties"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -473,6 +474,11 @@
   <action name="actionQuick_Start_Guide">
    <property name="text">
     <string>Quick Start Guide</string>
+   </property>
+  </action>
+  <action name="actionCameraProperties">
+   <property name="text">
+    <string>Camera Properties</string>
    </property>
   </action>
  </widget>

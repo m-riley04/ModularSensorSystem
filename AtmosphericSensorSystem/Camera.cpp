@@ -10,7 +10,12 @@ bool checkCameraAvailability()
 
 Camera::Camera(QObject *parent)
 	: QObject(parent), frameTimer(new QTimer())
-{}
+{
+    // Default the camera
+    if (checkCameraAvailability()) {
+        setVideoDevice(0);
+    }
+}
 
 Camera::~Camera()
 {}
@@ -23,21 +28,16 @@ void Camera::release() {
     camera.release();
 }
 
-bool Camera::isOpened() {
-    return camera.isOpened();
-}
-
-QUrl& Camera::getOutputDirectory() {
-    return outputDir;
-}
-
-QTimer* Camera::getFrameTimer() {
-    return frameTimer;
-}
-
-CameraState& Camera::getState() {
-    return state;
-}
+bool Camera::isOpened() { return camera.isOpened(); }
+QUrl& Camera::getOutputDirectory() { return outputDir; }
+QTimer* Camera::getFrameTimer() { return frameTimer; }
+CameraState& Camera::getState() { return _state; }
+int Camera::brightness() { return this->camera.get(cv::CAP_PROP_BRIGHTNESS); }
+int Camera::contrast() { return this->camera.get(cv::CAP_PROP_CONTRAST); }
+int Camera::saturation() { return this->camera.get(cv::CAP_PROP_SATURATION); }
+int Camera::gain() { return this->camera.get(cv::CAP_PROP_GAIN); }
+bool Camera::backlight() { return this->camera.get(cv::CAP_PROP_BACKLIGHT) > 0; }
+bool Camera::autoExposure() { return this->camera.get(cv::CAP_PROP_AUTO_EXPOSURE) > 0; }
 
 Camera& Camera::operator >> (cv::Mat& image) {
     if (camera.isOpened()) {
@@ -85,10 +85,6 @@ void Camera::setAutoExposure(bool value) {
     }
 }
 
-void Camera::setVideoDevice() {
-
-}
-
 void Camera::restart() {
     stop();
     start();
@@ -110,9 +106,22 @@ void Camera::stop() {
     }
 }
 
+void Camera::setVideoDevice(int deviceIndex) {
+    // Stop the current device
+    stop();
+
+    // Open the new device
+    open(deviceIndex);
+
+    // Start the new device
+    if (isOpened()) {
+        start();
+    }
+}
+
 void Camera::startRecording() {
     /// TODO: Maybe rename this from "record" or make a "toggleRecording" slot
-    if (state == CAMERA_RECORDING) {
+    if (_state == CAMERA_RECORDING) {
         stop();
     }
 
@@ -130,7 +139,7 @@ void Camera::startRecording() {
             videoWriter.open(filename.toStdString(), cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), fps, cv::Size(frameWidth, frameHeight), true);
 
             if (videoWriter.isOpened()) {
-                state = CAMERA_RECORDING;
+                _state = CAMERA_RECORDING;
             }
             else {
                 /// TODO: Signal a camera error
@@ -145,7 +154,7 @@ void Camera::pauseRecording() {
 
 void Camera::stopRecording() {
     videoWriter.release(); // Stop recording
-    state = CAMERA_IDLE;
+    _state = CAMERA_IDLE;
     /// TODO: Signal recording stopped
 }
 

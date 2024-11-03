@@ -31,16 +31,17 @@ private:
     QUrl outputDir;
     QTimer* frameTimer;
 
+    void initCamera();
     void initWidgets();
     void initSignals();
     void displayFrame(const cv::Mat& frame);
 
-private slots:
+public slots:
     void openOutputDirectory();
     void setOutputDirectory();
 
-    void updateDeviceDropdown();
-    void updateDevice(int deviceIndex);
+    void openCameraProperties();
+
     /*void updateSpaceRemaining();*/
 
 };
