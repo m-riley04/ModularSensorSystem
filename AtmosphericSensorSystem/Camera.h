@@ -19,6 +19,7 @@ class Camera : public QObject
 private:
     cv::VideoCapture camera;
     cv::VideoWriter videoWriter;
+    cv::Mat frame;
     QUrl outputDir; /// TODO: Maybe change this to QDir 
     QTimer* frameTimer;
     CameraState state = CAMERA_IDLE;
@@ -29,15 +30,22 @@ public:
 
     void open(int deviceIndex);
     void release();
-
     bool isOpened();
 
+    QUrl& getOutputDirectory();
+    QTimer* getFrameTimer();
+    CameraState& getState();
+
+    Camera& operator >> (cv::Mat& image);
+
 signals:
-    void cameraStarted();
-    void cameraClosed();
+    void started();
+    void stopped();
     void deviceChanged();
     void deviceError();
+    void outputDirectoryChanged();
     void recordingStarted();
+    void recordingPaused();
     void recordingStopped();
     void recordingError();
 

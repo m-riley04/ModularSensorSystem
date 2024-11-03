@@ -9,11 +9,8 @@ bool checkCameraAvailability()
 }
 
 Camera::Camera(QObject *parent)
-	: QObject(parent)
-{
-    // Initialize the timer
-    frameTimer = new QTimer(this);
-}
+	: QObject(parent), frameTimer(new QTimer())
+{}
 
 Camera::~Camera()
 {}
@@ -28,6 +25,28 @@ void Camera::release() {
 
 bool Camera::isOpened() {
     return camera.isOpened();
+}
+
+QUrl& Camera::getOutputDirectory() {
+    return outputDir;
+}
+
+QTimer* Camera::getFrameTimer() {
+    return frameTimer;
+}
+
+CameraState& Camera::getState() {
+    return state;
+}
+
+Camera& Camera::operator >> (cv::Mat& image) {
+    if (camera.isOpened()) {
+        camera >> image; // Capture frame from camera
+    }
+    else {
+        image = cv::Mat(); // Return an empty frame if the camera is not open
+    }
+    return *this;
 }
 
 void Camera::setBrightness(int value) {
@@ -82,7 +101,10 @@ void Camera::start() {
 }
 
 void Camera::stop() {
-    frameTimer->stop();
+    if (frameTimer) {
+        frameTimer->stop();
+    }
+    
     if (isOpened()) {
         release();
     }
