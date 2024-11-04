@@ -21,7 +21,7 @@ Camera::~Camera()
 {}
 
 void Camera::open(int deviceIndex) {
-    camera.open(deviceIndex);
+    camera.open(deviceIndex, cv::CAP_DSHOW);
 }
 
 void Camera::release() {

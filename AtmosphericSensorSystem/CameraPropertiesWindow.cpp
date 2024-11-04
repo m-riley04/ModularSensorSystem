@@ -5,6 +5,7 @@ CameraPropertiesWindow::CameraPropertiesWindow(QWidget *parent, Camera *camera)
 {
 	ui.setupUi(this);
     initWidgets();
+    initSignals();
 }
 
 CameraPropertiesWindow::~CameraPropertiesWindow()
