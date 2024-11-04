@@ -4,6 +4,16 @@ CameraPropertiesWindow::CameraPropertiesWindow(QWidget *parent, Camera *camera)
 	: QDialog(parent), camera(camera)
 {
 	ui.setupUi(this);
+
+    // Initialize
+    brightnessInitial = camera->brightness();
+    contrastInitial = camera->contrast();
+    saturationInitial = camera->saturation();
+    gainInitial = camera->gain();
+    exposureInitial = camera->exposure();
+    backlightInitial = camera->backlight();
+    autoExposureInitial = camera->autoExposure();
+
     initWidgets();
     initSignals();
 }
@@ -12,8 +22,6 @@ CameraPropertiesWindow::~CameraPropertiesWindow()
 {}
 
 void CameraPropertiesWindow::initWidgets() {
-    
-
     // Initialize the display settings
     ui.sliderBrightness->setValue(camera->brightness());
     ui.sliderContrast->setValue(camera->contrast());
@@ -37,19 +45,49 @@ void CameraPropertiesWindow::initSignals() {
     connect(ui.sliderGain, &QSlider::valueChanged, camera, &Camera::setGain);
     connect(ui.checkboxBacklight, &QCheckBox::checkStateChanged, camera, &Camera::setBacklight);
     connect(ui.checkboxAutoExposure, &QCheckBox::checkStateChanged, camera, &Camera::setAutoExposure);
+
+    // Buttons
+    connect(ui.buttonBox, &QDialogButtonBox::clicked, this, &CameraPropertiesWindow::dialogButtonClicked);
 }
 
 void CameraPropertiesWindow::updateDeviceDropdown() {
     ui.dropdownDevice->clear();
     QStringList deviceNames;
 
-    for (int i = 0; i < 10; i++) {
-        cv::VideoCapture _tempCam(i);
-        if (_tempCam.isOpened()) {
-            deviceNames.push_back(QString("Camera %1").arg(i));
-            _tempCam.release();
-        }
+    for (int i = 0; i < QMediaDevices::videoInputs().size(); i++) {
+        deviceNames.push_back(QMediaDevices::videoInputs()[i].description());
     }
 
     ui.dropdownDevice->insertItems(0, deviceNames);
+}
+
+void CameraPropertiesWindow::restoreDefaults() {
+    ui.sliderBrightness->setValue(DEFAULT_BRIGHTNESS);
+    ui.sliderContrast->setValue(DEFAULT_CONTRAST);
+    ui.sliderSaturation->setValue(DEFAULT_SATURATION);
+    ui.sliderGain->setValue(DEFAULT_GAIN);
+    ui.checkboxBacklight->setChecked(DEFAULT_BACKLIGHT);
+    ui.checkboxAutoExposure->setChecked(DEFAULT_AUTO_EXPOSURE);
+}
+
+void CameraPropertiesWindow::restoreInitialChanges() {
+    ui.sliderBrightness->setValue(brightnessInitial);
+    ui.sliderContrast->setValue(contrastInitial);
+    ui.sliderSaturation->setValue(saturationInitial);
+    ui.sliderGain->setValue(gainInitial);
+    ui.checkboxBacklight->setChecked(backlightInitial);
+    ui.checkboxAutoExposure->setChecked(autoExposureInitial);
+}
+
+void CameraPropertiesWindow::dialogButtonClicked(QAbstractButton* button) {
+
+    switch (ui.buttonBox->standardButton(button)) {
+    case (QDialogButtonBox::Cancel):
+        this->restoreInitialChanges();
+    case (QDialogButtonBox::Apply):
+        this->close();
+        break;
+    case (QDialogButtonBox::RestoreDefaults):
+        restoreDefaults();
+    }
 }

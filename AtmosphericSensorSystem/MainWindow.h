@@ -1,13 +1,5 @@
 #pragma once
 
-#define DEFAULT_BRIGHTNESS 0
-#define DEFAULT_CONTRAST 10
-#define DEFAULT_SATURATION 10
-#define DEFAULT_GAIN 100
-#define DEFAULT_BACKLIGHT 0
-#define DEFAULT_WHITE_BALANCE 4500
-#define DEFAULT_AUTO_EXPOSURE 1
-
 #include <QtWidgets/QMainWindow>
 #include <QtMultimedia>
 #include <QFileDialog>

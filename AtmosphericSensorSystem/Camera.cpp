@@ -36,6 +36,7 @@ int Camera::brightness() { return this->camera.get(cv::CAP_PROP_BRIGHTNESS); }
 int Camera::contrast() { return this->camera.get(cv::CAP_PROP_CONTRAST); }
 int Camera::saturation() { return this->camera.get(cv::CAP_PROP_SATURATION); }
 int Camera::gain() { return this->camera.get(cv::CAP_PROP_GAIN); }
+int Camera::exposure() { return this->camera.get(cv::CAP_PROP_EXPOSURE); }
 bool Camera::backlight() { return this->camera.get(cv::CAP_PROP_BACKLIGHT) > 0; }
 bool Camera::autoExposure() { return this->camera.get(cv::CAP_PROP_AUTO_EXPOSURE) > 0; }
 

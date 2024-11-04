@@ -40,6 +40,7 @@ public:
     int contrast();
     int saturation();
     int gain();
+    int exposure();
     bool backlight();
     bool autoExposure();
     
