@@ -158,7 +158,3 @@ void Camera::stopRecording() {
     _state = CAMERA_IDLE;
     /// TODO: Signal recording stopped
 }
-
-void Camera::setOutputDirectory(QUrl directory) {
-    outputDir = directory;
-}

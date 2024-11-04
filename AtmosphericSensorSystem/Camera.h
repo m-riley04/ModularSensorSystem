@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <qmessagebox.h>
 #include <opencv2/opencv.hpp>
+#include "sensor.h"
 
 enum CameraState {
     CAMERA_IDLE,
@@ -12,7 +13,7 @@ enum CameraState {
     CAMERA_PAUSED,
 };
 
-class Camera : public QObject
+class Camera : public Sensor
 {
 	Q_OBJECT
 
@@ -20,7 +21,6 @@ private:
     cv::VideoCapture camera;
     cv::VideoWriter videoWriter;
     cv::Mat frame;
-    QUrl outputDir; /// TODO: Maybe change this to QDir 
     QTimer* frameTimer;
     CameraState _state = CAMERA_IDLE;
 
@@ -44,7 +44,6 @@ public:
     bool backlight();
     bool autoExposure();
     
-
     Camera& operator >> (cv::Mat& image);
 
 signals:
@@ -83,6 +82,4 @@ public slots:
     void setSharpness();
     void setGamma();
     void setBitrate();*/
-
-    void setOutputDirectory(QUrl directory);
 };
