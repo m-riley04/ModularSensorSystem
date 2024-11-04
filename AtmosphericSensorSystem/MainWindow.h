@@ -42,6 +42,9 @@ public slots:
 
     void openCameraProperties();
 
+    void quit();
+    void restart();
+
     /*void updateSpaceRemaining();*/
 
 };
