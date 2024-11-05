@@ -9,7 +9,7 @@ static bool checkCameraAvailability() {
 }
 
 Camera::Camera(QObject *parent)
-	: Sensor(parent), frameTimer(new QTimer())
+	: Sensor(parent), _frameTimer(new QTimer())
 {
     // Default the camera
     if (checkCameraAvailability()) {
@@ -34,9 +34,7 @@ void Camera::release() {
 }
 
 bool Camera::isOpened() { return camera.isOpened(); }
-QUrl& Camera::getOutputDirectory() { return outputDir; }
-QTimer* Camera::getFrameTimer() { return frameTimer; }
-CameraState& Camera::getState() { return _state; }
+QTimer* Camera::frameTimer() { return _frameTimer; }
 int Camera::brightness() { return this->camera.get(cv::CAP_PROP_BRIGHTNESS); }
 int Camera::contrast() { return this->camera.get(cv::CAP_PROP_CONTRAST); }
 int Camera::saturation() { return this->camera.get(cv::CAP_PROP_SATURATION); }
@@ -130,7 +128,7 @@ void Camera::setExposure(int value) {
 	if (isOpened()) {
 		camera.set(cv::CAP_PROP_EXPOSURE, value);
 		emit exposureChanged(value);
-    }
+	}
 }
 
 void Camera::setSharpness(int value) {
@@ -174,7 +172,7 @@ void Camera::start() {
             setVideoDevice(0);
         }
     }
-    frameTimer->start(60);  // Adjust the interval for desired frame rate
+    _frameTimer->start(_viewfinderFrameRate);  // Adjust the interval for desired frame rate
 }
 
 void Camera::pause() {
@@ -183,7 +181,7 @@ void Camera::pause() {
 
 void Camera::stop() {
     if (frameTimer) {
-        frameTimer->stop();
+        _frameTimer->stop();
     }
     
     if (isOpened()) {

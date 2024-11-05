@@ -17,7 +17,7 @@ private:
     cv::VideoCapture camera;
     cv::VideoWriter videoWriter;
     cv::Mat frame;
-    QTimer* frameTimer;
+    QTimer* _frameTimer;
     int _viewfinderFrameRate = DEFAULT_VIEWFINDER_FRAME_RATE;
 
 public:
@@ -37,7 +37,7 @@ public:
     int exposure();
     bool backlight();
     bool autoExposure();
-    
+
     int viewfinderFrameRate();
     
     Camera& operator >> (cv::Mat& image);
