@@ -46,27 +46,17 @@ public:
     
     Camera& operator >> (cv::Mat& image);
 
-signals:
-    void started();
-    void stopped();
-    void deviceChanged();
-    void deviceError();
-    void outputDirectoryChanged();
-    void recordingStarted();
-    void recordingPaused();
-    void recordingStopped();
-    void recordingError();
-
 public slots:
     void setVideoDevice(int deviceIndex);
 
-    void restart();
-    void start();
-    void stop();
+    void restart() override;
+    void start() override;
+    void pause() override;
+    void stop() override;
 
-    void startRecording();
-    void pauseRecording();
-    void stopRecording();
+    void startRecording() override;
+    void pauseRecording() override;
+    void stopRecording() override;
 
     void setBrightness(int value);
     void setContrast(int value);
@@ -82,4 +72,8 @@ public slots:
     void setSharpness();
     void setGamma();
     void setBitrate();*/
+
+signals:
+    void deviceChanged();
+    void deviceError();
 };

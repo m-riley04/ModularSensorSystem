@@ -9,7 +9,7 @@ bool checkCameraAvailability()
 }
 
 Camera::Camera(QObject *parent)
-	: QObject(parent), frameTimer(new QTimer())
+	: Sensor(parent), frameTimer(new QTimer())
 {
     // Default the camera
     if (checkCameraAvailability()) {
@@ -95,6 +95,10 @@ void Camera::start() {
     if (isOpened()) {
         frameTimer->start(30);  // Adjust the interval for desired frame rate
     }
+}
+
+void Camera::pause() {
+    // Implement the pause functionality here
 }
 
 void Camera::stop() {

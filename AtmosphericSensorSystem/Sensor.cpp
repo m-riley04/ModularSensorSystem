@@ -9,7 +9,10 @@ Sensor::~Sensor()
 
 void Sensor::setOutputDirectory(QUrl dir)
 {
-	outputDir = dir;
+	if (outputDir != dir) {
+		outputDir = dir;
+		emit outputDirectoryChanged(dir);
+	}
 }
 
 QUrl& Sensor::getOutputDirectory()

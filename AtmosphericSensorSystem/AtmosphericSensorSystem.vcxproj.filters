@@ -51,13 +51,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="CameraPropertiesWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Sensor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Camera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
