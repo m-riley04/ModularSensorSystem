@@ -27,6 +27,7 @@ void CameraPropertiesWindow::initWidgets() {
     ui.sliderContrast->setValue(camera->contrast());
     ui.sliderSaturation->setValue(camera->saturation());
     ui.sliderGain->setValue(camera->gain());
+    ui.sliderExposure->setValue(camera->exposure());
     ui.checkboxBacklight->setChecked(camera->backlight());
     ui.checkboxAutoExposure->setChecked(camera->autoExposure());
 
@@ -43,6 +44,7 @@ void CameraPropertiesWindow::initSignals() {
     connect(ui.sliderContrast, &QSlider::valueChanged, camera, &Camera::setContrast);
     connect(ui.sliderSaturation, &QSlider::valueChanged, camera, &Camera::setSaturation);
     connect(ui.sliderGain, &QSlider::valueChanged, camera, &Camera::setGain);
+    connect(ui.sliderExposure, &QSlider::valueChanged, camera, &Camera::setExposure);
     connect(ui.checkboxBacklight, &QCheckBox::checkStateChanged, camera, &Camera::setBacklight);
     connect(ui.checkboxAutoExposure, &QCheckBox::checkStateChanged, camera, &Camera::setAutoExposure);
 
@@ -66,6 +68,7 @@ void CameraPropertiesWindow::restoreDefaults() {
     ui.sliderContrast->setValue(DEFAULT_CONTRAST);
     ui.sliderSaturation->setValue(DEFAULT_SATURATION);
     ui.sliderGain->setValue(DEFAULT_GAIN);
+    ui.sliderExposure->setValue(DEFAULT_EXPOSURE);
     ui.checkboxBacklight->setChecked(DEFAULT_BACKLIGHT);
     ui.checkboxAutoExposure->setChecked(DEFAULT_AUTO_EXPOSURE);
 }
@@ -75,6 +78,7 @@ void CameraPropertiesWindow::restoreInitialChanges() {
     ui.sliderContrast->setValue(contrastInitial);
     ui.sliderSaturation->setValue(saturationInitial);
     ui.sliderGain->setValue(gainInitial);
+    ui.sliderExposure->setValue(exposureInitial);
     ui.checkboxBacklight->setChecked(backlightInitial);
     ui.checkboxAutoExposure->setChecked(autoExposureInitial);
 }

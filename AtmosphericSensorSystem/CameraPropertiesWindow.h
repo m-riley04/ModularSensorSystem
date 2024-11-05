@@ -9,6 +9,7 @@
 #define DEFAULT_CONTRAST 10
 #define DEFAULT_SATURATION 10
 #define DEFAULT_GAIN 100
+#define DEFAULT_EXPOSURE 0
 #define DEFAULT_BACKLIGHT 0
 #define DEFAULT_WHITE_BALANCE 4500
 #define DEFAULT_AUTO_EXPOSURE 1
@@ -16,6 +17,22 @@
 class CameraPropertiesWindow : public QDialog
 {
 	Q_OBJECT
+
+private:
+	Ui::CameraPropertiesWindowClass ui;
+	Camera* camera;
+
+	int brightnessInitial;
+	int contrastInitial;
+	int saturationInitial;
+	int gainInitial;
+	int exposureInitial;
+	bool backlightInitial;
+	bool autoExposureInitial;
+
+	void initWidgets();
+	void initSignals();
+	void updateDeviceDropdown();
 
 public:
 	CameraPropertiesWindow(QWidget *parent = nullptr, Camera *camera = nullptr);
@@ -36,19 +53,4 @@ signals:
 	void backlightChanged(bool value);
 	void autoExposureChanged(bool value);
 
-private:
-	Ui::CameraPropertiesWindowClass ui;
-	Camera* camera;
-
-	int brightnessInitial;
-	int contrastInitial;
-	int saturationInitial;
-	int gainInitial;
-	int exposureInitial;
-	bool backlightInitial;
-	bool autoExposureInitial;
-
-	void initWidgets();
-	void initSignals();
-	void updateDeviceDropdown();
 };

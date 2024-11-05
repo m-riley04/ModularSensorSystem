@@ -23,7 +23,7 @@ void MainWindow::initCamera() {
     camera = new Camera(this);
     
     // Initialize the timer to capture frames
-    frameTimer = camera->getFrameTimer();
+    frameTimer = camera->frameTimer();
     connect(frameTimer, &QTimer::timeout, this, [this]() {
         if (camera->isOpened()) {
             cv::Mat frame;
@@ -63,7 +63,7 @@ void MainWindow::displayFrame(const cv::Mat& frame) {
 }
 
 void MainWindow::openOutputDirectory() {
-    QDesktopServices::openUrl(camera->getOutputDirectory());
+    QDesktopServices::openUrl(camera->outputDirectory());
 }
 
 void MainWindow::setOutputDirectory() {
