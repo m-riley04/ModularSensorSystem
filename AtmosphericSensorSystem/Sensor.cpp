@@ -12,9 +12,9 @@ QUrl& Sensor::outputDirectory()
 	return _outputDir;
 }
 
-double Sensor::readInterval()
+double Sensor::interval()
 {
-	return _readInterval;
+	return _interval;
 }
 
 SensorState Sensor::state()
@@ -30,11 +30,11 @@ void Sensor::setOutputDirectory(QUrl dir)
 	}
 }
 
-void Sensor::setReadInterval(double interval)
+void Sensor::setInterval(double interval)
 {
-	if (_readInterval != interval) {
-		_readInterval = interval;
-		emit readIntervalChanged(interval);
+	if (_interval != interval) {
+		_interval = interval;
+		emit intervalChanged(interval);
 	}
 }
 

@@ -19,13 +19,12 @@ private:
     cv::Mat frame;
     QTimer* _frameTimer;
     int _viewfinderFrameRate = DEFAULT_VIEWFINDER_FRAME_RATE;
+    int _videoDeviceIndex = 0;
 
 public:
 	Camera(QObject *parent);
 	~Camera();
 
-    void open(int deviceIndex);
-    void release();
     bool isOpened();
 
     QTimer* frameTimer();
@@ -49,15 +48,16 @@ public:
     
     Camera& operator >> (cv::Mat& image);
 
+	QVariant read() override;
+
 	static bool checkCameraAvailability();
 
 public slots:
     void setVideoDevice(int deviceIndex);
-
+    
+    void open() override;
+    void release() override;
     void restart() override;
-    void start() override;
-    void pause() override;
-    void stop() override;
 
     void startRecording() override;
     void pauseRecording() override;

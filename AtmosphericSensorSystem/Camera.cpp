@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include <QtConcurrent>
 
-static bool checkCameraAvailability() {
+bool Camera::checkCameraAvailability() {
     if (QMediaDevices::videoInputs().count() > 0)
         return true;
     else
@@ -20,17 +20,33 @@ Camera::Camera(QObject *parent)
 Camera::~Camera()
 {}
 
-void Camera::open(int deviceIndex) {
-    QtConcurrent::run([this, deviceIndex]() {
-        camera.open(deviceIndex, cv::CAP_DSHOW);
-        if (camera.isOpened()) {
-            emit started();
-        }
-    });
+void Camera::open() {
+    // Check if it's already opened
+    if (isOpened()) {
+        return; /// TODO: Do more here
+    }
+
+    // Default the camera
+    if (checkCameraAvailability()) {
+        setVideoDevice(0);
+    }
+
+    /// TODO: Add multithreading
+    camera.open(_videoDeviceIndex, cv::CAP_DSHOW);
+    if (camera.isOpened()) {
+        emit opened();
+    }
+    _frameTimer->start(_viewfinderFrameRate);  // Adjust the interval for desired frame rate
 }
 
 void Camera::release() {
+    // Stop the frame timer
+    _frameTimer->stop();
+
+    // Release the camera
     camera.release();
+
+    emit released();
 }
 
 bool Camera::isOpened() { return camera.isOpened(); }
@@ -59,6 +75,12 @@ Camera& Camera::operator >> (cv::Mat& image) {
         image = cv::Mat(); // Return an empty frame if the camera is not open
     }
     return *this;
+}
+
+QVariant Camera::read() {
+	cv::Mat frame;
+	*this >> frame;
+	return QVariant::fromValue(frame);
 }
 
 void Camera::setBrightness(int value) {
@@ -168,51 +190,25 @@ void Camera::setViewfinderFrameRate(int value) {
 }
 
 void Camera::restart() {
-    stop();
-    start();
-}
-
-void Camera::start() {
-    if (!isOpened()) {
-        // Default the camera
-        if (checkCameraAvailability()) {
-            setVideoDevice(0);
-        }
-    }
-    _frameTimer->start(_viewfinderFrameRate);  // Adjust the interval for desired frame rate
-}
-
-void Camera::pause() {
-    // Implement the pause functionality here
-}
-
-void Camera::stop() {
-    if (frameTimer) {
-        _frameTimer->stop();
-    }
-    
-    if (isOpened()) {
-        release();
-    }
+    release();
+    open();
 }
 
 void Camera::setVideoDevice(int deviceIndex) {
     // Stop the current device
-    stop();
+    release();
+
+    // Set new index
+	_videoDeviceIndex = deviceIndex;
 
     // Open the new device
-    open(deviceIndex);
-
-    // Start the new device
-    if (isOpened()) {
-        start();
-    }
+    open();
 }
 
 void Camera::startRecording() {
     /// TODO: Maybe rename this from "record" or make a "toggleRecording" slot
     if (_state == SENSOR_RECORDING) {
-        stop();
+        stopRecording();
     }
 
     if (isOpened()) {
@@ -232,7 +228,8 @@ void Camera::startRecording() {
                 _state = SENSOR_RECORDING;
             }
             else {
-                /// TODO: Signal a camera error
+                /// TODO: Signal a RECORDING error
+                emit error("Recording error");
             }
         }
     }

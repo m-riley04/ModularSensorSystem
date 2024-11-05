@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QUrl>
 
-#define DEFAULT_RECORD_INTERVAL 1.0
+#define DEFAULT_INTERVAL 1.0
 
 enum SensorState {
 	SENSOR_IDLE,
@@ -18,42 +18,62 @@ class Sensor : public QObject
 	Q_OBJECT
 
 protected:
-	QUrl _outputDir; /// TODO: Maybe change this to QDir
-	double _readInterval = DEFAULT_RECORD_INTERVAL;
+	QUrl _outputDir;
+	double _interval = DEFAULT_INTERVAL;
 	SensorState _state = SENSOR_IDLE;
 
 public:
 	Sensor(QObject *parent);
 	~Sensor();
 
+	/// <summary>
+	/// The output directory where the sensor will save the recorded data
+	/// </summary>
+	/// <returns></returns>
 	QUrl& outputDirectory();
-	double readInterval();
+
+	/// <summary>
+	/// The interval that the sensor will read data from
+	/// </summary>
+	/// <returns></returns>
+	double interval();
+
+	/// <summary>
+	/// The state of the sensor
+	/// </summary>
+	/// <returns></returns>
 	SensorState state();
+
+	/// <summary>
+	/// Read the data from the sensor at an instant
+	/// </summary>
+	/// <returns></returns>
+	virtual QVariant read() = 0;
 
 public slots:
 
 	void setOutputDirectory(QUrl dir);
-	void setReadInterval(double interval);
+	void setInterval(double interval);
 	void setState(SensorState state);
 
-	virtual void start() = 0;
-	virtual void pause() = 0;
-	virtual void stop() = 0;
+
+	virtual void open() = 0;
+	virtual void release() = 0;
 	virtual void restart() = 0;
 
 	virtual void startRecording() = 0;
 	virtual void pauseRecording() = 0;
 	virtual void stopRecording() = 0;
-
 	
 signals:
-	void started();
-	void stopped();
+	void opened();
+	void released();
 	void outputDirectoryChanged(QUrl dir);
 	void recordingStarted();
 	void recordingPaused();
 	void recordingStopped();
 	void recordingError();
-	void readIntervalChanged(double interval);
+	void intervalChanged(double interval);
 	void stateChanged(SensorState state);
+	void error(QString message);
 };

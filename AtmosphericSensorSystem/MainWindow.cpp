@@ -40,9 +40,8 @@ void MainWindow::initSignals() {
     connect(ui.buttonRecord, &QPushButton::clicked, camera, &Camera::startRecording); /// TODO: Change this wording to be more like "toggleRecording"
     connect(ui.buttonOpenOutputDirectory, &QPushButton::clicked, this, &MainWindow::openOutputDirectory);
     connect(ui.buttonSetOutputDirectory, &QPushButton::clicked, this, &MainWindow::setOutputDirectory);
-    connect(ui.buttonStop, &QPushButton::clicked, camera, &Camera::stop);
-    connect(ui.buttonStart, &QPushButton::clicked, camera, &Camera::start);
-    connect(ui.buttonPause, &QPushButton::clicked, camera, &Camera::pause);
+    connect(ui.buttonStop, &QPushButton::clicked, camera, &Camera::release);
+    connect(ui.buttonStart, &QPushButton::clicked, camera, &Camera::open);
     connect(ui.buttonRestart, &QPushButton::clicked, camera, &Camera::restart);
 
     // Menu Bar

@@ -8,10 +8,19 @@ class SensorRecordingScheduler : public QObject
 	Q_OBJECT
 
 private:
-	QList<Sensor> _sensors;
+	QList<Sensor*> _sensors;
 
 
 public:
 	SensorRecordingScheduler(QObject *parent);
 	~SensorRecordingScheduler();
+
+	void start();
+	void pause();
+	void stop();
+
+signals:
+	void started();
+	void paused();
+	void stopped();
 };
