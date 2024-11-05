@@ -8,10 +8,6 @@
 #include "sensor.h"
 
 #define DEFAULT_VIEWFINDER_FRAME_RATE 60
-    CAMERA_IDLE,
-    CAMERA_RECORDING,
-    CAMERA_PAUSED,
-};
 
 class Camera : public Sensor
 {
@@ -32,9 +28,7 @@ public:
     void release();
     bool isOpened();
 
-    QUrl& getOutputDirectory();
-    QTimer* getFrameTimer();
-    CameraState& getState();
+    QTimer* frameTimer();
 
     int brightness();
     int contrast();

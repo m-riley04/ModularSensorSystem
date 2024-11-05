@@ -206,7 +206,7 @@ void Camera::setVideoDevice(int deviceIndex) {
 
 void Camera::startRecording() {
     /// TODO: Maybe rename this from "record" or make a "toggleRecording" slot
-    if (_state == CAMERA_RECORDING) {
+    if (_state == SENSOR_RECORDING) {
         stop();
     }
 
@@ -224,7 +224,7 @@ void Camera::startRecording() {
             videoWriter.open(filename.toStdString(), cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), fps, cv::Size(frameWidth, frameHeight), true);
 
             if (videoWriter.isOpened()) {
-                _state = CAMERA_RECORDING;
+                _state = SENSOR_RECORDING;
             }
             else {
                 /// TODO: Signal a camera error
@@ -240,7 +240,7 @@ void Camera::pauseRecording() {
 
 void Camera::stopRecording() {
     videoWriter.release(); // Stop recording
-    _state = CAMERA_IDLE;
+    _state = SENSOR_IDLE;
 	emit recordingStopped();
     /// TODO: Signal recording stopped
 }
