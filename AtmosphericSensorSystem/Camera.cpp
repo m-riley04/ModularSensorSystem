@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <QtConcurrent>
 
 bool checkCameraAvailability()
 {
@@ -21,7 +22,12 @@ Camera::~Camera()
 {}
 
 void Camera::open(int deviceIndex) {
-    camera.open(deviceIndex, cv::CAP_DSHOW);
+    QtConcurrent::run([this, deviceIndex]() {
+        camera.open(deviceIndex, cv::CAP_DSHOW);
+        if (camera.isOpened()) {
+            emit started();
+        }
+    });
 }
 
 void Camera::release() {
@@ -92,9 +98,13 @@ void Camera::restart() {
 }
 
 void Camera::start() {
-    if (isOpened()) {
-        frameTimer->start(30);  // Adjust the interval for desired frame rate
+    if (!isOpened()) {
+        // Default the camera
+        if (checkCameraAvailability()) {
+            setVideoDevice(0);
+        }
     }
+    frameTimer->start(60);  // Adjust the interval for desired frame rate
 }
 
 void Camera::pause() {
