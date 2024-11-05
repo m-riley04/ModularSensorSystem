@@ -3,13 +3,14 @@
 #include <QObject>
 #include <QUrl>
 
+#define DEFAULT_RECORD_INTERVAL 1.0
+
 enum SensorState {
 	SENSOR_IDLE,
 	SENSOR_STARTING,
 	SENSOR_STOPPING,
-	SENSOR_RECORDING_STARTED,
-	SENSOR_RECORDING_PAUSED,
-	SENSOR_RECORDING_STOPPED,
+	SENSOR_RECORDING,
+	SENSOR_RECORDING_PAUSED
 };
 
 class Sensor : public QObject
@@ -17,16 +18,23 @@ class Sensor : public QObject
 	Q_OBJECT
 
 protected:
-	QUrl outputDir; /// TODO: Maybe change this to QDir
+	QUrl _outputDir; /// TODO: Maybe change this to QDir
+	double _readInterval = DEFAULT_RECORD_INTERVAL;
+	SensorState _state = SENSOR_IDLE;
 
 public:
 	Sensor(QObject *parent);
 	~Sensor();
 
+	QUrl& outputDirectory();
+	double readInterval();
+	SensorState state();
+
 public slots:
 
-	QUrl& getOutputDirectory();
 	void setOutputDirectory(QUrl dir);
+	void setReadInterval(double interval);
+	void setState(SensorState state);
 
 	virtual void start() = 0;
 	virtual void pause() = 0;
@@ -36,6 +44,7 @@ public slots:
 	virtual void startRecording() = 0;
 	virtual void pauseRecording() = 0;
 	virtual void stopRecording() = 0;
+
 	
 signals:
 	void started();
@@ -45,4 +54,6 @@ signals:
 	void recordingPaused();
 	void recordingStopped();
 	void recordingError();
+	void readIntervalChanged(double interval);
+	void stateChanged(SensorState state);
 };

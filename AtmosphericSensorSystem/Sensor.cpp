@@ -7,15 +7,41 @@ Sensor::Sensor(QObject *parent)
 Sensor::~Sensor()
 {}
 
+QUrl& Sensor::outputDirectory()
+{
+	return _outputDir;
+}
+
+double Sensor::readInterval()
+{
+	return _readInterval;
+}
+
+SensorState Sensor::state()
+{
+	return _state;
+}
+
 void Sensor::setOutputDirectory(QUrl dir)
 {
-	if (outputDir != dir) {
-		outputDir = dir;
+	if (_outputDir != dir) {
+		_outputDir = dir;
 		emit outputDirectoryChanged(dir);
 	}
 }
 
-QUrl& Sensor::getOutputDirectory()
+void Sensor::setReadInterval(double interval)
 {
-	return outputDir;
+	if (_readInterval != interval) {
+		_readInterval = interval;
+		emit readIntervalChanged(interval);
+	}
+}
+
+void Sensor::setState(SensorState state)
+{
+	if (_state != state) {
+		_state = state;
+		emit stateChanged(state);
+	}
 }
