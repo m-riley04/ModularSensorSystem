@@ -46,6 +46,8 @@ public:
     
     Camera& operator >> (cv::Mat& image);
 
+	static bool checkCameraAvailability();
+
 public slots:
     void setVideoDevice(int deviceIndex);
 

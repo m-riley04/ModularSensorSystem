@@ -1,8 +1,7 @@
 #include "Camera.h"
 #include <QtConcurrent>
 
-bool checkCameraAvailability()
-{
+static bool checkCameraAvailability() {
     if (QMediaDevices::videoInputs().count() > 0)
         return true;
     else
