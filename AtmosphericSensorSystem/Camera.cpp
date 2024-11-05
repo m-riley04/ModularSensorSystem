@@ -44,6 +44,7 @@ int Camera::gain() { return this->camera.get(cv::CAP_PROP_GAIN); }
 int Camera::exposure() { return this->camera.get(cv::CAP_PROP_EXPOSURE); }
 bool Camera::backlight() { return this->camera.get(cv::CAP_PROP_BACKLIGHT) > 0; }
 bool Camera::autoExposure() { return this->camera.get(cv::CAP_PROP_AUTO_EXPOSURE) > 0; }
+int Camera::viewfinderFrameRate() { return _viewfinderFrameRate; }
 
 Camera& Camera::operator >> (cv::Mat& image) {
     if (camera.isOpened()) {
@@ -58,36 +59,106 @@ Camera& Camera::operator >> (cv::Mat& image) {
 void Camera::setBrightness(int value) {
     if (isOpened()) {
         camera.set(cv::CAP_PROP_BRIGHTNESS, value);
+		emit brightnessChanged(value);
     }
 }
 
 void Camera::setContrast(int value) {
     if (isOpened()) {
         camera.set(cv::CAP_PROP_CONTRAST, value);
+		emit contrastChanged(value);
     }
 }
 
 void Camera::setSaturation(int value) {
     if (isOpened()) {
         camera.set(cv::CAP_PROP_SATURATION, value);
+		emit saturationChanged(value);
     }
 }
 
 void Camera::setGain(int value) {
     if (isOpened()) {
         camera.set(cv::CAP_PROP_GAIN, value);
+		emit gainChanged(value);
     }
 }
 
 void Camera::setBacklight(bool value) {
     if (isOpened()) {
         camera.set(cv::CAP_PROP_BACKLIGHT, value);
+		emit backlightChanged(value);
     }
 }
 
 void Camera::setAutoExposure(bool value) {
     if (isOpened()) {
         camera.set(cv::CAP_PROP_AUTO_EXPOSURE, value);
+		emit autoExposureChanged(value);
+    }
+}
+
+void Camera::setFPS(int fps) {
+    if (isOpened()) {
+        camera.set(cv::CAP_PROP_FPS, fps);
+		emit fpsChanged(fps);
+    }
+}
+
+void Camera::setFrameWidth(int width) {
+    if (isOpened()) {
+		camera.set(cv::CAP_PROP_FRAME_WIDTH, width);
+		emit frameWidthChanged(width);
+    }
+}
+
+void Camera::setFrameHeight(int height) {
+	if (isOpened()) {
+		camera.set(cv::CAP_PROP_FRAME_HEIGHT, height);
+		emit frameHeightChanged(height);
+	}
+}
+
+void Camera::setHue(int value) {
+    if (isOpened()) {
+		camera.set(cv::CAP_PROP_HUE, value);
+		emit hueChanged(value);
+    }
+}
+
+void Camera::setExposure(int value) {
+	if (isOpened()) {
+		camera.set(cv::CAP_PROP_EXPOSURE, value);
+		emit exposureChanged(value);
+    }
+}
+
+void Camera::setSharpness(int value) {
+	if (isOpened()) {
+		camera.set(cv::CAP_PROP_SHARPNESS, value);
+		emit sharpnessChanged(value);
+	}
+}
+
+void Camera::setGamma(int value) {
+	if (isOpened()) {
+		camera.set(cv::CAP_PROP_GAMMA, value);
+		emit gammaChanged(value);
+	}
+}
+
+void Camera::setBitrate(int value) {
+	if (isOpened()) {
+		camera.set(cv::CAP_PROP_BITRATE, value);
+		emit bitrateChanged(value);
+	}
+}
+
+void Camera::setViewfinderFrameRate(int value) {
+    if (_viewfinderFrameRate != value) {
+        _viewfinderFrameRate = value;
+        _frameTimer->setInterval(value);
+        emit viewfinderFrameRateChanged(value);
     }
 }
 
@@ -164,10 +235,12 @@ void Camera::startRecording() {
 
 void Camera::pauseRecording() {
     /// TODO: Signal recording stopped
+	emit recordingPaused();
 }
 
 void Camera::stopRecording() {
     videoWriter.release(); // Stop recording
     _state = CAMERA_IDLE;
+	emit recordingStopped();
     /// TODO: Signal recording stopped
 }

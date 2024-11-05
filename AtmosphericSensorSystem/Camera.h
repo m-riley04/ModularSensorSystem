@@ -7,7 +7,7 @@
 #include <opencv2/opencv.hpp>
 #include "sensor.h"
 
-enum CameraState {
+#define DEFAULT_VIEWFINDER_FRAME_RATE 60
     CAMERA_IDLE,
     CAMERA_RECORDING,
     CAMERA_PAUSED,
@@ -22,7 +22,7 @@ private:
     cv::VideoWriter videoWriter;
     cv::Mat frame;
     QTimer* frameTimer;
-    CameraState _state = CAMERA_IDLE;
+    int _viewfinderFrameRate = DEFAULT_VIEWFINDER_FRAME_RATE;
 
 public:
 	Camera(QObject *parent);
@@ -43,6 +43,8 @@ public:
     int exposure();
     bool backlight();
     bool autoExposure();
+    
+    int viewfinderFrameRate();
     
     Camera& operator >> (cv::Mat& image);
 
@@ -66,16 +68,33 @@ public slots:
     void setGain(int value);
     void setBacklight(bool value);
     void setAutoExposure(bool value);
-    /*void setFPS();
-    void setFrameWidth();
-    void setFrameHeight();
-    void setHue();
-    void setExposure();
-    void setSharpness();
-    void setGamma();
-    void setBitrate();*/
+    void setFPS(int fps);
+    void setFrameWidth(int width);
+    void setFrameHeight(int height);
+    void setHue(int value);
+    void setExposure(int value);
+    void setSharpness(int value);
+    void setGamma(int value);
+    void setBitrate(int value);
+    void setViewfinderFrameRate(int frameRate);
 
 signals:
     void deviceChanged();
     void deviceError();
+	
+	void brightnessChanged(int value);
+	void contrastChanged(int value);
+	void saturationChanged(int value);
+	void gainChanged(int value);
+	void exposureChanged(int value);
+	void backlightChanged(bool value);
+	void autoExposureChanged(bool value);
+	void frameWidthChanged(int value);
+	void frameHeightChanged(int value);
+    void fpsChanged(int value);
+	void hueChanged(int value);
+	void sharpnessChanged(int value);
+	void gammaChanged(int value);
+	void bitrateChanged(int value);
+    void viewfinderFrameRateChanged(int frameRate);
 };
