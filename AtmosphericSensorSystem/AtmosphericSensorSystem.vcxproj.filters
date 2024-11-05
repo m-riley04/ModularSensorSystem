@@ -49,6 +49,9 @@
     <ClCompile Include="Sensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SensorRecordingScheduler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CameraPropertiesWindow.h">
@@ -58,6 +61,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SensorRecordingScheduler.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
