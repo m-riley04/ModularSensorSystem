@@ -34,9 +34,16 @@ public:
     int contrast();
     int saturation();
     int gain();
-    int exposure();
     bool backlight();
     bool autoExposure();
+    int fps();
+	int frameWidth();
+	int frameHeight();
+	int hue();
+    int exposure();
+	int sharpness();
+	int gamma();
+	int bitrate();
 
     int viewfinderFrameRate();
     

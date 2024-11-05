@@ -39,9 +39,16 @@ int Camera::brightness() { return this->camera.get(cv::CAP_PROP_BRIGHTNESS); }
 int Camera::contrast() { return this->camera.get(cv::CAP_PROP_CONTRAST); }
 int Camera::saturation() { return this->camera.get(cv::CAP_PROP_SATURATION); }
 int Camera::gain() { return this->camera.get(cv::CAP_PROP_GAIN); }
-int Camera::exposure() { return this->camera.get(cv::CAP_PROP_EXPOSURE); }
 bool Camera::backlight() { return this->camera.get(cv::CAP_PROP_BACKLIGHT) > 0; }
 bool Camera::autoExposure() { return this->camera.get(cv::CAP_PROP_AUTO_EXPOSURE) > 0; }
+int Camera::fps() { return this->camera.get(cv::CAP_PROP_FPS); }
+int Camera::frameWidth() { return this->camera.get(cv::CAP_PROP_FRAME_WIDTH); }
+int Camera::frameHeight() { return this->camera.get(cv::CAP_PROP_FRAME_HEIGHT); }
+int Camera::hue() { return this->camera.get(cv::CAP_PROP_HUE); }
+int Camera::exposure() { return this->camera.get(cv::CAP_PROP_EXPOSURE); }
+int Camera::sharpness() { return this->camera.get(cv::CAP_PROP_SHARPNESS); }
+int Camera::gamma() { return this->camera.get(cv::CAP_PROP_GAMMA); }
+int Camera::bitrate() { return this->camera.get(cv::CAP_PROP_BITRATE); }
 int Camera::viewfinderFrameRate() { return _viewfinderFrameRate; }
 
 Camera& Camera::operator >> (cv::Mat& image) {
