@@ -2,6 +2,8 @@
 
 #include <QObject>
 #include <QUrl>
+#include <qserialport.h>
+#include <qserialportinfo.h>
 
 #define DEFAULT_INTERVAL 1.0
 
@@ -20,6 +22,7 @@ class Sensor : public QObject
 protected:
 	QUrl _outputDir;
 	double _interval = DEFAULT_INTERVAL;
+	QSerialPort _serialPort;
 	SensorState _state = SENSOR_IDLE;
 
 public:
@@ -55,6 +58,7 @@ public slots:
 	void setOutputDirectory(QUrl dir);
 	void setInterval(double interval);
 	void setState(SensorState state);
+	void setPortName(const QString& portName);
 
 
 	virtual void open() = 0;

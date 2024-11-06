@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include <libusb-1.0/libusb.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -6,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui.setupUi(this);
 
     // Initialize
-    initCamera();
+    initSensors();
     initSignals();
     initWidgets();
 }
@@ -18,7 +19,11 @@ void MainWindow::initWidgets() {
 
 }
 
-void MainWindow::initCamera() {
+void MainWindow::initSensors() {
+    detectSensors();
+
+	scheduler = new SensorRecordingScheduler(this);
+
     // Create camera
     camera = new Camera(this);
     
@@ -48,6 +53,67 @@ void MainWindow::initSignals() {
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
     connect(ui.actionCameraProperties, &QAction::triggered, this, &MainWindow::openCameraProperties);
+}
+
+void listUSBDevices() {
+    libusb_context* context = nullptr;
+    libusb_device** devices = nullptr;
+    ssize_t deviceCount;
+
+    // Initialize libusb context
+    if (libusb_init(&context) < 0) {
+        std::cerr << "Failed to initialize libusb" << std::endl;
+        return;
+    }
+
+    // Get list of USB devices
+    deviceCount = libusb_get_device_list(context, &devices);
+    if (deviceCount < 0) {
+        std::cerr << "Failed to get USB device list" << std::endl;
+        libusb_exit(context);
+        return;
+    }
+
+    // Iterate over devices
+    for (ssize_t i = 0; i < deviceCount; ++i) {
+        libusb_device* device = devices[i];
+        libusb_device_descriptor descriptor;
+
+        // Get device descriptor
+        if (libusb_get_device_descriptor(device, &descriptor) == 0) {
+            std::cout << "Device " << i + 1 << ":" << std::endl;
+            std::cout << "  Vendor ID  : " << std::hex << descriptor.idVendor << std::endl;
+            std::cout << "  Product ID : " << std::hex << descriptor.idProduct << std::endl;
+
+            // Open device to fetch further details (optional)
+            libusb_device_handle* handle;
+            if (libusb_open(device, &handle) == 0) {
+                unsigned char buffer[256];
+
+                // Get Manufacturer string
+                if (descriptor.iManufacturer && libusb_get_string_descriptor_ascii(handle, descriptor.iManufacturer, buffer, sizeof(buffer)) > 0) {
+                    std::cout << "  Manufacturer: " << buffer << std::endl;
+                }
+
+                // Get Product string
+                if (descriptor.iProduct && libusb_get_string_descriptor_ascii(handle, descriptor.iProduct, buffer, sizeof(buffer)) > 0) {
+                    std::cout << "  Product     : " << buffer << std::endl;
+                }
+
+                // Close device handle
+                libusb_close(handle);
+            }
+        }
+    }
+
+    // Clean up
+    libusb_free_device_list(devices, 1);
+    libusb_exit(context);
+}
+
+
+void MainWindow::detectSensors() {
+    listUSBDevices();
 }
 
 void MainWindow::displayFrame(const cv::Mat& frame) {

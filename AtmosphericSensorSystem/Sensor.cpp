@@ -45,3 +45,7 @@ void Sensor::setState(SensorState state)
 		emit stateChanged(state);
 	}
 }
+
+void Sensor::setPortName(const QString& portName) {
+	_serialPort.setPortName(portName);
+}

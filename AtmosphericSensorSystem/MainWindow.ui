@@ -84,15 +84,15 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>1271</width>
-      <height>691</height>
+      <width>951</width>
+      <height>601</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background: black;</string>
     </property>
     <property name="text">
-     <string>video</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="buttonStop">
@@ -111,7 +111,7 @@
    <widget class="QPushButton" name="buttonStart">
     <property name="geometry">
      <rect>
-      <x>550</x>
+      <x>540</x>
       <y>740</y>
       <width>80</width>
       <height>24</height>
@@ -124,7 +124,7 @@
    <widget class="QPushButton" name="buttonRestart">
     <property name="geometry">
      <rect>
-      <x>650</x>
+      <x>630</x>
       <y>740</y>
       <width>80</width>
       <height>24</height>
@@ -137,7 +137,7 @@
    <widget class="QPushButton" name="buttonPause">
     <property name="geometry">
      <rect>
-      <x>750</x>
+      <x>720</x>
       <y>740</y>
       <width>80</width>
       <height>24</height>
@@ -145,6 +145,29 @@
     </property>
     <property name="text">
      <string>Pause</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="sensorsList">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>30</y>
+      <width>321</width>
+      <height>361</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>10</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sensors</string>
     </property>
    </widget>
   </widget>
