@@ -92,7 +92,7 @@ void MainWindow::initSensors() {
 
 void MainWindow::initSignals() {
     // Buttons
-    //connect(ui.buttonRecord, &QPushButton::clicked, camera, &Camera::startRecording); /// TODO: Change this wording to be more like "toggleRecording"
+    connect(ui.buttonRecord, &QPushButton::clicked, this, &MainWindow::record_clicked); /// TODO: Change this wording to be more like "toggleRecording"
     connect(ui.buttonOpenOutputDirectory, &QPushButton::clicked, this, &MainWindow::openOutputDirectory);
     connect(ui.buttonSetOutputDirectory, &QPushButton::clicked, this, &MainWindow::setOutputDirectory);
     connect(ui.buttonStop, &QPushButton::clicked, camera, &Camera::stop);
@@ -105,7 +105,27 @@ void MainWindow::initSignals() {
     connect(ui.actionCameraProperties, &QAction::triggered, this, &MainWindow::openCameraProperties);
 }
 
+void MainWindow::record_clicked() {
+	if (isRecording) {
+        disconnect(camera, &Camera::dataReady, videoWriter, &VideoWriter::record);
 
+		// TODO: Add cleanup code for videoWriter
+	}
+	else {
+		QString filename = QFileDialog::getSaveFileName(this, "Save video file", camera->outputDirectory().toString(), "Video files (*.avi *.mp4)");
+		if (filename.isEmpty()) {
+			return;
+		}
+
+        // Get the frame rate
+        double fps = camera->fps();
+
+		videoWriter = new VideoWriter(filename.toStdString(), cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), fps, cv::Size(640, 480)); // TODO: Make these parameters configurable
+        connect(camera, &Camera::dataReady, videoWriter, &VideoWriter::record);
+	}
+
+    isRecording = !isRecording;
+}
 
 void MainWindow::detectSensors() {
     //listUSBDevices();

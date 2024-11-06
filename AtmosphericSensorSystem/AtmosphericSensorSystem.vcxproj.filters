@@ -55,6 +55,9 @@
     <ClCompile Include="Controllers\SensorController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Writers\VideoWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CameraPropertiesWindow.h">
@@ -66,10 +69,13 @@
     <QtMoc Include="Sensors\Camera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Writers\SensorWriter.h">
+    <QtMoc Include="Controllers\SensorController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Controllers\SensorController.h">
+    <QtMoc Include="Writers\VideoWriter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Writers\SensorWriter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

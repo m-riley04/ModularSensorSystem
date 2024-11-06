@@ -1,7 +1,6 @@
 #include "SensorWriter.h"
 
-SensorWriter::SensorWriter(QObject *parent)
-	: QObject(parent)
+SensorWriter::SensorWriter()
 {}
 
 SensorWriter::~SensorWriter()

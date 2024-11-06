@@ -3,14 +3,15 @@
 #include <QtWidgets/QMainWindow>
 #include <QtMultimedia>
 #include <QFileDialog>
+#include <QVariant>
 #include <qmessagebox.h>
+#include <libusb-1.0/libusb.h>
 #include <opencv2/opencv.hpp>
 #include "CameraPropertiesWindow.h"
-#include "ui_MainWindow.h"
-#include <QVariant>
 #include "Controllers/SensorController.h"
 #include "Sensors/Camera.h"
-#include <libusb-1.0/libusb.h>
+#include "ui_MainWindow.h"
+#include "Writers/VideoWriter.h"
 
 class MainWindow : public QMainWindow
 {
@@ -23,8 +24,10 @@ public:
 private:
     Ui::MainWindowClass ui;
     Camera* camera;
+	VideoWriter* videoWriter;
     QUrl outputDir;
 	SensorController* sensorController;
+    bool isRecording = false;
 
     void initSensors();
     void initWidgets();
@@ -37,6 +40,8 @@ public slots:
     void setOutputDirectory();
 
     void openCameraProperties();
+
+	void record_clicked();
 
     void quit();
     void restart();

@@ -8,7 +8,7 @@ enum SensorWriterState {
 	PAUSED
 };
 
-class SensorWriter  : public QObject
+class SensorWriter : public QObject
 {
 	Q_OBJECT
 
@@ -16,16 +16,11 @@ private:
 	SensorWriterState _state = STOPPED;
 
 public:
-	SensorWriter(QObject *parent);
+	SensorWriter();
 	~SensorWriter();
 
 	SensorWriterState state() const;
 
+public slots:
 	virtual void record(const QVariant& data) = 0;
-
-signals:
-	void started();
-	void paused();
-	void stopped();
-	void error(QString message);
 };

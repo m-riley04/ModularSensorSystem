@@ -98,6 +98,7 @@
     <ClCompile Include="Sensors\Sensor.cpp" />
     <ClCompile Include="Writers\SensorWriter.cpp" />
     <ClCompile Include="Controllers\SensorController.cpp" />
+    <ClCompile Include="Writers\VideoWriter.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="CameraPropertiesWindow.ui" />
     <QtUic Include="MainWindow.ui" />
@@ -121,6 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Controllers\SensorController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Writers\VideoWriter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
