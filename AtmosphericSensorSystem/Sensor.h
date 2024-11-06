@@ -2,17 +2,17 @@
 
 #include <QObject>
 #include <QUrl>
-#include <qserialport.h>
-#include <qserialportinfo.h>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QVariant>
 
 #define DEFAULT_INTERVAL 1.0
 
 enum SensorState {
 	SENSOR_IDLE,
+	SENSOR_RUNNING,
 	SENSOR_STARTING,
-	SENSOR_STOPPING,
-	SENSOR_RECORDING,
-	SENSOR_RECORDING_PAUSED
+	SENSOR_STOPPING
 };
 
 class Sensor : public QObject
@@ -60,23 +60,18 @@ public slots:
 	void setState(SensorState state);
 	void setPortName(const QString& portName);
 
-
-	virtual void open() = 0;
-	virtual void release() = 0;
+	virtual void initialize() = 0;
+	virtual void start() = 0;
+	virtual void stop() = 0;
 	virtual void restart() = 0;
-
-	virtual void startRecording() = 0;
-	virtual void pauseRecording() = 0;
-	virtual void stopRecording() = 0;
 	
 signals:
-	void opened();
-	void released();
+	void started();
+	void stopped();
+
+	void dataReady(QVariant data);
+
 	void outputDirectoryChanged(QUrl dir);
-	void recordingStarted();
-	void recordingPaused();
-	void recordingStopped();
-	void recordingError();
 	void intervalChanged(double interval);
 	void stateChanged(SensorState state);
 	void error(QString message);

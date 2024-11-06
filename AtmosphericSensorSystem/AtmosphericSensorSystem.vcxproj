@@ -96,7 +96,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sensor.cpp" />
-    <ClCompile Include="SensorRecordingScheduler.cpp" />
+    <ClCompile Include="SensorDataWriter.cpp" />
+    <ClCompile Include="SensorManager.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="CameraPropertiesWindow.ui" />
     <QtUic Include="MainWindow.ui" />
@@ -116,7 +117,10 @@
     <QtMoc Include="Sensor.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="SensorRecordingScheduler.h" />
+    <QtMoc Include="SensorDataWriter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="SensorManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

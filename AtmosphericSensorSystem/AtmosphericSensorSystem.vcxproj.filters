@@ -49,7 +49,10 @@
     <ClCompile Include="Sensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SensorRecordingScheduler.cpp">
+    <ClCompile Include="SensorDataWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SensorManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,7 +66,10 @@
     <QtMoc Include="Camera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="SensorRecordingScheduler.h">
+    <QtMoc Include="SensorDataWriter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SensorManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
