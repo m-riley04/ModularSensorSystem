@@ -40,19 +40,19 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="Sensors\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CameraPropertiesWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sensor.cpp">
+    <ClCompile Include="Sensors\Sensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SensorDataWriter.cpp">
+    <ClCompile Include="Writers\SensorWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SensorManager.cpp">
+    <ClCompile Include="Controllers\SensorController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -60,16 +60,16 @@
     <QtMoc Include="CameraPropertiesWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Sensor.h">
+    <QtMoc Include="Sensors\Sensor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Camera.h">
+    <QtMoc Include="Sensors\Camera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="SensorDataWriter.h">
+    <QtMoc Include="Writers\SensorWriter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="SensorManager.h">
+    <QtMoc Include="Controllers\SensorController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

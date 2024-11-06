@@ -8,7 +8,7 @@ enum SensorWriterState {
 	PAUSED
 };
 
-class SensorDataWriter  : public QObject
+class SensorWriter  : public QObject
 {
 	Q_OBJECT
 
@@ -16,8 +16,8 @@ private:
 	SensorWriterState _state = STOPPED;
 
 public:
-	SensorDataWriter(QObject *parent);
-	~SensorDataWriter();
+	SensorWriter(QObject *parent);
+	~SensorWriter();
 
 	SensorWriterState state() const;
 

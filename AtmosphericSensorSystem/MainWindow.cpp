@@ -1,5 +1,4 @@
 #include "MainWindow.h"
-#include <libusb-1.0/libusb.h>
 
 void listUSBDevices() {
     libusb_context* context = nullptr;
@@ -78,7 +77,7 @@ void MainWindow::initWidgets() {
 void MainWindow::initSensors() {
     listUSBDevices();
 
-    sensorManager = new SensorManager(this);
+    sensorController = new SensorController(this);
 
     // Create camera
     camera = new Camera(this);

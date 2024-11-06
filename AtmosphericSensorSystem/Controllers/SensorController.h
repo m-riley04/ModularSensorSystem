@@ -1,9 +1,9 @@
 #pragma once
 
 #include <QObject>
-#include "Sensor.h"
+#include "../Sensors/Sensor.h"
 
-class SensorManager  : public QObject
+class SensorController  : public QObject
 {
 	Q_OBJECT
 
@@ -11,8 +11,8 @@ private:
 	QList<Sensor*> _sensors;
 
 public:
-	SensorManager(QObject *parent);
-	~SensorManager();
+	SensorController(QObject *parent);
+	~SensorController();
 
 	QList<Sensor*> sensors() const;
 	void addSensor(Sensor* sensor);
