@@ -48,6 +48,8 @@ public:
     
     Camera& operator >> (cv::Mat& image);
 
+    double calculateFrameRate();
+
 	QVariant read() override;
 
 	static bool checkCameraAvailability();

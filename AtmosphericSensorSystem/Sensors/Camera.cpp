@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include <QtConcurrent>
+#include <chrono>
 
 bool Camera::checkCameraAvailability() {
     if (QMediaDevices::videoInputs().count() > 0)
@@ -32,8 +33,13 @@ void Camera::initialize() {
 		setVideoDevice(0);
 	}
 
+    _viewfinderFrameRate = calculateFrameRate();
+
 	// Open the camera
 	start();
+
+    // Set/calculate the FPS
+    setFPS(_viewfinderFrameRate);
 }
 
 void Camera::start() {
@@ -56,7 +62,7 @@ void Camera::start() {
 
         _frameTimer = new QTimer(this);
         connect(_frameTimer, &QTimer::timeout, this, &Camera::captureFrame);
-        _frameTimer->start(_viewfinderFrameRate);
+        _frameTimer->start(1000/_viewfinderFrameRate);
         _state = SENSOR_RUNNING;
         emit started();
     }
@@ -103,6 +109,33 @@ Camera& Camera::operator >> (cv::Mat& image) {
         image = cv::Mat(); // Return an empty frame if the camera is not open
     }
     return *this;
+}
+
+double Camera::calculateFrameRate() {
+    if (!camera.isOpened()) {
+        return 0.0;
+    }
+
+    const int durationInSeconds = 2; // Duration to capture frames
+    int frameCount = 0;
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    while (true) {
+        cv::Mat frame;
+        if (!camera.read(frame)) {
+            break;
+        }
+        frameCount++;
+
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = currentTime - startTime;
+        if (elapsed.count() >= durationInSeconds) {
+            break;
+        }
+    }
+
+    double frameRate = static_cast<double>(frameCount) / durationInSeconds;
+    return frameRate;
 }
 
 QVariant Camera::read() {
