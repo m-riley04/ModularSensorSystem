@@ -55,13 +55,12 @@ public:
 public slots:
     void setVideoDevice(int deviceIndex);
     
-    void open() override;
-    void release() override;
+    void initialize() override;
+    void start() override;
+    void stop() override;
     void restart() override;
 
-    void startRecording() override;
-    void pauseRecording() override;
-    void stopRecording() override;
+    void captureFrame();
 
     void setBrightness(int value);
     void setContrast(int value);

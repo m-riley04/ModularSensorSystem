@@ -12,41 +12,69 @@ Camera::Camera(QObject *parent)
 	: Sensor(parent), _frameTimer(new QTimer())
 {
     // Default the camera
-    if (checkCameraAvailability()) {
-        setVideoDevice(0);
-    }
+    initialize();
 }
 
 Camera::~Camera()
-{}
+{
+    // Release the camera
+    stop();
 
-void Camera::open() {
+    // Double check
+    if (camera.isOpened()) {
+        camera.release();
+    }
+}
+
+void Camera::initialize() {
+    // Default the video device
+	if (checkCameraAvailability()) {
+		setVideoDevice(0);
+	}
+
+	// Open the camera
+	start();
+}
+
+void Camera::start() {
     // Check if it's already opened
     if (isOpened()) {
         return; /// TODO: Do more here
     }
 
-    // Default the camera
-    if (checkCameraAvailability()) {
-        setVideoDevice(0);
-    }
+	/// TODO: Check if the device index is available
 
     /// TODO: Add multithreading
-    camera.open(_videoDeviceIndex, cv::CAP_DSHOW);
-    if (camera.isOpened()) {
-        emit opened();
+    if (_state != SENSOR_RUNNING) {
+        // Open the camera
+        camera.open(_videoDeviceIndex, cv::CAP_DSHOW);
+
+        if (!isOpened()) {
+            emit error("Failed to open camera.");
+            return;
+        }
+
+        _frameTimer = new QTimer(this);
+        connect(_frameTimer, &QTimer::timeout, this, &Camera::captureFrame);
+        _frameTimer->start(_viewfinderFrameRate);
+        _state = SENSOR_RUNNING;
+        emit started();
     }
-    _frameTimer->start(_viewfinderFrameRate);  // Adjust the interval for desired frame rate
 }
 
-void Camera::release() {
-    // Stop the frame timer
-    _frameTimer->stop();
+void Camera::stop() {
 
-    // Release the camera
-    camera.release();
+    if (_state == SENSOR_RUNNING) {
+        // Stop the frame timer
+        _frameTimer->stop();
+        _state = SENSOR_IDLE;
 
-    emit released();
+        // Release the camera
+        camera.release();
+
+        emit stopped();
+    }
+    
 }
 
 bool Camera::isOpened() { return camera.isOpened(); }
@@ -78,9 +106,21 @@ Camera& Camera::operator >> (cv::Mat& image) {
 }
 
 QVariant Camera::read() {
-	cv::Mat frame;
-	*this >> frame;
-	return QVariant::fromValue(frame);
+    cv::Mat frame;
+    if (camera.read(frame)) {
+        return QVariant::fromValue(frame);
+    }
+    else {
+        qWarning() << "Failed to read frame from camera.";
+        return QVariant();
+    }
+}
+
+void Camera::captureFrame() {
+    QVariant data = read();
+    if (!data.isNull()) {
+        emit dataReady(data);
+    }
 }
 
 void Camera::setBrightness(int value) {
@@ -190,59 +230,12 @@ void Camera::setViewfinderFrameRate(int value) {
 }
 
 void Camera::restart() {
-    release();
-    open();
+    stop();
+    start();
 }
 
 void Camera::setVideoDevice(int deviceIndex) {
-    // Stop the current device
-    release();
-
     // Set new index
 	_videoDeviceIndex = deviceIndex;
-
-    // Open the new device
-    open();
-}
-
-void Camera::startRecording() {
-    /// TODO: Maybe rename this from "record" or make a "toggleRecording" slot
-    if (_state == SENSOR_RECORDING) {
-        stopRecording();
-    }
-
-    if (isOpened()) {
-        /// TODO: Get filename another way
-        QString filename = "test.avi";//QFileDialog::getSaveFileName(this, "Save Video", outputDir.toString(), "Video Files (*.avi *.mp4)");
-
-        if (!filename.isEmpty()) {
-            // Set up VideoWriter with file path, codec, frame rate, and frame size
-            int frameWidth = static_cast<int>(camera.get(cv::CAP_PROP_FRAME_WIDTH));
-            int frameHeight = static_cast<int>(camera.get(cv::CAP_PROP_FRAME_HEIGHT));
-            double fps = 30.0; // Set desired frame rate
-
-            // Use an appropriate codec, e.g., 'MJPG' for .avi, 'MP4V' for .mp4
-            videoWriter.open(filename.toStdString(), cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), fps, cv::Size(frameWidth, frameHeight), true);
-
-            if (videoWriter.isOpened()) {
-                _state = SENSOR_RECORDING;
-            }
-            else {
-                /// TODO: Signal a RECORDING error
-                emit error("Recording error");
-            }
-        }
-    }
-}
-
-void Camera::pauseRecording() {
-    /// TODO: Signal recording stopped
-	emit recordingPaused();
-}
-
-void Camera::stopRecording() {
-    videoWriter.release(); // Stop recording
-    _state = SENSOR_IDLE;
-	emit recordingStopped();
-    /// TODO: Signal recording stopped
+	emit deviceChanged();
 }
