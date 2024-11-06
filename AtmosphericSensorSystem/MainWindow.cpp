@@ -1,60 +1,6 @@
 #include "MainWindow.h"
 #include <libusb-1.0/libusb.h>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-{
-    ui.setupUi(this);
-
-    // Initialize
-    initSensors();
-    initSignals();
-    initWidgets();
-}
-
-MainWindow::~MainWindow()
-{}
-
-void MainWindow::initWidgets() {
-
-}
-
-void MainWindow::initSensors() {
-    detectSensors();
-
-	scheduler = new SensorRecordingScheduler(this);
-
-    // Create camera
-    camera = new Camera(this);
-    
-    // Initialize the timer to capture frames
-    frameTimer = camera->frameTimer();
-    connect(frameTimer, &QTimer::timeout, this, [this]() {
-        if (camera->isOpened()) {
-            cv::Mat frame;
-            *camera >> frame;
-            if (!frame.empty()) {
-                displayFrame(frame);
-            }
-        }
-    });
-}
-
-void MainWindow::initSignals() {
-    // Buttons
-    connect(ui.buttonRecord, &QPushButton::clicked, camera, &Camera::startRecording); /// TODO: Change this wording to be more like "toggleRecording"
-    connect(ui.buttonOpenOutputDirectory, &QPushButton::clicked, this, &MainWindow::openOutputDirectory);
-    connect(ui.buttonSetOutputDirectory, &QPushButton::clicked, this, &MainWindow::setOutputDirectory);
-    connect(ui.buttonStop, &QPushButton::clicked, camera, &Camera::release);
-    connect(ui.buttonStart, &QPushButton::clicked, camera, &Camera::open);
-    connect(ui.buttonRestart, &QPushButton::clicked, camera, &Camera::restart);
-
-    // Menu Bar
-    connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
-    connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
-    connect(ui.actionCameraProperties, &QAction::triggered, this, &MainWindow::openCameraProperties);
-}
-
 void listUSBDevices() {
     libusb_context* context = nullptr;
     libusb_device** devices = nullptr;
@@ -81,9 +27,9 @@ void listUSBDevices() {
 
         // Get device descriptor
         if (libusb_get_device_descriptor(device, &descriptor) == 0) {
-            std::cout << "Device " << i + 1 << ":" << std::endl;
-            std::cout << "  Vendor ID  : " << std::hex << descriptor.idVendor << std::endl;
-            std::cout << "  Product ID : " << std::hex << descriptor.idProduct << std::endl;
+            qDebug() << "Device " << i + 1 << ":";
+            qDebug() << "  Vendor ID  : " << std::hex << descriptor.idVendor;
+            qDebug() << "  Product ID : " << std::hex << descriptor.idProduct;
 
             // Open device to fetch further details (optional)
             libusb_device_handle* handle;
@@ -92,12 +38,12 @@ void listUSBDevices() {
 
                 // Get Manufacturer string
                 if (descriptor.iManufacturer && libusb_get_string_descriptor_ascii(handle, descriptor.iManufacturer, buffer, sizeof(buffer)) > 0) {
-                    std::cout << "  Manufacturer: " << buffer << std::endl;
+                    qDebug() << "  Manufacturer: " << buffer;
                 }
 
                 // Get Product string
                 if (descriptor.iProduct && libusb_get_string_descriptor_ascii(handle, descriptor.iProduct, buffer, sizeof(buffer)) > 0) {
-                    std::cout << "  Product     : " << buffer << std::endl;
+                    qDebug() << "  Product     : " << buffer;
                 }
 
                 // Close device handle
@@ -111,20 +57,65 @@ void listUSBDevices() {
     libusb_exit(context);
 }
 
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+{
+    ui.setupUi(this);
+
+    // Initialize
+    initSensors();
+    initSignals();
+    initWidgets();
+}
+
+MainWindow::~MainWindow()
+{}
+
+void MainWindow::initWidgets() {
+
+}
+
+void MainWindow::initSensors() {
+    listUSBDevices();
+
+    sensorManager = new SensorManager(this);
+
+    // Create camera
+    camera = new Camera(this);
+    
+    // Initialize the timer to capture frames
+    connect(camera, &Camera::dataReady, this, [this](QVariant data) {
+		if (data.canConvert<cv::Mat>()) {
+			displayFrame(data.value<cv::Mat>());
+		}
+    });
+}
+
+void MainWindow::initSignals() {
+    // Buttons
+    //connect(ui.buttonRecord, &QPushButton::clicked, camera, &Camera::startRecording); /// TODO: Change this wording to be more like "toggleRecording"
+    connect(ui.buttonOpenOutputDirectory, &QPushButton::clicked, this, &MainWindow::openOutputDirectory);
+    connect(ui.buttonSetOutputDirectory, &QPushButton::clicked, this, &MainWindow::setOutputDirectory);
+    connect(ui.buttonStop, &QPushButton::clicked, camera, &Camera::stop);
+    connect(ui.buttonStart, &QPushButton::clicked, camera, &Camera::start);
+    connect(ui.buttonRestart, &QPushButton::clicked, camera, &Camera::restart);
+
+    // Menu Bar
+    connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
+    connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
+    connect(ui.actionCameraProperties, &QAction::triggered, this, &MainWindow::openCameraProperties);
+}
+
+
 
 void MainWindow::detectSensors() {
-    listUSBDevices();
+    //listUSBDevices();
 }
 
 void MainWindow::displayFrame(const cv::Mat& frame) {
     // Convert the frame to QImage for displaying in QLabel
     QImage image(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
     ui.video->setPixmap(QPixmap::fromImage(image).scaled(ui.video->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
-    // Write frame to video file if recording
-    /*if (state == STATE_RECORDING && videoWriter.isOpened()) {
-        videoWriter.write(frame);
-    }*/
 }
 
 void MainWindow::openOutputDirectory() {

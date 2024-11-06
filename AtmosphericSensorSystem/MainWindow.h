@@ -7,8 +7,9 @@
 #include <opencv2/opencv.hpp>
 #include "Camera.h"
 #include "CameraPropertiesWindow.h"
-#include "SensorRecordingScheduler.h"
+#include "SensorManager.h"
 #include "ui_MainWindow.h"
+#include <QVariant>
 
 class MainWindow : public QMainWindow
 {
@@ -22,8 +23,7 @@ private:
     Ui::MainWindowClass ui;
     Camera* camera;
     QUrl outputDir;
-    QTimer* frameTimer;
-	SensorRecordingScheduler* scheduler;
+	SensorManager* sensorManager;
 
     void initSensors();
     void initWidgets();
