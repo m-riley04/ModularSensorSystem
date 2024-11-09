@@ -118,9 +118,11 @@ void MainWindow::record_clicked() {
 		}
 
         // Get the frame rate
-        double fps = camera->calculateFrameRate();
+        double fps = camera->fps();
+        cv::Size frameSize(camera->frameWidth(), camera->frameHeight());
+        int fourcc = cv::VideoWriter::fourcc('M', 'J', 'P', 'G');
 
-		videoWriter = new VideoWriter(filename.toStdString(), cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), fps, cv::Size(640, 480)); // TODO: Make these parameters configurable
+		videoWriter = new VideoWriter(filename.toStdString(), fourcc, fps, frameSize);
         connect(camera, &Camera::dataReady, videoWriter, &VideoWriter::record);
 	}
 

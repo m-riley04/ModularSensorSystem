@@ -7,7 +7,7 @@
 #include <opencv2/opencv.hpp>
 #include "sensor.h"
 
-#define DEFAULT_VIEWFINDER_FRAME_RATE 60
+#define DEFAULT_FRAME_RATE 30
 
 class Camera : public Sensor
 {
@@ -18,7 +18,7 @@ private:
     cv::VideoWriter videoWriter;
     cv::Mat frame;
     QTimer* _frameTimer;
-    int _viewfinderFrameRate = DEFAULT_VIEWFINDER_FRAME_RATE;
+    int _fps = DEFAULT_FRAME_RATE;
     int _videoDeviceIndex = 0;
 
 public:
@@ -43,8 +43,6 @@ public:
 	int sharpness();
 	int gamma();
 	int bitrate();
-
-    int viewfinderFrameRate();
     
     Camera& operator >> (cv::Mat& image);
 
@@ -78,7 +76,6 @@ public slots:
     void setSharpness(int value);
     void setGamma(int value);
     void setBitrate(int value);
-    void setViewfinderFrameRate(int frameRate);
 
 signals:
     void deviceChanged();
@@ -98,5 +95,4 @@ signals:
 	void sharpnessChanged(int value);
 	void gammaChanged(int value);
 	void bitrateChanged(int value);
-    void viewfinderFrameRateChanged(int frameRate);
 };

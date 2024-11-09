@@ -33,13 +33,11 @@ void Camera::initialize() {
 		setVideoDevice(0);
 	}
 
-    _viewfinderFrameRate = calculateFrameRate();
-
 	// Open the camera
 	start();
 
-    // Set/calculate the FPS
-    setFPS(_viewfinderFrameRate);
+    // Set/calculate the FPS /// TODO: Initialize all the camera properties
+    setFPS(_fps);
 }
 
 void Camera::start() {
@@ -62,7 +60,7 @@ void Camera::start() {
 
         _frameTimer = new QTimer(this);
         connect(_frameTimer, &QTimer::timeout, this, &Camera::captureFrame);
-        _frameTimer->start(1000/_viewfinderFrameRate);
+        _frameTimer->start(static_cast<int>(1000/_fps));
         _state = SENSOR_RUNNING;
         emit started();
     }
@@ -91,7 +89,7 @@ int Camera::saturation() { return this->camera.get(cv::CAP_PROP_SATURATION); }
 int Camera::gain() { return this->camera.get(cv::CAP_PROP_GAIN); }
 bool Camera::backlight() { return this->camera.get(cv::CAP_PROP_BACKLIGHT) > 0; }
 bool Camera::autoExposure() { return this->camera.get(cv::CAP_PROP_AUTO_EXPOSURE) > 0; }
-int Camera::fps() { return this->camera.get(cv::CAP_PROP_FPS); }
+int Camera::fps() { return _fps; } //this->camera.get(cv::CAP_PROP_FPS); } /// TODO: Unsure whether to return the cap's fps or the fps set by the user
 int Camera::frameWidth() { return this->camera.get(cv::CAP_PROP_FRAME_WIDTH); }
 int Camera::frameHeight() { return this->camera.get(cv::CAP_PROP_FRAME_HEIGHT); }
 int Camera::hue() { return this->camera.get(cv::CAP_PROP_HUE); }
@@ -99,7 +97,6 @@ int Camera::exposure() { return this->camera.get(cv::CAP_PROP_EXPOSURE); }
 int Camera::sharpness() { return this->camera.get(cv::CAP_PROP_SHARPNESS); }
 int Camera::gamma() { return this->camera.get(cv::CAP_PROP_GAMMA); }
 int Camera::bitrate() { return this->camera.get(cv::CAP_PROP_BITRATE); }
-int Camera::viewfinderFrameRate() { return _viewfinderFrameRate; }
 
 Camera& Camera::operator >> (cv::Mat& image) {
     if (camera.isOpened()) {
@@ -199,9 +196,15 @@ void Camera::setAutoExposure(bool value) {
 }
 
 void Camera::setFPS(int fps) {
+    if (_fps != fps) {
+        _fps = fps;
+        _frameTimer->setInterval(static_cast<int>(1000 / fps));
+        emit fpsChanged(fps);
+    }
+
+    /// TODO: Figure out how to combine the CAP_PROP stuff or just get rid of it entirely
     if (isOpened()) {
         camera.set(cv::CAP_PROP_FPS, fps);
-		emit fpsChanged(fps);
     }
 }
 
@@ -252,14 +255,6 @@ void Camera::setBitrate(int value) {
 		camera.set(cv::CAP_PROP_BITRATE, value);
 		emit bitrateChanged(value);
 	}
-}
-
-void Camera::setViewfinderFrameRate(int value) {
-    if (_viewfinderFrameRate != value) {
-        _viewfinderFrameRate = value;
-        _frameTimer->setInterval(value);
-        emit viewfinderFrameRateChanged(value);
-    }
 }
 
 void Camera::restart() {
