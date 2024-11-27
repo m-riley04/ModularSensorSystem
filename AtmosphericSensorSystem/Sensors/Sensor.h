@@ -8,13 +8,6 @@
 
 #define DEFAULT_INTERVAL 1.0
 
-enum SensorState {
-	SENSOR_IDLE,
-	SENSOR_RUNNING,
-	SENSOR_STARTING,
-	SENSOR_STOPPING
-};
-
 class Sensor : public QObject
 {
 	Q_OBJECT
@@ -24,7 +17,7 @@ protected:
 	QString _outputPrefix;
 	double _interval = DEFAULT_INTERVAL;
 	QSerialPort _serialPort;
-	SensorState _state = SENSOR_IDLE;
+	int _running = false;
 
 public:
 	Sensor(QObject *parent);
@@ -49,12 +42,6 @@ public:
 	double interval();
 
 	/// <summary>
-	/// The state of the sensor
-	/// </summary>
-	/// <returns></returns>
-	SensorState state();
-
-	/// <summary>
 	/// Read the data from the sensor at an instant
 	/// </summary>
 	/// <returns></returns>
@@ -65,7 +52,6 @@ public slots:
 	void setOutputDirectory(QUrl dir);
 	void setOutputPrefix(QString prefix);
 	void setInterval(double interval);
-	void setState(SensorState state);
 	void setPortName(const QString& portName);
 
 	virtual void initialize() = 0;
@@ -82,6 +68,5 @@ signals:
 	void outputDirectoryChanged(QUrl dir);
 	void outputPrefixChanged(QString prefix);
 	void intervalChanged(double interval);
-	void stateChanged(SensorState state);
 	void error(QString message);
 };

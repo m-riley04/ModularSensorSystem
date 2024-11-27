@@ -16,20 +16,15 @@ class Camera : public Sensor
 
 private:
     cv::VideoCapture camera;
-    cv::VideoWriter videoWriter;
-    cv::Mat frame;
-    QTimer* _frameTimer;
+    QTimer* frameTimer;
     int _fps = DEFAULT_FRAME_RATE;
     int _videoDeviceIndex = 0;
-    QThread* worker;
 
 public:
 	Camera(QObject *parent=nullptr);
 	~Camera();
 
     bool isOpened();
-
-    QTimer* frameTimer();
 
     int brightness();
     int contrast();
@@ -45,10 +40,6 @@ public:
 	int sharpness();
 	int gamma();
 	int bitrate();
-    
-    Camera& operator >> (cv::Mat& image);
-
-    double calculateFrameRate();
 
 	QVariant read() override;
 

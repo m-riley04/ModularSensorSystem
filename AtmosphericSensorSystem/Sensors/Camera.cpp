@@ -2,15 +2,8 @@
 #include <QtConcurrent>
 #include <chrono>
 
-bool Camera::checkCameraAvailability() {
-    if (QMediaDevices::videoInputs().count() > 0)
-        return true;
-    else
-        return false;
-}
-
 Camera::Camera(QObject *parent)
-	: Sensor(parent), _frameTimer(new QTimer())
+	: Sensor(parent), frameTimer(new QTimer())
 {
     // Default the camera
     initialize();
@@ -28,52 +21,51 @@ void Camera::initialize() {
 		setVideoDevice(0);
 	}
 
-	// Open the camera
-	start();
-
     // Set/calculate the FPS /// TODO: Initialize all the camera properties
     setFPS(_fps);
 }
 
 void Camera::start() {
-    if (_state != SENSOR_RUNNING) {
-        // Open the camera
-        camera.open(_videoDeviceIndex, cv::CAP_DSHOW);
+    // Check if camera is already running
+    if (_running) return;
 
-        if (!isOpened()) {
-            emit error("Failed to open camera.");
-            return;
-        }
+    // Update state
+    _running = true;
 
-        // Create the timer in this thread
-        _frameTimer = new QTimer(this);
-        connect(_frameTimer, &QTimer::timeout, this, &Camera::captureFrame);
-        _frameTimer->start(static_cast<int>(1000 / _fps));
-
-        _state = SENSOR_RUNNING;
-        emit started();
+    // Open the camera
+    camera.open(_videoDeviceIndex, cv::CAP_DSHOW);
+    if (!isOpened()) {
+        emit error("Failed to open camera.");
+        return;
     }
+
+    // Initialize the timer
+    frameTimer = new QTimer(this);
+    connect(frameTimer, &QTimer::timeout, this, &Camera::captureFrame);
+    frameTimer->start(1000 / _fps);
+    
+    // Emit signal
+    emit started();
 }
 
 void Camera::stop() {
+    // Check if not running
+	if (!_running) return;
 
-    if (_state == SENSOR_RUNNING) {
-        // Stop the frame timer
-        _frameTimer->stop();
-        delete _frameTimer;
-        _frameTimer = nullptr;
+    // Update state
+    _running = false;
 
-        // Release the camera
-        camera.release();
+    // Stop the frame timer
+    frameTimer->stop();
 
-        _state = SENSOR_IDLE;
-        emit stopped();
-    }
+    // Release the camera
+    camera.release();
     
+    // Emit signal
+    emit stopped();
 }
 
 bool Camera::isOpened() { return camera.isOpened(); }
-QTimer* Camera::frameTimer() { return _frameTimer; }
 int Camera::brightness() { return this->camera.get(cv::CAP_PROP_BRIGHTNESS); }
 int Camera::contrast() { return this->camera.get(cv::CAP_PROP_CONTRAST); }
 int Camera::saturation() { return this->camera.get(cv::CAP_PROP_SATURATION); }
@@ -89,43 +81,6 @@ int Camera::sharpness() { return this->camera.get(cv::CAP_PROP_SHARPNESS); }
 int Camera::gamma() { return this->camera.get(cv::CAP_PROP_GAMMA); }
 int Camera::bitrate() { return this->camera.get(cv::CAP_PROP_BITRATE); }
 
-Camera& Camera::operator >> (cv::Mat& image) {
-    if (camera.isOpened()) {
-        camera >> image; // Capture frame from camera
-    }
-    else {
-        image = cv::Mat(); // Return an empty frame if the camera is not open
-    }
-    return *this;
-}
-
-double Camera::calculateFrameRate() {
-    if (!camera.isOpened()) {
-        return 0.0;
-    }
-
-    const int durationInSeconds = 2; // Duration to capture frames
-    int frameCount = 0;
-    auto startTime = std::chrono::high_resolution_clock::now();
-
-    while (true) {
-        cv::Mat frame;
-        if (!camera.read(frame)) {
-            break;
-        }
-        frameCount++;
-
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> elapsed = currentTime - startTime;
-        if (elapsed.count() >= durationInSeconds) {
-            break;
-        }
-    }
-
-    double frameRate = static_cast<double>(frameCount) / durationInSeconds;
-    return frameRate;
-}
-
 QVariant Camera::read() {
     cv::Mat frame;
     if (camera.read(frame)) {
@@ -135,6 +90,13 @@ QVariant Camera::read() {
         qWarning() << "Failed to read frame from camera.";
         return QVariant();
     }
+}
+
+bool Camera::checkCameraAvailability() {
+    if (QMediaDevices::videoInputs().count() > 0)
+        return true;
+    else
+        return false;
 }
 
 void Camera::captureFrame() {
@@ -189,7 +151,7 @@ void Camera::setAutoExposure(bool value) {
 void Camera::setFPS(int fps) {
     if (_fps != fps) {
         _fps = fps;
-        _frameTimer->setInterval(static_cast<int>(1000 / fps));
+        frameTimer->setInterval(static_cast<int>(1000 / fps));
         emit fpsChanged(fps);
     }
 

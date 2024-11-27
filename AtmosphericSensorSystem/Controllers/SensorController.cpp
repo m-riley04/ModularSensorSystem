@@ -11,11 +11,11 @@ SensorController::SensorController(QObject *parent)
 	camera->moveToThread(worker);
 
 	// Start thread
-	worker->start();
+	connect(worker, &QThread::started, camera, &Camera::start);
+	connect(camera, &Camera::dataReady, qobject_cast<MainWindow*>(parent->parent()), &MainWindow::displayFrame);
+	connect(this, &SensorController::stopSensors, camera, &Camera::stop);
 	connect(worker, &QThread::finished, camera, &QObject::deleteLater);
-
-	// Connect signal to GUI
-	QObject::connect(camera, &Camera::dataReady, qobject_cast<MainWindow*>(parent->parent()), &MainWindow::displayFrame);
+	worker->start();
 }
 
 SensorController::~SensorController()

@@ -23,11 +23,6 @@ double Sensor::interval()
 	return _interval;
 }
 
-SensorState Sensor::state()
-{
-	return _state;
-}
-
 void Sensor::setOutputDirectory(QUrl dir)
 {
 	if (_outputDir != dir) {
@@ -49,14 +44,6 @@ void Sensor::setInterval(double interval)
 	if (_interval != interval) {
 		_interval = interval;
 		emit intervalChanged(interval);
-	}
-}
-
-void Sensor::setState(SensorState state)
-{
-	if (_state != state) {
-		_state = state;
-		emit stateChanged(state);
 	}
 }
 
