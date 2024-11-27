@@ -1,13 +1,11 @@
 #pragma once
 
 #include <QObject>
-#include "../Sensors/Sensor.h"
-#include <QLabel>
-#include <opencv2/opencv.hpp>
-#include "../Sensors/Camera.h"
 #include <QThread>
+#include "../Sensors/Sensor.h"
+#include "../Sensors/Camera.h"
 
-class SensorController  : public QObject
+class SensorController : public QObject
 {
 	Q_OBJECT
 
@@ -20,7 +18,7 @@ private:
 public:
 	Camera* camera; /// TODO: Generalize this
 
-	SensorController(QObject *parent, QLabel* label);
+	SensorController(QObject*parent);
 	~SensorController();
 
 	QList<Sensor*> sensors() const;
@@ -30,11 +28,6 @@ public:
 
 	void startSensors();
 	void stopSensors();
-
-	
-
-public slots:
-	void display(const cv::Mat& frame);
 
 signals:
 	void sensorAdded(Sensor* sensor);

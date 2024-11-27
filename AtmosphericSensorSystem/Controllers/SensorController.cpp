@@ -1,7 +1,8 @@
 #include "SensorController.h"
+#include "../MainWindow.h"
 
-SensorController::SensorController(QObject *parent, QLabel* label)
-	: QObject(parent), label(label)
+SensorController::SensorController(QObject *parent)
+	: QObject(parent)
 {
 	// Initialize camera and thread
 	camera = new Camera();
@@ -13,13 +14,8 @@ SensorController::SensorController(QObject *parent, QLabel* label)
 	worker->start();
 	connect(worker, &QThread::finished, camera, &QObject::deleteLater);
 
-	// Initialize the timer to capture frames
-	connect(camera, &Camera::dataReady, this, [this](QVariant data) {
-		if (data.canConvert<cv::Mat>()) {
-			// Use QMetaObject::invokeMethod to ensure 'display' runs in the main thread
-			QMetaObject::invokeMethod(this, "display", Qt::QueuedConnection, Q_ARG(cv::Mat, data.value<cv::Mat>()));
-		}
-	});
+	// Connect signal to GUI
+	QObject::connect(camera, &Camera::dataReady, qobject_cast<MainWindow*>(parent->parent()), &MainWindow::displayFrame);
 }
 
 SensorController::~SensorController()
@@ -64,11 +60,4 @@ void SensorController::stopSensors()
 	for (Sensor* sensor : _sensors) {
 		QMetaObject::invokeMethod(sensor, "stop", Qt::QueuedConnection);
 	}
-}
-
-void SensorController::display(const cv::Mat& frame)
-{
-	QImage image(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
-	label->setPixmap(QPixmap::fromImage(image).scaled(label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
 }

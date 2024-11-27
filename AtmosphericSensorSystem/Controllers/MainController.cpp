@@ -1,9 +1,9 @@
 #include "MainController.h"
 
-MainController::MainController(QObject *parent, QLabel* label)
+MainController::MainController(QObject *parent)
 	: QObject(parent)
 {
-    sensorController = new SensorController(this, label);
+    sensorController = new SensorController(this);
 }
 
 MainController::~MainController()

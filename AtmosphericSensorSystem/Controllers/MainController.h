@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QUrl>
 #include "SensorController.h"
 
 class MainController : public QObject
@@ -12,7 +11,7 @@ private:
 	SensorController* sensorController;
 
 public:
-	MainController(QObject *parent, QLabel* label);
+	MainController(QObject *parent);
 	~MainController();
 
 public slots:
