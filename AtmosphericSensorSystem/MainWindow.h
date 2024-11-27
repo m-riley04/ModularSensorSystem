@@ -9,9 +9,8 @@
 #include <opencv2/opencv.hpp>
 #include "CameraPropertiesWindow.h"
 #include "Controllers/SensorController.h"
-#include "Sensors/Camera.h"
 #include "ui_MainWindow.h"
-#include "Writers/VideoWriter.h"
+#include "Controllers/MainController.h"
 
 class MainWindow : public QMainWindow
 {
@@ -23,28 +22,15 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-	VideoWriter* videoWriter;
-    QUrl outputDir;
-	SensorController* sensorController;
-    bool isRecording = false;
+    MainController* controller = nullptr;
 
-    void initSensors();
     void initWidgets();
     void initSignals();
     void displayFrame(const cv::Mat& frame);
 
 public slots:
-    void openOutputDirectory();
-    void setOutputDirectory();
-    void setOutputPrefix();
-
     void openCameraProperties();
-
-	void record_clicked();
 
     void quit();
     void restart();
-
-    /*void updateSpaceRemaining();*/
-
 };

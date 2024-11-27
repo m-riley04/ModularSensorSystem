@@ -64,6 +64,9 @@
     <ClCompile Include="MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Controllers\MainController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CameraPropertiesWindow.h">
@@ -88,6 +91,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Sensors\GPS.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Controllers\MainController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

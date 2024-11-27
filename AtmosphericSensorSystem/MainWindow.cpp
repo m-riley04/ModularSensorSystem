@@ -99,39 +99,26 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    controller = new MainController(this, ui.video);
 
     // Initialize
-    initSensors();
     initSignals();
     initWidgets();
-
 }
 
 MainWindow::~MainWindow()
 {
-    sensorController->stopSensors();
-    delete sensorController;
+    delete controller;
 }
 
 void MainWindow::initWidgets() {
 
 }
 
-void MainWindow::initSensors() {
-    sensorController = new SensorController(this, ui.video);
-}
-
 void MainWindow::initSignals() {
-    // Recording Controls
-    connect(ui.buttonRecord, &QPushButton::clicked, this, &MainWindow::record_clicked); /// TODO: Change this wording to be more like "toggleRecording"
-    connect(ui.buttonOpenOutputDirectory, &QPushButton::clicked, this, &MainWindow::openOutputDirectory);
-    connect(ui.buttonSetOutputDirectory, &QPushButton::clicked, this, &MainWindow::setOutputDirectory);
-    connect(ui.outputPrefixLineEdit, &QLineEdit::textChanged, this, &MainWindow::setOutputPrefix);
-
     // Camera Controls
-    connect(ui.buttonStop, &QPushButton::clicked, sensorController, &SensorController::stopSensors);
-    connect(ui.buttonStart, &QPushButton::clicked, sensorController, &SensorController::startSensors);
-    
+    connect(ui.buttonStop, &QPushButton::clicked, controller, &MainController::stopSensors);
+    connect(ui.buttonStart, &QPushButton::clicked, controller, &MainController::startSensors);
 
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
@@ -139,54 +126,10 @@ void MainWindow::initSignals() {
     connect(ui.actionCameraProperties, &QAction::triggered, this, &MainWindow::openCameraProperties);
 }
 
-void MainWindow::record_clicked() {
-	if (isRecording) {
-        //disconnect(camera, &Camera::dataReady, videoWriter, &VideoWriter::record);
-
-		// TODO: Add cleanup code for videoWriter
-	}
-	else {
-		//QString filename = QFileDialog::getSaveFileName(this, "Save video file", camera->outputDirectory().toString(), "Video files (*.avi *.mp4)");
-		//if (filename.isEmpty()) {
-		//	return;
-		//}
-
-  //      // Get the frame rate
-  //      double fps = camera->fps();
-  //      cv::Size frameSize(camera->frameWidth(), camera->frameHeight());
-  //      int fourcc = cv::VideoWriter::fourcc('M', 'J', 'P', 'G');
-
-		//videoWriter = new VideoWriter(filename.toStdString(), fourcc, fps, frameSize);
-  //      connect(camera, &Camera::dataReady, videoWriter, &VideoWriter::record);
-	}
-
-    isRecording = !isRecording;
-}
-
 void MainWindow::displayFrame(const cv::Mat& frame) {
     // Convert the frame to QImage for displaying in QLabel
     QImage image(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
     ui.video->setPixmap(QPixmap::fromImage(image).scaled(ui.video->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-}
-
-void MainWindow::openOutputDirectory() {
-    //QDesktopServices::openUrl(camera->outputDirectory());
-}
-
-void MainWindow::setOutputDirectory() {
-    QUrl temp = QFileDialog::getExistingDirectoryUrl(this, "Select the output directory");
-    if (!temp.isEmpty()) {
-        // Update UI
-		ui.outputPrefixLineEdit->setText(temp.toString());
-
-        // Update camera
-        //camera->setOutputDirectory(temp);
-    }
-}
-
-void MainWindow::setOutputPrefix()
-{
-	//camera->setOutputPrefix(ui.outputPrefixLineEdit->text());
 }
 
 void MainWindow::openCameraProperties() {

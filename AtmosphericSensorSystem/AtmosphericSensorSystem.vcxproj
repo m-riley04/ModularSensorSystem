@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Controllers\MainController.cpp" />
     <ClCompile Include="Sensors\GPS.cpp" />
     <ClCompile Include="Sensors\Sensor.cpp" />
     <ClCompile Include="Widgets\SensorListItem.cpp" />
@@ -139,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\GPS.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Controllers\MainController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
