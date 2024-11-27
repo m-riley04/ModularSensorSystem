@@ -107,7 +107,12 @@
     <QtMoc Include="MainWindow.h" />
     <ClCompile Include="Sensors\Camera.cpp" />
     <ClCompile Include="CameraPropertiesWindow.cpp" />
-    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="MainWindow.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
     <QtUic Include="Widgets\SensorListItem.ui" />
   </ItemGroup>

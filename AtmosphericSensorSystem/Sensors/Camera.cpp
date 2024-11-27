@@ -20,11 +20,6 @@ Camera::~Camera()
 {
     // Release the camera
     stop();
-
-    // Double check
-    if (camera.isOpened()) {
-        camera.release();
-    }
 }
 
 void Camera::initialize() {
@@ -41,14 +36,6 @@ void Camera::initialize() {
 }
 
 void Camera::start() {
-    // Check if it's already opened
-    if (isOpened()) {
-        return; /// TODO: Do more here
-    }
-
-	/// TODO: Check if the device index is available
-
-    /// TODO: Add multithreading
     if (_state != SENSOR_RUNNING) {
         // Open the camera
         camera.open(_videoDeviceIndex, cv::CAP_DSHOW);
@@ -58,9 +45,11 @@ void Camera::start() {
             return;
         }
 
+        // Create the timer in this thread
         _frameTimer = new QTimer(this);
         connect(_frameTimer, &QTimer::timeout, this, &Camera::captureFrame);
-        _frameTimer->start(static_cast<int>(1000/_fps));
+        _frameTimer->start(static_cast<int>(1000 / _fps));
+
         _state = SENSOR_RUNNING;
         emit started();
     }
@@ -71,11 +60,13 @@ void Camera::stop() {
     if (_state == SENSOR_RUNNING) {
         // Stop the frame timer
         _frameTimer->stop();
-        _state = SENSOR_IDLE;
+        delete _frameTimer;
+        _frameTimer = nullptr;
 
         // Release the camera
         camera.release();
 
+        _state = SENSOR_IDLE;
         emit stopped();
     }
     

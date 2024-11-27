@@ -21,6 +21,7 @@ class Sensor : public QObject
 
 protected:
 	QUrl _outputDir;
+	QString _outputPrefix;
 	double _interval = DEFAULT_INTERVAL;
 	QSerialPort _serialPort;
 	SensorState _state = SENSOR_IDLE;
@@ -34,6 +35,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	QUrl& outputDirectory();
+
+	/// <summary>
+	/// The output directory where the sensor will save the recorded data
+	/// </summary>
+	/// <returns></returns>
+	QString& outputPrefix();
 
 	/// <summary>
 	/// The interval that the sensor will read data from
@@ -56,6 +63,7 @@ public:
 public slots:
 
 	void setOutputDirectory(QUrl dir);
+	void setOutputPrefix(QString prefix);
 	void setInterval(double interval);
 	void setState(SensorState state);
 	void setPortName(const QString& portName);
@@ -72,6 +80,7 @@ signals:
 	void dataReady(QVariant data);
 
 	void outputDirectoryChanged(QUrl dir);
+	void outputPrefixChanged(QString prefix);
 	void intervalChanged(double interval);
 	void stateChanged(SensorState state);
 	void error(QString message);

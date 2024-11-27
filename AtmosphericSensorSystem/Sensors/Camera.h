@@ -6,6 +6,7 @@
 #include <qmessagebox.h>
 #include <opencv2/opencv.hpp>
 #include "sensor.h"
+#include <QThread>
 
 #define DEFAULT_FRAME_RATE 30
 
@@ -20,9 +21,10 @@ private:
     QTimer* _frameTimer;
     int _fps = DEFAULT_FRAME_RATE;
     int _videoDeviceIndex = 0;
+    QThread* worker;
 
 public:
-	Camera(QObject *parent);
+	Camera(QObject *parent=nullptr);
 	~Camera();
 
     bool isOpened();

@@ -23,7 +23,6 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    Camera* camera;
 	VideoWriter* videoWriter;
     QUrl outputDir;
 	SensorController* sensorController;
@@ -33,11 +32,11 @@ private:
     void initWidgets();
     void initSignals();
     void displayFrame(const cv::Mat& frame);
-    void detectSensors();
 
 public slots:
     void openOutputDirectory();
     void setOutputDirectory();
+    void setOutputPrefix();
 
     void openCameraProperties();
 

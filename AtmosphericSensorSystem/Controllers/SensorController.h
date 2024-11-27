@@ -2,6 +2,10 @@
 
 #include <QObject>
 #include "../Sensors/Sensor.h"
+#include <QLabel>
+#include <opencv2/opencv.hpp>
+#include "../Sensors/Camera.h"
+#include <QThread>
 
 class SensorController  : public QObject
 {
@@ -9,9 +13,14 @@ class SensorController  : public QObject
 
 private:
 	QList<Sensor*> _sensors;
+	QLabel* label;
+	QThread* worker;
+	
 
 public:
-	SensorController(QObject *parent);
+	Camera* camera; /// TODO: Generalize this
+
+	SensorController(QObject *parent, QLabel* label);
 	~SensorController();
 
 	QList<Sensor*> sensors() const;
@@ -21,6 +30,11 @@ public:
 
 	void startSensors();
 	void stopSensors();
+
+	
+
+public slots:
+	void display(const cv::Mat& frame);
 
 signals:
 	void sensorAdded(Sensor* sensor);
