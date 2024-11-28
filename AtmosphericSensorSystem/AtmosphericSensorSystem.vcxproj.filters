@@ -26,10 +26,10 @@
     <QtRcc Include="MainWindow.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtUic Include="MainWindow.ui">
+    <QtUic Include="Windows\MainWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtMoc Include="MainWindow.h">
+    <QtMoc Include="Windows\MainWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -40,7 +40,7 @@
     <ClCompile Include="Sensors\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CameraPropertiesWindow.cpp">
+    <ClCompile Include="Windows\CameraPropertiesWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sensors\Sensor.cpp">
@@ -61,7 +61,7 @@
     <ClCompile Include="Sensors\GPS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainWindow.cpp">
+    <ClCompile Include="Windows\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Controllers\MainController.cpp">
@@ -69,7 +69,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="CameraPropertiesWindow.h">
+    <QtMoc Include="Windows\CameraPropertiesWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Sensors\Sensor.h">
@@ -98,7 +98,7 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="CameraPropertiesWindow.ui">
+    <QtUic Include="Windows\CameraPropertiesWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\SensorListItem.ui">

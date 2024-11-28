@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include "Controllers/MainController.h"
+#include "../Controllers/MainController.h"
 
 class MainWindow : public QMainWindow
 {

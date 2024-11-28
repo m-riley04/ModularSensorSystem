@@ -2,8 +2,8 @@
 
 #include <QDialog>
 #include <QtConcurrent>
-#include "Sensors/Camera.h"
 #include "ui_CameraPropertiesWindow.h"
+#include "../Sensors/Camera.h"
 
 #define DEFAULT_BRIGHTNESS 0
 #define DEFAULT_CONTRAST 10
