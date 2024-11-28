@@ -4,25 +4,50 @@
 SensorController::SensorController(QObject *parent)
 	: QObject(parent)
 {
-	// Initialize camera and thread
+	// Initialize components
 	camera = new Camera();
-	worker = new QThread(this);
 	addSensor(camera);
-	camera->moveToThread(worker);
 
-	// Start thread
-	connect(worker, &QThread::started, camera, &Camera::start);
-	connect(camera, &Camera::dataReady, qobject_cast<MainWindow*>(parent->parent()), &MainWindow::displayFrame);
+	synchronizer = new SensorSynchronizer();
+	frameProcessor = new FrameProcessor();
+	writer = new SensorWriter();
+	
+	// Initialize threads
+	cameraThread = new QThread();
+	processorThread = new QThread();
+	writerThread = new QThread();
+
+	camera->moveToThread(cameraThread);
+	frameProcessor->moveToThread(processorThread);
+	writer->moveToThread(writerThread);
+
+	// Connect pipeline
+	connect(camera, &Camera::dataReady, frameProcessor, &FrameProcessor::processFrame);
+	connect(frameProcessor, &FrameProcessor::frameProcessed, synchronizer, &SensorSynchronizer::addSensorData);
+	connect(synchronizer, &SensorSynchronizer::synchronizedDataReady, writer, &SensorWriter::write);
+	connect(synchronizer, &SensorSynchronizer::synchronizedDataReady, qobject_cast<MainWindow*>(parent->parent()), &MainWindow::displayFrame);
+
+	// Connect other signals/slots
+	connect(cameraThread, &QThread::started, camera, &Camera::start);
 	connect(this, &SensorController::stopSensors, camera, &Camera::stop);
-	connect(worker, &QThread::finished, camera, &QObject::deleteLater);
-	worker->start();
+	
+	// Start threads
+	cameraThread->start();
+	processorThread->start();
+	writerThread->start();
 }
 
 SensorController::~SensorController()
 {
-	// Stop the thread safely
-	worker->quit();
-	worker->wait();
+	// Stop the threads safely
+	cameraThread->quit();
+	cameraThread->wait();
+
+	processorThread->quit();
+	processorThread->wait();
+
+	writerThread->quit();
+	writerThread->wait();
 }
 
 QList<Sensor*> SensorController::sensors() const

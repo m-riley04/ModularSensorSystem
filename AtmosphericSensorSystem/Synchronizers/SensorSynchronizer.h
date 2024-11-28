@@ -8,7 +8,7 @@ class SensorSynchronizer  : public QObject
 	Q_OBJECT
 
 public:
-	SensorSynchronizer(QObject *parent);
+	SensorSynchronizer(QObject *parent = nullptr);
 	~SensorSynchronizer();
 
 public slots:
@@ -16,5 +16,5 @@ public slots:
 	void addSensorData(const QVariant& data, const qint64 timestamp);
 
 signals:
-	void synchronizedDataReady(const cv::Mat& frame, const QVariant& sensorData, const qint64 timestamp);
+	void synchronizedDataReady(const QVariant& data, const qint64 timestamp);
 };

@@ -8,11 +8,11 @@ class SensorWriter : public QObject
 	Q_OBJECT
 
 public:
-	SensorWriter();
+	SensorWriter(QObject* parent = nullptr);
 	~SensorWriter();
 
 public slots:
-	void write(const cv::Mat& frame, const QVariant& sensorData, const qint64 timestamp);
+	void write(const QVariant& data, const qint64 timestamp);
 
 signals:
 	void writeFinished(const qint64 timestamp);

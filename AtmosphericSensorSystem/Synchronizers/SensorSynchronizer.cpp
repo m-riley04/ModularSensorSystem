@@ -14,5 +14,6 @@ void SensorSynchronizer::addCameraFrame(const cv::Mat& frame, const qint64 times
 
 void SensorSynchronizer::addSensorData(const QVariant & data, const qint64 timestamp)
 {
-
+	// TODO: Do way more here
+	emit synchronizedDataReady(data, timestamp);
 }

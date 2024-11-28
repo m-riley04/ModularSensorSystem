@@ -20,7 +20,7 @@ private:
     void initSignals();
 
 public slots:
-    void displayFrame(QVariant data);
+    void displayFrame(QVariant data, qint64 timestamp);
     void openCameraProperties();
 
     void quit();

@@ -31,7 +31,7 @@ void MainWindow::initSignals() {
     connect(ui.actionCameraProperties, &QAction::triggered, this, &MainWindow::openCameraProperties);
 }
 
-void MainWindow::displayFrame(QVariant data) {
+void MainWindow::displayFrame(QVariant data, qint64 timestamp) {
     if (data.canConvert<cv::Mat>()) {
 		cv::Mat frame = data.value<cv::Mat>();
 

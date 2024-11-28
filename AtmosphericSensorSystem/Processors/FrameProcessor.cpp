@@ -7,8 +7,9 @@ FrameProcessor::FrameProcessor(QObject *parent)
 FrameProcessor::~FrameProcessor()
 {}
 
-void FrameProcessor::processFrame(const cv::Mat& frame, const qint64 timestamp) {
+void FrameProcessor::processFrame(const QVariant& frame, const qint64 timestamp) {
 
+	// TODO: Process the frame with YOLO
 
 	emit frameProcessed(frame, timestamp);
 }

@@ -1,19 +1,20 @@
 #pragma once
 
 #include <QObject>
+#include <QVariant>
 #include <opencv2/opencv.hpp>
 
-class FrameProcessor  : public QObject
+class FrameProcessor : public QObject
 {
 	Q_OBJECT
 
 public:
-	FrameProcessor(QObject *parent);
+	FrameProcessor(QObject *parent = nullptr);
 	~FrameProcessor();
 
 public slots:
-	void processFrame(const cv::Mat& frame, const qint64 timestamp);
+	void processFrame(const QVariant& frame, const qint64 timestamp);
 
 signals:
-	void frameProcessed(const cv::Mat& processedFrame, const qint64 timestamp);
+	void frameProcessed(const QVariant& processedFrame, const qint64 timestamp);
 };
