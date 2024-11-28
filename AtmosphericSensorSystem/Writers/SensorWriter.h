@@ -2,10 +2,18 @@
 
 #include <QObject>
 #include <opencv2/opencv.hpp>
+#include <QDir>
+#include <QUrl>
+#include <QtMultimedia>
 
 class SensorWriter : public QObject
 {
 	Q_OBJECT
+
+private:
+	QString filename;
+	QUrl outputPath;
+	QMediaRecorder* videoWriter;
 
 public:
 	SensorWriter(QObject* parent = nullptr);
