@@ -8,35 +8,9 @@ Sensor::Sensor(QObject *parent)
 Sensor::~Sensor()
 {}
 
-QUrl& Sensor::outputDirectory()
-{
-	return _outputDir;
-}
-
-QString& Sensor::outputPrefix()
-{
-	return _outputPrefix;
-}
-
 double Sensor::interval()
 {
 	return _interval;
-}
-
-void Sensor::setOutputDirectory(QUrl dir)
-{
-	if (_outputDir != dir) {
-		_outputDir = dir;
-		emit outputDirectoryChanged(dir);
-	}
-}
-
-void Sensor::setOutputPrefix(QString prefix)
-{
-	if (_outputPrefix != prefix) {
-		_outputPrefix = prefix;
-		emit outputPrefixChanged(prefix);
-	}
 }
 
 void Sensor::setInterval(double interval)
