@@ -96,12 +96,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\MainController.cpp" />
+    <ClCompile Include="Processors\FrameProcessor.cpp" />
     <ClCompile Include="Sensors\GPS.cpp" />
     <ClCompile Include="Sensors\Sensor.cpp" />
+    <ClCompile Include="Synchronizers\SensorSynchronizer.cpp" />
     <ClCompile Include="Widgets\SensorListItem.cpp" />
     <ClCompile Include="Writers\SensorWriter.cpp" />
     <ClCompile Include="Controllers\SensorController.cpp" />
-    <ClCompile Include="Writers\VideoWriter.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="Windows\CameraPropertiesWindow.ui" />
     <QtUic Include="Windows\MainWindow.ui" />
@@ -133,9 +134,6 @@
     <QtMoc Include="Controllers\SensorController.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Writers\VideoWriter.h" />
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="Widgets\SensorListItem.h" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +141,12 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Controllers\MainController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Processors\FrameProcessor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Synchronizers\SensorSynchronizer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

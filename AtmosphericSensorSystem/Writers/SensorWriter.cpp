@@ -6,7 +6,8 @@ SensorWriter::SensorWriter()
 SensorWriter::~SensorWriter()
 {}
 
-SensorWriterState SensorWriter::state() const
-{
-	return _state;
+void SensorWriter::write(const cv::Mat& frame, const QVariant& sensorData, const qint64 timestamp) {
+	
+	
+	emit writeFinished(timestamp);
 }
