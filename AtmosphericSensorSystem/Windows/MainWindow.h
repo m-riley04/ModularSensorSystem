@@ -25,4 +25,8 @@ public slots:
 
     void quit();
     void restart();
+
+signals:
+    void clicked_record();
+    void clicked_stop();
 };

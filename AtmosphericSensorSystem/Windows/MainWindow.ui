@@ -82,6 +82,32 @@
      </property>
     </widget>
    </widget>
+   <widget class="QPushButton" name="buttonRecord">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>730</y>
+      <width>80</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Record</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonStopRecording">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>730</y>
+      <width>111</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop Recording</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -187,7 +213,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="MainWindow.qrc"/>
+  <include location="../MainWindow.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -28,8 +28,11 @@ SensorController::SensorController(QObject *parent)
 	connect(synchronizer, &SensorSynchronizer::synchronizedDataReady, qobject_cast<MainWindow*>(parent->parent()), &MainWindow::displayFrame);
 
 	// Connect other signals/slots
+	MainWindow* mainWindow = qobject_cast<MainWindow*>(parent->parent());
 	connect(cameraThread, &QThread::started, camera, &Camera::start);
 	connect(this, &SensorController::stopSensors, camera, &Camera::stop);
+	connect(mainWindow, &MainWindow::clicked_record, writer, &SensorWriter::startRecording);
+	connect(mainWindow, &MainWindow::clicked_stop, writer, &SensorWriter::stopRecording);
 	
 	// Start threads
 	cameraThread->start();

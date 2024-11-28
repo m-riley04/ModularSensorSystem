@@ -25,6 +25,10 @@ void MainWindow::initSignals() {
     connect(ui.buttonStop, &QPushButton::clicked, controller, &MainController::stopSensors);
     connect(ui.buttonStart, &QPushButton::clicked, controller, &MainController::startSensors);
 
+    // Recording Controls
+    connect(ui.buttonRecord, &QPushButton::clicked, this, &MainWindow::clicked_record);
+    connect(ui.buttonStopRecording, &QPushButton::clicked, this, &MainWindow::clicked_stop);
+
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
@@ -39,7 +43,6 @@ void MainWindow::displayFrame(QVariant data, qint64 timestamp) {
         QImage image(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
         ui.video->setPixmap(QPixmap::fromImage(image).scaled(ui.video->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
-    
 }
 
 void MainWindow::openCameraProperties() {

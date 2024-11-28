@@ -13,13 +13,20 @@ class SensorWriter : public QObject
 private:
 	QString filename;
 	QUrl outputPath;
-	QMediaRecorder* videoWriter;
+	QVideoFrameInput* frameInput;
+	QMediaRecorder recorder;
+	QMediaCaptureSession session;
+	QMediaFormat format;
+
+	bool isRecording = false;
 
 public:
 	SensorWriter(QObject* parent = nullptr);
 	~SensorWriter();
 
 public slots:
+	void startRecording();
+	void stopRecording();
 	void write(const QVariant& data, const qint64 timestamp);
 
 signals:
