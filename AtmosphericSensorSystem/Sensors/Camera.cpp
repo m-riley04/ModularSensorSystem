@@ -102,7 +102,8 @@ bool Camera::checkCameraAvailability() {
 void Camera::captureFrame() {
     QVariant data = read();
     if (!data.isNull()) {
-        emit dataReady(data);
+        qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
+        emit dataReady(data, timestamp);
     }
 }
 

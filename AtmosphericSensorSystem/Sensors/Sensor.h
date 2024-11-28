@@ -47,7 +47,7 @@ signals:
 	void started();
 	void stopped();
 
-	void dataReady(QVariant data);
+	void dataReady(QVariant data, qint64 timestamp);
 
 	void intervalChanged(double interval);
 	void error(QString message);
