@@ -17,6 +17,8 @@ private:
 	QMediaRecorder recorder;
 	QMediaCaptureSession session;
 	QMediaFormat format;
+	qint64 previousTimestamp = 0;
+	qint64 startTimestamp = 0;
 
 	bool isRecording = false;
 

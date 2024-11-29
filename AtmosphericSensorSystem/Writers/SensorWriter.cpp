@@ -15,6 +15,14 @@ QImage matToQImage(const cv::Mat& mat) {
 	}
 }
 
+QVideoFrame imageToVideoFrame(const QImage& image, qint64 prevTimestamp, qint64 currTimestamp) {
+	QVideoFrame frame(image);
+	frame.setStartTime(prevTimestamp);
+	frame.setEndTime(currTimestamp); // Set duration in milliseconds
+	//frame.setStreamFrameRate(30);
+	return frame;
+}
+
 SensorWriter::SensorWriter(QObject* parent)
 {
 	// Create output directory
@@ -26,18 +34,21 @@ SensorWriter::SensorWriter(QObject* parent)
 	}
 
 	// Initialize filename
-	filename = "test_output.mp4";
+	filename = "test_output.avi";
 	outputPath = outputPath.toString() + "/" + outputFolderName + "/" + filename;
 
 	// Initialize video writer
 	QVideoFrameFormat frameFormat(QSize(640, 480), QVideoFrameFormat::Format_RGBA8888);
 	frameInput = new QVideoFrameInput(frameFormat);
 	format.setVideoCodec(QMediaFormat::VideoCodec::MPEG4);
-	format.setFileFormat(QMediaFormat::MPEG4);
+	format.setFileFormat(QMediaFormat::AVI);
 	session.setRecorder(&recorder);
 	session.setVideoFrameInput(frameInput);
 	recorder.setOutputLocation(outputPath);
 	recorder.setMediaFormat(format);
+	recorder.setVideoFrameRate(30);
+	recorder.setEncodingMode(QMediaRecorder::AverageBitRateEncoding);
+	recorder.setVideoFrameRate(30);
 	recorder.setVideoResolution(QSize(640, 480));
 }
 
@@ -49,6 +60,9 @@ SensorWriter::~SensorWriter()
 void SensorWriter::startRecording()
 {
 	if (!isRecording) {
+		startTimestamp = QDateTime::currentMSecsSinceEpoch();
+		previousTimestamp = startTimestamp;
+
 		// Check if the output file exists
 		QFile file(outputPath.toString());
 		if (file.exists()) {
@@ -82,7 +96,7 @@ void SensorWriter::write(const QVariant& data, const qint64 timestamp) {
 		auto mat = data.value<cv::Mat>();
 		qDebug() << "Frame dimensions:" << mat.cols << "x" << mat.rows;
 		QImage img = matToQImage(mat);
-		QVideoFrame frame(img);
+		QVideoFrame frame = imageToVideoFrame(img, previousTimestamp-startTimestamp, timestamp-startTimestamp);
 		if (!frame.isValid()) {
 			qWarning() << "Invalid QVideoFrame created.";
 		}
@@ -90,6 +104,9 @@ void SensorWriter::write(const QVariant& data, const qint64 timestamp) {
 			qWarning() << "Failed to send video frame to recorder.";
 		}
 	}
+	
+	previousTimestamp = timestamp;
+
 	emit writeFinished(timestamp);
 
 }
