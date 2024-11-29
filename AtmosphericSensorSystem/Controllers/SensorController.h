@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QThread>
+#include <QtMultimedia>
 #include "../Sensors/Sensor.h"
 #include "../Sensors/Camera.h"
 #include "../Synchronizers/SensorSynchronizer.h"
@@ -23,6 +24,11 @@ private:
 	QThread* cameraThread;
 	QThread* processorThread;
 	QThread* writerThread;
+
+	QCamera q_camera;
+	QMediaCaptureSession session;
+	QMediaRecorder recorder;
+	QVideoSink sink;
 
 public:
 	SensorController(QObject* parent);
