@@ -65,22 +65,6 @@ void Camera::stop() {
     emit stopped();
 }
 
-bool Camera::isOpened() { return camera.isOpened(); }
-int Camera::brightness() { return this->camera.get(cv::CAP_PROP_BRIGHTNESS); }
-int Camera::contrast() { return this->camera.get(cv::CAP_PROP_CONTRAST); }
-int Camera::saturation() { return this->camera.get(cv::CAP_PROP_SATURATION); }
-int Camera::gain() { return this->camera.get(cv::CAP_PROP_GAIN); }
-bool Camera::backlight() { return this->camera.get(cv::CAP_PROP_BACKLIGHT) > 0; }
-bool Camera::autoExposure() { return this->camera.get(cv::CAP_PROP_AUTO_EXPOSURE) > 0; }
-int Camera::fps() { return _fps; } //this->camera.get(cv::CAP_PROP_FPS); } /// TODO: Unsure whether to return the cap's fps or the fps set by the user
-int Camera::frameWidth() { return this->camera.get(cv::CAP_PROP_FRAME_WIDTH); }
-int Camera::frameHeight() { return this->camera.get(cv::CAP_PROP_FRAME_HEIGHT); }
-int Camera::hue() { return this->camera.get(cv::CAP_PROP_HUE); }
-int Camera::exposure() { return this->camera.get(cv::CAP_PROP_EXPOSURE); }
-int Camera::sharpness() { return this->camera.get(cv::CAP_PROP_SHARPNESS); }
-int Camera::gamma() { return this->camera.get(cv::CAP_PROP_GAMMA); }
-int Camera::bitrate() { return this->camera.get(cv::CAP_PROP_BITRATE); }
-
 QVariant Camera::read() {
     cv::Mat frame;
     if (camera.read(frame)) {
@@ -106,6 +90,22 @@ void Camera::captureFrame() {
         emit dataReady(data, timestamp);
     }
 }
+
+bool Camera::isOpened() { return camera.isOpened(); }
+int Camera::brightness() { return this->camera.get(cv::CAP_PROP_BRIGHTNESS); }
+int Camera::contrast() { return this->camera.get(cv::CAP_PROP_CONTRAST); }
+int Camera::saturation() { return this->camera.get(cv::CAP_PROP_SATURATION); }
+int Camera::gain() { return this->camera.get(cv::CAP_PROP_GAIN); }
+bool Camera::backlight() { return this->camera.get(cv::CAP_PROP_BACKLIGHT) > 0; }
+bool Camera::autoExposure() { return this->camera.get(cv::CAP_PROP_AUTO_EXPOSURE) > 0; }
+int Camera::fps() { return _fps; } //this->camera.get(cv::CAP_PROP_FPS); } /// TODO: Unsure whether to return the cap's fps or the fps set by the user
+int Camera::frameWidth() { return this->camera.get(cv::CAP_PROP_FRAME_WIDTH); }
+int Camera::frameHeight() { return this->camera.get(cv::CAP_PROP_FRAME_HEIGHT); }
+int Camera::hue() { return this->camera.get(cv::CAP_PROP_HUE); }
+int Camera::exposure() { return this->camera.get(cv::CAP_PROP_EXPOSURE); }
+int Camera::sharpness() { return this->camera.get(cv::CAP_PROP_SHARPNESS); }
+int Camera::gamma() { return this->camera.get(cv::CAP_PROP_GAMMA); }
+int Camera::bitrate() { return this->camera.get(cv::CAP_PROP_BITRATE); }
 
 void Camera::setBrightness(int value) {
     if (isOpened()) {
