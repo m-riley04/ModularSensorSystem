@@ -12,7 +12,9 @@ Camera::Camera(QObject *parent)
 Camera::~Camera()
 {
     // Release the camera
-    stop();
+    if (camera.isActive()) {
+        stop();
+    }
 }
 
 void Camera::initialize() {
@@ -20,56 +22,51 @@ void Camera::initialize() {
 	if (checkCameraAvailability()) {
 		setVideoDevice(0);
 	}
+    
+    // Initialize capture session
+    session.setVideoSink(&sink);
+    session.setCamera(&camera);
 }
 
 void Camera::start() {
-    // Check if camera is already running
-    if (_running) return; // TODO: Do more logging here
-
-    // Check if the camera is available
-    if (!camera.isAvailable()) return; // TODO: Do more logging here
+    // Check if the camera is available/is idle
+    if (!camera.isAvailable() || camera.isActive()) return; // TODO: Do more logging here
 
     // Open the camera
     camera.start();
-
-    // Update state
-    _running = true;
-
-    // Initialize the timer
-
-    connect(frameTimer, &QTimer::timeout, this, &Camera::captureFrame);
     
+    // Initialize the timer
+	frameTimer = new QTimer();
+    connect(frameTimer, &QTimer::timeout, this, &Camera::captureFrame);
+    frameTimer->start(1000 / _fps);
+    frameTimer->setInterval(static_cast<int>(1000 / _fps));
+
     // Emit signal
     emit started();
 }
 
 void Camera::stop() {
-    // Check if not running
-	if (!_running) return;
-
-    // Update state
-    _running = false;
+    // Check if camera is good to go/is active
+    if (!camera.isAvailable() || !camera.isActive()) return; // TODO: Do more logging here
     
+    // Stop timer
+    frameTimer->stop();
+
+    // Stop camera
+    camera.stop();
+
     // Emit signal
     emit stopped();
 }
 
 QVariant Camera::read() {
-    cv::Mat frame;
-    if (camera.read(frame)) {
-        return QVariant::fromValue(frame);
-    }
-    else {
-        qWarning() << "Failed to read frame from camera.";
-        return QVariant();
-    }
+    QVideoFrame frame = sink.videoFrame();
+
+    return QVariant::fromValue(frame);
 }
 
 bool Camera::checkCameraAvailability() {
-    if (QMediaDevices::videoInputs().count() > 0)
-        return true;
-    else
-        return false;
+    return QMediaDevices::videoInputs().count() > 0;
 }
 
 void Camera::captureFrame() {
@@ -77,6 +74,9 @@ void Camera::captureFrame() {
     if (!data.isNull()) {
         qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
         emit dataReady(data, timestamp);
+    }
+    else {
+        qDebug() << "ERROR: Failed to read and capture frame from camera.";
     }
 }
 

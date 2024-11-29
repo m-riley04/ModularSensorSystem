@@ -32,23 +32,16 @@ void MainWindow::initSignals() {
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
-    connect(ui.actionCameraProperties, &QAction::triggered, this, &MainWindow::openCameraProperties);
 }
 
 void MainWindow::displayFrame(QVariant data, qint64 timestamp) {
-    if (data.canConvert<cv::Mat>()) {
-		cv::Mat frame = data.value<cv::Mat>();
+    if (data.canConvert<QVideoFrame>()) {
+		QVideoFrame frame = data.value<QVideoFrame>();
 
         // Convert the frame to QImage for displaying in QLabel
-        QImage image(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
+        QImage image = frame.toImage();
         ui.video->setPixmap(QPixmap::fromImage(image).scaled(ui.video->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
-}
-
-void MainWindow::openCameraProperties() {
-    //CameraPropertiesWindow *w = new CameraPropertiesWindow(this, camera);
-    //w->setAttribute(Qt::WA_DeleteOnClose);
-    //w->show();
 }
 
 void MainWindow::quit() {

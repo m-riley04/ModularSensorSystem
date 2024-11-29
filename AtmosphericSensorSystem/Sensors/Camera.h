@@ -15,6 +15,9 @@ class Camera : public Sensor
 
 private:
     QCamera camera;
+    QMediaCaptureSession session;
+    QVideoSink sink;
+    QTimer* frameTimer;
     int _fps = DEFAULT_FRAME_RATE;
     int _videoDeviceIndex = 0;
 
@@ -23,7 +26,6 @@ public:
 	~Camera();
 
 	QVariant read() override;
-
 	static bool checkCameraAvailability();
 
 public slots:

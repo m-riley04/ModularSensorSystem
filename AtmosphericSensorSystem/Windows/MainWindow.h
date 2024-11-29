@@ -3,6 +3,7 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
 #include "../Controllers/MainController.h"
+#include <QVideoFrame>
 
 class MainWindow : public QMainWindow
 {
@@ -21,7 +22,6 @@ private:
 
 public slots:
     void displayFrame(QVariant data, qint64 timestamp);
-    void openCameraProperties();
 
     void quit();
     void restart();

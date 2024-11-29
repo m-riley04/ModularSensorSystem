@@ -5,14 +5,14 @@ CameraPropertiesWindow::CameraPropertiesWindow(QWidget *parent, Camera *camera)
 {
 	ui.setupUi(this);
 
-    // Initialize
-    brightnessInitial = camera->brightness();
-    contrastInitial = camera->contrast();
-    saturationInitial = camera->saturation();
-    gainInitial = camera->gain();
-    exposureInitial = camera->exposure();
-    backlightInitial = camera->backlight();
-    autoExposureInitial = camera->autoExposure();
+    //// Initialize
+    //brightnessInitial = camera->brightness();
+    //contrastInitial = camera->contrast();
+    //saturationInitial = camera->saturation();
+    //gainInitial = camera->gain();
+    //exposureInitial = camera->exposure();
+    //backlightInitial = camera->backlight();
+    //autoExposureInitial = camera->autoExposure();
 
     initWidgets();
     initSignals();
@@ -23,13 +23,13 @@ CameraPropertiesWindow::~CameraPropertiesWindow()
 
 void CameraPropertiesWindow::initWidgets() {
     // Initialize the display settings
-    ui.sliderBrightness->setValue(camera->brightness());
+    /*ui.sliderBrightness->setValue(camera->brightness());
     ui.sliderContrast->setValue(camera->contrast());
     ui.sliderSaturation->setValue(camera->saturation());
     ui.sliderGain->setValue(camera->gain());
     ui.sliderExposure->setValue(camera->exposure());
     ui.checkboxBacklight->setChecked(camera->backlight());
-    ui.checkboxAutoExposure->setChecked(camera->autoExposure());
+    ui.checkboxAutoExposure->setChecked(camera->autoExposure());*/
 
     // Initialize the devices dropdown
     updateDeviceDropdown();
@@ -40,13 +40,13 @@ void CameraPropertiesWindow::initSignals() {
     connect(ui.dropdownDevice, &QComboBox::currentIndexChanged, camera, &Camera::setVideoDevice);
 
     // Sliders
-    connect(ui.sliderBrightness, &QSlider::valueChanged, camera, &Camera::setBrightness);
+    /*connect(ui.sliderBrightness, &QSlider::valueChanged, camera, &Camera::setBrightness);
     connect(ui.sliderContrast, &QSlider::valueChanged, camera, &Camera::setContrast);
     connect(ui.sliderSaturation, &QSlider::valueChanged, camera, &Camera::setSaturation);
     connect(ui.sliderGain, &QSlider::valueChanged, camera, &Camera::setGain);
     connect(ui.sliderExposure, &QSlider::valueChanged, camera, &Camera::setExposure);
     connect(ui.checkboxBacklight, &QCheckBox::checkStateChanged, camera, &Camera::setBacklight);
-    connect(ui.checkboxAutoExposure, &QCheckBox::checkStateChanged, camera, &Camera::setAutoExposure);
+    connect(ui.checkboxAutoExposure, &QCheckBox::checkStateChanged, camera, &Camera::setAutoExposure);*/
 
     // Buttons
     connect(ui.buttonBox, &QDialogButtonBox::clicked, this, &CameraPropertiesWindow::dialogButtonClicked);
