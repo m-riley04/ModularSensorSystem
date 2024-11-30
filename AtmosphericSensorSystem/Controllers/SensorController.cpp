@@ -95,6 +95,7 @@ void SensorController::addCamera(QCameraDevice device)
 
 void SensorController::removeCamera(Camera* camera)
 {
+	
 	mCameras.removeOne(camera);
 	emit cameraRemoved(camera);
 }
@@ -116,5 +117,12 @@ void SensorController::stopCameras()
 {
 	for (Camera* camera : mCameras) {
 		camera->stop();
+	}
+}
+
+Camera* SensorController::findCamera(QVideoWidget* widget)
+{
+	for (Camera* camera : mCameras) {
+		if (camera->output() == widget) return camera;
 	}
 }

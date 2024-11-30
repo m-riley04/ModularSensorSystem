@@ -5,6 +5,7 @@
 #include "../Controllers/SensorController.h"
 #include <QVideoFrame>
 #include <QVideoWidget>
+#include "AddCameraDialog/AddCameraDialog.h"
 
 class MainWindow : public QMainWindow
 {

@@ -1,5 +1,4 @@
 #include "MainWindow.h"
-#include "AddCameraDialog/AddCameraDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -38,8 +37,33 @@ void MainWindow::initSignals() {
         connect(addDialog, &AddCameraDialog::deviceSelected, pController, &SensorController::addCamera);
         addDialog->show();
     });
-    connect(ui.buttonRemoveSensor, &QPushButton::clicked, this, []{
+    connect(ui.buttonRemoveSensor, &QPushButton::clicked, [this]{
+        const QString title = "Delete";
+        const QString text = "Are you sure you want to remove this camera?";
+        QMessageBox::StandardButton reply = QMessageBox::question(this, title, text, QMessageBox::StandardButton::Yes|QMessageBox::StandardButton::No);
 
+        // Check output
+        if (reply == QMessageBox::Yes)
+        {
+            // Find the selected tab
+            int currentTabIndex = ui.tabCameras->currentIndex();
+            if (currentTabIndex == -1 || !(currentTabIndex < mVideoWidgets.length()))
+            {
+                QMessageBox::warning(this, "Error", "The selected camera does not exist and cannot be deleted.", QMessageBox::StandardButton::Ok);
+                return;
+            }
+
+            // Find camera and video widget
+            QVideoWidget* videoWidget = mVideoWidgets[currentTabIndex];
+            Camera* cam = pController->findCamera(videoWidget);
+
+            // Remove video widget from UI
+            videoWidget->deleteLater();
+
+            // Remove camera and video widget
+            pController->removeCamera(cam);
+            mVideoWidgets.removeAt(currentTabIndex);
+        }
     });
     connect(pController, &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
 
