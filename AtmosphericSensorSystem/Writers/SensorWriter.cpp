@@ -42,8 +42,8 @@ SensorWriter::SensorWriter(QObject* parent)
 	m_frameInput = new QVideoFrameInput(frameFormat);
 	m_format.setVideoCodec(QMediaFormat::VideoCodec::MPEG4);
 	m_format.setFileFormat(QMediaFormat::AVI);
-	m_session.setRecorder(&m_recorder);
-	m_session.setVideoFrameInput(m_frameInput);
+	mSession.setRecorder(&m_recorder);
+	mSession.setVideoFrameInput(m_frameInput);
 	m_recorder.setOutputLocation(m_outputPath);
 	m_recorder.setMediaFormat(m_format);
 	m_recorder.setVideoFrameRate(30);

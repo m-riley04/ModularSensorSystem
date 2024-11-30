@@ -12,14 +12,14 @@ Camera::Camera(QObject *parent)
 Camera::~Camera()
 {
     // Release the camera
-    if (m_camera.isActive()) {
+    if (mCamera.isActive()) {
         stop();
     }
 }
 
 void Camera::setVideoDevice(QCameraDevice device)
 {
-    m_camera.setCameraDevice(device);
+    mCamera.setCameraDevice(device);
     emit deviceChanged();
 }
 
@@ -30,16 +30,16 @@ void Camera::initialize() {
 	}
     
     // Initialize capture session
-    m_session.setVideoSink(&m_sink);
-    m_session.setCamera(&m_camera);
+    mSession.setVideoSink(&mSink);
+    mSession.setCamera(&mCamera);
 }
 
 void Camera::start() {
     // Check if the camera is available/is idle
-    if (!m_camera.isAvailable() || m_camera.isActive()) return; // TODO: Do more logging here
+    if (!mCamera.isAvailable() || mCamera.isActive()) return; // TODO: Do more logging here
 
     // Open the camera
-    m_camera.start();
+    mCamera.start();
 
     // Emit signal
     emit started();
@@ -47,24 +47,24 @@ void Camera::start() {
 
 void Camera::stop() {
     // Check if camera is good to go/is active
-    if (!m_camera.isAvailable() || !m_camera.isActive()) return; // TODO: Do more logging here
+    if (!mCamera.isAvailable() || !mCamera.isActive()) return; // TODO: Do more logging here
     
     // Stop camera
-    m_camera.stop();
+    mCamera.stop();
 
     // Emit signal
     emit stopped();
 }
 
 QVariant Camera::read() {
-    QVideoFrame frame = m_sink.videoFrame();
+    QVideoFrame frame = mSink.videoFrame();
 
     return QVariant::fromValue(frame);
 }
 
 void Camera::setVideoWidget(QVideoWidget* widget)
 {
-    m_session.setVideoOutput(widget);
+    mSession.setVideoOutput(widget);
 }
 
 void Camera::restart() {
@@ -74,7 +74,7 @@ void Camera::restart() {
 
 void Camera::setVideoDevice(int deviceIndex) {
     // Set new index
-    m_camera.setCameraDevice(QCameraDevice()); // TODO: Actually use device index
+    mCamera.setCameraDevice(QCameraDevice()); // TODO: Actually use device index
 	emit deviceChanged();
 }
 

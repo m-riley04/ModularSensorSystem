@@ -11,14 +11,14 @@ class CameraPropertiesWindow : public QDialog
 
 private:
 	Ui::CameraPropertiesWindowClass ui;
-	Camera* m_camera;
+	Camera* mCamera;
 
 	void initWidgets();
 	void initSignals();
 	void updateDeviceDropdown();
 
 public:
-	CameraPropertiesWindow(QWidget *parent = nullptr, Camera *m_camera = nullptr);
+	CameraPropertiesWindow(QWidget *parent = nullptr, Camera *mCamera = nullptr);
 	~CameraPropertiesWindow();
 
 };

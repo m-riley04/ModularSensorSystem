@@ -14,16 +14,16 @@ class SensorController : public QObject
 	Q_OBJECT
 
 private:
-	QList<Sensor*> r_sensors;
-	QList<Camera*> r_cameras;
+	QList<Sensor*> mSensors;
+	QList<Camera*> mCameras;
 
-	FrameProcessor *p_frameProcessor;
-	SensorSynchronizer *p_synchronizer;
-	SensorWriter *p_writer;
+	FrameProcessor *pFrameProcessor;
+	SensorSynchronizer *pSynchronizer;
+	SensorWriter *pWriter;
 	
-	QThread m_cameraThread;
-	QThread m_processorThread;
-	QThread m_writerThread;
+	QThread mCameraThread;
+	QThread mProcessorThread;
+	QThread mWriterThread;
 
 public:
 	SensorController(QObject *parent);

@@ -16,8 +16,8 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    SensorController* p_controller;
-    QList<QVideoWidget*> m_videoWidgets;
+    SensorController *pController;
+    QList<QVideoWidget*> mVideoWidgets;
 
     void initWidgets();
     void initSignals();

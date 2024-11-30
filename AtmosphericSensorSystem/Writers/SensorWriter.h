@@ -15,7 +15,7 @@ private:
 	QUrl m_outputPath;
 	QVideoFrameInput* m_frameInput;
 	QMediaRecorder m_recorder;
-	QMediaCaptureSession m_session;
+	QMediaCaptureSession mSession;
 	QMediaFormat m_format;
 	qint64 m_previousTimestamp = 0;
 	qint64 m_startTimestamp = 0;
