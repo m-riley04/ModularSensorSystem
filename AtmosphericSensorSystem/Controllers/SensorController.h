@@ -30,12 +30,20 @@ public:
 	~SensorController();
 
 	QList<Sensor*> sensors() const;
-	void addSensor(Sensor *sensor);
-	void removeSensor(Sensor *sensor);
-	void clearSensors();
+	QList<Camera*> cameras() const;
 
+public slots:
+	void addSensor(Sensor* sensor);
+	void removeSensor(Sensor* sensor);
+	void clearSensors();
 	void startSensors();
 	void stopSensors();
+
+	void addCamera(QCameraDevice device);
+	void removeCamera(Camera* camera);
+	void clearCameras();
+	void startCameras();
+	void stopCameras();
 
 signals:
 	void sensorAdded(Sensor *sensor);
@@ -43,5 +51,7 @@ signals:
 	void sensorsCleared();
 	
 	void cameraStarted(Camera *camera);
-	void cameraAdded(Camera *camera);
+	void cameraAdded(Camera* camera);
+	void cameraRemoved(Camera *camera);
+	void camerasCleared();
 };

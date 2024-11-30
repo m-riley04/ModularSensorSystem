@@ -100,9 +100,11 @@
     <ClCompile Include="Sensors\Sensor.cpp" />
     <ClCompile Include="Synchronizers\SensorSynchronizer.cpp" />
     <ClCompile Include="Widgets\SensorListItem.cpp" />
+    <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp" />
     <ClCompile Include="Writers\SensorWriter.cpp" />
     <ClCompile Include="Controllers\SensorController.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui" />
     <QtUic Include="Windows\CameraPropertiesWindow.ui" />
     <QtUic Include="Windows\MainWindow.ui" />
     <QtMoc Include="Windows\MainWindow.h" />
@@ -143,6 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Synchronizers\SensorSynchronizer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Windows\AddCameraDialog\AddCameraDialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

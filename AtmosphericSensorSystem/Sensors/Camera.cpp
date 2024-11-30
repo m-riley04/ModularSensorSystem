@@ -17,16 +17,10 @@ Camera::~Camera()
     }
 }
 
-void Camera::setVideoDevice(QCameraDevice device)
-{
-    mCamera.setCameraDevice(device);
-    emit deviceChanged();
-}
-
 void Camera::initialize() {
     // Default the video device
 	if (checkCameraAvailability()) {
-		setVideoDevice(0);
+		setDevice(QCameraDevice());
 	}
     
     // Initialize capture session
@@ -62,22 +56,33 @@ QVariant Camera::read() {
     return QVariant::fromValue(frame);
 }
 
-void Camera::setVideoWidget(QVideoWidget* widget)
+QVideoWidget* Camera::output()
+{
+    return pOutput;
+}
+
+void Camera::setOutput(QVideoWidget* widget)
 {
     mSession.setVideoOutput(widget);
+}
+
+QCameraDevice* Camera::device()
+{
+    return pDevice;
+}
+
+void Camera::setDevice(QCameraDevice device)
+{
+    mCamera.setCameraDevice(device);
+    pDevice = &device;
+    emit deviceChanged();
+}
+
+bool Camera::checkCameraAvailability() {
+    return QMediaDevices::videoInputs().count() > 0;
 }
 
 void Camera::restart() {
     stop();
     start();
-}
-
-void Camera::setVideoDevice(int deviceIndex) {
-    // Set new index
-    mCamera.setCameraDevice(QCameraDevice()); // TODO: Actually use device index
-	emit deviceChanged();
-}
-
-bool Camera::checkCameraAvailability() {
-    return QMediaDevices::videoInputs().count() > 0;
 }

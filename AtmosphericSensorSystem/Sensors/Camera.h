@@ -18,8 +18,8 @@ private:
     QCamera mCamera;
     QMediaCaptureSession mSession;
     QVideoSink mSink;
-    int mFps = DEFAULT_FRAME_RATE;
-    int mVideoDeviceIndex = 0;
+    QVideoWidget *pOutput;
+    QCameraDevice *pDevice;
 
 public:
 	Camera(QObject *parent = nullptr);
@@ -29,15 +29,16 @@ public:
 	static bool checkCameraAvailability();
 
 public slots:
-    void setVideoDevice(int deviceIndex);
-    void setVideoDevice(QCameraDevice device);
-    
     void initialize() override;
     void start() override;
     void stop() override;
     void restart() override;
 
-    void setVideoWidget(QVideoWidget* widget);
+    QVideoWidget* output();
+    void setOutput(QVideoWidget* widget);
+
+    QCameraDevice* device();
+    void setDevice(QCameraDevice device);
 
 signals:
     void deviceChanged();

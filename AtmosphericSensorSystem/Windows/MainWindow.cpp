@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "AddCameraDialog/AddCameraDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,6 +32,17 @@ void MainWindow::initSignals() {
     connect(ui.buttonStop, &QPushButton::clicked, pController, &SensorController::stopSensors);
     connect(ui.buttonStart, &QPushButton::clicked, pController, &SensorController::startSensors);
 
+    // Camera View
+    connect(ui.buttonAddSensor, &QPushButton::clicked, [this]{
+        AddCameraDialog* addDialog = new AddCameraDialog();
+        connect(addDialog, &AddCameraDialog::deviceSelected, pController, &SensorController::addCamera);
+        addDialog->show();
+    });
+    connect(ui.buttonRemoveSensor, &QPushButton::clicked, this, []{
+
+    });
+    connect(pController, &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
+
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
@@ -42,7 +54,7 @@ void MainWindow::addVideoWidget(Camera *camera)
     mVideoWidgets.push_back(videoWidget);
     QString tabName = "Camera " + mVideoWidgets.length();
     ui.tabCameras->addTab(videoWidget, tabName);
-    camera->setVideoWidget(videoWidget);
+    camera->setOutput(videoWidget);
 }
 
 void MainWindow::quit() {

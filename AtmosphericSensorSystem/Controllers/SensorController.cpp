@@ -11,23 +11,20 @@ SensorController::SensorController(QObject *parent)
 
 	pFrameProcessor->moveToThread(&mProcessorThread);
 	pWriter->moveToThread(&mWriterThread);
-
-	// Connect other signals/slots
-	MainWindow *mainWindow = qobject_cast<MainWindow*>(parent);
-	connect(this, &SensorController::cameraAdded, mainWindow, &MainWindow::addVideoWidget);
+	
 	
 	// Start threads
 	mProcessorThread.start();
 	mWriterThread.start();
 
-	// Initialize cameras only
-	for (QCameraDevice device : QMediaDevices::videoInputs()) {
-		Camera* _camera = new Camera();
-		_camera->setVideoDevice(device);
-		_camera->start();
-		addSensor(_camera);
-		emit cameraAdded(_camera);
-	}
+	//// Initialize cameras only
+	//for (QCameraDevice device : QMediaDevices::videoInputs()) {
+	//	Camera* _camera = new Camera();
+	//	_camera->setDevice(device);
+	//	_camera->start();
+	//	addCamera(_camera);
+	//	emit cameraAdded(_camera);
+	//}
 }
 
 SensorController::~SensorController()
@@ -79,5 +76,45 @@ void SensorController::stopSensors()
 {
 	for (Sensor* sensor : mSensors) {
 		sensor->stop();
+	}
+}
+
+QList<Camera*> SensorController::cameras() const
+{
+	return QList<Camera*>();
+}
+
+void SensorController::addCamera(QCameraDevice device)
+{
+	Camera* _camera = new Camera();
+	_camera->setDevice(device);
+	mCameras.append(_camera);
+	_camera->start();
+	emit cameraAdded(_camera);
+}
+
+void SensorController::removeCamera(Camera* camera)
+{
+	mCameras.removeOne(camera);
+	emit cameraRemoved(camera);
+}
+
+void SensorController::clearCameras()
+{
+	mCameras.clear();
+	emit camerasCleared();
+}
+
+void SensorController::startCameras()
+{
+	for (Camera* camera : mCameras) {
+		camera->start();
+	}
+}
+
+void SensorController::stopCameras()
+{
+	for (Camera* camera : mCameras) {
+		camera->stop();
 	}
 }
