@@ -16,14 +16,14 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    SensorController* controller;
-    QList<QVideoWidget*> videoWidgets;
+    SensorController* p_controller;
+    QList<QVideoWidget*> m_videoWidgets;
 
     void initWidgets();
     void initSignals();
 
 public slots:
-    void addVideoWidget(Camera* camera);
+    void addVideoWidget(Camera *camera);
 
     void quit();
     void restart();
@@ -31,5 +31,5 @@ public slots:
 signals:
     void clicked_record();
     void clicked_stop();
-    void clicked_display_video(QVideoWidget* widget);
+    void clicked_display_video(QVideoWidget *widget);
 };

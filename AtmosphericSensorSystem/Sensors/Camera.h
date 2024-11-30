@@ -15,11 +15,11 @@ class Camera : public Sensor
 	Q_OBJECT
 
 private:
-    QCamera camera;
-    QMediaCaptureSession session;
-    QVideoSink sink;
-    int _fps = DEFAULT_FRAME_RATE;
-    int _videoDeviceIndex = 0;
+    QCamera m_camera;
+    QMediaCaptureSession m_session;
+    QVideoSink m_sink;
+    int m_fps = DEFAULT_FRAME_RATE;
+    int m_videoDeviceIndex = 0;
 
 public:
 	Camera(QObject *parent = nullptr);

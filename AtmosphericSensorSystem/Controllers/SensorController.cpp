@@ -5,20 +5,20 @@ SensorController::SensorController(QObject *parent)
 	: QObject(parent)
 {
 	// Initialize components
-	synchronizer = new SensorSynchronizer();
-	frameProcessor = new FrameProcessor();
-	writer = new SensorWriter();
+	p_synchronizer = new SensorSynchronizer();
+	p_frameProcessor = new FrameProcessor();
+	p_writer = new SensorWriter();
 
-	frameProcessor->moveToThread(&processorThread);
-	writer->moveToThread(&writerThread);
+	p_frameProcessor->moveToThread(&m_processorThread);
+	p_writer->moveToThread(&m_writerThread);
 
 	// Connect other signals/slots
-	MainWindow* mainWindow = qobject_cast<MainWindow*>(parent);
+	MainWindow *mainWindow = qobject_cast<MainWindow*>(parent);
 	connect(this, &SensorController::cameraAdded, mainWindow, &MainWindow::addVideoWidget);
 	
 	// Start threads
-	processorThread.start();
-	writerThread.start();
+	m_processorThread.start();
+	m_writerThread.start();
 
 	// Initialize cameras only
 	for (QCameraDevice device : QMediaDevices::videoInputs()) {
@@ -33,51 +33,51 @@ SensorController::SensorController(QObject *parent)
 SensorController::~SensorController()
 {
 	// Clean up threads
-	processorThread.quit();
-	processorThread.wait();
+	m_processorThread.quit();
+	m_processorThread.wait();
 
-	writerThread.quit();
-	writerThread.wait();
+	m_writerThread.quit();
+	m_writerThread.wait();
 
 	// Clean up pointers
-	delete frameProcessor;
-	delete synchronizer;
-	delete writer;
+	delete p_frameProcessor;
+	delete p_synchronizer;
+	delete p_writer;
 }
 
 QList<Sensor*> SensorController::sensors() const
 {
-	return _sensors;
+	return r_sensors;
 }
 
-void SensorController::addSensor(Sensor* sensor)
+void SensorController::addSensor(Sensor *sensor)
 {
-	_sensors.append(sensor);
+	r_sensors.append(sensor);
 	emit sensorAdded(sensor);
 }
 
-void SensorController::removeSensor(Sensor* sensor)
+void SensorController::removeSensor(Sensor *sensor)
 {
-	_sensors.removeOne(sensor);
+	r_sensors.removeOne(sensor);
 	emit sensorRemoved(sensor);
 }
 
 void SensorController::clearSensors()
 {
-	_sensors.clear();
+	r_sensors.clear();
 	emit sensorsCleared();
 }
 
 void SensorController::startSensors()
 {
-	for (Sensor* sensor : _sensors) {
+	for (Sensor* sensor : r_sensors) {
 		sensor->start();
 	}
 }
 
 void SensorController::stopSensors()
 {
-	for (Sensor* sensor : _sensors) {
+	for (Sensor* sensor : r_sensors) {
 		sensor->stop();
 	}
 }

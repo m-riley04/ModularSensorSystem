@@ -27,44 +27,44 @@ SensorWriter::SensorWriter(QObject* parent)
 {
 	// Create output directory
 	QString outputFolderName = "output";
-	outputPath = QDir::currentPath();
-	QDir _ = QDir(outputPath.toString());
+	m_outputPath = QDir::currentPath();
+	QDir _ = QDir(m_outputPath.toString());
 	if (!_.exists(outputFolderName)) {
 		_.mkdir(outputFolderName);
 	}
 
 	// Initialize filename
-	filename = "test_output.avi";
-	outputPath = outputPath.toString() + "/" + outputFolderName + "/" + filename;
+	m_filename = "test_output.avi";
+	m_outputPath = m_outputPath.toString() + "/" + outputFolderName + "/" + m_filename;
 
 	// Initialize video writer
 	QVideoFrameFormat frameFormat(QSize(640, 480), QVideoFrameFormat::Format_RGBA8888);
-	frameInput = new QVideoFrameInput(frameFormat);
-	format.setVideoCodec(QMediaFormat::VideoCodec::MPEG4);
-	format.setFileFormat(QMediaFormat::AVI);
-	session.setRecorder(&recorder);
-	session.setVideoFrameInput(frameInput);
-	recorder.setOutputLocation(outputPath);
-	recorder.setMediaFormat(format);
-	recorder.setVideoFrameRate(30);
-	recorder.setEncodingMode(QMediaRecorder::AverageBitRateEncoding);
-	recorder.setVideoFrameRate(30);
-	recorder.setVideoResolution(QSize(640, 480));
+	m_frameInput = new QVideoFrameInput(frameFormat);
+	m_format.setVideoCodec(QMediaFormat::VideoCodec::MPEG4);
+	m_format.setFileFormat(QMediaFormat::AVI);
+	m_session.setRecorder(&m_recorder);
+	m_session.setVideoFrameInput(m_frameInput);
+	m_recorder.setOutputLocation(m_outputPath);
+	m_recorder.setMediaFormat(m_format);
+	m_recorder.setVideoFrameRate(30);
+	m_recorder.setEncodingMode(QMediaRecorder::AverageBitRateEncoding);
+	m_recorder.setVideoFrameRate(30);
+	m_recorder.setVideoResolution(QSize(640, 480));
 }
 
 SensorWriter::~SensorWriter()
 {
-	if (isRecording) recorder.stop();
+	if (m_isRecording) m_recorder.stop();
 }
 
 void SensorWriter::startRecording()
 {
-	if (!isRecording) {
-		startTimestamp = QDateTime::currentMSecsSinceEpoch();
-		previousTimestamp = startTimestamp;
+	if (!m_isRecording) {
+		m_startTimestamp = QDateTime::currentMSecsSinceEpoch();
+		m_previousTimestamp = m_startTimestamp;
 
 		// Check if the output file exists
-		QFile file(outputPath.toString());
+		QFile file(m_outputPath.toString());
 		if (file.exists()) {
 			file.remove();
 		}
@@ -72,40 +72,40 @@ void SensorWriter::startRecording()
 		file.open(QIODevice::WriteOnly);
 		file.close();
 
-		isRecording = true;
-		recorder.record();
+		m_isRecording = true;
+		m_recorder.record();
 	}
 }
 
 void SensorWriter::stopRecording()
 {
-	if (isRecording) {
-		isRecording = false;
-		recorder.stop();
+	if (m_isRecording) {
+		m_isRecording = false;
+		m_recorder.stop();
 
-		if (recorder.error() != QMediaRecorder::NoError) {
-			qWarning() << "Error while stopping recorder:" << recorder.errorString();
+		if (m_recorder.error() != QMediaRecorder::NoError) {
+			qWarning() << "Error while stopping recorder:" << m_recorder.errorString();
 		}
 	}
 }
 
 void SensorWriter::write(const QVariant& data, const qint64 timestamp) {
-	if (!isRecording) return;
+	if (!m_isRecording) return;
 
 	if (data.canConvert<cv::Mat>()) {
 		auto mat = data.value<cv::Mat>();
 		qDebug() << "Frame dimensions:" << mat.cols << "x" << mat.rows;
 		QImage img = matToQImage(mat);
-		QVideoFrame frame = imageToVideoFrame(img, previousTimestamp-startTimestamp, timestamp-startTimestamp);
+		QVideoFrame frame = imageToVideoFrame(img, m_previousTimestamp-m_startTimestamp, timestamp-m_startTimestamp);
 		if (!frame.isValid()) {
 			qWarning() << "Invalid QVideoFrame created.";
 		}
-		if (!frameInput->sendVideoFrame(frame)) {
+		if (!m_frameInput->sendVideoFrame(frame)) {
 			qWarning() << "Failed to send video frame to recorder.";
 		}
 	}
 	
-	previousTimestamp = timestamp;
+	m_previousTimestamp = timestamp;
 
 	emit writeFinished(timestamp);
 

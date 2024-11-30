@@ -11,16 +11,16 @@ class SensorWriter : public QObject
 	Q_OBJECT
 
 private:
-	QString filename;
-	QUrl outputPath;
-	QVideoFrameInput* frameInput;
-	QMediaRecorder recorder;
-	QMediaCaptureSession session;
-	QMediaFormat format;
-	qint64 previousTimestamp = 0;
-	qint64 startTimestamp = 0;
+	QString m_filename;
+	QUrl m_outputPath;
+	QVideoFrameInput* m_frameInput;
+	QMediaRecorder m_recorder;
+	QMediaCaptureSession m_session;
+	QMediaFormat m_format;
+	qint64 m_previousTimestamp = 0;
+	qint64 m_startTimestamp = 0;
 
-	bool isRecording = false;
+	bool m_isRecording = false;
 
 public:
 	SensorWriter(QObject* parent = nullptr);

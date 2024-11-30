@@ -14,39 +14,34 @@ class SensorController : public QObject
 	Q_OBJECT
 
 private:
-	QList<Sensor*> _sensors;
-	QList<Camera*> _cameras;
+	QList<Sensor*> r_sensors;
+	QList<Camera*> r_cameras;
 
-	FrameProcessor* frameProcessor;
-	SensorSynchronizer* synchronizer;
-	SensorWriter* writer;
+	FrameProcessor *p_frameProcessor;
+	SensorSynchronizer *p_synchronizer;
+	SensorWriter *p_writer;
 	
-	QThread cameraThread;
-	QThread processorThread;
-	QThread writerThread;
-
-	QCamera q_camera;
-	QMediaCaptureSession session;
-	QMediaRecorder recorder;
-	QVideoSink sink;
+	QThread m_cameraThread;
+	QThread m_processorThread;
+	QThread m_writerThread;
 
 public:
-	SensorController(QObject* parent);
+	SensorController(QObject *parent);
 	~SensorController();
 
 	QList<Sensor*> sensors() const;
-	void addSensor(Sensor* sensor);
-	void removeSensor(Sensor* sensor);
+	void addSensor(Sensor *sensor);
+	void removeSensor(Sensor *sensor);
 	void clearSensors();
 
 	void startSensors();
 	void stopSensors();
 
 signals:
-	void sensorAdded(Sensor* sensor);
-	void sensorRemoved(Sensor* sensor);
+	void sensorAdded(Sensor *sensor);
+	void sensorRemoved(Sensor *sensor);
 	void sensorsCleared();
 	
-	void cameraStarted(Camera* camera);
-	void cameraAdded(Camera* camera);
+	void cameraStarted(Camera *camera);
+	void cameraAdded(Camera *camera);
 };

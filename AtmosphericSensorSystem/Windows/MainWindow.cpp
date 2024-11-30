@@ -4,7 +4,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    controller = new SensorController(this);
+    p_controller = new SensorController(this);
 
     // Initialize
     initSignals();
@@ -14,11 +14,11 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     // Delete controller
-    delete controller;
+    delete p_controller;
 
     // Remove all generated video widgets
-    for (QVideoWidget* widget : videoWidgets) {
-        delete widget;
+    for (QVideoWidget *p : m_videoWidgets) {
+        delete p;
     }
 }
 
@@ -28,23 +28,19 @@ void MainWindow::initWidgets() {
 
 void MainWindow::initSignals() {
     // Camera Controls
-    connect(ui.buttonStop, &QPushButton::clicked, controller, &SensorController::stopSensors);
-    connect(ui.buttonStart, &QPushButton::clicked, controller, &SensorController::startSensors);
-
-    // Recording Controls
-    connect(ui.buttonRecord, &QPushButton::clicked, this, &MainWindow::clicked_record);
-    connect(ui.buttonStopRecording, &QPushButton::clicked, this, &MainWindow::clicked_stop);
+    connect(ui.buttonStop, &QPushButton::clicked, p_controller, &SensorController::stopSensors);
+    connect(ui.buttonStart, &QPushButton::clicked, p_controller, &SensorController::startSensors);
 
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
 }
 
-void MainWindow::addVideoWidget(Camera* camera)
+void MainWindow::addVideoWidget(Camera *camera)
 {
-    QVideoWidget* videoWidget = new QVideoWidget();
-    videoWidgets.push_back(videoWidget);
-    QString tabName = "Camera " + videoWidgets.length();
+    QVideoWidget *videoWidget = new QVideoWidget();
+    m_videoWidgets.push_back(videoWidget);
+    QString tabName = "Camera " + m_videoWidgets.length();
     ui.tabCameras->addTab(videoWidget, tabName);
     camera->setVideoWidget(videoWidget);
 }
