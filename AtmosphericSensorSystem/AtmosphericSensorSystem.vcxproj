@@ -95,7 +95,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Controllers\MainController.cpp" />
     <ClCompile Include="Processors\FrameProcessor.cpp" />
     <ClCompile Include="Sensors\GPS.cpp" />
     <ClCompile Include="Sensors\Sensor.cpp" />
@@ -138,9 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\GPS.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="Controllers\MainController.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Processors\FrameProcessor.h" />

@@ -4,7 +4,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    controller = new MainController(this);
+    controller = new SensorController(this);
 
     // Initialize
     initSignals();
@@ -13,7 +13,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    // Delete controller
     delete controller;
+
+    // Remove all generated video widgets
+    for (QVideoWidget* widget : videoWidgets) {
+        delete widget;
+    }
 }
 
 void MainWindow::initWidgets() {
@@ -22,8 +28,8 @@ void MainWindow::initWidgets() {
 
 void MainWindow::initSignals() {
     // Camera Controls
-    connect(ui.buttonStop, &QPushButton::clicked, controller, &MainController::stopSensors);
-    connect(ui.buttonStart, &QPushButton::clicked, controller, &MainController::startSensors);
+    connect(ui.buttonStop, &QPushButton::clicked, controller, &SensorController::stopSensors);
+    connect(ui.buttonStart, &QPushButton::clicked, controller, &SensorController::startSensors);
 
     // Recording Controls
     connect(ui.buttonRecord, &QPushButton::clicked, this, &MainWindow::clicked_record);
@@ -32,23 +38,15 @@ void MainWindow::initSignals() {
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
-    connect(ui.actionCameraProperties, &QAction::triggered, this, &MainWindow::openCameraProperties);
 }
 
-void MainWindow::displayFrame(QVariant data, qint64 timestamp) {
-    if (data.canConvert<cv::Mat>()) {
-		cv::Mat frame = data.value<cv::Mat>();
-
-        // Convert the frame to QImage for displaying in QLabel
-        QImage image(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_BGR888);
-        ui.video->setPixmap(QPixmap::fromImage(image).scaled(ui.video->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    }
-}
-
-void MainWindow::openCameraProperties() {
-    //CameraPropertiesWindow *w = new CameraPropertiesWindow(this, camera);
-    //w->setAttribute(Qt::WA_DeleteOnClose);
-    //w->show();
+void MainWindow::addVideoWidget(Camera* camera)
+{
+    QVideoWidget* videoWidget = new QVideoWidget();
+    videoWidgets.push_back(videoWidget);
+    QString tabName = "Camera " + videoWidgets.length();
+    ui.tabCameras->addTab(videoWidget, tabName);
+    camera->setVideoWidget(videoWidget);
 }
 
 void MainWindow::quit() {
