@@ -2,8 +2,9 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include "../Controllers/MainController.h"
+#include "../Controllers/SensorController.h"
 #include <QVideoFrame>
+#include <QVideoWidget>
 
 class MainWindow : public QMainWindow
 {
@@ -15,13 +16,14 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    MainController* controller;
+    SensorController* controller;
+    QList<QVideoWidget*> videoWidgets;
 
     void initWidgets();
     void initSignals();
 
 public slots:
-    void displayFrame(QVariant data, qint64 timestamp);
+    void addVideoWidget(Camera* camera);
 
     void quit();
     void restart();
@@ -29,4 +31,5 @@ public slots:
 signals:
     void clicked_record();
     void clicked_stop();
+    void clicked_display_video(QVideoWidget* widget);
 };

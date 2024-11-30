@@ -15,15 +15,15 @@ class SensorController : public QObject
 
 private:
 	QList<Sensor*> _sensors;
+	QList<Camera*> _cameras;
 
-	Camera* camera; /// TODO: Generalize this
 	FrameProcessor* frameProcessor;
 	SensorSynchronizer* synchronizer;
 	SensorWriter* writer;
 	
-	QThread* cameraThread;
-	QThread* processorThread;
-	QThread* writerThread;
+	QThread cameraThread;
+	QThread processorThread;
+	QThread writerThread;
 
 	QCamera q_camera;
 	QMediaCaptureSession session;
@@ -46,4 +46,7 @@ signals:
 	void sensorAdded(Sensor* sensor);
 	void sensorRemoved(Sensor* sensor);
 	void sensorsCleared();
+	
+	void cameraStarted(Camera* camera);
+	void cameraAdded(Camera* camera);
 };

@@ -6,6 +6,7 @@
 #include <qmessagebox.h>
 #include "sensor.h"
 #include <QThread>
+#include <QVideoWidget>
 
 #define DEFAULT_FRAME_RATE 30
 
@@ -17,12 +18,11 @@ private:
     QCamera camera;
     QMediaCaptureSession session;
     QVideoSink sink;
-    QTimer* frameTimer;
     int _fps = DEFAULT_FRAME_RATE;
     int _videoDeviceIndex = 0;
 
 public:
-	Camera(QObject *parent=nullptr);
+	Camera(QObject *parent = nullptr);
 	~Camera();
 
 	QVariant read() override;
@@ -30,13 +30,14 @@ public:
 
 public slots:
     void setVideoDevice(int deviceIndex);
+    void setVideoDevice(QCameraDevice device);
     
     void initialize() override;
     void start() override;
     void stop() override;
     void restart() override;
 
-    void captureFrame();
+    void setVideoWidget(QVideoWidget* widget);
 
 signals:
     void deviceChanged();

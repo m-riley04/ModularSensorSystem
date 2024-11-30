@@ -17,6 +17,12 @@ Camera::~Camera()
     }
 }
 
+void Camera::setVideoDevice(QCameraDevice device)
+{
+    camera.setCameraDevice(device);
+    emit deviceChanged();
+}
+
 void Camera::initialize() {
     // Default the video device
 	if (checkCameraAvailability()) {
@@ -34,12 +40,6 @@ void Camera::start() {
 
     // Open the camera
     camera.start();
-    
-    // Initialize the timer
-	frameTimer = new QTimer();
-    connect(frameTimer, &QTimer::timeout, this, &Camera::captureFrame);
-    frameTimer->start(1000 / _fps);
-    frameTimer->setInterval(static_cast<int>(1000 / _fps));
 
     // Emit signal
     emit started();
@@ -49,9 +49,6 @@ void Camera::stop() {
     // Check if camera is good to go/is active
     if (!camera.isAvailable() || !camera.isActive()) return; // TODO: Do more logging here
     
-    // Stop timer
-    frameTimer->stop();
-
     // Stop camera
     camera.stop();
 
@@ -65,19 +62,9 @@ QVariant Camera::read() {
     return QVariant::fromValue(frame);
 }
 
-bool Camera::checkCameraAvailability() {
-    return QMediaDevices::videoInputs().count() > 0;
-}
-
-void Camera::captureFrame() {
-    QVariant data = read();
-    if (!data.isNull()) {
-        qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
-        emit dataReady(data, timestamp);
-    }
-    else {
-        qDebug() << "ERROR: Failed to read and capture frame from camera.";
-    }
+void Camera::setVideoWidget(QVideoWidget* widget)
+{
+    session.setVideoOutput(widget);
 }
 
 void Camera::restart() {
@@ -89,4 +76,8 @@ void Camera::setVideoDevice(int deviceIndex) {
     // Set new index
     camera.setCameraDevice(QCameraDevice()); // TODO: Actually use device index
 	emit deviceChanged();
+}
+
+bool Camera::checkCameraAvailability() {
+    return QMediaDevices::videoInputs().count() > 0;
 }
