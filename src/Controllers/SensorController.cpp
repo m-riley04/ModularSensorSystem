@@ -5,14 +5,13 @@ SensorController::SensorController(QObject *parent)
 	: QObject(parent)
 {
 	// Initialize components
-	pSynchronizer = new SensorSynchronizer();
-	pFrameProcessor = new FrameProcessor();
-	pWriter = new SensorWriter();
+	pSynchronizer = std::make_unique<SensorSynchronizer>();
+	pFrameProcessor = std::make_unique<FrameProcessor>();
+	pWriter = std::make_unique<SensorWriter>();
 
+	// Initialize threads
 	pFrameProcessor->moveToThread(&mProcessorThread);
 	pWriter->moveToThread(&mWriterThread);
-	
-	// Start threads
 	mProcessorThread.start();
 	mWriterThread.start();
 }
@@ -26,37 +25,32 @@ SensorController::~SensorController()
 	mWriterThread.quit();
 	mWriterThread.wait();
 
-	// Clean up all cameras and sensors that haven't been deleted yet
-	for (Camera* p : mCameras) {
-		if (p != nullptr) delete p;
-	}
-
-	// Clean up all cameras that haven't been deleted yet
-	for (Sensor* p : mSensors) {
-		if (p != nullptr) delete p;
-	}
-
-	// Clean up component pointers
-	delete pFrameProcessor;
-	delete pSynchronizer;
-	delete pWriter;
+	// Clean up sensors/cameras
+	mCameras.clear();
+	mSensors.clear();
 }
 
-QList<Sensor*> SensorController::sensors() const
+const std::vector<std::unique_ptr<Sensor>> &SensorController::sensors() const
 {
 	return mSensors;
 }
 
-void SensorController::addSensor(Sensor *sensor)
+void SensorController::addSensor()
 {
-	mSensors.append(sensor);
-	emit sensorAdded(sensor);
+	//mSensors.push_back(sensor);
+	//emit sensorAdded(mSensors.back().get());
 }
 
 void SensorController::removeSensor(Sensor *sensor)
 {
-	mSensors.removeOne(sensor);
-	emit sensorRemoved(sensor);
+	auto it = std::find_if(mSensors.begin(), mSensors.end(),
+		[sensor](const std::unique_ptr<Sensor>& ptr) {
+			return ptr.get() == sensor;
+		});
+	if (it != mSensors.end()) {
+		emit sensorRemoved(sensor);
+		mSensors.erase(it); // This will automatically delete the Sensor
+	}
 }
 
 void SensorController::clearSensors()
@@ -67,37 +61,43 @@ void SensorController::clearSensors()
 
 void SensorController::startSensors()
 {
-	for (Sensor* sensor : mSensors) {
+	for (const std::unique_ptr<Sensor>& sensor : mSensors) {
 		sensor->start();
 	}
 }
 
 void SensorController::stopSensors()
 {
-	for (Sensor* sensor : mSensors) {
+	for (const std::unique_ptr<Sensor>& sensor : mSensors) {
 		sensor->stop();
 	}
 }
 
-QList<Camera*> SensorController::cameras() const
+const std::vector<std::unique_ptr<Camera>>& SensorController::cameras() const
 {
-	return QList<Camera*>();
+	return mCameras;
 }
 
 void SensorController::addCamera(QCameraDevice device)
 {
-	Camera* _camera = new Camera();
-	_camera->setDevice(device);
-	mCameras.append(_camera);
-	_camera->start();
-	emit cameraAdded(_camera);
+	auto camera = std::make_unique<Camera>();
+	camera->setDevice(device);
+	camera->start();
+
+	mCameras.push_back(std::move(camera));
+	emit cameraAdded(mCameras.back().get());
 }
 
 void SensorController::removeCamera(Camera* camera)
 {
-	mCameras.removeOne(camera);
-	delete camera;
-	emit cameraRemoved(camera);
+	auto it = std::find_if(mCameras.begin(), mCameras.end(),
+		[camera](const std::unique_ptr<Camera>& ptr) {
+			return ptr.get() == camera;
+		});
+	if (it != mCameras.end()) {
+		emit cameraRemoved(camera);
+		mCameras.erase(it);
+	}
 }
 
 void SensorController::clearCameras()
@@ -108,21 +108,21 @@ void SensorController::clearCameras()
 
 void SensorController::startCameras()
 {
-	for (Camera* camera : mCameras) {
+	for (const auto& camera : mCameras) {
 		camera->start();
 	}
 }
 
 void SensorController::stopCameras()
 {
-	for (Camera* camera : mCameras) {
+	for (const auto& camera : mCameras) {
 		camera->stop();
 	}
 }
 
 Camera* SensorController::findCamera(QVideoWidget* widget)
 {
-	for (Camera* camera : mCameras) {
-		if (camera->output() == widget) return camera;
+	for (const auto& camera : mCameras) {
+		if (camera->output() == widget) return camera.get();
 	}
 }

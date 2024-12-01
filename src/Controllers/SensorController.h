@@ -8,20 +8,21 @@
 #include "../Synchronizers/SensorSynchronizer.h"
 #include "../Processors/FrameProcessor.h"
 #include "../Writers/SensorWriter.h"
+#include <memory>
+#include <vector>
 
 class SensorController : public QObject
 {
 	Q_OBJECT
 
 private:
-	QList<Sensor*> mSensors;
-	QList<Camera*> mCameras;
+	std::vector<std::unique_ptr<Sensor>> mSensors;
+	std::vector<std::unique_ptr<Camera>> mCameras;
 
-	FrameProcessor *pFrameProcessor;
-	SensorSynchronizer *pSynchronizer;
-	SensorWriter *pWriter;
+	std::unique_ptr<FrameProcessor> pFrameProcessor;
+	std::unique_ptr<SensorSynchronizer> pSynchronizer;
+	std::unique_ptr<SensorWriter> pWriter;
 	
-	QThread mCameraThread;
 	QThread mProcessorThread;
 	QThread mWriterThread;
 
@@ -29,11 +30,11 @@ public:
 	SensorController(QObject *parent);
 	~SensorController();
 
-	QList<Sensor*> sensors() const;
-	QList<Camera*> cameras() const;
+	const std::vector<std::unique_ptr<Sensor>> &sensors() const;
+	const std::vector<std::unique_ptr<Camera>> &cameras() const;
 
 public slots:
-	void addSensor(Sensor* sensor);
+	void addSensor();
 	void removeSensor(Sensor* sensor);
 	void clearSensors();
 	void startSensors();
