@@ -12,19 +12,9 @@ SensorController::SensorController(QObject *parent)
 	pFrameProcessor->moveToThread(&mProcessorThread);
 	pWriter->moveToThread(&mWriterThread);
 	
-	
 	// Start threads
 	mProcessorThread.start();
 	mWriterThread.start();
-
-	//// Initialize cameras only
-	//for (QCameraDevice device : QMediaDevices::videoInputs()) {
-	//	Camera* _camera = new Camera();
-	//	_camera->setDevice(device);
-	//	_camera->start();
-	//	addCamera(_camera);
-	//	emit cameraAdded(_camera);
-	//}
 }
 
 SensorController::~SensorController()
@@ -36,7 +26,17 @@ SensorController::~SensorController()
 	mWriterThread.quit();
 	mWriterThread.wait();
 
-	// Clean up pointers
+	// Clean up all cameras and sensors that haven't been deleted yet
+	for (Camera* p : mCameras) {
+		if (p != nullptr) delete p;
+	}
+
+	// Clean up all cameras that haven't been deleted yet
+	for (Sensor* p : mSensors) {
+		if (p != nullptr) delete p;
+	}
+
+	// Clean up component pointers
 	delete pFrameProcessor;
 	delete pSynchronizer;
 	delete pWriter;
@@ -95,8 +95,8 @@ void SensorController::addCamera(QCameraDevice device)
 
 void SensorController::removeCamera(Camera* camera)
 {
-	
 	mCameras.removeOne(camera);
+	delete camera;
 	emit cameraRemoved(camera);
 }
 

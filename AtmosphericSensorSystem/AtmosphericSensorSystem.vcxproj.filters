@@ -67,6 +67,9 @@
     <ClCompile Include="Synchronizers\SensorSynchronizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Windows\CameraPropertiesWindow.h">
@@ -96,12 +99,18 @@
     <QtMoc Include="Synchronizers\SensorSynchronizer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Windows\AddCameraDialog\AddCameraDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Windows\CameraPropertiesWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\SensorListItem.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

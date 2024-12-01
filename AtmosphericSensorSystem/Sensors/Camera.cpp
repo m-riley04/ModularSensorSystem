@@ -64,6 +64,7 @@ QVideoWidget* Camera::output()
 void Camera::setOutput(QVideoWidget* widget)
 {
     mSession.setVideoOutput(widget);
+    pOutput = widget;
 }
 
 QCameraDevice* Camera::device()

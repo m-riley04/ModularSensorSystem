@@ -1,6 +1,6 @@
 {
   "dependencies": [
-    "opencv",
-    "libusb"
+    "libusb",
+    "opencv"
   ]
 }

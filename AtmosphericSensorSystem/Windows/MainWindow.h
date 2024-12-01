@@ -25,6 +25,8 @@ private:
 
 public slots:
     void addVideoWidget(Camera *camera);
+    void addCamera();
+    void removeCamera();
 
     void quit();
     void restart();
