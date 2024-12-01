@@ -4,7 +4,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    pController = new SensorController(this);
+    pController = std::make_unique<SensorController>(this);
 
     // Initialize
     initSignals();
@@ -13,13 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    // Delete controller
-    delete pController;
-
-    // Remove all generated video widgets
-    for (QVideoWidget *p : mVideoWidgets) {
-        delete p;
-    }
+    mVideoWidgets.clear();
 }
 
 void MainWindow::initWidgets() {
@@ -28,13 +22,13 @@ void MainWindow::initWidgets() {
 
 void MainWindow::initSignals() {
     // Camera Controls
-    connect(ui.buttonStop, &QPushButton::clicked, pController, &SensorController::stopSensors);
-    connect(ui.buttonStart, &QPushButton::clicked, pController, &SensorController::startSensors);
+    connect(ui.buttonStop, &QPushButton::clicked, pController.get(), &SensorController::stopSensors);
+    connect(ui.buttonStart, &QPushButton::clicked, pController.get(), &SensorController::startSensors);
 
     // Camera View
     connect(ui.buttonAddSensor, &QPushButton::clicked, this, &MainWindow::addCamera);
     connect(ui.buttonRemoveSensor, &QPushButton::clicked, this, &MainWindow::removeCamera);
-    connect(pController, &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
+    connect(pController.get(), &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
 
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
@@ -43,9 +37,9 @@ void MainWindow::initSignals() {
 
 void MainWindow::addVideoWidget(Camera *camera)
 {
-    QVideoWidget *videoWidget = new QVideoWidget();
+    auto videoWidget = new QVideoWidget(this);
     mVideoWidgets.push_back(videoWidget);
-    QString tabName = "Camera " + mVideoWidgets.length();
+    QString tabName = "Camera " + mVideoWidgets.size();
     ui.tabCameras->addTab(videoWidget, tabName);
     camera->setOutput(videoWidget);
 }
@@ -53,7 +47,7 @@ void MainWindow::addVideoWidget(Camera *camera)
 void MainWindow::addCamera()
 {
     AddCameraDialog* addDialog = new AddCameraDialog();
-    connect(addDialog, &AddCameraDialog::deviceSelected, pController, &SensorController::addCamera);
+    connect(addDialog, &AddCameraDialog::deviceSelected, pController.get(), &SensorController::addCamera);
     addDialog->show();
 }
 
@@ -68,14 +62,14 @@ void MainWindow::removeCamera()
     {
         // Find the selected tab
         int currentTabIndex = ui.tabCameras->currentIndex();
-        if (currentTabIndex == -1 || !(currentTabIndex < mVideoWidgets.length()))
+        if (currentTabIndex == -1 || !(currentTabIndex < mVideoWidgets.size()))
         {
             QMessageBox::warning(this, "Error", "The selected camera does not exist and cannot be deleted.", QMessageBox::StandardButton::Ok);
             return;
         }
 
         // Find camera and video widget
-        QVideoWidget* videoWidget = mVideoWidgets[currentTabIndex];
+        auto &videoWidget = mVideoWidgets.at(currentTabIndex);
         Camera* cam = pController->findCamera(videoWidget);
 
         // Remove video widget from UI
@@ -83,7 +77,7 @@ void MainWindow::removeCamera()
 
         // Remove camera and video widget
         pController->removeCamera(cam);
-        mVideoWidgets.removeAt(currentTabIndex);
+        mVideoWidgets.erase(mVideoWidgets.begin() + currentTabIndex);
     }
 }
 
