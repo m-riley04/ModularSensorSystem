@@ -105,6 +105,19 @@
      <string>+</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="buttonCameraSettings">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>600</y>
+      <width>121</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Camera Settings</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

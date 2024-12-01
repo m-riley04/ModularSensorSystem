@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "QtCameraControlsWindow/QtCameraControlsDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,6 +30,25 @@ void MainWindow::initSignals() {
     connect(ui.buttonAddSensor, &QPushButton::clicked, this, &MainWindow::addCamera);
     connect(ui.buttonRemoveSensor, &QPushButton::clicked, this, &MainWindow::removeCamera);
     connect(pController.get(), &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
+    connect(ui.buttonCameraSettings, &QPushButton::clicked, [this]() {
+        // Find the selected tab
+        int currentTabIndex = ui.tabCameras->currentIndex();
+        if (currentTabIndex == -1 || !(currentTabIndex < mVideoWidgets.size()))
+        {
+            QMessageBox::warning(this, "Error", "The selected camera does not exist and cannot be deleted.", QMessageBox::StandardButton::Ok);
+            return;
+        }
+
+        // Find camera and video widget
+        auto& videoWidget = mVideoWidgets.at(currentTabIndex);
+        Camera* cam = pController->findCamera(videoWidget);
+
+        // Create the settings box
+        QtCameraControlsDialog* controls = new QtCameraControlsDialog(cam, this);
+        controls->setAttribute(Qt::WA_DeleteOnClose);
+        controls->show();
+
+        });
 
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);

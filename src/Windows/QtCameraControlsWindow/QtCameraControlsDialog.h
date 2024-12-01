@@ -14,4 +14,5 @@ public:
 
 private:
 	Ui::QtCameraControlsDialogClass ui;
+	Camera* pCamera;
 };

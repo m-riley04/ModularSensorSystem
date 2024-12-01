@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>548</width>
-    <height>496</height>
+    <height>562</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,31 +53,17 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>Min Frame Rate:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>Pixel Format:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>Resolution:</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QLabel" name="labelMaxFrameRate">
         <property name="text">
          <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Min Frame Rate:</string>
         </property>
        </widget>
       </item>
@@ -88,10 +74,24 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Pixel Format:</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="1">
        <widget class="QLabel" name="labelPixelFormat">
         <property name="text">
          <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>Resolution:</string>
         </property>
        </widget>
       </item>
@@ -117,9 +117,6 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::FieldGrowthPolicy::AllNonFixedFieldsGrow</enum>
       </property>
-      <property name="rowWrapPolicy">
-       <enum>QFormLayout::RowWrapPolicy::DontWrapRows</enum>
-      </property>
       <property name="horizontalSpacing">
        <number>9</number>
       </property>
@@ -127,6 +124,23 @@
        <number>9</number>
       </property>
       <item row="0" column="0">
+       <widget class="QLabel" name="label_14">
+        <property name="text">
+         <string>Active</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="checkboxActive">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
          <string>Color Temperature</string>
@@ -136,7 +150,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="1" column="1">
        <widget class="QSlider" name="sliderColorTemp">
         <property name="maximum">
          <number>10000</number>
@@ -152,7 +166,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>Exposure Mode</string>
@@ -162,7 +176,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QComboBox" name="dropdownExposureMode">
         <item>
          <property name="text">
@@ -251,7 +265,7 @@
         </item>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>Exposure Comp.</string>
@@ -261,14 +275,14 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QSlider" name="sliderExposureComp">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string>Flash Mode</string>
@@ -278,7 +292,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <widget class="QComboBox" name="dropdownFlashMode">
         <item>
          <property name="text">
@@ -297,7 +311,24 @@
         </item>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_15">
+        <property name="text">
+         <string>Auto Exposure Time</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="checkboxAutoExposureTime">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
        <widget class="QLabel" name="label_7">
         <property name="text">
          <string>Manual Exposure Time</string>
@@ -307,14 +338,31 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="6" column="1">
        <widget class="QSlider" name="sliderManualExposureTime">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="7" column="0">
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>Auto Iso Sensitivity</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QCheckBox" name="checkboxAutoIsoSensitivity">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
          <string>Manual ISO Sensitivity</string>
@@ -324,7 +372,7 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="8" column="1">
        <widget class="QSlider" name="sliderManualIsoSensitivity">
         <property name="maximum">
          <number>128000</number>
@@ -337,7 +385,7 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="0">
+      <item row="9" column="0">
        <widget class="QLabel" name="label_6">
         <property name="text">
          <string>Torch Mode</string>
@@ -347,7 +395,7 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
+      <item row="9" column="1">
        <widget class="QComboBox" name="dropdownTorchMode">
         <item>
          <property name="text">
@@ -366,7 +414,7 @@
         </item>
        </widget>
       </item>
-      <item row="7" column="0">
+      <item row="10" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">
          <string>White Balance Mode</string>
@@ -376,7 +424,7 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="10" column="1">
        <widget class="QComboBox" name="dropdownWhiteBalanceMode">
         <item>
          <property name="text">
@@ -438,16 +486,6 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <tabstops>
-  <tabstop>sliderColorTemp</tabstop>
-  <tabstop>dropdownExposureMode</tabstop>
-  <tabstop>sliderExposureComp</tabstop>
-  <tabstop>dropdownFlashMode</tabstop>
-  <tabstop>sliderManualExposureTime</tabstop>
-  <tabstop>sliderManualIsoSensitivity</tabstop>
-  <tabstop>dropdownTorchMode</tabstop>
-  <tabstop>dropdownWhiteBalanceMode</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>
