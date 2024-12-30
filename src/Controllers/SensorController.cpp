@@ -123,6 +123,6 @@ void SensorController::stopCameras()
 Camera* SensorController::findCamera(QVideoWidget* widget)
 {
 	for (const auto& camera : mCameras) {
-		if (camera->output() == widget) return camera.get();
+		if (camera->session().videoOutput() == widget) return camera.get();
 	}
 }

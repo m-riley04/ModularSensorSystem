@@ -56,26 +56,24 @@ QVariant Camera::read() {
     return QVariant::fromValue(frame);
 }
 
-QVideoWidget* Camera::output()
+QCamera& Camera::camera()
 {
-    return pOutput;
+    return mCamera;
+}
+
+QMediaCaptureSession& Camera::session()
+{
+    return mSession;
 }
 
 void Camera::setOutput(QVideoWidget* widget)
 {
     mSession.setVideoOutput(widget);
-    pOutput = widget;
-}
-
-QCameraDevice* Camera::device()
-{
-    return pDevice;
 }
 
 void Camera::setDevice(QCameraDevice device)
 {
     mCamera.setCameraDevice(device);
-    pDevice = &device;
     emit deviceChanged();
 }
 
@@ -86,64 +84,4 @@ bool Camera::checkCameraAvailability() {
 void Camera::restart() {
     stop();
     start();
-}
-
-void Camera::setActive(bool active)
-{
-    mCamera.setActive(active);
-}
-
-void Camera::setAutoExposureTime(bool enable)
-{
-    mCamera.setAutoExposureTime();
-}
-
-void Camera::setAutoIsoSensitivity(bool enable)
-{
-    mCamera.setAutoIsoSensitivity();
-}
-
-void Camera::setColorTemperature(int temp)
-{
-    mCamera.setColorTemperature(temp);
-}
-
-void Camera::setExposureCompensation(float ev)
-{
-    mCamera.setExposureCompensation(ev);
-}
-
-void Camera::setExposureMode(QCamera::ExposureMode mode)
-{
-    mCamera.setExposureMode(mode);
-}
-
-void Camera::setFlashMode(QCamera::FlashMode mode)
-{
-    mCamera.setFlashMode(mode);
-}
-
-void Camera::setManualExposureTime(float seconds)
-{
-    mCamera.setManualExposureTime(seconds);
-}
-
-void Camera::setManualIsoSensitivity(int iso)
-{
-    mCamera.setManualIsoSensitivity(iso);
-}
-
-void Camera::setTorchMode(QCamera::TorchMode mode)
-{
-    mCamera.setTorchMode(mode);
-}
-
-void Camera::setWhiteBalanceMode(QCamera::WhiteBalanceMode mode)
-{
-    mCamera.setWhiteBalanceMode(mode);
-}
-
-void Camera::zoomTo(float factor, float rate)
-{
-
 }

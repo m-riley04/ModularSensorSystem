@@ -18,8 +18,6 @@ private:
     QCamera mCamera;
     QMediaCaptureSession mSession;
     QVideoSink mSink;
-    QVideoWidget *pOutput;
-    QCameraDevice *pDevice;
 
 public:
 	Camera(QObject *parent = nullptr);
@@ -28,31 +26,17 @@ public:
 	QVariant read() override;
 	static bool checkCameraAvailability();
 
-    QVideoWidget* output();
-    QCameraDevice* device();
+    QCamera& camera();
+    QMediaCaptureSession& session();
 
 public slots:
     void initialize() override;
     void start() override;
     void stop() override;
     void restart() override;
-
     
     void setOutput(QVideoWidget* widget);
     void setDevice(QCameraDevice device);
-
-    void setActive(bool active);
-    void setAutoExposureTime(bool enable);
-    void setAutoIsoSensitivity(bool enable);
-    void setColorTemperature(int temp);
-    void setExposureCompensation(float ev);
-    void setExposureMode(QCamera::ExposureMode mode);
-    void setFlashMode(QCamera::FlashMode mode);
-    void setManualExposureTime(float seconds);
-    void setManualIsoSensitivity(int iso);
-    void setTorchMode(QCamera::TorchMode mode);
-    void setWhiteBalanceMode(QCamera::WhiteBalanceMode mode);
-    void zoomTo(float factor, float rate);
 
 signals:
     void deviceChanged();
