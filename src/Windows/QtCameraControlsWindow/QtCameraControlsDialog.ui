@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>561</width>
-    <height>727</height>
+    <width>751</width>
+    <height>837</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,81 +46,145 @@
       <string>Format</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="4" column="1">
-       <widget class="QPushButton" name="buttonResetFormat">
+      <item row="8" column="0">
+       <widget class="QPushButton" name="buttonResetFilters">
         <property name="text">
-         <string>Reset Format</string>
+         <string>Reset Filters</string>
         </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_17">
-        <property name="text">
-         <string>FPS</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="dropdownPixelFormat"/>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="dropdownFps"/>
-      </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="buttonSeeAllFormats">
-        <property name="text">
-         <string>See All Formats</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Pixel Format</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_18">
-        <property name="text">
-         <string>Resolution</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="dropdownResolution"/>
-      </item>
-      <item row="0" column="2">
-       <widget class="QRadioButton" name="radioFps">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">radioGroupFormat</string>
-        </attribute>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QRadioButton" name="radioResolution">
+       <widget class="QLabel" name="labelResolution">
         <property name="text">
-         <string/>
+         <string>res</string>
         </property>
-        <attribute name="buttonGroup">
-         <string notr="true">radioGroupFormat</string>
-        </attribute>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QRadioButton" name="radioPixelFormat">
+       <widget class="QLabel" name="labelPixelFormat">
         <property name="text">
-         <string/>
+         <string>pix</string>
         </property>
-        <attribute name="buttonGroup">
-         <string notr="true">radioGroupFormat</string>
+       </widget>
+      </item>
+      <item row="7" column="2" rowspan="2">
+       <widget class="QTableWidget" name="tableFormats">
+        <property name="editTriggers">
+         <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <attribute name="horizontalHeaderCascadingSectionResizes">
+         <bool>false</bool>
         </attribute>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>175</number>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>FPS</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Resolution</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Pixel Format</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="labelFps">
+        <property name="text">
+         <string>fps</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QPushButton" name="pushButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Select</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0" colspan="2">
+       <widget class="QGroupBox" name="groupBox">
+        <property name="title">
+         <string>Filters</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="1">
+          <widget class="QComboBox" name="dropdownFps"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Pixel Format</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="dropdownResolution"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_18">
+           <property name="text">
+            <string>Resolution</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="dropdownPixelFormat"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_17">
+           <property name="text">
+            <string>FPS</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>Pixel Format:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Resolution:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>FPS:</string>
+        </property>
        </widget>
       </item>
      </layout>
@@ -509,7 +573,4 @@
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="radioGroupFormat"/>
- </buttongroups>
 </ui>

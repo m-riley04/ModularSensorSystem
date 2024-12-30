@@ -112,6 +112,7 @@
     <ClCompile Include="Sensors\GPS.cpp" />
     <ClCompile Include="Sensors\Sensor.cpp" />
     <ClCompile Include="Synchronizers\SensorSynchronizer.cpp" />
+    <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\QtCameraFormatTableWidgetItem.cpp" />
     <ClCompile Include="Widgets\SensorListItem.cpp" />
     <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp" />
     <ClCompile Include="Windows\QtCameraControlsWindow\QtCameraControlsDialog.cpp" />
@@ -166,6 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Windows\QtCameraControlsWindow\QtCameraControlsDialog.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\QtCameraFormatTableWidgetItem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

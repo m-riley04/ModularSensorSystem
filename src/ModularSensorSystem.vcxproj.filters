@@ -73,6 +73,9 @@
     <ClCompile Include="Windows\QtCameraControlsWindow\QtCameraControlsDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\QtCameraFormatTableWidgetItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Windows\CameraPropertiesWindow.h">
@@ -122,5 +125,10 @@
     <QtUic Include="Windows\QtCameraControlsWindow\QtCameraControlsDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\QtCameraFormatTableWidgetItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

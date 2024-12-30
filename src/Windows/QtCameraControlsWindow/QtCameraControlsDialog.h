@@ -5,13 +5,7 @@
 #include "../../Sensors/Camera.h"
 #include <QtConcurrent>
 #include <QtConcurrent/qtconcurrentfilter.h>
-
-enum FormatFilter
-{
-	FORMAT_FILTER_FPS,
-	FORMAT_FILTER_RESOLUTION,
-	FORMAT_FILTER_PIXEL_FORMAT
-};
+#include "../../Widgets/QtCameraFormatTableWidgetItem/QtCameraFormatTableWidgetItem.h"
 
 class QtCameraControlsDialog : public QDialog
 {
@@ -43,11 +37,10 @@ private:
 	void connectPropertyControls(Camera* camera);
 	void connectFormatControls();
 
-	void resetFormatDropdowns();
+	void resetFilters();
 
 public slots:
 	void onFpsChanged(int index);
 	void onResolutionChanged(int index);
 	void onPixelFormatChanged(int index);
-	void onFilterChanged(int id);
 };
