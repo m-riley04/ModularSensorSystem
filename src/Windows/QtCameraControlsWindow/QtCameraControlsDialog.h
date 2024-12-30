@@ -24,6 +24,7 @@ private:
 	Camera* pCamera;
 	QList<QCameraFormat> mFormats;
 	QCameraFormat defaultFormat;
+	QCameraFormat selectedFormat;
 	
 	void populateFilterDropdowns();
 
@@ -37,4 +38,6 @@ private:
 
 public slots:
 	void updateFormatTable();
+	void onFormatClicked(int row, int column);
+	void onSelectClicked();
 };

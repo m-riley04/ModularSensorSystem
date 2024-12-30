@@ -239,6 +239,12 @@ void QtCameraControlsDialog::connectFormatControls()
 
 	// Initialize reset button
 	connect(ui.buttonResetFilters, &QPushButton::clicked, this, &QtCameraControlsDialog::resetFilters);
+
+	// Initialize select button
+	connect(ui.buttonSelect, &QPushButton::clicked, this, &QtCameraControlsDialog::onSelectClicked);
+
+	// Initialize format table
+	connect(ui.tableFormats, &QTableWidget::cellClicked, this, &QtCameraControlsDialog::onFormatClicked);
 }
 
 void QtCameraControlsDialog::resetFilters()
@@ -258,6 +264,51 @@ void QtCameraControlsDialog::resetFilters()
 	ui.dropdownFps->blockSignals(false);
 	ui.dropdownResolution->blockSignals(false);
 	ui.dropdownPixelFormat->blockSignals(false);
+}
+
+void QtCameraControlsDialog::onFormatClicked(int row, int column)
+{
+	// Find format that matches row
+	auto itr = std::find_if(mFormats.begin(), mFormats.end(), [this, row](const QCameraFormat& format) {
+		return qFuzzyCompare(format.maxFrameRate(), ui.tableFormats->item(row, QtCameraFormatTableItemType::FPS)->text().toFloat()) &&
+			format.resolution() == stringToSize(ui.tableFormats->item(row, QtCameraFormatTableItemType::RESOLUTION)->text()) &&
+			pixelFormatMap[format.pixelFormat()] == ui.tableFormats->item(row, QtCameraFormatTableItemType::PIXEL_FORMAT)->text();
+		});
+	if (itr == mFormats.end()) {
+		// TODO: do more error handling
+		QMessageBox::warning(this, "Error", "Format not found.");
+		return;
+	}
+	
+	// Set the camera format
+	selectedFormat = *itr;
+
+	// Enable the select button
+	ui.buttonSelect->setEnabled(true);
+}
+
+void QtCameraControlsDialog::onSelectClicked()
+{
+	if (selectedFormat.isNull()) {
+		// TODO: Add error checking
+		QMessageBox::warning(this, "Error", "No format selected.");
+		return;
+	}
+
+	// Set the camera format
+	pCamera->camera().setCameraFormat(selectedFormat);
+
+	// Get the current format of the camera (should be the selected one)
+	QCameraFormat currentFormat = pCamera->camera().cameraFormat();
+
+	// Update the UI elements
+	ui.labelFps->setText(QString::number(currentFormat.maxFrameRate()));
+	ui.labelResolution->setText(sizeToString(currentFormat.resolution()));
+	ui.labelPixelFormat->setText(pixelFormatMap[currentFormat.pixelFormat()]);
+	
+	// Reset selected filter
+	selectedFormat = QCameraFormat();
+	ui.buttonSelect->setEnabled(false);
 }
 
 void QtCameraControlsDialog::updateFormatTable()
