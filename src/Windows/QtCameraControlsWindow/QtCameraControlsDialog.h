@@ -36,5 +36,5 @@ private:
 	void resetFilters();
 
 public slots:
-	void onFilterChanged();
+	void updateFormatTable();
 };

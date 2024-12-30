@@ -73,6 +73,16 @@ QSize QtCameraControlsDialog::stringToSize(const QString& str)
 
 void QtCameraControlsDialog::populateFilterDropdowns()
 {
+	// Clear existing items
+	ui.dropdownFps->clear();
+	ui.dropdownResolution->clear();
+	ui.dropdownPixelFormat->clear();
+
+	// Populate dropdowns with default/no option as FIRST INDEX (index 0)
+	ui.dropdownFps->addItem("Any", QVariant());
+	ui.dropdownResolution->addItem("Any", QVariant());
+	ui.dropdownPixelFormat->addItem("Any", QVariant());
+
 	// Populate dropdowns with all possible for each category
 	QSet<float> fpsSet;
 	QSet<QSize> resolutionSet;
@@ -223,9 +233,9 @@ void QtCameraControlsDialog::connectPropertyControls(Camera* camera)
 void QtCameraControlsDialog::connectFormatControls()
 {
 	// Initialize filters
-	connect(ui.dropdownFps, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::onFilterChanged);
-	connect(ui.dropdownResolution, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::onFilterChanged);
-	connect(ui.dropdownPixelFormat, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::onFilterChanged);
+	connect(ui.dropdownFps, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::updateFormatTable);
+	connect(ui.dropdownResolution, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::updateFormatTable);
+	connect(ui.dropdownPixelFormat, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::updateFormatTable);
 
 	// Initialize reset button
 	connect(ui.buttonResetFilters, &QPushButton::clicked, this, &QtCameraControlsDialog::resetFilters);
@@ -238,13 +248,11 @@ void QtCameraControlsDialog::resetFilters()
 	ui.dropdownResolution->blockSignals(true);
 	ui.dropdownPixelFormat->blockSignals(true);
 
-	// Clear dropdowns
-	ui.dropdownFps->clear();
-	ui.dropdownResolution->clear();
-	ui.dropdownPixelFormat->clear();
-
 	// Populate dropdowns
 	populateFilterDropdowns();
+
+	// Update the format table
+	updateFormatTable();
 
 	// Unblock signals
 	ui.dropdownFps->blockSignals(false);
@@ -252,13 +260,74 @@ void QtCameraControlsDialog::resetFilters()
 	ui.dropdownPixelFormat->blockSignals(false);
 }
 
-void QtCameraControlsDialog::onFilterChanged()
+void QtCameraControlsDialog::updateFormatTable()
 {
-	// Get all filter values
-	QString fpsString = ui.dropdownFps->currentText();
-	QString resolutionString = ui.dropdownResolution->currentText();
-	QString pixelFormatString = ui.dropdownPixelFormat->currentText();
+	// Clear existing entries
+	ui.tableFormats->clearContents();
+	ui.tableFormats->setRowCount(0);
 
-	// Repopulate resolution and pixel format dropdowns
-	
+	// Extract current filter selections
+	QVariant fpsData = ui.dropdownFps->currentData();
+	QVariant resData = ui.dropdownResolution->currentData();
+	QVariant pfData = ui.dropdownPixelFormat->currentData();
+
+	// Convert them to actual types if they are valid
+	bool fpsIsValid = fpsData.isValid();
+	bool resIsValid = resData.isValid();
+	bool pfIsValid = pfData.isValid();
+
+	// We'll only compare if these are valid
+	float selectedFps = fpsIsValid ? fpsData.toFloat() : 0.0f;
+	QSize selectedResolution = resIsValid ? resData.toSize() : QSize();
+	QVideoFrameFormat::PixelFormat selectedPixelFormat =
+		pfIsValid
+		? static_cast<QVideoFrameFormat::PixelFormat>(pfData.toInt())
+		: QVideoFrameFormat::Format_Invalid;
+
+	// Iterate through all available formats
+	for (const QCameraFormat& format : mFormats)
+	{
+		// Check FPS if valid
+		bool matchesFps = true;
+		if (fpsIsValid) {
+			// Use qFuzzyCompare to account for floating-point comparison
+			matchesFps = qFuzzyCompare(format.maxFrameRate(), selectedFps);
+		}
+
+		// Check resolution if valid
+		bool matchesResolution = true;
+		if (resIsValid) {
+			matchesResolution = (format.resolution() == selectedResolution);
+		}
+
+		// Check pixel format if valid
+		bool matchesPixelFormat = true;
+		if (pfIsValid) {
+			matchesPixelFormat = (format.pixelFormat() == selectedPixelFormat);
+		}
+
+		// If all conditions pass, add it to the table
+		if (matchesFps && matchesResolution && matchesPixelFormat) {
+			int row = ui.tableFormats->rowCount();
+			ui.tableFormats->insertRow(row);
+
+			// FPS
+			ui.tableFormats->setItem(
+				row, 
+				0,
+				new QtCameraFormatTableWidgetItem(QString::number(format.maxFrameRate()), QtCameraFormatTableItemType::FPS));
+
+			// Resolution
+			ui.tableFormats->setItem(
+				row, 
+				1, 
+				new QtCameraFormatTableWidgetItem(sizeToString(format.resolution()), QtCameraFormatTableItemType::RESOLUTION));
+
+			// Pixel Format
+			ui.tableFormats->setItem(
+				row, 
+				2,
+				new QtCameraFormatTableWidgetItem(pixelFormatMap[format.pixelFormat()], QtCameraFormatTableItemType::PIXEL_FORMAT));
+		}
+	}
 }
