@@ -6,6 +6,7 @@
 #include <QtConcurrent>
 #include <QtConcurrent/qtconcurrentfilter.h>
 #include "../../Widgets/QtCameraFormatTableWidgetItem/QtCameraFormatTableWidgetItem.h"
+#include <algorithm>
 
 class QtCameraControlsDialog : public QDialog
 {
@@ -23,13 +24,8 @@ private:
 	Camera* pCamera;
 	QList<QCameraFormat> mFormats;
 	QCameraFormat defaultFormat;
-	float selectedFps;
-	QString selectedResolution;
-	QVideoFrameFormat::PixelFormat selectedPixelFormat;
 	
-	int populateFpsDropdown(QString resolution, QVideoFrameFormat::PixelFormat pixelFormat);
-	QString populateResolutionDropdown(float fps, QVideoFrameFormat::PixelFormat pixelFormat);
-	QVideoFrameFormat::PixelFormat populatePixelFormatDropdown(float fps, QString resolution);
+	void populateFilterDropdowns();
 
 	void initializeFormatGroup(Camera* camera);
 	void initializeSettingsGroup(Camera* camera);
@@ -40,7 +36,5 @@ private:
 	void resetFilters();
 
 public slots:
-	void onFpsChanged(int index);
-	void onResolutionChanged(int index);
-	void onPixelFormatChanged(int index);
+	void onFilterChanged();
 };

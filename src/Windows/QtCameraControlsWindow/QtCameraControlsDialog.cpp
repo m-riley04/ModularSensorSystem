@@ -71,11 +71,56 @@ QSize QtCameraControlsDialog::stringToSize(const QString& str)
 	return QSize(); // invalid if parsing failed
 }
 
+void QtCameraControlsDialog::populateFilterDropdowns()
+{
+	// Populate dropdowns with all possible for each category
+	QSet<float> fpsSet;
+	QSet<QSize> resolutionSet;
+	QSet<QVideoFrameFormat::PixelFormat> pixelFormatSet;
+	for (QCameraFormat format : mFormats)
+	{
+		fpsSet.insert(format.maxFrameRate());
+		resolutionSet.insert(format.resolution());
+		pixelFormatSet.insert(format.pixelFormat());
+	}
+
+	// Sort each set
+	QList<float> fpsList = fpsSet.values();
+	std::sort(fpsList.begin(), fpsList.end(), std::greater<float>());
+	QList<QSize> resolutionList = resolutionSet.values();
+	std::sort(resolutionList.begin(), resolutionList.end(), [](const QSize &a, const QSize &b){
+			return a.width() > b.width();
+		});
+	QList<QVideoFrameFormat::PixelFormat> pixelFormatList = pixelFormatSet.values();
+	std::sort(pixelFormatList.begin(), pixelFormatList.end(), [](const QVideoFrameFormat::PixelFormat& a, const QVideoFrameFormat::PixelFormat& b) {
+			return pixelFormatMap[a] > pixelFormatMap[b]; 
+		});
+
+	// Populate fps dropdown
+	for (float fps : fpsList)
+	{
+		ui.dropdownFps->addItem(QString::number(fps), fps);
+	}
+
+	// Populate resolution dropdown
+	for (QSize resolution : resolutionList)
+	{
+		ui.dropdownResolution->addItem(sizeToString(resolution), resolution);
+	}
+
+	// Populate pixel format dropdown
+	for (QVideoFrameFormat::PixelFormat pixelFormat : pixelFormatList)
+	{
+		ui.dropdownPixelFormat->addItem(pixelFormatMap[pixelFormat], pixelFormat);
+	}
+}
+
 void QtCameraControlsDialog::initializeFormatGroup(Camera* camera)
 {
 	// Initialize format list
 	mFormats = camera->camera().cameraDevice().videoFormats();
 
+	// Check if no formats are available
 	if (mFormats.isEmpty())
 	{
 		/// TODO: Maybe put a message instead?
@@ -138,69 +183,6 @@ void QtCameraControlsDialog::initializeSettingsGroup(Camera* camera)
 	connectPropertyControls(camera);
 }
 
-
-int QtCameraControlsDialog::populateFpsDropdown(QString resolution, QVideoFrameFormat::PixelFormat pixelFormat)
-{
-	QList<QCameraFormat> fpsFormatList = QtConcurrent::blockingFiltered(mFormats, [resolution, pixelFormat](QCameraFormat format) {
-		return format.pixelFormat() == pixelFormat && sizeToString(format.resolution()) == resolution;
-		});
-
-	ui.dropdownFps->clear();
-	for (QCameraFormat format : fpsFormatList)
-	{
-		ui.dropdownFps->addItem(QString::number(format.maxFrameRate()), format.maxFrameRate());
-	}
-
-	// Select first item
-	if (!fpsFormatList.isEmpty()) {
-		ui.dropdownFps->setCurrentIndex(0);
-		return fpsFormatList.first().maxFrameRate();
-	}
-	
-	return 0.0;
-}
-
-QString QtCameraControlsDialog::populateResolutionDropdown(float fps, QVideoFrameFormat::PixelFormat pixelFormat)
-{
-	QList<QCameraFormat> resolutionFormatList = QtConcurrent::blockingFiltered(mFormats, [fps, pixelFormat](QCameraFormat format) {
-		return format.pixelFormat() == pixelFormat && format.maxFrameRate() == fps;
-		});
-	ui.dropdownResolution->clear();
-	for (QCameraFormat format : resolutionFormatList)
-	{
-		ui.dropdownResolution->addItem(sizeToString(format.resolution()), format.resolution());
-	}
-
-	if (!resolutionFormatList.isEmpty()) {
-		ui.dropdownResolution->setCurrentIndex(0);
-		return sizeToString(resolutionFormatList.first().resolution());
-	}
-
-	return "";
-}
-
-QVideoFrameFormat::PixelFormat QtCameraControlsDialog::populatePixelFormatDropdown(float fps, QString resolution)
-{
-	QList<QCameraFormat> pixelFormatList = QtConcurrent::blockingFiltered(mFormats, [fps, resolution](QCameraFormat format) {
-		return sizeToString(format.resolution()) == resolution && format.maxFrameRate() == fps;
-		});
-	ui.dropdownPixelFormat->clear();
-
-	for (QCameraFormat format : pixelFormatList)
-	{
-		ui.dropdownPixelFormat->addItem(pixelFormatMap[format.pixelFormat()], format.pixelFormat());
-	}
-
-	if (!pixelFormatList.isEmpty())
-	{
-		ui.dropdownPixelFormat->setCurrentIndex(0);
-		return pixelFormatList.first().pixelFormat(); 
-	}
-
-	/// TODO: Maybe change this
-	return QVideoFrameFormat::Format_Invalid;
-}
-
 void QtCameraControlsDialog::connectPropertyControls(Camera* camera)
 {
 	connect(ui.checkboxActive, &QCheckBox::checkStateChanged, camera, [camera](Qt::CheckState state) {
@@ -241,13 +223,12 @@ void QtCameraControlsDialog::connectPropertyControls(Camera* camera)
 void QtCameraControlsDialog::connectFormatControls()
 {
 	// Initialize filters
-	connect(ui.dropdownFps, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::onFpsChanged);
-	connect(ui.dropdownResolution, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::onResolutionChanged);
-	connect(ui.dropdownPixelFormat, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::onPixelFormatChanged);
+	connect(ui.dropdownFps, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::onFilterChanged);
+	connect(ui.dropdownResolution, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::onFilterChanged);
+	connect(ui.dropdownPixelFormat, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::onFilterChanged);
 
 	// Initialize reset button
 	connect(ui.buttonResetFilters, &QPushButton::clicked, this, &QtCameraControlsDialog::resetFilters);
-
 }
 
 void QtCameraControlsDialog::resetFilters()
@@ -262,39 +243,8 @@ void QtCameraControlsDialog::resetFilters()
 	ui.dropdownResolution->clear();
 	ui.dropdownPixelFormat->clear();
 
-	// Reset selected values
-	selectedFps = 0.0;
-	selectedResolution = "";
-	selectedPixelFormat = QVideoFrameFormat::Format_Invalid;
-
-	// Populate dropdowns with all possible for each category
-	QSet<float> fpsSet;
-	QSet<QString> resolutionSet;
-	QSet<QVideoFrameFormat::PixelFormat> pixelFormatSet;
-	for (QCameraFormat format : mFormats)
-	{
-		fpsSet.insert(format.maxFrameRate());
-		resolutionSet.insert(sizeToString(format.resolution()));
-		pixelFormatSet.insert(format.pixelFormat());
-	}
-
-	// Populate fps dropdown
-	for (float fps : fpsSet)
-	{
-		ui.dropdownFps->addItem(QString::number(fps), fps);
-	}
-
-	// Populate resolution dropdown
-	for (QString resolution : resolutionSet)
-	{
-		ui.dropdownResolution->addItem(resolution, resolution);
-	}
-
-	// Populate pixel format dropdown
-	for (QVideoFrameFormat::PixelFormat pixelFormat : pixelFormatSet)
-	{
-		ui.dropdownPixelFormat->addItem(pixelFormatMap[pixelFormat], pixelFormat);
-	}
+	// Populate dropdowns
+	populateFilterDropdowns();
 
 	// Unblock signals
 	ui.dropdownFps->blockSignals(false);
@@ -302,46 +252,13 @@ void QtCameraControlsDialog::resetFilters()
 	ui.dropdownPixelFormat->blockSignals(false);
 }
 
-void QtCameraControlsDialog::onFpsChanged(int index)
+void QtCameraControlsDialog::onFilterChanged()
 {
-	// Get FPS at new index
-	float fps = ui.dropdownFps->itemText(index).toFloat();
+	// Get all filter values
+	QString fpsString = ui.dropdownFps->currentText();
+	QString resolutionString = ui.dropdownResolution->currentText();
+	QString pixelFormatString = ui.dropdownPixelFormat->currentText();
 
 	// Repopulate resolution and pixel format dropdowns
-	ui.dropdownPixelFormat->blockSignals(true);
-	ui.dropdownResolution->blockSignals(true);
-	selectedResolution = populateResolutionDropdown(fps, selectedPixelFormat);
-	selectedPixelFormat = populatePixelFormatDropdown(fps, selectedResolution);
-	ui.dropdownPixelFormat->blockSignals(false);
-	ui.dropdownResolution->blockSignals(false);
-}
-
-void QtCameraControlsDialog::onResolutionChanged(int index)
-{
-	// Get resolution at new index
-	QString resolution = ui.dropdownResolution->itemText(index);
 	
-	// Repopulate fps and pixel format dropdown
-	ui.dropdownFps->blockSignals(true);
-	ui.dropdownPixelFormat->blockSignals(true);
-
-	selectedFps = populateFpsDropdown(resolution, selectedPixelFormat);
-	selectedPixelFormat = populatePixelFormatDropdown(selectedFps, resolution);
-	ui.dropdownFps->blockSignals(false);
-	ui.dropdownPixelFormat->blockSignals(false);
-	
-}
-
-void QtCameraControlsDialog::onPixelFormatChanged(int index)
-{
-	// Get pixel format at new index
-	selectedPixelFormat = static_cast<QVideoFrameFormat::PixelFormat>(ui.dropdownPixelFormat->itemData(index).toInt());
-	
-	// Repopulate fps and resolution dropdowns
-	ui.dropdownFps->blockSignals(true);
-	ui.dropdownResolution->blockSignals(true);
-	selectedFps = populateFpsDropdown(selectedResolution, selectedPixelFormat);
-	selectedResolution = populateResolutionDropdown(selectedFps, selectedPixelFormat);
-	ui.dropdownFps->blockSignals(false);
-	ui.dropdownResolution->blockSignals(false);
 }
