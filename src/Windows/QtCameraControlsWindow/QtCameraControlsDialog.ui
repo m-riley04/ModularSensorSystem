@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>548</width>
-    <height>562</height>
+    <width>561</width>
+    <height>727</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,64 +41,52 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="groupFormat">
      <property name="title">
-      <string>Properties</string>
+      <string>Format</string>
      </property>
-     <layout class="QFormLayout" name="formLayout_2">
+     <layout class="QFormLayout" name="formLayout_3">
       <item row="0" column="0">
-       <widget class="QLabel" name="label_10">
+       <widget class="QLabel" name="label_17">
         <property name="text">
-         <string>Max Frame Rate:</string>
+         <string>FPS</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLabel" name="labelMaxFrameRate">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
+       <widget class="QComboBox" name="dropdownFps"/>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_11">
+       <widget class="QLabel" name="label_18">
         <property name="text">
-         <string>Min Frame Rate:</string>
+         <string>Resolution</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLabel" name="labelMinFrameRate">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
+       <widget class="QComboBox" name="dropdownResolution"/>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_12">
+       <widget class="QLabel" name="label_10">
         <property name="text">
-         <string>Pixel Format:</string>
+         <string>Pixel Format</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLabel" name="labelPixelFormat">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>Resolution:</string>
-        </property>
-       </widget>
+       <widget class="QComboBox" name="dropdownPixelFormat"/>
       </item>
       <item row="3" column="1">
-       <widget class="QLabel" name="labelResolution">
+       <widget class="QPushButton" name="buttonSeeAllFormats">
         <property name="text">
-         <string>...</string>
+         <string>See All Formats</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QPushButton" name="buttonResetDropdowns">
+        <property name="text">
+         <string>Reset All Dropdowns</string>
         </property>
        </widget>
       </item>
