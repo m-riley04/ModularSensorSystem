@@ -1,4 +1,5 @@
-<UI version="4.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>QtCameraControlsDialogClass</class>
  <widget class="QDialog" name="QtCameraControlsDialogClass">
   <property name="geometry">
@@ -44,7 +45,14 @@
      <property name="title">
       <string>Format</string>
      </property>
-     <layout class="QFormLayout" name="formLayout_3">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="4" column="1">
+       <widget class="QPushButton" name="buttonResetFormat">
+        <property name="text">
+         <string>Reset Format</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_17">
         <property name="text">
@@ -52,8 +60,25 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="dropdownPixelFormat"/>
+      </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="dropdownFps"/>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="buttonSeeAllFormats">
+        <property name="text">
+         <string>See All Formats</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Pixel Format</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_18">
@@ -65,28 +90,37 @@
       <item row="1" column="1">
        <widget class="QComboBox" name="dropdownResolution"/>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_10">
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="radioFps">
         <property name="text">
-         <string>Pixel Format</string>
+         <string/>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">radioGroupFormat</string>
+        </attribute>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="dropdownPixelFormat"/>
-      </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="buttonSeeAllFormats">
+      <item row="1" column="2">
+       <widget class="QRadioButton" name="radioResolution">
         <property name="text">
-         <string>See All Formats</string>
+         <string/>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">radioGroupFormat</string>
+        </attribute>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QPushButton" name="buttonResetDropdowns">
+      <item row="2" column="2">
+       <widget class="QRadioButton" name="radioPixelFormat">
         <property name="text">
-         <string>Reset All Dropdowns</string>
+         <string/>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">radioGroupFormat</string>
+        </attribute>
        </widget>
       </item>
      </layout>
@@ -475,4 +509,7 @@
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
-</UI>
+ <buttongroups>
+  <buttongroup name="radioGroupFormat"/>
+ </buttongroups>
+</ui>

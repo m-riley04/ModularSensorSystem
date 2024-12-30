@@ -6,6 +6,13 @@
 #include <QtConcurrent>
 #include <QtConcurrent/qtconcurrentfilter.h>
 
+enum FormatFilter
+{
+	FORMAT_FILTER_FPS,
+	FORMAT_FILTER_RESOLUTION,
+	FORMAT_FILTER_PIXEL_FORMAT
+};
+
 class QtCameraControlsDialog : public QDialog
 {
 	Q_OBJECT
@@ -42,4 +49,5 @@ public slots:
 	void onFpsChanged(int index);
 	void onResolutionChanged(int index);
 	void onPixelFormatChanged(int index);
+	void onFilterChanged(int id);
 };
