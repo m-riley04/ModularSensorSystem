@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<UI version="4.0">
  <class>QtCameraControlsDialogClass</class>
  <widget class="QDialog" name="QtCameraControlsDialogClass">
   <property name="geometry">
@@ -476,4 +475,4 @@
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
-</ui>
+</UI>
