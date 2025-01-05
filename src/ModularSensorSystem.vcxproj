@@ -21,7 +21,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
-    <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
@@ -79,6 +78,7 @@
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgConfiguration>Debug</VcpkgConfiguration>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -108,23 +108,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Processors\FrameProcessor.cpp" />
     <ClCompile Include="Sensors\GPS.cpp" />
     <ClCompile Include="Sensors\Sensor.cpp" />
-    <ClCompile Include="Synchronizers\SensorSynchronizer.cpp" />
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\QtCameraFormatTableWidgetItem.cpp" />
     <ClCompile Include="Widgets\SensorListItem.cpp" />
     <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp" />
     <ClCompile Include="Windows\QtCameraControlsWindow\QtCameraControlsDialog.cpp" />
-    <ClCompile Include="Writers\SensorWriter.cpp" />
     <ClCompile Include="Controllers\SensorController.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui" />
-    <QtUic Include="Windows\CameraPropertiesWindow.ui" />
     <QtUic Include="Windows\MainWindow.ui" />
     <QtMoc Include="Windows\MainWindow.h" />
     <ClCompile Include="Sensors\Camera.cpp" />
-    <ClCompile Include="Windows\CameraPropertiesWindow.cpp" />
     <ClCompile Include="Windows\MainWindow.cpp">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
@@ -139,13 +134,7 @@
     <QtMoc Include="Sensors\Camera.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Windows\CameraPropertiesWindow.h" />
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="Sensors\Sensor.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="Writers\SensorWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Controllers\SensorController.h" />
@@ -155,12 +144,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\GPS.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="Processors\FrameProcessor.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="Synchronizers\SensorSynchronizer.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Windows\AddCameraDialog\AddCameraDialog.h" />

@@ -3,28 +3,10 @@
 
 SensorController::SensorController(QObject *parent)
 	: QObject(parent)
-{
-	// Initialize components
-	pSynchronizer = std::make_unique<SensorSynchronizer>();
-	pFrameProcessor = std::make_unique<FrameProcessor>();
-	pWriter = std::make_unique<SensorWriter>();
-
-	// Initialize threads
-	pFrameProcessor->moveToThread(&mProcessorThread);
-	pWriter->moveToThread(&mWriterThread);
-	mProcessorThread.start();
-	mWriterThread.start();
-}
+{}
 
 SensorController::~SensorController()
 {
-	// Clean up threads
-	mProcessorThread.quit();
-	mProcessorThread.wait();
-
-	mWriterThread.quit();
-	mWriterThread.wait();
-
 	// Clean up sensors/cameras
 	mCameras.clear();
 	mSensors.clear();

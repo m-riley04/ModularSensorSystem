@@ -5,9 +5,6 @@
 #include <QtMultimedia>
 #include "../Sensors/Sensor.h"
 #include "../Sensors/Camera.h"
-#include "../Synchronizers/SensorSynchronizer.h"
-#include "../Processors/FrameProcessor.h"
-#include "../Writers/SensorWriter.h"
 #include <memory>
 #include <vector>
 
@@ -18,13 +15,6 @@ class SensorController : public QObject
 private:
 	std::vector<std::unique_ptr<Sensor>> mSensors;
 	std::vector<std::unique_ptr<Camera>> mCameras;
-
-	std::unique_ptr<FrameProcessor> pFrameProcessor;
-	std::unique_ptr<SensorSynchronizer> pSynchronizer;
-	std::unique_ptr<SensorWriter> pWriter;
-	
-	QThread mProcessorThread;
-	QThread mWriterThread;
 
 public:
 	SensorController(QObject *parent);

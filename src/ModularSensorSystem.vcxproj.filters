@@ -40,13 +40,7 @@
     <ClCompile Include="Sensors\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Windows\CameraPropertiesWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sensors\Sensor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Writers\SensorWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Controllers\SensorController.cpp">
@@ -61,12 +55,6 @@
     <ClCompile Include="Windows\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Processors\FrameProcessor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Synchronizers\SensorSynchronizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,9 +66,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Windows\CameraPropertiesWindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Sensors\Sensor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -90,19 +75,10 @@
     <QtMoc Include="Controllers\SensorController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Writers\SensorWriter.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Widgets\SensorListItem.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Sensors\GPS.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Processors\FrameProcessor.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Synchronizers\SensorSynchronizer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Windows\AddCameraDialog\AddCameraDialog.h">
@@ -113,9 +89,6 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="Windows\CameraPropertiesWindow.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="Widgets\SensorListItem.ui">
       <Filter>Form Files</Filter>
     </QtUic>
