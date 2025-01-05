@@ -195,72 +195,13 @@
      <property name="title">
       <string>Settings</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
+     <layout class="QGridLayout" name="gridLayout_3">
       <property name="sizeConstraint">
        <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
       </property>
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::FieldGrowthPolicy::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="horizontalSpacing">
+      <property name="spacing">
        <number>9</number>
       </property>
-      <property name="verticalSpacing">
-       <number>9</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_14">
-        <property name="text">
-         <string>Active</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="checkboxActive">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Color Temperature</string>
-        </property>
-        <property name="buddy">
-         <cstring>sliderColorTemp</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSlider" name="sliderColorTemp">
-        <property name="maximum">
-         <number>10000</number>
-        </property>
-        <property name="pageStep">
-         <number>100</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="invertedControls">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Exposure Mode</string>
-        </property>
-        <property name="buddy">
-         <cstring>dropdownExposureMode</cstring>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="1">
        <widget class="QComboBox" name="dropdownExposureMode">
         <item>
@@ -350,30 +291,33 @@
         </item>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_2">
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Exposure Comp.</string>
+         <string>Exposure Mode</string>
         </property>
         <property name="buddy">
-         <cstring>sliderExposureComp</cstring>
+         <cstring>dropdownExposureMode</cstring>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QSlider" name="sliderExposureComp">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="checkboxAutoExposureTime">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_4">
+      <item row="9" column="0">
+       <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>Flash Mode</string>
+         <string>Torch Mode</string>
         </property>
         <property name="buddy">
-         <cstring>dropdownFlashMode</cstring>
+         <cstring>dropdownTorchMode</cstring>
         </property>
        </widget>
       </item>
@@ -396,47 +340,6 @@
         </item>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_15">
-        <property name="text">
-         <string>Auto Exposure Time</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QCheckBox" name="checkboxAutoExposureTime">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Manual Exposure Time</string>
-        </property>
-        <property name="buddy">
-         <cstring>sliderManualExposureTime</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QSlider" name="sliderManualExposureTime">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QLabel" name="label_16">
-        <property name="text">
-         <string>Auto Iso Sensitivity</string>
-        </property>
-       </widget>
-      </item>
       <item row="7" column="1">
        <widget class="QCheckBox" name="checkboxAutoIsoSensitivity">
         <property name="text">
@@ -447,56 +350,35 @@
         </property>
        </widget>
       </item>
-      <item row="8" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Manual ISO Sensitivity</string>
-        </property>
-        <property name="buddy">
-         <cstring>sliderManualIsoSensitivity</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="1">
-       <widget class="QSlider" name="sliderManualIsoSensitivity">
-        <property name="maximum">
-         <number>128000</number>
-        </property>
-        <property name="pageStep">
-         <number>100</number>
-        </property>
+      <item row="3" column="1">
+       <widget class="QSlider" name="sliderExposureComp">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="9" column="0">
-       <widget class="QLabel" name="label_6">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_14">
         <property name="text">
-         <string>Torch Mode</string>
-        </property>
-        <property name="buddy">
-         <cstring>dropdownTorchMode</cstring>
+         <string>Active</string>
         </property>
        </widget>
       </item>
-      <item row="9" column="1">
-       <widget class="QComboBox" name="dropdownTorchMode">
-        <item>
-         <property name="text">
-          <string>Off</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>On</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Auto</string>
-         </property>
-        </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Flash Mode</string>
+        </property>
+        <property name="buddy">
+         <cstring>dropdownFlashMode</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QSlider" name="sliderManualExposureTime">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
        </widget>
       </item>
       <item row="10" column="0">
@@ -556,6 +438,125 @@
           <string>Sunset</string>
          </property>
         </item>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Manual ISO Sensitivity</string>
+        </property>
+        <property name="buddy">
+         <cstring>sliderManualIsoSensitivity</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QComboBox" name="dropdownTorchMode">
+        <item>
+         <property name="text">
+          <string>Off</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>On</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Auto</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_15">
+        <property name="text">
+         <string>Auto Exposure Time</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QSlider" name="sliderManualIsoSensitivity">
+        <property name="maximum">
+         <number>128000</number>
+        </property>
+        <property name="pageStep">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Manual Exposure Time</string>
+        </property>
+        <property name="buddy">
+         <cstring>sliderManualExposureTime</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Color Temperature</string>
+        </property>
+        <property name="buddy">
+         <cstring>sliderColorTemp</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="checkboxActive">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSlider" name="sliderColorTemp">
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+        <property name="pageStep">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="invertedControls">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Exposure Comp.</string>
+        </property>
+        <property name="buddy">
+         <cstring>sliderExposureComp</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>Auto Iso Sensitivity</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0" colspan="2">
+       <widget class="QPushButton" name="buttonFFMPEG">
+        <property name="text">
+         <string>Open FFMPEG Settings</string>
+        </property>
        </widget>
       </item>
      </layout>

@@ -22,6 +22,7 @@ public:
 private:
 	Ui::QtCameraControlsDialogClass ui;
 	Camera* pCamera;
+	QString mName;
 	QList<QCameraFormat> mFormats;
 	QCameraFormat defaultFormat;
 	QCameraFormat selectedFormat;
@@ -40,4 +41,6 @@ public slots:
 	void updateFormatTable();
 	void onFormatClicked(int row, int column);
 	void onSelectClicked();
+
+	void openFFPMEGSettings();
 };

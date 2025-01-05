@@ -46,6 +46,7 @@ QtCameraControlsDialog::QtCameraControlsDialog(Camera* camera, QWidget* parent)
 	ui.setupUi(this);
 
 	/// Initialzie camera device
+	mName = camera->camera().cameraDevice().description();
 	ui.labelCameraDevice->setText(camera->camera().cameraDevice().description());
 	
 	/// Initialize Formats box
@@ -191,6 +192,9 @@ void QtCameraControlsDialog::initializeSettingsGroup(Camera* camera)
 
 	// Connect widgets to controls
 	connectPropertyControls(camera);
+
+	// Connect ffmpeg settings button
+	connect(ui.buttonFFMPEG, &QPushButton::clicked, this, &QtCameraControlsDialog::openFFPMEGSettings);
 }
 
 void QtCameraControlsDialog::connectPropertyControls(Camera* camera)
@@ -381,4 +385,38 @@ void QtCameraControlsDialog::updateFormatTable()
 				new QtCameraFormatTableWidgetItem(pixelFormatMap[format.pixelFormat()], QtCameraFormatTableItemType::PIXEL_FORMAT));
 		}
 	}
+}
+
+void QtCameraControlsDialog::openFFPMEGSettings()
+{
+	QProcess* process = new QProcess();
+
+	// Hanlde errors
+	connect(process, &QProcess::errorOccurred, [this](QProcess::ProcessError error) {
+		switch (error) {
+		case QProcess::ProcessError::FailedToStart:
+			QMessageBox::warning(this, "Error", "Failed to start ffmpeg process.");
+			break;
+		case QProcess::ProcessError::Crashed:
+			QMessageBox::warning(this, "Error", "FFMPEG process crashed.");
+			break;
+		case QProcess::ProcessError::Timedout:
+			QMessageBox::warning(this, "Error", "FFMPEG process timed out.");
+			break;
+		case QProcess::ProcessError::WriteError:
+			QMessageBox::warning(this, "Error", "FFMPEG process write error.");
+			break;
+		case QProcess::ProcessError::ReadError:
+			QMessageBox::warning(this, "Error", "FFMPEG process read error.");
+			break;
+		case QProcess::ProcessError::UnknownError:
+			QMessageBox::warning(this, "Error", "FFMPEG process unknown error.");
+			break;
+		default:
+			QMessageBox::warning(this, "Error", "FFMPEG process error.");
+			break;
+		}
+		});
+
+	process->start("ffmpeg -f dshow -show_video_device_dialog true -i video=\"" + this->mName + '"');
 }
