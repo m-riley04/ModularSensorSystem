@@ -1,9 +1,8 @@
 #include "QtCameraControlsDialog.h"
-#include <QListWidget>
 
-/**
-* A map of pixel formats to their string representations.
-*/
+/// <summary>
+/// A map of pixel formats to their string representations.
+/// </summary>
 QMap<QVideoFrameFormat::PixelFormat, QString> pixelFormatMap{
 	{ QVideoFrameFormat::Format_Invalid, "Invalid" },
 	{ QVideoFrameFormat::Format_ARGB8888, "ARGB8888" },
@@ -40,24 +39,108 @@ QMap<QVideoFrameFormat::PixelFormat, QString> pixelFormatMap{
 	{ QVideoFrameFormat::Format_YUV420P10, "YUV420P10" },
 };
 
-QtCameraControlsDialog::QtCameraControlsDialog(Camera* camera, QWidget* parent)
-	: QDialog(parent), pCamera(camera)
+/// <summary>
+/// A map of string reps to their values for exposure modes.
+/// </summary>
+QMap<QString, QCamera::ExposureMode> exposureModeMap{
+	{ "Auto",           QCamera::ExposureMode::ExposureAuto },
+	{ "Manual",         QCamera::ExposureMode::ExposureManual },
+	{ "Portrait",       QCamera::ExposureMode::ExposurePortrait },
+	{ "Night",          QCamera::ExposureMode::ExposureNight },
+	{ "Sports",         QCamera::ExposureMode::ExposureSports },
+	{ "Snow",           QCamera::ExposureMode::ExposureSnow },
+	{ "Beach",          QCamera::ExposureMode::ExposureBeach },
+	{ "Action",         QCamera::ExposureMode::ExposureAction },
+	{ "Landscape",      QCamera::ExposureMode::ExposureLandscape },
+	{ "Night Portrait", QCamera::ExposureMode::ExposureNightPortrait },
+	{ "Theatre",        QCamera::ExposureMode::ExposureTheatre },
+	{ "Sunset",         QCamera::ExposureMode::ExposureSunset },
+	{ "Steady Photo",   QCamera::ExposureMode::ExposureSteadyPhoto },
+	{ "Fireworks",      QCamera::ExposureMode::ExposureFireworks },
+	{ "Party",          QCamera::ExposureMode::ExposureParty },
+	{ "Candlelight",    QCamera::ExposureMode::ExposureCandlelight },
+	{ "Barcode",        QCamera::ExposureMode::ExposureBarcode }
+};
+
+/// <summary>
+/// A map of string reps to their values for flash modes.
+/// </summary>
+QMap<QString, QCamera::FlashMode> flashModeMap{
+	{ "Off",     QCamera::FlashMode::FlashOff },
+	{ "On",      QCamera::FlashMode::FlashOn },
+	{ "Auto",    QCamera::FlashMode::FlashAuto }
+};
+
+/// <summary>
+/// A map of string reps to their values for torch modes.
+/// </summary>
+QMap<QString, QCamera::TorchMode> torchModeMap{
+	{ "Off",     QCamera::TorchMode::TorchOff },
+	{ "On",      QCamera::TorchMode::TorchOn },
+	{ "Auto",    QCamera::TorchMode::TorchAuto }
+};
+
+/// <summary>
+/// A map of string reps to their values for white balance modes.
+/// </summary>
+QMap<QString, QCamera::WhiteBalanceMode> whiteBalanceModeMap{
+	{ "Auto",           QCamera::WhiteBalanceMode::WhiteBalanceAuto },
+	{ "Manual",           QCamera::WhiteBalanceMode::WhiteBalanceManual },
+	{ "Sunlight",       QCamera::WhiteBalanceMode::WhiteBalanceSunlight },
+	{ "Cloudy",         QCamera::WhiteBalanceMode::WhiteBalanceCloudy },
+	{ "Shade",          QCamera::WhiteBalanceMode::WhiteBalanceShade },
+	{ "Tungsten",       QCamera::WhiteBalanceMode::WhiteBalanceTungsten },
+	{ "Fluorescent",    QCamera::WhiteBalanceMode::WhiteBalanceFluorescent },
+	{ "Flash",          QCamera::WhiteBalanceMode::WhiteBalanceFlash },
+	{ "Sunset",        QCamera::WhiteBalanceMode::WhiteBalanceSunset }
+};
+
+/// <summary>
+/// A map of string reps to their values for focus modes.
+/// </summary>
+QMap<QString, QCamera::FocusMode> focusModeMap{
+	{ "Auto",        QCamera::FocusMode::FocusModeAuto },
+	{ "Auto (Near)", QCamera::FocusMode::FocusModeAutoNear },
+	{ "Auto (Far)",  QCamera::FocusMode::FocusModeAutoFar },
+	{ "Hyperfocal",  QCamera::FocusMode::FocusModeHyperfocal },
+	{ "Infinity",    QCamera::FocusMode::FocusModeInfinity },
+	{ "Manual",      QCamera::FocusMode::FocusModeManual }
+};
+
+QtCameraControlsDialog::QtCameraControlsDialog(QCamera* camera, QMediaCaptureSession* cap, QWidget* parent)
+	: QDialog(parent), pCamera(camera), pCaptureSession(cap)
 {
 	ui.setupUi(this);
 
+	if (pCamera == nullptr) {
+		QMessageBox::warning(this, "Error", "Could not initialize camera: Camera is null.");
+		return;
+	}
+
 	/// Initialzie camera device
-	mName = camera->camera().cameraDevice().description();
-	ui.labelCameraDevice->setText(camera->camera().cameraDevice().description());
-	
+	mName = camera->cameraDevice().description();
+	ui.labelCameraDevice->setText(camera->cameraDevice().description());
+	ui.checkboxActive->setChecked(camera->isActive());
+	connect(ui.checkboxActive, &QCheckBox::checkStateChanged, camera, [camera](Qt::CheckState state) {
+		camera->setActive(state == Qt::CheckState::Checked);
+		});
+
+	// Initialize supported features
+	initializeSupportedFeatures();
+
 	/// Initialize Formats box
-	initializeFormatGroup(camera);
+	initializeFormatGroup();
+
+	// Initialize Zoom/Focus box
+	initializeZoomFocusGroup();
 
 	/// Initialize settings group
-	initializeSettingsGroup(camera);
+	initializeSettingsGroup();
 }
 
 QtCameraControlsDialog::~QtCameraControlsDialog()
-{}
+{
+}
 
 QString QtCameraControlsDialog::sizeToString(QSize size)
 {
@@ -99,12 +182,12 @@ void QtCameraControlsDialog::populateFilterDropdowns()
 	QList<float> fpsList = fpsSet.values();
 	std::sort(fpsList.begin(), fpsList.end(), std::greater<float>());
 	QList<QSize> resolutionList = resolutionSet.values();
-	std::sort(resolutionList.begin(), resolutionList.end(), [](const QSize &a, const QSize &b){
-			return a.width() > b.width();
+	std::sort(resolutionList.begin(), resolutionList.end(), [](const QSize& a, const QSize& b) {
+		return a.width() > b.width();
 		});
 	QList<QVideoFrameFormat::PixelFormat> pixelFormatList = pixelFormatSet.values();
 	std::sort(pixelFormatList.begin(), pixelFormatList.end(), [](const QVideoFrameFormat::PixelFormat& a, const QVideoFrameFormat::PixelFormat& b) {
-			return pixelFormatMap[a] > pixelFormatMap[b]; 
+		return pixelFormatMap[a] > pixelFormatMap[b];
 		});
 
 	// Populate fps dropdown
@@ -126,10 +209,130 @@ void QtCameraControlsDialog::populateFilterDropdowns()
 	}
 }
 
-void QtCameraControlsDialog::initializeFormatGroup(Camera* camera)
+void QtCameraControlsDialog::populateExposureModes()
+{
+	ui.dropdownExposureMode->blockSignals(true);
+	ui.dropdownExposureMode->clear();
+	for (auto itr = exposureModeMap.begin(); itr != exposureModeMap.end(); itr++)
+	{
+		QString name = itr.key();
+		QCamera::ExposureMode mode = itr.value();
+
+		// Add mode if it is supported
+		if (pCamera->isExposureModeSupported(mode)) ui.dropdownExposureMode->addItem(name, mode);
+	}
+	ui.dropdownExposureMode->blockSignals(false);
+}
+
+void QtCameraControlsDialog::populateFlashModes()
+{
+	ui.dropdownFlashMode->blockSignals(true);
+	ui.dropdownFlashMode->clear();
+	for (auto itr = flashModeMap.begin(); itr != flashModeMap.end(); itr++)
+	{
+		QString name = itr.key();
+		QCamera::FlashMode mode = itr.value();
+
+		// Add mode if it is supported
+		if (pCamera->isFlashModeSupported(mode)) ui.dropdownFlashMode->addItem(name, mode);
+	}
+	ui.dropdownFlashMode->blockSignals(false);
+}
+
+void QtCameraControlsDialog::populateFocusModes()
+{
+	ui.dropdownFocusMode->blockSignals(true);
+	ui.dropdownFocusMode->clear();
+	for (auto itr = focusModeMap.begin(); itr != focusModeMap.end(); itr++)
+	{
+		QString name = itr.key();
+		QCamera::FocusMode mode = itr.value();
+
+		// Add mode if it is supported
+		if (pCamera->isFocusModeSupported(mode)) ui.dropdownFocusMode->addItem(name, mode);
+	}
+	ui.dropdownFocusMode->blockSignals(false);
+}
+
+void QtCameraControlsDialog::populateTorchModes()
+{
+	ui.dropdownTorchMode->blockSignals(true);
+	ui.dropdownTorchMode->clear();
+	for (auto itr = torchModeMap.begin(); itr != torchModeMap.end(); itr++)
+	{
+		QString name = itr.key();
+		QCamera::TorchMode mode = itr.value();
+
+		// Add mode if it is supported
+		if (pCamera->isTorchModeSupported(mode)) ui.dropdownTorchMode->addItem(name, mode);
+	}
+	ui.dropdownTorchMode->blockSignals(false);
+}
+
+void QtCameraControlsDialog::populateWhiteBalanceModes()
+{
+	ui.dropdownWhiteBalanceMode->blockSignals(true);
+	ui.dropdownWhiteBalanceMode->clear();
+	for (auto itr = whiteBalanceModeMap.begin(); itr != whiteBalanceModeMap.end(); itr++)
+	{
+		QString name = itr.key();
+		QCamera::WhiteBalanceMode mode = itr.value();
+
+		// Add mode if it is supported
+		if (pCamera->isWhiteBalanceModeSupported(mode)) ui.dropdownWhiteBalanceMode->addItem(name, mode);
+	}
+	ui.dropdownWhiteBalanceMode->blockSignals(false);
+}
+
+void QtCameraControlsDialog::initializeSupportedFeatures()
+{
+	QCamera::Features features = pCamera->supportedFeatures();
+
+	// Check if color temperature is supported
+	bool colorTempSupported = features & QCamera::Feature::ColorTemperature;
+	ui.sliderColorTemp->setEnabled(colorTempSupported);
+	ui.labelColorTemperature->setEnabled(colorTempSupported);
+
+	// Check if exposure compensation is supported
+	bool exposureCompSupported = features & QCamera::Feature::ExposureCompensation;
+	ui.sliderExposureComp->setEnabled(exposureCompSupported);
+	ui.labelExposureComp->setEnabled(exposureCompSupported);
+
+	// Check if ISO sensitivity is supported
+	bool isoSensitivitySupported = features & QCamera::Feature::IsoSensitivity;
+	ui.sliderManualIsoSensitivity->setEnabled(isoSensitivitySupported);
+	ui.labelManualIsoSensitivity->setEnabled(isoSensitivitySupported);
+	ui.checkboxAutoIsoSensitivity->setEnabled(isoSensitivitySupported);
+	ui.labelAutoIsoSensitivity->setEnabled(isoSensitivitySupported);
+
+	// Check if manual exposure time is supported
+	bool manualExposureTimeSupported = features & QCamera::Feature::ManualExposureTime;
+	ui.sliderManualExposureTime->setEnabled(manualExposureTimeSupported);
+	ui.labelManualExposureTime->setEnabled(manualExposureTimeSupported);
+	ui.checkboxAutoExposureTime->setEnabled(manualExposureTimeSupported);
+	ui.labelAutoExposureTime->setEnabled(manualExposureTimeSupported);
+
+	// TODO: Check if custom focus point is supported
+	//ui.sliderFocusPoint->setEnabled(features & QCamera::Feature::FocusPoint);
+
+	// Check if focus distance is supported
+	bool focusDistanceSupported = features & QCamera::Feature::FocusDistance;
+	ui.sliderFocusDistance->setEnabled(focusDistanceSupported);
+	ui.labelFocusDistance->setEnabled(focusDistanceSupported);
+
+	// Check OS-specific features
+#ifdef Q_OS_WIN
+	ui.buttonFFMPEG->setEnabled(true);
+#else
+	ui.buttonFFMPEG->hide();
+#endif
+
+}
+
+void QtCameraControlsDialog::initializeFormatGroup()
 {
 	// Initialize format list
-	mFormats = camera->camera().cameraDevice().videoFormats();
+	mFormats = pCamera->cameraDevice().videoFormats();
 
 	// Check if no formats are available
 	if (mFormats.isEmpty())
@@ -159,79 +362,61 @@ void QtCameraControlsDialog::initializeFormatGroup(Camera* camera)
 
 	// Populate filter dropdowns
 	resetFilters();
-	
+
 	// Connect control signals
 	connectFormatControls();
 }
 
-void QtCameraControlsDialog::initializeSettingsGroup(Camera* camera)
+void QtCameraControlsDialog::initializeZoomFocusGroup()
 {
+	/// Initialize Zoom/Focus Box values
+	ui.sliderZoom->setValue(pCamera->zoomFactor());
+	ui.sliderFocusDistance->setValue(pCamera->focusDistance());
+
+	// Populate focus modes
+	populateFocusModes();
+
+	// Initialize min/max values
+	ui.sliderZoom->setMinimum(pCamera->minimumZoomFactor());
+	ui.sliderZoom->setMaximum(pCamera->maximumZoomFactor());
+
+	// Connect widgets to controls
+	connectZoomFocusControls();
+}
+
+void QtCameraControlsDialog::initializeSettingsGroup()
+{
+	// Populate dropdowns
+	populateExposureModes();
+	populateFlashModes();
+	populateTorchModes();
+	populateWhiteBalanceModes();
+
 	/// Initialize Settings Box values
 	// Controls
-	ui.checkboxActive->setChecked(camera->camera().isActive());
-	ui.sliderColorTemp->setValue(camera->camera().colorTemperature());
-	ui.dropdownExposureMode->setCurrentIndex(static_cast<int>(camera->camera().exposureMode()));
-	ui.sliderExposureComp->setValue(camera->camera().exposureCompensation());
-	ui.dropdownFlashMode->setCurrentIndex(static_cast<int>(camera->camera().flashMode()));
-	ui.checkboxAutoExposureTime->setChecked(camera->camera().exposureTime());
-	ui.sliderManualExposureTime->setValue(camera->camera().manualExposureTime());
-	ui.checkboxAutoIsoSensitivity->setChecked(camera->camera().isoSensitivity());
-	ui.sliderManualIsoSensitivity->setValue(camera->camera().manualIsoSensitivity());
-	ui.dropdownTorchMode->setCurrentIndex(static_cast<int>(camera->camera().torchMode()));
-	ui.dropdownWhiteBalanceMode->setCurrentIndex(static_cast<int>(camera->camera().whiteBalanceMode()));
+	ui.sliderColorTemp->setValue(pCamera->colorTemperature());
+	ui.dropdownExposureMode->setCurrentIndex(static_cast<int>(pCamera->exposureMode()));
+	ui.sliderExposureComp->setValue(pCamera->exposureCompensation());
+	ui.dropdownFlashMode->setCurrentIndex(static_cast<int>(pCamera->flashMode()));
+	ui.checkboxAutoExposureTime->setChecked(pCamera->exposureTime());
+	ui.sliderManualExposureTime->setValue(pCamera->manualExposureTime());
+	ui.checkboxAutoIsoSensitivity->setChecked(pCamera->isoSensitivity());
+	ui.sliderManualIsoSensitivity->setValue(pCamera->manualIsoSensitivity());
+	ui.dropdownTorchMode->setCurrentIndex(static_cast<int>(pCamera->torchMode()));
+	ui.dropdownWhiteBalanceMode->setCurrentIndex(static_cast<int>(pCamera->whiteBalanceMode()));
 
 	/// Initialize min/max values
 	//ui.sliderColorTemp->setMinimum();
 	//ui.sliderColorTemp->setMaximum();
 	//ui.sliderExposureComp->setMinimum();
 	//ui.sliderExposureComp->setMaximum();
-	ui.sliderManualExposureTime->setMinimum(camera->camera().minimumExposureTime());
-	ui.sliderManualExposureTime->setMaximum(camera->camera().maximumExposureTime());
-	ui.sliderManualIsoSensitivity->setMinimum(camera->camera().minimumIsoSensitivity());
-	ui.sliderManualIsoSensitivity->setMaximum(camera->camera().maximumIsoSensitivity());
+	ui.sliderManualExposureTime->setMinimum(pCamera->minimumExposureTime());
+	ui.sliderManualExposureTime->setMaximum(pCamera->maximumExposureTime());
+	ui.sliderManualIsoSensitivity->setMinimum(pCamera->minimumIsoSensitivity());
+	ui.sliderManualIsoSensitivity->setMaximum(pCamera->maximumIsoSensitivity());
 
 	// Connect widgets to controls
-	connectPropertyControls(camera);
-
-	// Connect ffmpeg settings button
-	connect(ui.buttonFFMPEG, &QPushButton::clicked, this, &QtCameraControlsDialog::openFFPMEGSettings);
-}
-
-void QtCameraControlsDialog::connectPropertyControls(Camera* camera)
-{
-	connect(ui.checkboxActive, &QCheckBox::checkStateChanged, camera, [camera](Qt::CheckState state) {
-		camera->camera().setActive(state == Qt::CheckState::Checked);
-		});
-	connect(ui.sliderColorTemp, &QSlider::valueChanged, camera, [camera](int value) {
-		camera->camera().setColorTemperature(value);
-		});
-	connect(ui.dropdownExposureMode, &QComboBox::currentIndexChanged, camera, [camera](int index) {
-		camera->camera().setExposureMode(static_cast<QCamera::ExposureMode>(index));
-		});
-	connect(ui.sliderExposureComp, &QSlider::valueChanged, camera, [camera](int value) {
-		camera->camera().setExposureCompensation(value);
-		});
-	connect(ui.dropdownFlashMode, &QComboBox::currentIndexChanged, camera, [camera](int index) {
-		camera->camera().setFlashMode(static_cast<QCamera::FlashMode>(index));
-		});
-	connect(ui.checkboxAutoExposureTime, &QCheckBox::checkStateChanged, camera, [camera](Qt::CheckState state) {
-		camera->camera().setAutoExposureTime(); // TODO: add functionality
-		});
-	connect(ui.sliderManualExposureTime, &QSlider::valueChanged, camera, [camera](int value) {
-		camera->camera().setManualExposureTime(value);
-		});
-	connect(ui.checkboxAutoIsoSensitivity, &QCheckBox::checkStateChanged, camera, [camera](Qt::CheckState state) {
-		camera->camera().setAutoIsoSensitivity(); // TODO: add functionality
-		});
-	connect(ui.sliderManualIsoSensitivity, &QSlider::valueChanged, camera, [camera](int value) {
-		camera->camera().setManualIsoSensitivity(value);
-		});
-	connect(ui.dropdownTorchMode, &QComboBox::currentIndexChanged, camera, [camera](int index) {
-		camera->camera().setTorchMode(static_cast<QCamera::TorchMode>(index));
-		});
-	connect(ui.dropdownWhiteBalanceMode, &QComboBox::currentIndexChanged, camera, [camera](int index) {
-		camera->camera().setWhiteBalanceMode(static_cast<QCamera::WhiteBalanceMode>(index));
-		});
+	connectSettingsControls();
 }
 
 void QtCameraControlsDialog::connectFormatControls()
@@ -249,6 +434,63 @@ void QtCameraControlsDialog::connectFormatControls()
 
 	// Initialize format table
 	connect(ui.tableFormats, &QTableWidget::cellClicked, this, &QtCameraControlsDialog::onFormatClicked);
+}
+
+void QtCameraControlsDialog::connectZoomFocusControls()
+{
+	connect(ui.sliderZoomRate, &QSlider::valueChanged, pCamera, [this](int value) {
+		pCamera->zoomTo(pCamera->zoomFactor(), value);
+		});
+
+	connect(ui.sliderZoom, &QSlider::valueChanged, pCamera, [this](int value) {
+		pCamera->setZoomFactor(value);
+		pCamera->zoomTo(value, 1);
+		});
+
+	connect(ui.dropdownFocusMode, &QComboBox::currentIndexChanged, pCamera, [this](int index) {
+		pCamera->setFocusMode(static_cast<QCamera::FocusMode>(index));
+		});
+
+	connect(ui.sliderFocusDistance, &QSlider::valueChanged, pCamera, [this](int value) {
+		pCamera->setFocusDistance(value);
+		});
+}
+
+void QtCameraControlsDialog::connectSettingsControls()
+{
+	connect(ui.sliderColorTemp, &QSlider::valueChanged, pCamera, [this](int value) {
+		pCamera->setColorTemperature(value);
+		});
+	connect(ui.dropdownExposureMode, &QComboBox::currentIndexChanged, pCamera, [this](int index) {
+		pCamera->setExposureMode(static_cast<QCamera::ExposureMode>(index));
+		});
+	connect(ui.sliderExposureComp, &QSlider::valueChanged, pCamera, [this](int value) {
+		pCamera->setExposureCompensation(value);
+		});
+	connect(ui.dropdownFlashMode, &QComboBox::currentIndexChanged, pCamera, [this](int index) {
+		pCamera->setFlashMode(static_cast<QCamera::FlashMode>(index));
+		});
+	connect(ui.checkboxAutoExposureTime, &QCheckBox::checkStateChanged, pCamera, [this](Qt::CheckState state) {
+		pCamera->setAutoExposureTime(); // TODO: add functionality
+		});
+	connect(ui.sliderManualExposureTime, &QSlider::valueChanged, pCamera, [this](int value) {
+		pCamera->setManualExposureTime(value);
+		});
+	connect(ui.checkboxAutoIsoSensitivity, &QCheckBox::checkStateChanged, pCamera, [this](Qt::CheckState state) {
+		pCamera->setAutoIsoSensitivity(); // TODO: add functionality
+		});
+	connect(ui.sliderManualIsoSensitivity, &QSlider::valueChanged, pCamera, [this](int value) {
+		pCamera->setManualIsoSensitivity(value);
+		});
+	connect(ui.dropdownTorchMode, &QComboBox::currentIndexChanged, pCamera, [this](int index) {
+		pCamera->setTorchMode(static_cast<QCamera::TorchMode>(index));
+		});
+	connect(ui.dropdownWhiteBalanceMode, &QComboBox::currentIndexChanged, pCamera, [this](int index) {
+		pCamera->setWhiteBalanceMode(static_cast<QCamera::WhiteBalanceMode>(index));
+		});
+
+	// Connect ffmpeg settings button
+	connect(ui.buttonFFMPEG, &QPushButton::clicked, this, &QtCameraControlsDialog::openFFMPEGSettings);
 }
 
 void QtCameraControlsDialog::resetFilters()
@@ -283,7 +525,7 @@ void QtCameraControlsDialog::onFormatClicked(int row, int column)
 		QMessageBox::warning(this, "Error", "Format not found.");
 		return;
 	}
-	
+
 	// Set the camera format
 	selectedFormat = *itr;
 
@@ -300,16 +542,16 @@ void QtCameraControlsDialog::onSelectClicked()
 	}
 
 	// Set the camera format
-	pCamera->camera().setCameraFormat(selectedFormat);
+	pCamera->setCameraFormat(selectedFormat);
 
 	// Get the current format of the camera (should be the selected one)
-	QCameraFormat currentFormat = pCamera->camera().cameraFormat();
+	QCameraFormat currentFormat = pCamera->cameraFormat();
 
 	// Update the UI elements
 	ui.labelFps->setText(QString::number(currentFormat.maxFrameRate()));
 	ui.labelResolution->setText(sizeToString(currentFormat.resolution()));
 	ui.labelPixelFormat->setText(pixelFormatMap[currentFormat.pixelFormat()]);
-	
+
 	// Reset selected filter
 	selectedFormat = QCameraFormat();
 	ui.buttonSelect->setEnabled(false);
@@ -368,30 +610,37 @@ void QtCameraControlsDialog::updateFormatTable()
 
 			// FPS
 			ui.tableFormats->setItem(
-				row, 
+				row,
 				0,
 				new QtCameraFormatTableWidgetItem(QString::number(format.maxFrameRate()), QtCameraFormatTableItemType::FPS));
 
 			// Resolution
 			ui.tableFormats->setItem(
-				row, 
-				1, 
+				row,
+				1,
 				new QtCameraFormatTableWidgetItem(sizeToString(format.resolution()), QtCameraFormatTableItemType::RESOLUTION));
 
 			// Pixel Format
 			ui.tableFormats->setItem(
-				row, 
+				row,
 				2,
 				new QtCameraFormatTableWidgetItem(pixelFormatMap[format.pixelFormat()], QtCameraFormatTableItemType::PIXEL_FORMAT));
 		}
 	}
 }
 
-void QtCameraControlsDialog::openFFPMEGSettings()
+void QtCameraControlsDialog::openFFMPEGSettings()
 {
+	// Check OS for compatibility
+#ifdef Q_OS_WIN
+#else
+	QMessageBox::warning(this, "Error", "FFMPEG settings are only available on Windows.");
+	return;
+#endif
+
 	QProcess* process = new QProcess();
 
-	// Hanlde errors
+	// Handle errors
 	connect(process, &QProcess::errorOccurred, [this](QProcess::ProcessError error) {
 		switch (error) {
 		case QProcess::ProcessError::FailedToStart:
@@ -417,6 +666,7 @@ void QtCameraControlsDialog::openFFPMEGSettings()
 			break;
 		}
 		});
-
-	process->start("ffmpeg -f dshow -show_video_device_dialog true -i video=\"" + this->mName + '"');
+	QStringList args;
+	args << "-f" << "dshow" << "-show_video_device_dialog" << "true" << "-i" << "video=" + this->mName;
+	process->start("ffmpeg", args);
 }
