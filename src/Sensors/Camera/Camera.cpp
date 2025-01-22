@@ -20,10 +20,19 @@ void Camera::initialize() {
 	if (checkCameraAvailability()) {
 		setDevice(QCameraDevice());
 	}
+
+    // Set default output location
+	QDir _(QDir::currentPath()); 
+	if (!_.exists("output")) {
+		_.mkdir("output");
+	}
+
+    mRecorder.setOutputLocation(QDir::currentPath() + "/output");
     
     // Initialize capture session
     mSession.setVideoSink(&mSink);
     mSession.setCamera(&mCamera);
+	mSession.setRecorder(&mRecorder);
 }
 
 void Camera::start() {
@@ -52,16 +61,6 @@ QVariant Camera::read() {
     QVideoFrame frame = mSink.videoFrame();
 
     return QVariant::fromValue(frame);
-}
-
-QCamera& Camera::camera()
-{
-    return mCamera;
-}
-
-QMediaCaptureSession& Camera::session()
-{
-    return mSession;
 }
 
 void Camera::setOutput(QVideoWidget* widget)

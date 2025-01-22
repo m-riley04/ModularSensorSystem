@@ -1,4 +1,5 @@
-<UI version="4.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>MainWindowClass</class>
  <widget class="QMainWindow" name="MainWindowClass">
   <property name="geometry">
@@ -6,117 +7,175 @@
     <x>0</x>
     <y>0</y>
     <width>971</width>
-    <height>797</height>
+    <height>836</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QGroupBox" name="groupBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>600</y>
-      <width>281</width>
-      <height>80</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Basic Camera Controls</string>
-    </property>
-    <widget class="QPushButton" name="buttonStart">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>80</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Start</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="buttonStop">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>40</y>
-       <width>80</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Stop</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="buttonRestart">
-     <property name="geometry">
-      <rect>
-       <x>190</x>
-       <y>40</y>
-       <width>80</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Restart</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QTabWidget" name="tabCameras">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>951</width>
-      <height>571</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>-1</number>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="buttonRemoveSensor">
-    <property name="geometry">
-     <rect>
-      <x>919</x>
-      <y>600</y>
-      <width>41</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>-</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="buttonAddSensor">
-    <property name="geometry">
-     <rect>
-      <x>870</x>
-      <y>600</y>
-      <width>41</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>+</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="buttonCameraSettings">
-    <property name="geometry">
-     <rect>
-      <x>740</x>
-      <y>600</y>
-      <width>121</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Camera Settings</string>
-    </property>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QFrame" name="frame_2">
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="2">
+        <widget class="QPushButton" name="buttonAddSensor">
+         <property name="text">
+          <string>+</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QPushButton" name="buttonRemoveSensor">
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0" colspan="4">
+        <widget class="QTabWidget" name="tabCameras">
+         <property name="currentIndex">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>Camera-Specific Controls</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>Basic Camera Controls</string>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QPushButton" name="buttonStart">
+               <property name="text">
+                <string>Start</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonStop">
+               <property name="text">
+                <string>Stop</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonRestart">
+               <property name="text">
+                <string>Restart</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonCameraSettings">
+               <property name="text">
+                <string>Camera Settings</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_2">
+            <property name="title">
+             <string>Recording</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout">
+             <item row="2" column="1" colspan="2">
+              <widget class="QPushButton" name="buttonRecord">
+               <property name="text">
+                <string>Record</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="labelElapsedTitle">
+               <property name="text">
+                <string>Elapsed: </string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="labelElapsed">
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Save Directory</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLineEdit" name="inputSaveDirectory"/>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>Overall Device Controls</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QPushButton" name="buttonRecordAll">
+            <property name="text">
+             <string>Begin Recording All</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -225,4 +284,4 @@
   <include location="../MainWindow.qrc"/>
  </resources>
  <connections/>
-</UI>
+</ui>
