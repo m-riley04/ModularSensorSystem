@@ -112,7 +112,7 @@
     <ClCompile Include="Sensors\GPS.cpp" />
     <ClCompile Include="Sensors\Sensor.cpp" />
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
-    <ClCompile Include="Widgets\SensorListItem.cpp" />
+    <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp" />
     <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp" />
     <ClCompile Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp" />
     <ClCompile Include="Controllers\SensorController.cpp" />
@@ -128,7 +128,7 @@
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <QtUic Include="Widgets\SensorListItem.ui" />
+    <QtUic Include="Widgets\SensorListItem\SensorListItem.ui" />
     <QtUic Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -141,7 +141,7 @@
     <QtMoc Include="Controllers\SensorController.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Widgets\SensorListItem.h" />
+    <QtMoc Include="Widgets\SensorListItem\SensorListItem.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\GPS.h" />

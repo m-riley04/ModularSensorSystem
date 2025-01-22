@@ -46,7 +46,7 @@
     <ClCompile Include="Controllers\SensorController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\SensorListItem.cpp">
+    <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sensors\GPS.cpp">
@@ -75,7 +75,7 @@
     <QtMoc Include="Controllers\SensorController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\SensorListItem.h">
+    <QtMoc Include="Widgets\SensorListItem\SensorListItem.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Sensors\GPS.h">
@@ -89,7 +89,7 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="Widgets\SensorListItem.ui">
+    <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui">
