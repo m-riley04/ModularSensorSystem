@@ -58,10 +58,10 @@
     <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Windows\QtCameraControlsWindow\QtCameraControlsDialog.cpp">
+    <ClCompile Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\QtCameraFormatTableWidgetItem.cpp">
+    <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -84,7 +84,7 @@
     <QtMoc Include="Windows\AddCameraDialog\AddCameraDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Windows\QtCameraControlsWindow\QtCameraControlsDialog.h">
+    <QtMoc Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -95,12 +95,12 @@
     <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Windows\QtCameraControlsWindow\QtCameraControlsDialog.ui">
+    <QtUic Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\QtCameraFormatTableWidgetItem.h">
+    <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

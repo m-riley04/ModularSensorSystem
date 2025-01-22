@@ -1,5 +1,5 @@
 #include "MainWindow.h"
-#include "QtCameraControlsWindow/QtCameraControlsDialog.h"
+#include "QtCameraControlsWindow/qtcameracontrolsdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -44,7 +44,7 @@ void MainWindow::initSignals() {
         Camera* cam = pController->findCamera(videoWidget);
 
         // Create the settings box
-        QtCameraControlsDialog* controls = new QtCameraControlsDialog(cam, this);
+        QtCameraControlsDialog* controls = new QtCameraControlsDialog(&cam->camera(), &cam->session(), this);
         controls->setAttribute(Qt::WA_DeleteOnClose);
         controls->show();
 

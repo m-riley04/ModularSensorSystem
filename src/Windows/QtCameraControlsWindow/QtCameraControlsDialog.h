@@ -2,7 +2,7 @@
 
 #include <QDialog>
 #include "ui_QtCameraControlsDialog.h"
-#include "../../widgets/QtFormatTableWidgetItem/qtcameraformattablewidgetitem.h"
+#include "../../Widgets/QtCameraFormatTableWidgetItem/qtcameraformatablewidgetitem.h"
 #include <algorithm>
 #include <QListWidget>
 #include <QtMultimedia>

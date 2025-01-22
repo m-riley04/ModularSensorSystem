@@ -1,5 +1,5 @@
-#include "QtCameraFormatTableWidgetItem.h"
-#include <Windows/QtCameraControlsWindow/QtCameraControlsDialog.h>
+#include "qtcameraformatablewidgetitem.h"
+#include <Windows/QtCameraControlsWindow/qtcameracontrolsdialog.h>
 
 QtCameraFormatTableWidgetItem::QtCameraFormatTableWidgetItem(QString text, int type) : QTableWidgetItem(text, type)
 {}
