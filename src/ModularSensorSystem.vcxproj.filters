@@ -37,7 +37,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sensors\Camera.cpp">
+    <ClCompile Include="Sensors\Camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sensors\Sensor.cpp">
@@ -69,7 +69,7 @@
     <QtMoc Include="Sensors\Sensor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Sensors\Camera.h">
+    <QtMoc Include="Sensors\Camera\Camera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Controllers\SensorController.h">

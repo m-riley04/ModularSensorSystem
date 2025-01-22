@@ -1,6 +1,4 @@
 #include "Camera.h"
-#include <QtConcurrent>
-#include <chrono>
 
 Camera::Camera(QObject *parent)
 	: Sensor(parent)

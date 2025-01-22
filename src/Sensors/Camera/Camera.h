@@ -4,9 +4,11 @@
 #include <QtMultimedia>
 #include <QFileDialog>
 #include <qmessagebox.h>
-#include "sensor.h"
+#include "../sensor.h"
 #include <QThread>
 #include <QVideoWidget>
+#include <QtConcurrent>
+#include <chrono>
 
 #define DEFAULT_FRAME_RATE 30
 

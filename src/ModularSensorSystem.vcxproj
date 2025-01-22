@@ -120,7 +120,7 @@
     <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui" />
     <QtUic Include="Windows\MainWindow.ui" />
     <QtMoc Include="Windows\MainWindow.h" />
-    <ClCompile Include="Sensors\Camera.cpp" />
+    <ClCompile Include="Sensors\Camera\Camera.cpp" />
     <ClCompile Include="Windows\MainWindow.cpp">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
@@ -132,7 +132,7 @@
     <QtUic Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Sensors\Camera.h" />
+    <QtMoc Include="Sensors\Camera\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor.h" />

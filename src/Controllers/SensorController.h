@@ -3,8 +3,8 @@
 #include <QObject>
 #include <QThread>
 #include <QtMultimedia>
-#include "../Sensors/Sensor.h"
-#include "../Sensors/Camera.h"
+#include "../Sensors/sensor.h"
+#include "../Sensors/Camera/camera.h"
 #include <memory>
 #include <vector>
 
