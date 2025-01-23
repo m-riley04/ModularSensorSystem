@@ -45,6 +45,7 @@ public slots:
 	void setMediaDirectory(QUrl directory);
 
 signals:
-    void deviceChanged();
+    void deviceChanged(QCameraDevice device);
+	void mediaDirectoryChanged(QUrl directory);
     void deviceError();
 };

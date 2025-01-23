@@ -39,6 +39,21 @@ void MainWindow::initSignals() {
     });
 
 	connect(this, &MainWindow::cameraChanged, ui.cameraControls, &CameraControls::setCamera);
+    
+    // Recording
+	connect(ui.buttonRecord, &QPushButton::clicked, [this]() {
+        if (!isRecording) {
+            ui.buttonRecord->setText("Stop Recording");
+        }
+        else {
+            ui.buttonRecord->setText("Record");
+        }
+
+        pController->recordCameras();
+
+        isRecording = !isRecording;
+
+		});
 
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);

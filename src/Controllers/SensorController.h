@@ -36,6 +36,8 @@ public slots:
 	void startCameras();
 	void stopCameras();
 
+	void recordCameras();
+
 	Camera* findCamera(QVideoWidget *widget);
 
 signals:

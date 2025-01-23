@@ -20,9 +20,13 @@ private:
     std::unique_ptr<SensorController> pController;
     std::vector<QVideoWidget*> mVideoWidgets;
     QCamera* pCamera = nullptr;
+    bool isRecording = false;
 
     void initWidgets();
     void initSignals();
+
+public:
+	bool recording() { return isRecording; }
 
 public slots:
     void addVideoWidget(Camera *camera);

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>556</width>
-    <height>180</height>
+    <height>202</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -64,10 +64,17 @@
       <string>Recording</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="1">
-       <widget class="QLabel" name="labelElapsedTitle">
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="inputSaveDirectory">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QPushButton" name="buttonOpenOutput">
         <property name="text">
-         <string>Elapsed: </string>
+         <string>Open</string>
         </property>
        </widget>
       </item>
@@ -85,8 +92,19 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QLineEdit" name="inputSaveDirectory"/>
+      <item row="0" column="1">
+       <widget class="QLabel" name="labelElapsedTitle">
+        <property name="text">
+         <string>Elapsed: </string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="buttonSetOutput">
+        <property name="text">
+         <string>Set</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

@@ -7,6 +7,13 @@ SensorController::SensorController(QObject *parent)
 
 SensorController::~SensorController()
 {
+	// Check if recording
+	for (const auto& camera : mCameras) {
+		if (camera->recorder().recorderState() == QMediaRecorder::RecorderState::RecordingState) {
+			camera->recorder().stop();
+		}
+	}
+
 	// Clean up sensors/cameras
 	mCameras.clear();
 	mSensors.clear();
@@ -99,6 +106,14 @@ void SensorController::stopCameras()
 {
 	for (const auto& camera : mCameras) {
 		camera->stop();
+	}
+}
+
+void SensorController::recordCameras()
+{
+	for (const auto& camera : mCameras) {
+		if (camera->recorder().recorderState() == QMediaRecorder::RecorderState::StoppedState) camera->recorder().record();
+		else camera->recorder().stop();
 	}
 }
 

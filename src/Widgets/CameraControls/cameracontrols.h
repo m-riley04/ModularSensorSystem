@@ -17,6 +17,9 @@ private:
 	Ui::CameraControlsClass ui;
 	Camera* pCamera = nullptr;
 
+	void initSignals();
+	void initWidgets();
+
 public slots:
 	void setCamera(Camera* camera);
 

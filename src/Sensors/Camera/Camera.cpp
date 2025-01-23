@@ -71,11 +71,13 @@ void Camera::setOutput(QVideoWidget* widget)
 void Camera::setDevice(QCameraDevice device)
 {
     mCamera.setCameraDevice(device);
-    emit deviceChanged();
+    emit deviceChanged(device);
 }
 
 void Camera::setMediaDirectory(QUrl directory)
 {
+	mRecorder.setOutputLocation(directory);
+	emit mediaDirectoryChanged(directory);
 }
 
 bool Camera::checkCameraAvailability() {
