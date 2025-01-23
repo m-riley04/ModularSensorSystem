@@ -42,6 +42,7 @@ public slots:
     
     void setOutput(QVideoWidget* widget);
     void setDevice(QCameraDevice device);
+	void setMediaDirectory(QUrl directory);
 
 signals:
     void deviceChanged();

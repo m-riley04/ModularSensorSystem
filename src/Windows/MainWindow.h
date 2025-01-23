@@ -19,6 +19,7 @@ private:
     Ui::MainWindowClass ui;
     std::unique_ptr<SensorController> pController;
     std::vector<QVideoWidget*> mVideoWidgets;
+    QCamera* pCamera = nullptr;
 
     void initWidgets();
     void initSignals();
@@ -32,6 +33,7 @@ public slots:
     void restart();
 
 signals:
+	void cameraChanged(Camera* camera);
     void clicked_record();
     void clicked_stop();
     void clicked_display_video(QVideoWidget *widget);

@@ -111,12 +111,14 @@
   <ItemGroup>
     <ClCompile Include="Sensors\GPS.cpp" />
     <ClCompile Include="Sensors\Sensor.cpp" />
+    <ClCompile Include="Widgets\CameraControls\cameracontrols.cpp" />
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
     <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp" />
     <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp" />
     <ClCompile Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp" />
     <ClCompile Include="Controllers\SensorController.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="Widgets\CameraControls\cameracontrols.ui" />
     <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui" />
     <QtUic Include="Windows\MainWindow.ui" />
     <QtMoc Include="Windows\MainWindow.h" />
@@ -153,6 +155,7 @@
     <QtMoc Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Widgets\CameraControls\cameracontrols.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

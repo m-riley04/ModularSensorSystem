@@ -74,6 +74,10 @@ void Camera::setDevice(QCameraDevice device)
     emit deviceChanged();
 }
 
+void Camera::setMediaDirectory(QUrl directory)
+{
+}
+
 bool Camera::checkCameraAvailability() {
     return QMediaDevices::videoInputs().count() > 0;
 }

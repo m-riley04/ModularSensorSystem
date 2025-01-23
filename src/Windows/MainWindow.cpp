@@ -18,36 +18,24 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::initWidgets() {
-
+    //ui.cameraControls->setCamera(pCamera);
 }
 
 void MainWindow::initSignals() {
-    // Camera Controls
-    connect(ui.buttonStop, &QPushButton::clicked, pController.get(), &SensorController::stopSensors);
-    connect(ui.buttonStart, &QPushButton::clicked, pController.get(), &SensorController::startSensors);
-
     // Camera View
     connect(ui.buttonAddSensor, &QPushButton::clicked, this, &MainWindow::addCamera);
     connect(ui.buttonRemoveSensor, &QPushButton::clicked, this, &MainWindow::removeCamera);
     connect(pController.get(), &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
-    connect(ui.buttonCameraSettings, &QPushButton::clicked, [this]() {
-        // Find the selected tab
-        int currentTabIndex = ui.tabCameras->currentIndex();
-        if (currentTabIndex == -1 || !(currentTabIndex < mVideoWidgets.size()))
-        {
-            QMessageBox::warning(this, "Error", "The selected camera does not exist and cannot be deleted.", QMessageBox::StandardButton::Ok);
-            return;
-        }
 
-        // Find camera and video widget
-        auto& videoWidget = mVideoWidgets.at(currentTabIndex);
-        Camera* cam = pController->findCamera(videoWidget);
+    //
+    connect(ui.tabCameras, &QTabWidget::currentChanged, [this](int index) {
+        if (index == -1 || !(index < mVideoWidgets.size())) return;
 
-        // Create the settings box
-        QtCameraControlsDialog* controls = new QtCameraControlsDialog(&cam->camera(), &cam->session(), this);
-        controls->setAttribute(Qt::WA_DeleteOnClose);
-        controls->show();
+        // Get the camera from the video widgets
+		Camera* cam = pController->findCamera(mVideoWidgets.at(index));
 
+        // Emit the camera changed signal
+        emit cameraChanged(cam);
         });
 
     // Menu Bar
@@ -59,7 +47,7 @@ void MainWindow::addVideoWidget(Camera *camera)
 {
     auto videoWidget = new QVideoWidget(this);
     mVideoWidgets.push_back(videoWidget);
-    ui.tabCameras->addTab(videoWidget, "Camera " + mVideoWidgets.size());
+    ui.tabCameras->addTab(videoWidget, camera->camera().cameraDevice().description());
     camera->setOutput(videoWidget);
 }
 
