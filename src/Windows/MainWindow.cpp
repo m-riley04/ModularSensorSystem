@@ -27,7 +27,7 @@ void MainWindow::initSignals() {
     connect(ui.buttonRemoveSensor, &QPushButton::clicked, this, &MainWindow::removeCamera);
     connect(pController.get(), &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
 
-    //
+    // Camera Controls
     connect(ui.tabCameras, &QTabWidget::currentChanged, [this](int index) {
         if (index == -1 || !(index < mVideoWidgets.size())) return;
 
@@ -36,7 +36,9 @@ void MainWindow::initSignals() {
 
         // Emit the camera changed signal
         emit cameraChanged(cam);
-        });
+    });
+
+	connect(this, &MainWindow::cameraChanged, ui.cameraControls, &CameraControls::setCamera);
 
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
@@ -47,8 +49,9 @@ void MainWindow::addVideoWidget(Camera *camera)
 {
     auto videoWidget = new QVideoWidget(this);
     mVideoWidgets.push_back(videoWidget);
-    ui.tabCameras->addTab(videoWidget, camera->camera().cameraDevice().description());
-    camera->setOutput(videoWidget);
+    QString name = camera->camera().cameraDevice().description();
+    camera->setOutput(videoWidget); // Set output BEFORE adding tab
+    ui.tabCameras->addTab(videoWidget, name);
 }
 
 void MainWindow::addCamera()

@@ -10,7 +10,7 @@ class CameraControls : public QWidget
 	Q_OBJECT
 
 public:
-	CameraControls(QWidget *parent = nullptr, Camera* camera = nullptr);
+	CameraControls(QWidget* parent = nullptr, Camera* camera = nullptr);
 	~CameraControls();
 
 private:

@@ -1,8 +1,7 @@
 #include "cameracontrols.h"
 #include <Windows/QtCameraControlsWindow/QtCameraControlsDialog.h>
-#include <Windows/MainWindow.h>
 
-CameraControls::CameraControls(QWidget *parent, Camera* camera)
+CameraControls::CameraControls(QWidget* parent, Camera* camera)
 	: QWidget(parent), pCamera(camera)
 {
 	ui.setupUi(this);
@@ -12,7 +11,7 @@ CameraControls::CameraControls(QWidget *parent, Camera* camera)
 		ui.labelDeviceName->setText(pCamera->camera().cameraDevice().description());
 
 		// Connect to MainWindow
-		connect(parent, &MainWindow::cameraChanged, this, CameraControls::setCamera);
+		//connect(qobject_cast<MainWindow*>(parent), &MainWindow::cameraChanged, this, &CameraControls::setCamera);
 
 		// Camera Controls
 		connect(ui.buttonStart, &QPushButton::clicked, pCamera, &Camera::start);
@@ -34,8 +33,6 @@ CameraControls::CameraControls(QWidget *parent, Camera* camera)
 		// Recording controls
 		connect(ui.inputSaveDirectory, &QLineEdit::textChanged, pCamera, &Camera::setMediaDirectory);
 	}
-
-	
 }
 
 CameraControls::~CameraControls()
@@ -46,11 +43,23 @@ void CameraControls::setCamera(Camera* camera) {
 	// Set camera
 	pCamera = camera;
 
+	if (!pCamera) {
+		ui.labelDeviceName->setText("No Camera Selected");
+		ui.inputSaveDirectory->setText("");
+		ui.inputSaveDirectory->setEnabled(false);
+		return;
+	}
+	else {
+		ui.inputSaveDirectory->setEnabled(true);
+	}
+
 	// Update the camera name
-	ui.labelDeviceName->setText(pCamera->camera().cameraDevice().description());
+	QCamera& cam = camera->camera();
+
+	ui.labelDeviceName->setText(cam.cameraDevice().description());
 
 	// Update the camera settings
-	ui.inputSaveDirectory->setText(pCamera->recorder().outputLocation().toString());
+	ui.inputSaveDirectory->setText(camera->recorder().outputLocation().toString());
 
 	// Emit signal
 	emit cameraChanged(camera);
