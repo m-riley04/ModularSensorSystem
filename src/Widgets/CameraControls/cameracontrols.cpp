@@ -1,5 +1,6 @@
 #include "cameracontrols.h"
 #include <Windows/QtCameraControlsWindow/QtCameraControlsDialog.h>
+#include <Windows/QtRecordingControlsDialog/qtrecordingcontrolsdialog.h>
 
 CameraControls::CameraControls(QWidget* parent, Camera* camera)
 	: QWidget(parent), pCamera(camera)
@@ -15,9 +16,6 @@ void CameraControls::initSignals()
 	if (pCamera)
 	{
 		ui.labelDeviceName->setText(pCamera->camera().cameraDevice().description());
-
-		// Connect to MainWindow
-		//connect(qobject_cast<MainWindow*>(parent), &MainWindow::cameraChanged, this, &CameraControls::setCamera);
 
 		// Camera Controls
 		connect(ui.buttonStart, &QPushButton::clicked, pCamera, &Camera::start);
@@ -37,19 +35,17 @@ void CameraControls::initSignals()
 			controls->show();
 			});
 
-		// Recording controls
-		connect(ui.buttonOpenOutput, &QPushButton::clicked, [this]() {
-			// Open the output directory
-			QDesktopServices::openUrl(QUrl::fromLocalFile(pCamera->recorder().outputLocation().path()));
-			});
-		connect(ui.buttonSetOutput, &QPushButton::clicked, [this]() {
-			// Set the output directory
-			QString dir = QFileDialog::getExistingDirectory(this, "Select Output Directory", pCamera->recorder().outputLocation().path());
-			if (dir.isEmpty()) return;
+		// Recording settings
+		connect(ui.buttonRecordingSettings, &QPushButton::clicked, [this]() {
+			if (!pCamera) {
+				QMessageBox::warning(this, "Error", "No camera available to configure.");
+				return;
+			}
 
-			// Set the output directory
-			pCamera->setMediaDirectory(QUrl::fromLocalFile(dir));
-			ui.inputSaveDirectory->setText(dir);
+			// Create the settings box
+			QtRecordingControlsDialog* controls = new QtRecordingControlsDialog(this, &pCamera->recorder(), pCamera->camera().cameraDevice());
+			controls->setAttribute(Qt::WA_DeleteOnClose);
+			controls->show();
 			});
 	}
 }
@@ -59,10 +55,8 @@ void CameraControls::initWidgets()
 	if (!pCamera) {
 		// Set default text
 		ui.labelDeviceName->setText("No Camera Selected");
-		ui.inputSaveDirectory->setText("");
 
 		// Disable widgets
-		ui.inputSaveDirectory->setEnabled(false);
 		ui.buttonStart->setEnabled(false);
 		ui.buttonStop->setEnabled(false);
 		ui.buttonCameraSettings->setEnabled(false);
@@ -76,9 +70,6 @@ void CameraControls::initWidgets()
 
 	// Update device name
 	ui.labelDeviceName->setText(pCamera->camera().cameraDevice().description());
-
-	// Update the camera settings
-	ui.inputSaveDirectory->setText(pCamera->recorder().outputLocation().toString());
 }
 
 
