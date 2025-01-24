@@ -4,6 +4,13 @@
 #include "ui_qtrecordingcontrolsdialog.h"
 #include <QtMultimedia>
 #include <qfiledialog.h>
+#include <QMessageBox>
+
+enum RecordingControlsTab {
+	GENERAL,
+	VIDEO,
+	AUDIO
+};
 
 class QtRecordingControlsDialog : public QDialog
 {
@@ -23,6 +30,9 @@ private:
 	void initWidgets();
 	void initSignals();
 
+	template <typename Enum>
+	void populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList, std::function<QString(Enum)> enumTextFunction);
+
 	void initGeneralWidgets();
 	void initVideoWidgets();
 	void initAudioWidgets();
@@ -33,3 +43,11 @@ private:
 
 	void initDefaultValues();
 };
+
+template<typename Enum>
+inline void QtRecordingControlsDialog::populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList, std::function<QString(Enum)> enumTextFunction)
+{
+	for (Enum codec : enumList) {
+		dropdown->addItem(enumTextFunction(codec), QVariant(static_cast<int>(codec)));
+	}
+}

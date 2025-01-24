@@ -1,12 +1,33 @@
 #include "qtrecordingcontrolsdialog.h"
-#include <QMessageBox>
 
+QList<QMediaFormat::VideoCodec> videoCodecs = {
+	QMediaFormat::VideoCodec::VP8,
+	QMediaFormat::VideoCodec::MPEG2,
+	QMediaFormat::VideoCodec::MPEG1,
+	QMediaFormat::VideoCodec::WMV,
+	QMediaFormat::VideoCodec::H265,
+	QMediaFormat::VideoCodec::H264,
+	QMediaFormat::VideoCodec::MPEG4,
+	QMediaFormat::VideoCodec::AV1,
+	QMediaFormat::VideoCodec::MotionJPEG,
+	QMediaFormat::VideoCodec::VP9,
+	QMediaFormat::VideoCodec::Theora,
+	QMediaFormat::VideoCodec::Unspecified
+};
 
-
-enum RecordingControlsTab {
-	GENERAL,
-	VIDEO,
-	AUDIO
+QList<QMediaFormat::AudioCodec> audioCodecs = {
+	QMediaFormat::AudioCodec::WMA,
+	QMediaFormat::AudioCodec::AC3,
+	QMediaFormat::AudioCodec::AAC,
+	QMediaFormat::AudioCodec::ALAC,
+	QMediaFormat::AudioCodec::DolbyTrueHD,
+	QMediaFormat::AudioCodec::EAC3,
+	QMediaFormat::AudioCodec::MP3,
+	QMediaFormat::AudioCodec::Wave,
+	QMediaFormat::AudioCodec::Vorbis,
+	QMediaFormat::AudioCodec::FLAC,
+	QMediaFormat::AudioCodec::Opus,
+	QMediaFormat::AudioCodec::Unspecified
 };
 
 QtRecordingControlsDialog::QtRecordingControlsDialog(QWidget *parent, QMediaRecorder* recorder)
@@ -65,45 +86,9 @@ void QtRecordingControlsDialog::initWidgets()
 
 void QtRecordingControlsDialog::initSignals()
 {
-	/// GENERAL TAB
-	connect(ui.buttonOpenOutput, &QPushButton::clicked, [this]() {
-		// Open the output directory
-		QDesktopServices::openUrl(QUrl::fromLocalFile(pRecorder->outputLocation().path()));
-		});
-	connect(ui.buttonSetOutput, &QPushButton::clicked, [this]() {
-		// Set the output directory
-		QString dir = QFileDialog::getExistingDirectory(this, "Select Output Directory", pRecorder->outputLocation().path());
-		if (dir.isEmpty()) return;
-
-		// Set the output directory
-		pRecorder->setOutputLocation(QUrl::fromLocalFile(dir));
-		ui.inputSaveDirectory->setText(dir);
-		});
-
-	/// VIDEO TAB
-	connect(ui.dropdownQuality, &QComboBox::currentIndexChanged, [this](int index) {
-		pRecorder->setQuality(static_cast<QMediaRecorder::Quality>(index));
-		});
-
-	connect(ui.dropdownEncodingMode, &QComboBox::currentIndexChanged, [this](int index) {
-		pRecorder->setEncodingMode(static_cast<QMediaRecorder::EncodingMode>(index));
-		});
-
-	connect(ui.spinboxBitrate, &QSpinBox::editingFinished, [this]() {
-		pRecorder->setVideoBitRate(ui.spinboxBitrate->value());
-		});
-
-	connect(ui.spinboxFrameRate, &QSpinBox::editingFinished, [this]() {
-		pRecorder->setVideoFrameRate(ui.spinboxFrameRate->value());
-		});
-
-	connect(ui.spinboxWidth, &QSpinBox::editingFinished, [this]() {
-		pRecorder->setVideoResolution(ui.spinboxWidth->value(), ui.spinboxHeight->value());
-		});
-
-	connect(ui.spinboxHeight, &QSpinBox::editingFinished, [this]() {
-		pRecorder->setVideoResolution(ui.spinboxWidth->value(), ui.spinboxHeight->value());
-		});
+	initGeneralSignals();
+	initVideoSignals();
+	initAudioSignals();
 }
 
 void QtRecordingControlsDialog::initGeneralWidgets()
@@ -124,7 +109,10 @@ void QtRecordingControlsDialog::initVideoWidgets()
 	ui.labelVideoDevice->setText(pCamera->cameraDevice().description());
 
 	/// FIELDS
-	//ui.dropdownVideoCodec->setCurrentIndex();
+	populateEnumDropdown<QMediaFormat::VideoCodec>(ui.dropdownVideoCodec, videoCodecs, QMediaFormat::videoCodecDescription);
+
+	int i = ui.dropdownVideoCodec->findData(QVariant(static_cast<int>(pRecorder->mediaFormat().videoCodec())));
+	ui.dropdownVideoCodec->setCurrentIndex(i);
 	ui.spinboxBitrate->setValue(pRecorder->videoBitRate());
 	ui.spinboxFrameRate->setValue(pRecorder->videoFrameRate());
 	ui.spinboxWidth->setValue(pRecorder->videoResolution().width());
@@ -140,7 +128,10 @@ void QtRecordingControlsDialog::initAudioWidgets()
 	ui.labelAudioDevice->setText(pAudioInput->device().description());
 
 	/// FIELDS
-	//ui.dropdownAudioCodec->setCurrentIndex();
+	populateEnumDropdown<QMediaFormat::AudioCodec>(ui.dropdownAudioCodec, audioCodecs, QMediaFormat::audioCodecDescription);
+
+	int i = ui.dropdownAudioCodec->findData(QVariant(static_cast<int>(pRecorder->mediaFormat().audioCodec())));
+	ui.dropdownAudioCodec->setCurrentIndex(i);
 	ui.spinboxAudioBitrate->setValue(pRecorder->audioBitRate());
 	ui.spinboxSampleRate->setValue(pRecorder->audioSampleRate());
 	ui.spinboxChannels->setValue(pRecorder->audioChannelCount());
@@ -148,14 +139,75 @@ void QtRecordingControlsDialog::initAudioWidgets()
 
 void QtRecordingControlsDialog::initGeneralSignals()
 {
+	connect(ui.buttonOpenOutput, &QPushButton::clicked, [this]() {
+		// Open the output directory
+		QDesktopServices::openUrl(QUrl::fromLocalFile(pRecorder->outputLocation().path()));
+		});
+	connect(ui.buttonSetOutput, &QPushButton::clicked, [this]() {
+		// Select output directory
+		QString dir = QFileDialog::getExistingDirectory(this, "Select Output Directory", pRecorder->outputLocation().path());
+		if (dir.isEmpty()) return;
+
+		// Set the output directory
+		pRecorder->setOutputLocation(QUrl::fromLocalFile(dir));
+		ui.inputSaveDirectory->setText(dir);
+		});
+
+	connect(ui.checkboxAutoStop, &QCheckBox::checkStateChanged, [this](Qt::CheckState state) {
+		pRecorder->setAutoStop(static_cast<bool>(state));
+		});
+
+	connect(ui.dropdownQuality, &QComboBox::currentIndexChanged, [this](int index) {
+		pRecorder->setQuality(static_cast<QMediaRecorder::Quality>(index));
+		});
+
+	connect(ui.dropdownEncodingMode, &QComboBox::currentIndexChanged, [this](int index) {
+		pRecorder->setEncodingMode(static_cast<QMediaRecorder::EncodingMode>(index));
+		});
 }
 
 void QtRecordingControlsDialog::initVideoSignals()
 {
+	connect(ui.dropdownVideoCodec, &QComboBox::currentIndexChanged, [this](int index) {
+		auto codec = ui.dropdownVideoCodec->itemData(index).value<QMediaFormat::VideoCodec>();
+		pRecorder->mediaFormat().setVideoCodec(codec);
+		});
+
+	connect(ui.spinboxBitrate, &QSpinBox::editingFinished, [this]() {
+		pRecorder->setVideoBitRate(ui.spinboxBitrate->value());
+		});
+
+	connect(ui.spinboxFrameRate, &QSpinBox::editingFinished, [this]() {
+		pRecorder->setVideoFrameRate(ui.spinboxFrameRate->value());
+		});
+
+	connect(ui.spinboxWidth, &QSpinBox::editingFinished, [this]() {
+		pRecorder->setVideoResolution(ui.spinboxWidth->value(), ui.spinboxHeight->value());
+		});
+
+	connect(ui.spinboxHeight, &QSpinBox::editingFinished, [this]() {
+		pRecorder->setVideoResolution(ui.spinboxWidth->value(), ui.spinboxHeight->value());
+		});
 }
 
 void QtRecordingControlsDialog::initAudioSignals()
 {
+	connect(ui.dropdownAudioCodec, &QComboBox::currentIndexChanged, [this](int index) {
+		auto codec = ui.dropdownAudioCodec->itemData(index).value<QMediaFormat::AudioCodec>();
+		pRecorder->mediaFormat().setAudioCodec(codec);
+		});
+
+	connect(ui.spinboxAudioBitrate, &QSpinBox::editingFinished, [this]() {
+		pRecorder->setAudioBitRate(ui.spinboxAudioBitrate->value());
+		});
+
+	connect(ui.spinboxSampleRate, &QSpinBox::editingFinished, [this]() {
+		pRecorder->setAudioSampleRate(ui.spinboxSampleRate->value());
+		});
+
+	connect(ui.spinboxChannels, &QSpinBox::editingFinished, [this]() {
+		pRecorder->setAudioChannelCount(ui.spinboxChannels->value());
+		});
 }
 
 void QtRecordingControlsDialog::initDefaultValues()
