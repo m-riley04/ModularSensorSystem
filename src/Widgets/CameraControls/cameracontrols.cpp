@@ -43,7 +43,7 @@ void CameraControls::initSignals()
 			}
 
 			// Create the settings box
-			QtRecordingControlsDialog* controls = new QtRecordingControlsDialog(this, &pCamera->recorder(), pCamera->camera().cameraDevice());
+			QtRecordingControlsDialog* controls = new QtRecordingControlsDialog(this, &pCamera->recorder());
 			controls->setAttribute(Qt::WA_DeleteOnClose);
 			controls->show();
 			});

@@ -10,14 +10,26 @@ class QtRecordingControlsDialog : public QDialog
 	Q_OBJECT
 
 public:
-	QtRecordingControlsDialog(QWidget *parent = nullptr, QMediaRecorder* recorder = nullptr, QCameraDevice device = QCameraDevice());
+	QtRecordingControlsDialog(QWidget *parent = nullptr, QMediaRecorder* recorder = nullptr);
 	~QtRecordingControlsDialog();
 
 private:
 	Ui::QtRecordingControlsDialogClass ui;
-	QMediaRecorder* pRecorder;
-	QCameraDevice mDevice;
+	QMediaRecorder* pRecorder = nullptr;
+	QMediaCaptureSession* pCaptureSession = nullptr;
+	QAudioInput* pAudioInput = nullptr;
+	QCamera* pCamera = nullptr;
 
 	void initWidgets();
 	void initSignals();
+
+	void initGeneralWidgets();
+	void initVideoWidgets();
+	void initAudioWidgets();
+
+	void initGeneralSignals();
+	void initVideoSignals();
+	void initAudioSignals();
+
+	void initDefaultValues();
 };
