@@ -64,7 +64,7 @@ void MainWindow::addVideoWidget(Camera *camera)
 {
     auto videoWidget = new QVideoWidget(this);
     mVideoWidgets.push_back(videoWidget);
-    QString name = camera->camera().cameraDevice().description();
+    QString name = camera->camera()->cameraDevice().description();
     camera->setOutput(videoWidget); // Set output BEFORE adding tab
     ui.tabCameras->addTab(videoWidget, name);
 }

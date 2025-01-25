@@ -20,6 +20,8 @@ public:
 	QtRecordingControlsDialog(QWidget *parent = nullptr, QMediaRecorder* recorder = nullptr);
 	~QtRecordingControlsDialog();
 
+	static QString recorderStateDescription(QMediaRecorder::RecorderState state);
+
 private:
 	Ui::QtRecordingControlsDialogClass ui;
 	QMediaRecorder* pRecorder = nullptr;
@@ -31,7 +33,7 @@ private:
 	void initSignals();
 
 	template <typename Enum>
-	void populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList, std::function<QString(Enum)> enumTextFunction);
+	void populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList, std::function<QString(Enum)> enumTextFunction, bool clearDropdown = false);
 
 	void initGeneralWidgets();
 	void initVideoWidgets();
@@ -45,8 +47,10 @@ private:
 };
 
 template<typename Enum>
-inline void QtRecordingControlsDialog::populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList, std::function<QString(Enum)> enumTextFunction)
+inline void QtRecordingControlsDialog::populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList, std::function<QString(Enum)> enumTextFunction, bool clearDropdown)
 {
+	if (clearDropdown) dropdown->clear();
+
 	for (Enum codec : enumList) {
 		dropdown->addItem(enumTextFunction(codec), QVariant(static_cast<int>(codec)));
 	}

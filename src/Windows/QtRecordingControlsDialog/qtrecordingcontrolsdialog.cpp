@@ -67,6 +67,20 @@ QtRecordingControlsDialog::QtRecordingControlsDialog(QWidget *parent, QMediaReco
 QtRecordingControlsDialog::~QtRecordingControlsDialog()
 {}
 
+QString QtRecordingControlsDialog::recorderStateDescription(QMediaRecorder::RecorderState state)
+{
+	switch (state) {
+	case QMediaRecorder::RecorderState::PausedState:
+		return "Paused";
+	case QMediaRecorder::RecorderState::RecordingState:
+		return "Recording";
+	case QMediaRecorder::RecorderState::StoppedState:
+		return "Stopped";
+	}
+
+	return QString();
+}
+
 void QtRecordingControlsDialog::initWidgets()
 {
 	// Default set all tabs to disabled (except general)
@@ -86,6 +100,10 @@ void QtRecordingControlsDialog::initWidgets()
 
 void QtRecordingControlsDialog::initSignals()
 {
+	connect(pRecorder, &QMediaRecorder::errorOccurred, [this](QMediaRecorder::Error error, QString errorString) {
+		QMessageBox::warning(this, "Error #" + QString::number(error), errorString);
+		});
+
 	initGeneralSignals();
 	initVideoSignals();
 	initAudioSignals();
@@ -94,6 +112,8 @@ void QtRecordingControlsDialog::initSignals()
 void QtRecordingControlsDialog::initGeneralWidgets()
 {
 	/// FIELDS
+	ui.labelRecordingStatus->setText(recorderStateDescription(pRecorder->recorderState()));
+	ui.labelElapsedTime->setText(QString::number(pRecorder->duration()));
 	ui.inputSaveDirectory->setText(pRecorder->outputLocation().toString());
 	ui.checkboxAutoStop->setChecked(pRecorder->autoStop());
 	ui.dropdownQuality->setCurrentIndex(pRecorder->quality());
@@ -139,10 +159,19 @@ void QtRecordingControlsDialog::initAudioWidgets()
 
 void QtRecordingControlsDialog::initGeneralSignals()
 {
+	connect(pRecorder, &QMediaRecorder::recorderStateChanged, [this](QMediaRecorder::RecorderState state) {
+		ui.labelRecordingStatus->setText(recorderStateDescription(state));
+		});
+
+	connect(pRecorder, &QMediaRecorder::durationChanged, [this](qint64 duration) {
+		ui.labelElapsedTime->setText(QString::number(duration));
+		});
+
 	connect(ui.buttonOpenOutput, &QPushButton::clicked, [this]() {
 		// Open the output directory
 		QDesktopServices::openUrl(QUrl::fromLocalFile(pRecorder->outputLocation().path()));
 		});
+
 	connect(ui.buttonSetOutput, &QPushButton::clicked, [this]() {
 		// Select output directory
 		QString dir = QFileDialog::getExistingDirectory(this, "Select Output Directory", pRecorder->outputLocation().path());
