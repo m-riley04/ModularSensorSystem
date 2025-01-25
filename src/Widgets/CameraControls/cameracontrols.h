@@ -20,6 +20,8 @@ private:
 	void initSignals();
 	void initWidgets();
 
+	void populateAudioDevices();
+
 public slots:
 	void setCamera(Camera* camera);
 
