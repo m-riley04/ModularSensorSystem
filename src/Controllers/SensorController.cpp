@@ -9,8 +9,8 @@ SensorController::~SensorController()
 {
 	// Check if recording
 	for (const auto& camera : mCameras) {
-		if (camera->recorder().recorderState() == QMediaRecorder::RecorderState::RecordingState) {
-			camera->recorder().stop();
+		if (camera->recorder()->recorderState() == QMediaRecorder::RecorderState::RecordingState) {
+			camera->recorder()->stop();
 		}
 	}
 
@@ -112,14 +112,14 @@ void SensorController::stopCameras()
 void SensorController::recordCameras()
 {
 	for (const auto& camera : mCameras) {
-		if (camera->recorder().recorderState() == QMediaRecorder::RecorderState::StoppedState) camera->recorder().record();
-		else camera->recorder().stop();
+		if (camera->recorder()->recorderState() == QMediaRecorder::RecorderState::StoppedState) camera->recorder()->record();
+		else camera->recorder()->stop();
 	}
 }
 
 Camera* SensorController::findCamera(QVideoWidget* widget)
 {
 	for (const auto& camera : mCameras) {
-		if (camera->session().videoOutput() == widget) return camera.get();
+		if (camera->session()->videoOutput() == widget) return camera.get();
 	}
 }

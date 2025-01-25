@@ -21,6 +21,7 @@ private:
     QMediaCaptureSession mSession;
     QVideoSink mSink;
     QMediaRecorder mRecorder;
+    QAudioInput mAudioInput;
 
 public:
 	Camera(QObject *parent = nullptr);
@@ -29,10 +30,11 @@ public:
 	QVariant read() override;
 	static bool checkCameraAvailability();
 
-	QCamera& camera() { return mCamera; }
-	QMediaCaptureSession& session() { return mSession; }
-	QVideoSink& sink() { return mSink; }
-	QMediaRecorder& recorder() { return mRecorder; }
+	QCamera* camera() { return &mCamera; }
+	QMediaCaptureSession* session() { return &mSession; }
+	QVideoSink* sink() { return &mSink; }
+	QMediaRecorder* recorder() { return &mRecorder; }
+    QAudioInput* audioInput() { return &mAudioInput; }
 
 public slots:
     void initialize() override;
