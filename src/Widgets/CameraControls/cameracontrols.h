@@ -16,6 +16,7 @@ public:
 private:
 	Ui::CameraControlsClass ui;
 	Camera* pCamera = nullptr;
+	bool areSignalsInitialized = false;
 
 	void initSignals();
 	void initWidgets();

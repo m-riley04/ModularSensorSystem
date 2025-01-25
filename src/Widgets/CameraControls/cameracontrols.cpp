@@ -60,6 +60,9 @@ void CameraControls::initSignals()
 		QtRecordingControlsDialog* controls = new QtRecordingControlsDialog(this, pCamera->recorder());
 		controls->show();
 		});
+
+	// Set signals init flag
+	areSignalsInitialized = true;
 }
 
 void CameraControls::initWidgets()
@@ -106,8 +109,7 @@ void CameraControls::setCamera(Camera* camera) {
 	// Init widgets
 	initWidgets();
 
-	// Initialize signals
-	initSignals();
+	if (!areSignalsInitialized) initSignals();
 
 	// Emit signal
 	emit cameraChanged(camera);
