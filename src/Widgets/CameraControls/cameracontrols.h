@@ -16,10 +16,13 @@ public:
 private:
 	Ui::CameraControlsClass ui;
 	Camera* pCamera = nullptr;
+	QStorageInfo storageInfo;
 	bool areSignalsInitialized = false;
 
 	void initSignals();
 	void initWidgets();
+
+	void updateStorageLabel(qint64 availableBytes);
 
 	void populateAudioDevices();
 

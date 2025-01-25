@@ -12,13 +12,16 @@
 
 #define DEFAULT_FRAME_RATE 30
 
+/// <summary>
+/// Represents a type of Sensor specifically targeting audio/video. Encapsulates a QCamera, QMediaCaptureSession, QVideoSink, QMediaRecorder, and QAudioInput.
+/// </summary>
 class Camera : public Sensor
 {
 	Q_OBJECT
 
 private:
-    QCamera mCamera;
     QMediaCaptureSession mSession;
+    QCamera mCamera;
     QVideoSink mSink;
     QMediaRecorder mRecorder;
     QAudioInput mAudioInput;
@@ -30,8 +33,8 @@ public:
 	QVariant read() override;
 	static bool checkCameraAvailability();
 
+    QMediaCaptureSession* session() { return &mSession; }
 	QCamera* camera() { return &mCamera; }
-	QMediaCaptureSession* session() { return &mSession; }
 	QVideoSink* sink() { return &mSink; }
 	QMediaRecorder* recorder() { return &mRecorder; }
     QAudioInput* audioInput() { return &mAudioInput; }
@@ -47,7 +50,8 @@ public slots:
 	void setMediaDirectory(QUrl directory);
 
 signals:
-    void deviceChanged(QCameraDevice device);
+    void cameraDeviceChanged(QCameraDevice device);
+    void audioDeviceChanged(QAudioDevice audioDevice);
 	void mediaDirectoryChanged(QUrl directory);
     void deviceError();
 };

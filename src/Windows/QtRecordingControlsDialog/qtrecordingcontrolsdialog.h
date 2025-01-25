@@ -33,7 +33,8 @@ private:
 	void initSignals();
 
 	template <typename Enum>
-	void populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList, std::function<QString(Enum)> enumTextFunction, bool clearDropdown = false);
+	void populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList, 
+		std::function<QString(Enum)> enumTextFunction, bool clearDropdown = false, QList<Enum> allowedEnums = {});
 
 	void initGeneralWidgets();
 	void initVideoWidgets();
@@ -47,11 +48,12 @@ private:
 };
 
 template<typename Enum>
-inline void QtRecordingControlsDialog::populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList, std::function<QString(Enum)> enumTextFunction, bool clearDropdown)
+inline void QtRecordingControlsDialog::populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList, 
+	std::function<QString(Enum)> enumTextFunction, bool clearDropdown, QList<Enum> allowedEnums)
 {
 	if (clearDropdown) dropdown->clear();
 
 	for (Enum codec : enumList) {
-		dropdown->addItem(enumTextFunction(codec), QVariant(static_cast<int>(codec)));
+		if (allowedEnums.contains(codec)) dropdown->addItem(enumTextFunction(codec), QVariant(static_cast<int>(codec)));
 	}
 }

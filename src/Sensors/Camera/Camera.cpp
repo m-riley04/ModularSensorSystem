@@ -30,9 +30,18 @@ void Camera::initialize() {
     mRecorder.setOutputLocation(QDir::currentPath() + "/output");
     
     // Initialize capture session
-    mSession.setVideoSink(&mSink);
     mSession.setCamera(&mCamera);
+    mSession.setVideoSink(&mSink);
 	mSession.setRecorder(&mRecorder);
+    mSession.setAudioInput(&mAudioInput);
+
+    // Initialize connections
+    connect(&mAudioInput, &QAudioInput::deviceChanged, [this]() {
+        emit audioDeviceChanged(mAudioInput.device());
+        });
+    connect(&mCamera, &QCamera::cameraDeviceChanged, [this]() {
+        emit cameraDeviceChanged(mCamera.cameraDevice());
+        });
 }
 
 void Camera::start() {
@@ -71,7 +80,7 @@ void Camera::setOutput(QVideoWidget* widget)
 void Camera::setDevice(QCameraDevice device)
 {
     mCamera.setCameraDevice(device);
-    emit deviceChanged(device);
+    emit cameraDeviceChanged(device);
 }
 
 void Camera::setMediaDirectory(QUrl directory)

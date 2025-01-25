@@ -30,6 +30,23 @@ QList<QMediaFormat::AudioCodec> audioCodecs = {
 	QMediaFormat::AudioCodec::Unspecified
 };
 
+QList<QMediaFormat::FileFormat> fileFormats = {
+	QMediaFormat::WMA,
+	QMediaFormat::AAC,
+	QMediaFormat::Matroska,
+	QMediaFormat::WMV,
+	QMediaFormat::MP3,
+	QMediaFormat::Wave,
+	QMediaFormat::Ogg,
+	QMediaFormat::MPEG4,
+	QMediaFormat::AVI,
+	QMediaFormat::QuickTime,
+	QMediaFormat::WebM,
+	QMediaFormat::Mpeg4Audio,
+	QMediaFormat::FLAC,
+	QMediaFormat::UnspecifiedFormat
+};
+
 QtRecordingControlsDialog::QtRecordingControlsDialog(QWidget *parent, QMediaRecorder* recorder)
 	: QDialog(parent), pRecorder(recorder)
 {
@@ -112,6 +129,9 @@ void QtRecordingControlsDialog::initSignals()
 void QtRecordingControlsDialog::initGeneralWidgets()
 {
 	/// FIELDS
+	auto supportedFormats = pRecorder->mediaFormat().supportedFileFormats(QMediaFormat::ConversionMode::Encode);
+	populateEnumDropdown<QMediaFormat::FileFormat>(ui.dropdownFileFormat, fileFormats, QMediaFormat::fileFormatDescription, true, supportedFormats);
+
 	ui.labelRecordingStatus->setText(recorderStateDescription(pRecorder->recorderState()));
 	ui.labelElapsedTime->setText(QString::number(pRecorder->duration()));
 	ui.inputSaveDirectory->setText(pRecorder->outputLocation().toString());
@@ -129,7 +149,8 @@ void QtRecordingControlsDialog::initVideoWidgets()
 	ui.labelVideoDevice->setText(pCamera->cameraDevice().description());
 
 	/// FIELDS
-	populateEnumDropdown<QMediaFormat::VideoCodec>(ui.dropdownVideoCodec, videoCodecs, QMediaFormat::videoCodecDescription);
+	auto supportedCodecs = pRecorder->mediaFormat().supportedVideoCodecs(QMediaFormat::ConversionMode::Encode);
+	populateEnumDropdown<QMediaFormat::VideoCodec>(ui.dropdownVideoCodec, videoCodecs, QMediaFormat::videoCodecDescription, true, supportedCodecs);
 
 	int i = ui.dropdownVideoCodec->findData(QVariant(static_cast<int>(pRecorder->mediaFormat().videoCodec())));
 	ui.dropdownVideoCodec->setCurrentIndex(i);
@@ -148,7 +169,8 @@ void QtRecordingControlsDialog::initAudioWidgets()
 	ui.labelAudioDevice->setText(pAudioInput->device().description());
 
 	/// FIELDS
-	populateEnumDropdown<QMediaFormat::AudioCodec>(ui.dropdownAudioCodec, audioCodecs, QMediaFormat::audioCodecDescription);
+	auto supportedCodecs = pRecorder->mediaFormat().supportedAudioCodecs(QMediaFormat::ConversionMode::Encode);
+	populateEnumDropdown<QMediaFormat::AudioCodec>(ui.dropdownAudioCodec, audioCodecs, QMediaFormat::audioCodecDescription, true, supportedCodecs);
 
 	int i = ui.dropdownAudioCodec->findData(QVariant(static_cast<int>(pRecorder->mediaFormat().audioCodec())));
 	ui.dropdownAudioCodec->setCurrentIndex(i);
@@ -192,6 +214,11 @@ void QtRecordingControlsDialog::initGeneralSignals()
 
 	connect(ui.dropdownEncodingMode, &QComboBox::currentIndexChanged, [this](int index) {
 		pRecorder->setEncodingMode(static_cast<QMediaRecorder::EncodingMode>(index));
+		});
+
+	connect(ui.dropdownFileFormat, &QComboBox::currentIndexChanged, [this](int index) {
+		auto fileFormat = ui.dropdownFileFormat->itemData(index).value<QMediaFormat::FileFormat>();
+		pRecorder->mediaFormat().setFileFormat(fileFormat);
 		});
 }
 

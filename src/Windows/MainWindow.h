@@ -26,7 +26,7 @@ private:
     void initSignals();
 
 public:
-	bool recording() { return isRecording; }
+    bool recording() const { return isRecording; }
 
 public slots:
     void addVideoWidget(Camera *camera);

@@ -2,6 +2,18 @@
 #include <Windows/QtCameraControlsWindow/QtCameraControlsDialog.h>
 #include <Windows/QtRecordingControlsDialog/qtrecordingcontrolsdialog.h>
 
+double bytesToKilobytes(qint64 bytes) {
+	return bytes / 1024;
+}
+
+double bytesToMegabytes(qint64 bytes) {
+	return bytes / (1024 * 1024);
+}
+
+double bytesToGigabytes(qint64 bytes) {
+	return bytes / (1024 * 1024 * 1024);
+}
+
 CameraControls::CameraControls(QWidget* parent, Camera* camera)
 	: QWidget(parent), pCamera(camera)
 {
@@ -35,6 +47,12 @@ void CameraControls::initSignals()
 		// Find and assign the input based on index
 		pCamera->audioInput()->setDevice(audioInputs.at(index));
 		pCamera->session()->setAudioInput(pCamera->audioInput());
+		});
+
+	// Storage
+	connect(pCamera->recorder(), &QMediaRecorder::durationChanged, [this](qint64 duration) {
+		storageInfo.refresh();
+		updateStorageLabel(storageInfo.bytesAvailable());
 		});
 
 	// Camera settings
@@ -71,10 +89,37 @@ void CameraControls::initWidgets()
 	ui.dropdownAudioDevices->clear();
 	populateAudioDevices();
 
+	// init storage label
+	storageInfo.setPath(pCamera->recorder()->outputLocation().toString());
+	updateStorageLabel(storageInfo.bytesAvailable());
+
 	// Update current devices /// TODO: Make dropdown usable
 	if (pCamera->session()->camera() != nullptr) ui.dropdownVideoDevices->addItem(pCamera->camera()->cameraDevice().description());
 
 	//if (pCamera->session()->audioInput() != nullptr) ui.dropdownAudioDevices->addItem(pCamera->session()->audioInput()->device().description());
+}
+
+void CameraControls::updateStorageLabel(qint64 availableBytes)
+{
+	QString label = QString::number(availableBytes) + "B";
+
+	// Get kilobytes
+	double available = bytesToKilobytes(availableBytes);
+	label = QString::number(available) + "KB";
+
+	// Check if it's bigger than a megabyte
+	if (available > 1024) {
+		available = bytesToMegabytes(availableBytes);
+		label = QString::number(available) + "MB";
+	}
+
+	// Check if it's bigger than a gigabyte
+	if (available > 1024) {
+		available = bytesToGigabytes(availableBytes);
+		label = QString::number(available) + "GB";
+	}
+
+	ui.labelOutputStorage->setText(label);
 }
 
 void CameraControls::populateAudioDevices()
