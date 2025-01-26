@@ -71,7 +71,7 @@ void MainWindow::addVideoWidget(Camera *camera)
 
 void MainWindow::addCamera()
 {
-    AddCameraDialog* addDialog = new AddCameraDialog();
+    AddCameraDialog* addDialog = new AddCameraDialog(this, pController->videoDevices());
     connect(addDialog, &AddCameraDialog::deviceSelected, pController.get(), &SensorController::addCamera);
     addDialog->show();
 }

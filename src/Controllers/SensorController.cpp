@@ -67,6 +67,15 @@ const std::vector<std::unique_ptr<Camera>>& SensorController::cameras() const
 	return mCameras;
 }
 
+QList<QCameraDevice> SensorController::videoDevices()
+{
+	QList<QCameraDevice> devices = {};
+	for (int i = 0; i < mCameras.size(); i++) {
+		devices.append(mCameras[i]->camera()->cameraDevice());
+	}
+	return devices;
+}
+
 void SensorController::addCamera(QCameraDevice device)
 {
 	auto camera = std::make_unique<Camera>();

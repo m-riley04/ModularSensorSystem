@@ -22,6 +22,7 @@ public:
 
 	const std::vector<std::unique_ptr<Sensor>> &sensors() const;
 	const std::vector<std::unique_ptr<Camera>> &cameras() const;
+	QList<QCameraDevice> videoDevices();
 
 public slots:
 	void addSensor();
