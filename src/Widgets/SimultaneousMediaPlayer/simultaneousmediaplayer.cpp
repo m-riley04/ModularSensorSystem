@@ -32,12 +32,67 @@ SimultaneousMediaPlayer::SimultaneousMediaPlayer(QWidget *parent, QStringList me
 
 	initWidgets();
 	initSignals();
+	initShortcuts();
 }
 
 SimultaneousMediaPlayer::~SimultaneousMediaPlayer()
 {
 	mMediaPlayers.clear();
 	mVideoWidgets.clear();
+}
+
+void SimultaneousMediaPlayer::handleSkip()
+{
+	pSelectedMediaPlayer->setPosition(pSelectedMediaPlayer->position() + SKIP_INTERVAL_MS);
+}
+
+void SimultaneousMediaPlayer::handleReverse()
+{
+	pSelectedMediaPlayer->setPosition(pSelectedMediaPlayer->position() - SKIP_INTERVAL_MS);
+}
+
+void SimultaneousMediaPlayer::handleFrameForward()
+{
+	pSelectedMediaPlayer->setPosition(pSelectedMediaPlayer->position() + FRAME_INTERVAL_MS);
+}
+
+void SimultaneousMediaPlayer::handleFrameBackward()
+{
+	pSelectedMediaPlayer->setPosition(pSelectedMediaPlayer->position() - FRAME_INTERVAL_MS);
+}
+
+void SimultaneousMediaPlayer::handlePlay()
+{
+	pSelectedMediaPlayer->play();
+}
+
+void SimultaneousMediaPlayer::handlePause()
+{
+	pSelectedMediaPlayer->pause();
+}
+
+void SimultaneousMediaPlayer::handleStop()
+{
+	pSelectedMediaPlayer->stop();
+}
+
+void SimultaneousMediaPlayer::handlePlayPauseToggle()
+{
+	if (pSelectedMediaPlayer->isPlaying()) handlePause();
+	else handlePlay();
+
+	// Change the button text based on playback state
+	ui.buttonPlay->setText(pSelectedMediaPlayer->isPlaying() ? "Pause" : "Play");
+}
+
+void SimultaneousMediaPlayer::handleVolumeUp()
+{
+	ui.sliderVolume->setValue(ui.sliderVolume->value() + 1);
+}
+
+void SimultaneousMediaPlayer::handleVolumeDown()
+{
+	ui.sliderVolume->setValue(ui.sliderVolume->value() - 1);
 }
 
 void SimultaneousMediaPlayer::initWidgets()
@@ -56,18 +111,16 @@ void SimultaneousMediaPlayer::initSignals()
 
 	/// AUDIO/VOLUME
 	connect(ui.sliderVolume, &QSlider::valueChanged, pSelectedMediaPlayer->audioOutput(), &QAudioOutput::setVolume);
-
-	/// PLAYBACK CONTROLS
-	connect(ui.buttonPlay, &QPushButton::clicked, [this]() {
-
-		if (pSelectedMediaPlayer->isPlaying()) pSelectedMediaPlayer->pause();
-		else pSelectedMediaPlayer->play();
-
-		// Change the button text based on playback state
-		ui.buttonPlay->setText(pSelectedMediaPlayer->isPlaying() ? "Pause" : "Play");
+	connect(pSelectedMediaPlayer->audioOutput(), &QAudioOutput::volumeChanged, [this](float volume) {
+		ui.sliderVolume->blockSignals(true);
+		ui.sliderVolume->setValue(volume);
+		ui.sliderVolume->blockSignals(false);
 		});
 
-	connect(ui.buttonStop, &QPushButton::clicked, pSelectedMediaPlayer, &QMediaPlayer::stop);
+	/// PLAYBACK CONTROLS
+	connect(ui.buttonPlay, &QPushButton::clicked, this, &SimultaneousMediaPlayer::handlePlayPauseToggle);
+
+	connect(ui.buttonStop, &QPushButton::clicked, this, &SimultaneousMediaPlayer::handleStop);
 
 	connect(ui.dialSpeed, &QDial::valueChanged, [this]() {
 
@@ -77,13 +130,8 @@ void SimultaneousMediaPlayer::initSignals()
 
 		});
 
-	connect(ui.buttonSkip, &QPushButton::clicked, [this]() {
-		pSelectedMediaPlayer->setPosition(pSelectedMediaPlayer->position() + (SKIP_INTERVAL_S * 1000));
-		});
-
-	connect(ui.buttonReverse, &QPushButton::clicked, [this]() {
-		pSelectedMediaPlayer->setPosition(pSelectedMediaPlayer->position() - (SKIP_INTERVAL_S * 1000));
-		});
+	connect(ui.buttonSkip, &QPushButton::clicked, this, &SimultaneousMediaPlayer::handleSkip);
+	connect(ui.buttonReverse, &QPushButton::clicked, this, &SimultaneousMediaPlayer::handleReverse);
 
 	/// SEEK SLIDER
 	connect(ui.sliderSeek, &QSlider::valueChanged, pSelectedMediaPlayer, &QMediaPlayer::setPosition);
@@ -92,7 +140,6 @@ void SimultaneousMediaPlayer::initSignals()
 		ui.sliderSeek->blockSignals(true);
 		ui.sliderSeek->setValue(pos);
 		ui.sliderSeek->blockSignals(false);
-
 
 		// Update label
 		ui.labelElapsed->setText(QString::number(pos));
@@ -106,15 +153,28 @@ void SimultaneousMediaPlayer::initSignals()
 
 void SimultaneousMediaPlayer::initShortcuts()
 {
-	auto skipShortcut = new QShortcut(QKeySequence::Forward, this);
-	auto reverseShortcut = new QShortcut(QKeySequence::Back, this);
+	auto skipShortcut = new QShortcut(Qt::Key_Right, this);
+	auto reverseShortcut = new QShortcut(Qt::Key_Left, this);
+	auto frameForwardShortcut = new QShortcut(Qt::Key_Period, this);
+	auto frameBackwardShortcut = new QShortcut(Qt::Key_Comma, this);
 	auto playPauseShortcut = new QShortcut(Qt::Key_Space, this);
 	auto playShortcut = new QShortcut(Qt::Key_MediaPlay, this);
 	auto pauseShortcut = new QShortcut(Qt::Key_MediaPause, this);
-	auto playPauseShortcut = new QShortcut(Qt::Key_MediaStop, this);
-	auto volumeUpShortcut = new QShortcut(Qt::Key_VolumeUp | Qt::Key_Up, this);
-	auto volumeDownShortcut = new QShortcut(Qt::Key_VolumeDown | Qt::Key_Down, this);
+	auto stopShortcut = new QShortcut(Qt::Key_MediaStop, this);
+	auto volumeUpShortcut = new QShortcut(Qt::Key_Up, this);
+	auto volumeDownShortcut = new QShortcut(Qt::Key_Down, this);
 
+	/// CONNECTIONS
+	connect(skipShortcut, &QShortcut::activated, this, &SimultaneousMediaPlayer::handleSkip);
+	connect(reverseShortcut, &QShortcut::activated, this, &SimultaneousMediaPlayer::handleReverse);
+	connect(frameForwardShortcut, &QShortcut::activated, this, &SimultaneousMediaPlayer::handleFrameForward);
+	connect(frameBackwardShortcut, &QShortcut::activated, this, &SimultaneousMediaPlayer::handleFrameBackward);
+	connect(playPauseShortcut, &QShortcut::activated, this, &SimultaneousMediaPlayer::handlePlayPauseToggle);
+	connect(playShortcut, &QShortcut::activated, this, &SimultaneousMediaPlayer::handlePlay);
+	connect(pauseShortcut, &QShortcut::activated, this, &SimultaneousMediaPlayer::handlePause);
+	connect(stopShortcut, &QShortcut::activated, this, &SimultaneousMediaPlayer::handleStop);
+	connect(volumeUpShortcut, &QShortcut::activated, this, &SimultaneousMediaPlayer::handleVolumeUp);
+	connect(volumeDownShortcut, &QShortcut::activated, this, &SimultaneousMediaPlayer::handleVolumeDown);
 }
 
 void SimultaneousMediaPlayer::initPlaybackWidgets()
@@ -128,4 +188,7 @@ void SimultaneousMediaPlayer::initPlaybackWidgets()
 
 	/// BUTTONS
 	ui.buttonPlay->setText(pSelectedMediaPlayer->isPlaying() ? "Pause" : "Play");
+
+	/// VOLUME
+	ui.sliderVolume->setValue(pSelectedMediaPlayer->audioOutput()->volume());
 }

@@ -7,7 +7,8 @@
 #include <QVideoWidget>
 #include "ui_simultaneousmediaplayer.h"
 
-#define SKIP_INTERVAL_S 5
+#define SKIP_INTERVAL_MS 5000
+#define FRAME_INTERVAL_MS 10
 
 class SimultaneousMediaPlayer : public QDialog
 {
@@ -16,6 +17,18 @@ class SimultaneousMediaPlayer : public QDialog
 public:
 	SimultaneousMediaPlayer(QWidget* parent = nullptr, QStringList mediaFilePaths = {});
 	~SimultaneousMediaPlayer();
+
+public slots:
+	void handleSkip();
+	void handleReverse();
+	void handleFrameForward();
+	void handleFrameBackward();
+	void handlePlay();
+	void handlePause();
+	void handleStop();
+	void handlePlayPauseToggle();
+	void handleVolumeUp();
+	void handleVolumeDown();
 
 private:
 	Ui::SimultaneousMediaPlayerClass ui;

@@ -47,9 +47,6 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QTabWidget" name="tabs"/>
-   </item>
    <item row="2" column="0">
     <widget class="QFrame" name="frameControls">
      <property name="frameShape">
@@ -122,6 +119,9 @@
       </item>
      </layout>
     </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tabs"/>
    </item>
   </layout>
  </widget>
