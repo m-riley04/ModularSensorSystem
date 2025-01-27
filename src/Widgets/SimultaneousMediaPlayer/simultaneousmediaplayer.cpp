@@ -24,11 +24,12 @@ SimultaneousMediaPlayer::SimultaneousMediaPlayer(QWidget *parent, QStringList me
 		mAudioOutputs.push_back(audioOutput);
 		mVideoWidgets.push_back(videoWidget);
 		QString name = file.fileName();
-		ui.tabs->addTab(videoWidget, name);
+		ui.playbackGrid->addWidget(videoWidget);
+		//ui.tabs->addTab(videoWidget, name);
 	}
 
 	// Set current selected media
-	pSelectedMediaPlayer = mMediaPlayers.first();
+	pRootMedia = mMediaPlayers.first();
 
 	initWidgets();
 	initSignals();
@@ -43,46 +44,60 @@ SimultaneousMediaPlayer::~SimultaneousMediaPlayer()
 
 void SimultaneousMediaPlayer::handleSkip()
 {
-	pSelectedMediaPlayer->setPosition(pSelectedMediaPlayer->position() + SKIP_INTERVAL_MS);
+	for (QMediaPlayer* player : mMediaPlayers) {
+		player->setPosition(pRootMedia->position() + SKIP_INTERVAL_MS);
+	}
 }
 
 void SimultaneousMediaPlayer::handleReverse()
 {
-	pSelectedMediaPlayer->setPosition(pSelectedMediaPlayer->position() - SKIP_INTERVAL_MS);
+	for (QMediaPlayer* player : mMediaPlayers) {
+		player->setPosition(pRootMedia->position() - SKIP_INTERVAL_MS);
+	}
 }
 
 void SimultaneousMediaPlayer::handleFrameForward()
 {
-	pSelectedMediaPlayer->setPosition(pSelectedMediaPlayer->position() + FRAME_INTERVAL_MS);
+	for (QMediaPlayer* player : mMediaPlayers) {
+		player->setPosition(pRootMedia->position() + FRAME_INTERVAL_MS);
+	}
 }
 
 void SimultaneousMediaPlayer::handleFrameBackward()
 {
-	pSelectedMediaPlayer->setPosition(pSelectedMediaPlayer->position() - FRAME_INTERVAL_MS);
+	for (QMediaPlayer* player : mMediaPlayers) {
+		player->setPosition(pRootMedia->position() - FRAME_INTERVAL_MS);
+	}
 }
 
 void SimultaneousMediaPlayer::handlePlay()
 {
-	pSelectedMediaPlayer->play();
+	for (QMediaPlayer* player : mMediaPlayers) {
+		player->play();
+	}
 }
 
 void SimultaneousMediaPlayer::handlePause()
 {
-	pSelectedMediaPlayer->pause();
+	for (QMediaPlayer* player : mMediaPlayers) {
+		player->pause();
+	}
 }
 
 void SimultaneousMediaPlayer::handleStop()
 {
-	pSelectedMediaPlayer->stop();
+	for (QMediaPlayer* player : mMediaPlayers) {
+		player->stop();
+	}
 }
 
 void SimultaneousMediaPlayer::handlePlayPauseToggle()
 {
-	if (pSelectedMediaPlayer->isPlaying()) handlePause();
+	if (pRootMedia->isPlaying()) handlePause();
 	else handlePlay();
 
 	// Change the button text based on playback state
-	ui.buttonPlay->setText(pSelectedMediaPlayer->isPlaying() ? "Pause" : "Play");
+	ui.buttonPlay->setText(pRootMedia->isPlaying() ? "Pause" : "Play");
 }
 
 void SimultaneousMediaPlayer::handleVolumeUp()
@@ -104,14 +119,14 @@ void SimultaneousMediaPlayer::initWidgets()
 void SimultaneousMediaPlayer::initSignals()
 {
 	/// SELECTION
-	connect(ui.tabs, &QTabWidget::currentChanged, [this](int index) {
+	/*connect(ui.tabs, &QTabWidget::currentChanged, [this](int index) {
 		pSelectedMediaPlayer = mMediaPlayers[index];
 		initPlaybackWidgets();
-		});
+		});*/
 
 	/// AUDIO/VOLUME
-	connect(ui.sliderVolume, &QSlider::valueChanged, pSelectedMediaPlayer->audioOutput(), &QAudioOutput::setVolume);
-	connect(pSelectedMediaPlayer->audioOutput(), &QAudioOutput::volumeChanged, [this](float volume) {
+	connect(ui.sliderVolume, &QSlider::valueChanged, pRootMedia->audioOutput(), &QAudioOutput::setVolume);
+	connect(pRootMedia->audioOutput(), &QAudioOutput::volumeChanged, [this](float volume) {
 		ui.sliderVolume->blockSignals(true);
 		ui.sliderVolume->setValue(volume);
 		ui.sliderVolume->blockSignals(false);
@@ -134,8 +149,13 @@ void SimultaneousMediaPlayer::initSignals()
 	connect(ui.buttonReverse, &QPushButton::clicked, this, &SimultaneousMediaPlayer::handleReverse);
 
 	/// SEEK SLIDER
-	connect(ui.sliderSeek, &QSlider::valueChanged, pSelectedMediaPlayer, &QMediaPlayer::setPosition);
-	connect(pSelectedMediaPlayer, &QMediaPlayer::positionChanged, [this](qint64 pos) {
+	connect(ui.sliderSeek, &QSlider::valueChanged, [this](int value) {
+		for (QMediaPlayer* player : mMediaPlayers) {
+			player->setPosition(value);
+		}
+		});
+
+	connect(pRootMedia, &QMediaPlayer::positionChanged, [this](qint64 pos) {
 		// Set position
 		ui.sliderSeek->blockSignals(true);
 		ui.sliderSeek->setValue(pos);
@@ -145,7 +165,7 @@ void SimultaneousMediaPlayer::initSignals()
 		ui.labelElapsed->setText(QString::number(pos));
 		});
 
-	connect(pSelectedMediaPlayer, &QMediaPlayer::durationChanged, [this](qint64 dur) {
+	connect(pRootMedia, &QMediaPlayer::durationChanged, [this](qint64 dur) {
 		ui.sliderSeek->setMaximum(dur);
 		ui.labelDuration->setText(QString::number(dur));
 		});
@@ -181,14 +201,14 @@ void SimultaneousMediaPlayer::initPlaybackWidgets()
 {
 	/// SEEK SLIDER
 	//ui.sliderSeek->setEnabled(pSelectedMediaPlayer->isSeekable());
-	ui.sliderSeek->setMaximum(pSelectedMediaPlayer->duration());
-	ui.sliderSeek->setValue(pSelectedMediaPlayer->position());
-	ui.labelDuration->setText(QString::number(pSelectedMediaPlayer->duration()));
-	ui.labelElapsed->setText(QString::number(pSelectedMediaPlayer->position()));
+	ui.sliderSeek->setMaximum(pRootMedia->duration());
+	ui.sliderSeek->setValue(pRootMedia->position());
+	ui.labelDuration->setText(QString::number(pRootMedia->duration()));
+	ui.labelElapsed->setText(QString::number(pRootMedia->position()));
 
 	/// BUTTONS
-	ui.buttonPlay->setText(pSelectedMediaPlayer->isPlaying() ? "Pause" : "Play");
+	ui.buttonPlay->setText(pRootMedia->isPlaying() ? "Pause" : "Play");
 
 	/// VOLUME
-	ui.sliderVolume->setValue(pSelectedMediaPlayer->audioOutput()->volume());
+	ui.sliderVolume->setValue(pRootMedia->audioOutput()->volume());
 }
