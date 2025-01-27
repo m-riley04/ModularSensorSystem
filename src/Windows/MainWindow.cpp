@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "QtCameraControlsWindow/qtcameracontrolsdialog.h"
+#include <Widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -54,6 +55,16 @@ void MainWindow::initSignals() {
         isRecording = !isRecording;
 
 		});
+
+    connect(ui.buttonPlayback, &QPushButton::clicked, [this]() {
+        // Get files to open for playback
+        QStringList files = QFileDialog::getOpenFileNames(this, "Open recorded files");
+
+        if (files.length() <= 0) return; // Empty list
+
+        SimultaneousMediaPlayer* player = new SimultaneousMediaPlayer(this, files);
+        player->show();
+        });
 
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);

@@ -21,10 +21,10 @@ void AddCameraDialog::populateDropdown()
 	// Get current devices
 	for (QCameraDevice device : QMediaDevices::videoInputs()) {
 		// Check if device is already in current device list
-		if (!mCurrentCameras.contains(device)) {
+		//if (!mCurrentCameras.contains(device)) {
 			ui.dropdownDevices->addItem(device.description(), device.id());
 			mDevices.append(device);
-		}
+		//}
 	}
 }
 

@@ -1,17 +1,15 @@
 #include "cameracontrols.h"
-#include <Windows/QtCameraControlsWindow/QtCameraControlsDialog.h>
-#include <Windows/QtRecordingControlsDialog/qtrecordingcontrolsdialog.h>
 
 double bytesToKilobytes(qint64 bytes) {
-	return bytes / 1024;
+	return bytes / static_cast<double>(1024);
 }
 
 double bytesToMegabytes(qint64 bytes) {
-	return bytes / (1024 * 1024);
+	return bytes / static_cast<double>(1024 * 1024);
 }
 
 double bytesToGigabytes(qint64 bytes) {
-	return bytes / (1024 * 1024 * 1024);
+	return bytes / static_cast<double>(1024 * 1024 * 1024);
 }
 
 CameraControls::CameraControls(QWidget* parent, Camera* camera)

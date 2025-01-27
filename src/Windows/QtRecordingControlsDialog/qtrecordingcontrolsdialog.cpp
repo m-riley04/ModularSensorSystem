@@ -129,15 +129,17 @@ void QtRecordingControlsDialog::initSignals()
 void QtRecordingControlsDialog::initGeneralWidgets()
 {
 	/// FIELDS
-	auto supportedFormats = pRecorder->mediaFormat().supportedFileFormats(QMediaFormat::ConversionMode::Encode);
-	populateEnumDropdown<QMediaFormat::FileFormat>(ui.dropdownFileFormat, fileFormats, QMediaFormat::fileFormatDescription, true, supportedFormats);
-
 	ui.labelRecordingStatus->setText(recorderStateDescription(pRecorder->recorderState()));
 	ui.labelElapsedTime->setText(QString::number(pRecorder->duration()));
 	ui.inputSaveDirectory->setText(pRecorder->outputLocation().toString());
 	ui.checkboxAutoStop->setChecked(pRecorder->autoStop());
 	ui.dropdownQuality->setCurrentIndex(pRecorder->quality());
 	ui.dropdownEncodingMode->setCurrentIndex(pRecorder->encodingMode());
+
+	auto supportedFormats = pRecorder->mediaFormat().supportedFileFormats(QMediaFormat::ConversionMode::Encode);
+	populateEnumDropdown<QMediaFormat::FileFormat>(ui.dropdownFileFormat, fileFormats, QMediaFormat::fileFormatDescription, true, supportedFormats);
+	int i = ui.dropdownFileFormat->findData(QVariant(static_cast<int>(pRecorder->mediaFormat().fileFormat())));
+	ui.dropdownFileFormat->setCurrentIndex(i);
 }
 
 void QtRecordingControlsDialog::initVideoWidgets()

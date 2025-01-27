@@ -4,6 +4,8 @@
 #include <QtMultimedia>
 #include "ui_cameracontrols.h"
 #include <Sensors/Camera/Camera.h>
+#include <Windows/QtCameraControlsWindow/QtCameraControlsDialog.h>
+#include <Windows/QtRecordingControlsDialog/qtrecordingcontrolsdialog.h>
 
 class CameraControls : public QWidget
 {
