@@ -9,8 +9,15 @@
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
+#include "Generators/OpenCVGenerator/opencvcamera.h"
 
 #define DEFAULT_FRAME_RATE 30
+
+enum VideoInputMethod
+{
+    QCAMERA,
+	QVIDEOFRAMEINPUT
+};
 
 /// <summary>
 /// Represents a type of Sensor specifically targeting audio/video. Encapsulates a QCamera, QMediaCaptureSession, QVideoSink, QMediaRecorder, and QAudioInput.
@@ -25,9 +32,13 @@ private:
     QVideoSink mSink;
     QMediaRecorder mRecorder;
     QAudioInput mAudioInput;
+	QVideoFrameInput mFrameInput;
+	OpenCVGenerator mGenerator;
+
+	VideoInputMethod mVideoInputMethod = VideoInputMethod::QCAMERA;
 
 public:
-	Camera(QObject *parent = nullptr);
+	Camera(QObject *parent = nullptr, VideoInputMethod method = VideoInputMethod::QCAMERA);
 	~Camera();
 
 	QVariant read() override;
@@ -38,6 +49,10 @@ public:
 	QVideoSink* sink() { return &mSink; }
 	QMediaRecorder* recorder() { return &mRecorder; }
     QAudioInput* audioInput() { return &mAudioInput; }
+	QVideoFrameInput* frameInput() { return &mFrameInput; }
+    OpenCVGenerator* generator() { return &mGenerator; }
+
+    void changeVideoInputMethod(VideoInputMethod method);
 
 public slots:
     void initialize() override;
@@ -45,11 +60,13 @@ public slots:
     void stop() override;
     void restart() override;
     
-    void setOutput(QVideoWidget* widget);
+    void setVideoOutput(QVideoWidget* widget);
     void setDevice(QCameraDevice device);
 	void setMediaDirectory(QUrl directory);
 
 signals:
+    void videoInputMethodChanged(VideoInputMethod method);
+	void videoOutputChanged(QVideoWidget* widget);
     void cameraDeviceChanged(QCameraDevice device);
     void audioDeviceChanged(QAudioDevice audioDevice);
 	void mediaDirectoryChanged(QUrl directory);

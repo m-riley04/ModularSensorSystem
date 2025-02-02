@@ -39,6 +39,10 @@ void CameraControls::initSignals()
 	connect(ui.buttonRestart, &QPushButton::clicked, pCamera, &Camera::restart);
 
 	// Devices
+	connect(ui.checkboxVideoProcessing, &QCheckBox::checkStateChanged, [this](Qt::CheckState state) {
+		pCamera->changeVideoInputMethod(state == Qt::CheckState::Checked ? VideoInputMethod::QVIDEOFRAMEINPUT : VideoInputMethod::QCAMERA);
+		});
+
 	connect(ui.dropdownAudioDevices, &QComboBox::currentIndexChanged, [this](int index) {
 		auto audioInputs = QMediaDevices::audioInputs();
 
