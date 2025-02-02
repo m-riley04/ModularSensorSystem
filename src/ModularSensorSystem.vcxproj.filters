@@ -73,6 +73,12 @@
     <ClCompile Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sensors\Camera\Generators\mediagenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor.h">
@@ -103,6 +109,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Sensors\Camera\Generators\mediagenerator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

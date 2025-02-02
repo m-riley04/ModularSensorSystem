@@ -109,7 +109,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sensors\Camera\Generators\mediagenerator.cpp" />
     <ClCompile Include="Sensors\GPS.cpp" />
+    <ClCompile Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.cpp" />
     <ClCompile Include="Sensors\Sensor.cpp" />
     <ClCompile Include="Widgets\CameraControls\cameracontrols.cpp" />
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
@@ -162,6 +164,8 @@
     <QtMoc Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h" />
     <QtMoc Include="Widgets\CameraControls\cameracontrols.h" />
+    <QtMoc Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.h" />
+    <QtMoc Include="Sensors\Camera\Generators\mediagenerator.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

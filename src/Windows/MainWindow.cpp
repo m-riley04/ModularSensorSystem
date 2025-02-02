@@ -9,8 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     pController = std::make_unique<SensorController>(this);
 
     // Initialize
-    initSignals();
     initWidgets();
+    initSignals();
 }
 
 MainWindow::~MainWindow()
@@ -43,12 +43,7 @@ void MainWindow::initSignals() {
     
     // Recording
 	connect(ui.buttonRecord, &QPushButton::clicked, [this]() {
-        if (!isRecording) {
-            ui.buttonRecord->setText("Stop Recording");
-        }
-        else {
-            ui.buttonRecord->setText("Record");
-        }
+        ui.buttonRecord->setText(isRecording ? "Record" : "Stop Recording");
 
         pController->recordCameras();
 
