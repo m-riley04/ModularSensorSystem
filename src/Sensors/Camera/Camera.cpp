@@ -45,17 +45,17 @@ void Camera::initialize() {
         emit cameraDeviceChanged(mCamera.cameraDevice());
         });
 
-	//// Initialize generator signal connections
- //   connect(&mFrameInput, &QVideoFrameInput::readyToSendVideoFrame,
- //       &mGenerator, &OpenCVGenerator::nextFrame);
- //   connect(&mGenerator, &OpenCVGenerator::frameReady,
- //       &mFrameInput, [this](const QVideoFrame& frame) {
- //           bool successfullySent = mFrameInput.sendVideoFrame(frame);
+	// Initialize generator signal connections
+    connect(&mFrameInput, &QVideoFrameInput::readyToSendVideoFrame,
+        &mGenerator, &OpenCVGenerator::nextFrame);
+    connect(&mGenerator, &OpenCVGenerator::frameReady,
+        &mFrameInput, [this](const QVideoFrame& frame) {
+            bool successfullySent = mFrameInput.sendVideoFrame(frame);
 
- //           if (!successfullySent) {
- //               qDebug() << "Error: Could not send video frame";
- //           }
- //       });
+            if (!successfullySent) {
+                qDebug() << "Error: Could not send video frame";
+            }
+        });
 }
 
 void Camera::changeVideoInputMethod(VideoInputMethod method)
@@ -67,9 +67,14 @@ void Camera::changeVideoInputMethod(VideoInputMethod method)
 	case VideoInputMethod::QCAMERA:
         mSession.setVideoFrameInput(nullptr);
 		mSession.setCamera(&mCamera);
+        mGenerator.stop();
+        mCamera.start();
 		break;
 
 	case VideoInputMethod::QVIDEOFRAMEINPUT:
+        mSession.setCamera(nullptr);
+        mCamera.stop();
+        mGenerator.start(); /// TODO: Set this to correct input index
 		mSession.setVideoFrameInput(&mFrameInput);
 		break;
     }

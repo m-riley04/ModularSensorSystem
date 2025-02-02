@@ -13,11 +13,13 @@ void OpenCVGenerator::setInputIndex(int index) {
 	
 	if (cap.isOpened()) cap.release();
 
-	cap.open(mVideoIndex);
 	emit cameraIndexChanged(mVideoIndex);
 }
 
 void OpenCVGenerator::start() {
+	cap.open(mVideoIndex, cv::CAP_DSHOW);
+
+	// Start the frame grabbing loop
 	nextFrame();
 }
 
@@ -30,6 +32,12 @@ void OpenCVGenerator::nextFrame() {
 	// Get mat
 	cv::Mat mat;
 	cap >> mat;
+
+	// Check if the mat is empty
+	if (mat.empty()) {
+		//cap.release();
+		return;
+	}
 
 	// Convert from BGR to BGRA
 	cv::Mat matBGRA;
