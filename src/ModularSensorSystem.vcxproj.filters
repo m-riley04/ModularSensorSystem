@@ -79,6 +79,9 @@
     <ClCompile Include="Sensors\Camera\Generators\mediagenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sensors\Camera\TOPDON_TC001\topdontc001.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor.h">
@@ -115,6 +118,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Sensors\Camera\Generators\mediagenerator.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Sensors\Camera\TOPDON_TC001\topdontc001.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
