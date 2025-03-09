@@ -17,6 +17,12 @@ enum TC001Pallette
 	LAVA
 };
 
+enum TC001GainMode
+{
+	WIDE_RANGE,
+	HIGH_QUALITY
+};
+
 class TopdonTC001  : public QObject
 {
 	Q_OBJECT
@@ -36,6 +42,7 @@ private:
 	bool mIsIsothermal;
 	bool mIsStretchMode;
 	TC001Pallette mPallette;
+	TC001GainMode mGainMode;
 
 public:
 	TopdonTC001(QObject *parent);
@@ -54,6 +61,7 @@ public:
 	bool isIsothermal() const { return mIsIsothermal; };
 	bool isStretchMode() const { return mIsStretchMode; };
 	TC001Pallette pallette() const { return mPallette; };
+	TC001GainMode gainMode() const { return mGainMode; };
 
 public slots:
 
@@ -67,6 +75,9 @@ public slots:
 	void setTemperatureBar(bool isTemperatureBar);
 	void setIsothermal(bool isIsothermal);
 	void setStretchMode(bool isStretchMode);
+	void setGainMode(bool isWideRange); // Wide Range (~150 C) or High Quality (-20 to 150 C)
+
+	void activateFCC();
 
 signals:
 	void globalTemperatureChanged(double temperature);
@@ -82,4 +93,7 @@ signals:
 	void stretchModeChanged(bool isStretchMode);
 	void palletteChanged(TC001Pallette pallette);
 	void globalTemperatureChanged(double temperature);
+	void gainModeChanged(TC001GainMode gainMode);
+
+	void fccActivated();
 };
