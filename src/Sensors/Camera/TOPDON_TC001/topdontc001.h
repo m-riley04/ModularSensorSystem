@@ -67,17 +67,17 @@ public slots:
 
 	/// CONTROLS
 
-	void setAtmosphericTemperature(double temperature);
-	void setReflectionTemperature(double temperature);
-	void setDistance(double distance);
-	void setHumidity(double humidity);
-	void setEmmisivity(double emmisivity);
-	void setTemperatureBar(bool isTemperatureBar);
-	void setIsothermal(bool isIsothermal);
-	void setStretchMode(bool isStretchMode);
-	void setGainMode(bool isWideRange); // Wide Range (~150 C) or High Quality (-20 to 150 C)
+	//void setAtmosphericTemperature(double temperature);
+	//void setReflectionTemperature(double temperature);
+	//void setDistance(double distance);
+	//void setHumidity(double humidity);
+	//void setEmmisivity(double emmisivity);
+	//void setTemperatureBar(bool isTemperatureBar);
+	//void setIsothermal(bool isIsothermal);
+	//void setStretchMode(bool isStretchMode);
+	//void setGainMode(bool isWideRange); // Wide Range (~150 C) or High Quality (-20 to 150 C)
 
-	void activateFCC();
+	//void activateFCC();
 
 signals:
 	void globalTemperatureChanged(double temperature);
@@ -92,7 +92,6 @@ signals:
 	void isothermalChanged(bool isIsothermal);
 	void stretchModeChanged(bool isStretchMode);
 	void palletteChanged(TC001Pallette pallette);
-	void globalTemperatureChanged(double temperature);
 	void gainModeChanged(TC001GainMode gainMode);
 
 	void fccActivated();

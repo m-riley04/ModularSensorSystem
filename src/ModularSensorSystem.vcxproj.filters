@@ -82,6 +82,9 @@
     <ClCompile Include="Sensors\Camera\TOPDON_TC001\topdontc001.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor.h">
@@ -123,6 +126,9 @@
     <QtMoc Include="Sensors\Camera\TOPDON_TC001\topdontc001.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -141,6 +147,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
