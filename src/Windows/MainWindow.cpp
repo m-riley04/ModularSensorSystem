@@ -8,6 +8,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui.setupUi(this);
     pController = std::make_unique<SensorController>(this);
 
+    // Initialize core app
+    QCoreApplication::setApplicationName("ModularSensorSystem");
+    QCoreApplication::setApplicationVersion("1.0.0");
+    QCoreApplication::setOrganizationName("Riley Meyerkorth");
+    QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
+
+    // Initialize settings
+
+
     // Initialize
     initWidgets();
     initSignals();
