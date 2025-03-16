@@ -109,6 +109,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Controllers\PresetsController\presetscontroller.cpp" />
     <ClCompile Include="Sensors\Camera\Generators\mediagenerator.cpp" />
     <ClCompile Include="Sensors\Camera\TOPDON_TC001\topdontc001.cpp" />
     <ClCompile Include="Sensors\GPS.cpp" />
@@ -171,6 +172,7 @@
     <QtMoc Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.h" />
     <QtMoc Include="Sensors\Camera\Generators\mediagenerator.h" />
     <QtMoc Include="Sensors\Camera\TOPDON_TC001\topdontc001.h" />
+    <QtMoc Include="Controllers\PresetsController\presetscontroller.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

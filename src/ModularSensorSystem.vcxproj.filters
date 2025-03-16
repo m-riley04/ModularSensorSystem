@@ -85,6 +85,9 @@
     <ClCompile Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Controllers\PresetsController\presetscontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor.h">
@@ -127,6 +130,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Controllers\PresetsController\presetscontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
