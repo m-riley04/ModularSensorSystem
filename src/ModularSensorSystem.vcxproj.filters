@@ -88,6 +88,9 @@
     <ClCompile Include="Controllers\PresetsController\presetscontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Widgets\SinkView\sinkview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor.h">
@@ -135,6 +138,9 @@
     <QtMoc Include="Controllers\PresetsController\presetscontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Widgets\SinkView\sinkview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -156,6 +162,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Widgets\SinkView\sinkview.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
