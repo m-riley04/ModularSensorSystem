@@ -1,54 +1,40 @@
-#include "sinkview.h"
+#include "opencvworker.h"
+#include <iostream>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <stdlib.h>
+#include <thread>
 
-SinkView::SinkView(QWidget *parent)
-	: QWidget(parent), pSink(std::make_unique<QVideoSink>())
+using namespace std;
+
+//---- Constructor
+OpenCvWorker::OpenCvWorker(QObject* parent) :
+    QObject(parent),
+    m_status(false)
 {
-	ui.setupUi(this);
-
-    // Connect signal
-    connect(pSink.get(), &QVideoSink::videoFrameChanged, [this](QVideoFrame frame) {
-        this->setVideoFrame(frame);
-        });
-}
-
-SinkView::~SinkView()
-{}
-
-void SinkView::setVideoFrame(const QVideoFrame & frame)
-{
-    if (frame.isValid()) {
-        mFrame = frame;
-        update(); // schedules a paint event
+    m_classesFile = "data/classes.txt";
+    ifstream ifs(m_classesFile.c_str());
+    string line;
+    while (getline(ifs, line)) { // TODO (for optimization): replace by iterator
+        m_classes.push_back(line);
     }
 }
 
-void SinkView::paintEvent(QPaintEvent* event)
+//---- Destructor
+OpenCvWorker::~OpenCvWorker()
 {
-    Q_UNUSED(event);
-    QPainter painter(this);
-    if (mFrame.isValid()) {
-        QRectF targetRect = this->rect();
-        QVideoFrame::PaintOptions options;
-        mFrame.paint(&painter, targetRect, options);
-    }
 }
 
 //---- capture the frames
-void SinkView::captureFrame()
+void OpenCvWorker::captureFrame()
 {
     Mat frameToGui;
 
     //(*m_cap) >> m_currentFrame;
-    if (mFrame.size().isEmpty()) {
+    if (m_currentFrame.empty()) {
         return;
     }
-    /*flip(m_currentFrame, m_currentFrame, +1);
-    frameToGui = m_currentFrame.clone();*/
-	// Convert QVideoFrame to Mat
-    QImage img = mFrame.toImage();
-
-	// Convert QImage to cv::Mat
-    frameToGui = cv::Mat(img.height(), img.width(), CV_8UC4, (uchar*)img.bits(), img.bytesPerLine()).clone(); // TODO: use this repo to make it more accurate: https://github.com/dbzhang800/QtOpenCV/blob/master/cvmatandqimage.cpp
+    flip(m_currentFrame, m_currentFrame, +1);
+    frameToGui = m_currentFrame.clone();
 
     postProcess(frameToGui, m_outs);
 
@@ -59,7 +45,7 @@ void SinkView::captureFrame()
 }
 
 //---- process the frame to draw outputs
-void SinkView::postProcess(QVideoFrame frame, const vector<Mat>& outs)
+void OpenCvWorker::postProcess(Mat& frame, const vector<Mat>& outs)
 {
     vector<int> classIds;
     vector<float> confidences;
@@ -74,12 +60,12 @@ void SinkView::postProcess(QVideoFrame frame, const vector<Mat>& outs)
             Point classIdPoint;
             double confidence;
             minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
-            if (confidence > mConfidenceThreshold)
+            if (confidence > m_confThreshold)
             {
-                int centerX = (int)(data[0] * frame.height());
-                int centerY = (int)(data[1] * frame.width());
-                int width = (int)(data[2] * frame.height());
-                int height = (int)(data[3] * frame.width());
+                int centerX = (int)(data[0] * frame.cols);
+                int centerY = (int)(data[1] * frame.rows);
+                int width = (int)(data[2] * frame.cols);
+                int height = (int)(data[3] * frame.rows);
                 int left = centerX - width / 2;
                 int top = centerY - height / 2;
 
@@ -91,7 +77,7 @@ void SinkView::postProcess(QVideoFrame frame, const vector<Mat>& outs)
     }
 
     vector<int> indices;
-    NMSBoxes(boxes, confidences, mConfidenceThreshold, mNonMaximumSuppressionThreshold, indices);
+    NMSBoxes(boxes, confidences, m_confThreshold, m_nmsThreshold, indices);
     for (size_t i = 0; i < indices.size(); ++i)
     {
         int idx = indices[i];
@@ -102,12 +88,12 @@ void SinkView::postProcess(QVideoFrame frame, const vector<Mat>& outs)
 }
 
 //---- draw outputs
-void SinkView::drawPred(int classId, float conf, int left, int top, int right, int bottom, QVideoFrame* frame) {
+void OpenCvWorker::drawPred(int classId, float conf, int left, int top, int right, int bottom, Mat& frame) {
     rectangle(frame, Point(left, top), Point(right, bottom), Scalar(0, 255, 0));
     std::string label = std::format("%.2f", conf);
-    if (!mClasses.empty()) {
-        CV_Assert(classId < (int)mClasses.size());
-        label = mClasses[classId] + ": " + label;
+    if (!m_classes.empty()) {
+        CV_Assert(classId < (int)m_classes.size());
+        label = m_classes[classId] + ": " + label;
     }
     int baseLine;
     Size labelSize = getTextSize(label, FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
@@ -118,16 +104,16 @@ void SinkView::drawPred(int classId, float conf, int left, int top, int right, i
 }
 
 //---- start yolo
-void SinkView::activateYOLO() {
-    Mat frame = mCurrentMat.clone();
-    emit sendNewFrameYolo(frame);
+void OpenCvWorker::activateYOLO() {
+    Mat FrameToSend = m_currentFrame.clone();
+    emit sendNewFrameYolo(FrameToSend);
 }
 
 //---- receive new yolo outputs
-void SinkView::receiveNewParameters(vector<Mat> outs_) {
+void OpenCvWorker::receiveNewParameters(vector<Mat> outs_) {
     //qDebug() << "opencvworker, receiveNewParameters, thread id  " << QThread::currentThreadId();
     m_outs = outs_;
     //send a new frame to yolo
-    Mat frame = mCurrentMat.clone();
-    emit sendNewFrameYolo(frame);
+    Mat FrameToSend = m_currentFrame.clone();
+    emit sendNewFrameYolo(FrameToSend);
 }
