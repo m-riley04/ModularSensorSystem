@@ -110,7 +110,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\PresetsController\presetscontroller.cpp" />
-    <ClCompile Include="Processing\opencvworker.cpp" />
     <ClCompile Include="Processing\yolo.cpp" />
     <ClCompile Include="Sensors\Camera\Generators\mediagenerator.cpp" />
     <ClCompile Include="Sensors\Camera\TOPDON_TC001\topdontc001.cpp" />
@@ -179,14 +178,13 @@
     <QtMoc Include="Sensors\Camera\TOPDON_TC001\topdontc001.h" />
     <QtMoc Include="Controllers\PresetsController\presetscontroller.h" />
     <QtMoc Include="Processing\yolo.h" />
-    <QtMoc Include="Processing\opencvworker.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\yolo11n.onnx" />
+    <Text Include="Processing\data\classes.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Processing\data\classes.txt" />
+    <None Include="Processing\data\yolo11n.onnx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

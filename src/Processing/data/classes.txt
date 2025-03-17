@@ -1,0 +1,10 @@
+person
+car
+bus
+pencil
+phone
+cellphone
+computer
+monitor
+tv
+television

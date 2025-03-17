@@ -1,14 +1,27 @@
 #include "sinkview.h"
 
 SinkView::SinkView(QWidget *parent)
-	: QWidget(parent), pSink(std::make_unique<QVideoSink>())
+	: QWidget(parent), pSink(std::make_unique<QVideoSink>()), pYolo(std::make_unique<Yolo>())
 {
 	ui.setupUi(this);
 
-    // Connect signal
+    // Create timer to capture frames
+    QTimer* trigger = new QTimer(this);
+    trigger->setInterval(1);
+
+    // Connect raw video frame signal
     connect(pSink.get(), &QVideoSink::videoFrameChanged, [this](QVideoFrame frame) {
         this->setVideoFrame(frame);
         });
+
+    // Connect yolo signals
+	connect(pYolo.get(), &Yolo::sendDetections, this, &SinkView::receiveDetections);
+	connect(this, &SinkView::sendNewFrameYolo, pYolo.get(), &Yolo::receiveNewFrame);
+	connect(trigger, &QTimer::timeout, this, &SinkView::captureFrame);
+
+    activateYOLO();
+	trigger->start();
+    
 }
 
 SinkView::~SinkView()
@@ -26,108 +39,53 @@ void SinkView::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
+
+    // Draw video frame
     if (mFrame.isValid()) {
         QRectF targetRect = this->rect();
         QVideoFrame::PaintOptions options;
         mFrame.paint(&painter, targetRect, options);
     }
+
+    // Paint the total number of detections in the corner
+	painter.setPen(QPen(Qt::white, 2));
+	painter.drawText(10, 20, QString("Detections: %1").arg(mDetections.size()));
+
+    // Overlay detections
+    painter.setPen(QPen(Qt::red, 2));
+    for (const auto& detection : mDetections) {
+		painter.drawRect(detection.rect);
+
+        // Prepare text label with class and confidence
+        QString label;
+		if (!mClasses.empty() && detection.classId < mClasses.size()) {
+			label = QString::fromStdString(mClasses[detection.classId]) + ": " + 
+                    QString::number(detection.confidence, 'f', 2);
+        }
+        else {
+			label = QString("ID %1: %2").arg(detection.classId)
+                                        .arg(detection.confidence, 0, 'f', 2);
+        }
+		painter.drawText(detection.rect.topLeft(), label);
+    }
 }
 
-//---- capture the frames
 void SinkView::captureFrame()
 {
-    Mat frameToGui;
+    if (mFrame.size().isEmpty()) return;
 
-    //(*m_cap) >> m_currentFrame;
-    if (mFrame.size().isEmpty()) {
-        return;
-    }
-    /*flip(m_currentFrame, m_currentFrame, +1);
-    frameToGui = m_currentFrame.clone();*/
-	// Convert QVideoFrame to Mat
+    // Convert the current video frame to a QImage and send it to YOLO.
     QImage img = mFrame.toImage();
-
-	// Convert QImage to cv::Mat
-    frameToGui = cv::Mat(img.height(), img.width(), CV_8UC4, (uchar*)img.bits(), img.bytesPerLine()).clone(); // TODO: use this repo to make it more accurate: https://github.com/dbzhang800/QtOpenCV/blob/master/cvmatandqimage.cpp
-
-    postProcess(frameToGui, m_outs);
-
-    // NOTE: the following line is needed to be compatible with QImage
-    cv::cvtColor(frameToGui, frameToGui, cv::COLOR_BGR2RGB); // convert opencv image from BGR to RGB
-    QImage output((const unsigned char*)frameToGui.data, frameToGui.cols, frameToGui.rows, QImage::Format_RGB888);//Format_Indexed8);
-    emit sendFrame(output);
+    emit sendNewFrameYolo(img);
 }
 
-//---- process the frame to draw outputs
-void SinkView::postProcess(QVideoFrame frame, const vector<Mat>& outs)
-{
-    vector<int> classIds;
-    vector<float> confidences;
-    vector<Rect> boxes;
-
-    for (size_t i = 0; i < outs.size(); ++i)
-    {
-        float* data = (float*)outs[i].data;
-        for (int j = 0; j < outs[i].rows; ++j, data += outs[i].cols)
-        {
-            Mat scores = outs[i].row(j).colRange(5, outs[i].cols);
-            Point classIdPoint;
-            double confidence;
-            minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
-            if (confidence > mConfidenceThreshold)
-            {
-                int centerX = (int)(data[0] * frame.height());
-                int centerY = (int)(data[1] * frame.width());
-                int width = (int)(data[2] * frame.height());
-                int height = (int)(data[3] * frame.width());
-                int left = centerX - width / 2;
-                int top = centerY - height / 2;
-
-                classIds.push_back(classIdPoint.x);
-                confidences.push_back((float)confidence);
-                boxes.push_back(Rect(left, top, width, height));
-            }
-        }
-    }
-
-    vector<int> indices;
-    NMSBoxes(boxes, confidences, mConfidenceThreshold, mNonMaximumSuppressionThreshold, indices);
-    for (size_t i = 0; i < indices.size(); ++i)
-    {
-        int idx = indices[i];
-        Rect box = boxes[idx];
-        drawPred(classIds[idx], confidences[idx], box.x, box.y,
-            box.x + box.width, box.y + box.height, frame);
-    }
-}
-
-//---- draw outputs
-void SinkView::drawPred(int classId, float conf, int left, int top, int right, int bottom, QVideoFrame* frame) {
-    rectangle(frame, Point(left, top), Point(right, bottom), Scalar(0, 255, 0));
-    std::string label = std::format("%.2f", conf);
-    if (!mClasses.empty()) {
-        CV_Assert(classId < (int)mClasses.size());
-        label = mClasses[classId] + ": " + label;
-    }
-    int baseLine;
-    Size labelSize = getTextSize(label, FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
-    top = max(top, labelSize.height);
-    rectangle(frame, Point(left, top - labelSize.height),
-        Point(left + labelSize.width, top + baseLine), Scalar::all(255), FILLED);
-    putText(frame, label, Point(left, top), FONT_HERSHEY_SIMPLEX, 0.5, Scalar());
-}
-
-//---- start yolo
 void SinkView::activateYOLO() {
-    Mat frame = mCurrentMat.clone();
-    emit sendNewFrameYolo(frame);
+    QImage img = mFrame.toImage();
+    emit sendNewFrameYolo(img);
 }
 
-//---- receive new yolo outputs
-void SinkView::receiveNewParameters(vector<Mat> outs_) {
-    //qDebug() << "opencvworker, receiveNewParameters, thread id  " << QThread::currentThreadId();
-    m_outs = outs_;
-    //send a new frame to yolo
-    Mat frame = mCurrentMat.clone();
-    emit sendNewFrameYolo(frame);
+void SinkView::receiveDetections(std::vector<Yolo::Detection> detections)
+{
+    mDetections = detections;
+    update(); // Trigger a repaint with the new detections.
 }

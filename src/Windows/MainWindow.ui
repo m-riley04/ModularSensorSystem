@@ -158,11 +158,7 @@
        </layout>
       </widget>
       <widget class="QWidget" name="page_2">
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="SinkView" name="renderer" native="true"/>
-        </item>
-       </layout>
+       <layout class="QVBoxLayout" name="verticalLayout_4"/>
       </widget>
      </widget>
     </item>
@@ -276,12 +272,6 @@
    <class>CameraControls</class>
    <extends>QWidget</extends>
    <header>Widgets/CameraControls/cameracontrols.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>SinkView</class>
-   <extends>QWidget</extends>
-   <header>Widgets/SinkView/sinkview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -94,9 +94,6 @@
     <ClCompile Include="Processing\yolo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Processing\opencvworker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor.h">
@@ -150,9 +147,6 @@
     <QtMoc Include="Processing\yolo.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Processing\opencvworker.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -186,9 +180,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\yolo11n.onnx" />
+    <Text Include="Processing\data\classes.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Processing\data\classes.txt" />
+    <None Include="Processing\data\yolo11n.onnx" />
   </ItemGroup>
 </Project>

@@ -2,9 +2,8 @@
 #include "yolo.h"
 #include <QtCore>
 
-using namespace std;
-using namespace cv;
-using namespace cv::dnn;
+const int NET_WIDTH = 640;
+const int NET_HEIGHT = 640;
 
 Yolo::Yolo(QObject* parent) :QObject(parent) {
     setup();
@@ -15,34 +14,118 @@ Yolo::~Yolo() {
 
 //---- Setup network
 void Yolo::setup(void) {
+    mOuts.clear();
 
     // Configure Network
     // Give the configuration and weight files for the model
-    m_modelConfiguration = "yolo11n.onnx";
+    mModelConfig = "Processing/data/yolo11n.onnx";
 
     // Load the network
-    m_net = readNet(m_modelConfiguration);
-    m_net.setPreferableBackend(DNN_BACKEND_OPENCV);
-    m_net.setPreferableTarget(DNN_TARGET_CPU);
+    mNet = cv::dnn::readNet(mModelConfig);
+    mNet.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+    mNet.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 }
+
+std::vector<Yolo::Detection> Yolo::postProcess(const std::vector<Mat>& outs) {
+    std::vector<int> classIds;
+    std::vector<float> confidences;
+    std::vector<cv::Rect> boxes;
+
+    // Use the original frame dimensions for scaling
+    int frameWidth = mFrameWidth;
+    int frameHeight = mFrameHeight;
+
+    // Compute scaling factors (from network input size to original image size)
+    float x_factor = frameWidth / static_cast<float>(NET_WIDTH);
+    float y_factor = frameHeight / static_cast<float>(NET_HEIGHT);
+
+    // Loop over each output layer.
+    for (size_t i = 0; i < outs.size(); ++i) {
+        float* data = reinterpret_cast<float*>(outs[i].data);
+        int dimensions = outs[i].cols; // number of elements per detection row
+        int rows = outs[i].rows;
+        for (int j = 0; j < rows; ++j, data += dimensions) {
+            float confidence = data[4];
+            if (confidence > mConfidenceThreshold) {
+                // Get class scores (assume scores start at index 5)
+                cv::Mat scores = outs[i].row(j).colRange(5, dimensions);
+                cv::Point classIdPoint;
+                double max_class_score;
+                cv::minMaxLoc(scores, 0, &max_class_score, 0, &classIdPoint);
+                if (max_class_score > mConfidenceThreshold) {
+                    // Get bounding box coordinates in network scale (normalized for NET_WIDTH/NET_HEIGHT)
+                    float cx = data[0];
+                    float cy = data[1];
+                    float w = data[2];
+                    float h = data[3];
+                    // Convert to top-left corner coordinates on the original image scale
+                    int left = static_cast<int>((cx - 0.5f * w) * x_factor);
+                    int top = static_cast<int>((cy - 0.5f * h) * y_factor);
+                    int width = static_cast<int>(w * x_factor);
+                    int height = static_cast<int>(h * y_factor);
+                    classIds.push_back(classIdPoint.x);
+                    confidences.push_back(confidence);
+                    boxes.push_back(cv::Rect(left, top, width, height));
+                }
+            }
+        }
+    }
+
+    std::vector<int> indices;
+    cv::dnn::NMSBoxes(boxes, confidences, mConfidenceThreshold, mNonMaximumSuppressionThreshold, indices);
+
+    std::vector<Detection> detections;
+    for (int idx : indices) {
+        Detection det;
+        det.classId = classIds[idx];
+        det.confidence = confidences[idx];
+        det.rect = QRect(boxes[idx].x, boxes[idx].y, boxes[idx].width, boxes[idx].height);
+        detections.push_back(det);
+    }
+    return detections;
+}
+
 
 
 //---- compute network with frame
 void Yolo::feedForward(Mat& frame_) {
-    // NOTE  : Initialization of dnn is in this->setup()
     // create dnn input variable
-    blobFromImage(frame_, m_blob, 1 / 255.0, cvSize(m_inpWidth, m_inpHeight), Scalar(0, 0, 0), true, false);
-    //Sets the input toclassId the network
-    m_net.setInput(m_blob, "data");
+    cv::Mat blob;
+    cv::dnn::blobFromImage(frame_, blob, 1.0 / 255.0, cv::Size(NET_WIDTH, NET_HEIGHT), cv::Scalar(), true, false);
+
+    //Sets the input to classId the network
+    mNet.setInput(blob);
+
     //Runs the forward pass to get output of the output layers
-    m_outNames = m_net.getLayerNames();
-    m_net.forward(m_outs, m_outNames);
+    mNet.forward(mOuts, mNet.getUnconnectedOutLayersNames());
 }
 
 //---- receive a new frame to compute
-void Yolo::receiveNewFrame(Mat frame) {
-    //qDebug() << "yolo, receiveNewFrame, thread id  " << QThread::currentThreadId();
-    m_frame = frame.clone();
-    this->feedForward(m_frame); // process new frame through network
-    emit sendNewParameter(m_outs); // send new detected vector<Mat> for next boxes drawing
+void Yolo::receiveNewFrame(QImage imageFrame) {
+    // Check if image frame is empty
+	if (imageFrame.isNull()) {
+        emit sendDetections(std::vector<Detection>());
+		return;
+	}
+
+    // Set the frame input width and height
+	mFrameWidth = imageFrame.width();
+	mFrameHeight = imageFrame.height();
+
+    // Convert QImage to cv::Mat
+    cv::Mat mat = cv::Mat(imageFrame.height(), imageFrame.width(), CV_8U, 
+        (uchar*)imageFrame.bits(), imageFrame.bytesPerLine()).clone(); // TODO: use this repo to make it more accurate: https://github.com/dbzhang800/QtOpenCV/blob/master/cvmatandqimage.cp
+    
+    cv::Mat convertedMat;
+    cv::cvtColor(mat, convertedMat, cv::COLOR_BGRA2BGR);
+    mFrame = convertedMat.clone();
+    
+    // Run the network
+    this->feedForward(mFrame);
+
+    // Process raw outputs into detection results
+	std::vector<Detection> detections = postProcess(mOuts);
+
+    // Emit detections
+    emit sendDetections(detections); // send new detected vector<Mat> for next boxes drawing
 }

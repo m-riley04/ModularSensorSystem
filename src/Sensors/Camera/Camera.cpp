@@ -104,9 +104,9 @@ void Camera::stop() {
 }
 
 QVariant Camera::read() {
-    //QVideoFrame frame = mSink.videoFrame();
+    QVideoFrame frame = QVideoFrame();
 
-    //return QVariant::fromValue(frame);
+    return QVariant::fromValue(frame);
 }
 
 void Camera::setVideoOutput(QVideoWidget* widget)
