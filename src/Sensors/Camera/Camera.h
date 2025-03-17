@@ -29,7 +29,6 @@ class Camera : public Sensor
 private:
     QMediaCaptureSession mSession;
     QCamera mCamera;
-    QVideoSink mSink;
     QMediaRecorder mRecorder;
     QAudioInput mAudioInput;
 	QVideoFrameInput mFrameInput;
@@ -46,7 +45,6 @@ public:
 
     QMediaCaptureSession* session() { return &mSession; }
 	QCamera* camera() { return &mCamera; }
-	QVideoSink* sink() { return &mSink; }
 	QMediaRecorder* recorder() { return &mRecorder; }
     QAudioInput* audioInput() { return &mAudioInput; }
 	QVideoFrameInput* frameInput() { return &mFrameInput; }
@@ -61,6 +59,7 @@ public slots:
     void restart() override;
     
     void setVideoOutput(QVideoWidget* widget);
+    void setVideoSink(QVideoSink* sink);
     void setDevice(QCameraDevice device);
 	void setMediaDirectory(QUrl directory);
 

@@ -13,16 +13,6 @@
   <property name="windowTitle">
    <string>SinkView</string>
   </property>
-  <widget class="QWidget" name="video" native="true">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>40</y>
-     <width>571</width>
-     <height>311</height>
-    </rect>
-   </property>
-  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

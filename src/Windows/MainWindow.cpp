@@ -14,9 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
     QCoreApplication::setOrganizationName("Riley Meyerkorth");
     QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
 
-    // Initialize settings
-
-
     // Initialize
     initWidgets();
     initSignals();
@@ -24,14 +21,22 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    mVideoWidgets.clear();
+    mSinkWidgets.clear();
 }
 
 void MainWindow::initWidgets() {
-    //ui.cameraControls->setCamera(pCamera);
+    
 }
 
 void MainWindow::initSignals() {
+    // Pages
+	connect(ui.buttonHome, &QPushButton::clicked, [this]() {
+		ui.stackedWidget->setCurrentIndex(0);
+		});
+    connect(ui.buttonTest, &QPushButton::clicked, [this]() {
+        ui.stackedWidget->setCurrentIndex(1);
+        });
+
     // Camera View
     connect(ui.buttonAddSensor, &QPushButton::clicked, this, &MainWindow::addCamera);
     connect(ui.buttonRemoveSensor, &QPushButton::clicked, this, &MainWindow::removeCamera);
@@ -39,10 +44,10 @@ void MainWindow::initSignals() {
 
     // Camera Controls
     connect(ui.tabCameras, &QTabWidget::currentChanged, [this](int index) {
-        if (index == -1 || !(index < mVideoWidgets.size())) return;
+        if (index == -1 || !(index < mSinkWidgets.size())) return;
 
         // Get the camera from the video widgets
-		Camera* cam = pController->findCamera(mVideoWidgets.at(index));
+		Camera* cam = pController->findCamera(mSinkWidgets.at(index));
 
         // Emit the camera changed signal
         emit cameraChanged(cam);
@@ -77,11 +82,11 @@ void MainWindow::initSignals() {
 
 void MainWindow::addVideoWidget(Camera *camera)
 {
-    auto videoWidget = new QVideoWidget(this);
-    mVideoWidgets.push_back(videoWidget);
+    auto sink = new SinkView(this);
+    mSinkWidgets.push_back(sink);
     QString name = camera->camera()->cameraDevice().description();
-    camera->setVideoOutput(videoWidget); // Set output BEFORE adding tab
-    ui.tabCameras->addTab(videoWidget, name);
+    camera->setVideoSink(sink->sink()); // Set output BEFORE adding tab
+    ui.tabCameras->addTab(sink, name);
 }
 
 void MainWindow::addCamera()
@@ -102,14 +107,14 @@ void MainWindow::removeCamera()
     {
         // Find the selected tab
         int currentTabIndex = ui.tabCameras->currentIndex();
-        if (currentTabIndex == -1 || !(currentTabIndex < mVideoWidgets.size()))
+        if (currentTabIndex == -1 || !(currentTabIndex < mSinkWidgets.size()))
         {
             QMessageBox::warning(this, "Error", "The selected camera does not exist and cannot be deleted.", QMessageBox::StandardButton::Ok);
             return;
         }
 
         // Find camera and video widget
-        auto &videoWidget = mVideoWidgets.at(currentTabIndex);
+        auto &videoWidget = mSinkWidgets.at(currentTabIndex);
         Camera* cam = pController->findCamera(videoWidget);
 
         // Remove video widget from UI
@@ -117,7 +122,7 @@ void MainWindow::removeCamera()
 
         // Remove camera and video widget
         pController->removeCamera(cam);
-        mVideoWidgets.erase(mVideoWidgets.begin() + currentTabIndex);
+        mSinkWidgets.erase(mSinkWidgets.begin() + currentTabIndex);
     }
 }
 

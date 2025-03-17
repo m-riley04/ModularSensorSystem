@@ -6,6 +6,7 @@
 #include <QVideoFrame>
 #include <QVideoWidget>
 #include "AddCameraDialog/AddCameraDialog.h"
+#include "Widgets/SinkView/sinkview.h";
 
 class MainWindow : public QMainWindow
 {
@@ -18,8 +19,7 @@ public:
 private:
     Ui::MainWindowClass ui;
     std::unique_ptr<SensorController> pController;
-    std::vector<QVideoWidget*> mVideoWidgets;
-    QCamera* pCamera = nullptr;
+    std::vector<SinkView*> mSinkWidgets;
     bool isRecording = false;
 
     void initWidgets();

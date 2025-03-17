@@ -33,7 +33,6 @@ void Camera::initialize() {
     // Initialize capture session
     if (mVideoInputMethod == VideoInputMethod::QCAMERA) mSession.setCamera(&mCamera);
     if (mVideoInputMethod == VideoInputMethod::QVIDEOFRAMEINPUT) mSession.setVideoFrameInput(&mFrameInput);
-    mSession.setVideoSink(&mSink);
 	mSession.setRecorder(&mRecorder);
     mSession.setAudioInput(&mAudioInput);
 
@@ -105,9 +104,9 @@ void Camera::stop() {
 }
 
 QVariant Camera::read() {
-    QVideoFrame frame = mSink.videoFrame();
+    //QVideoFrame frame = mSink.videoFrame();
 
-    return QVariant::fromValue(frame);
+    //return QVariant::fromValue(frame);
 }
 
 void Camera::setVideoOutput(QVideoWidget* widget)
@@ -116,6 +115,13 @@ void Camera::setVideoOutput(QVideoWidget* widget)
 
     mSession.setVideoOutput(widget);
     emit videoOutputChanged(widget);
+}
+
+void Camera::setVideoSink(QVideoSink* sink)
+{
+	if (mSession.videoSink() == sink) return;
+	mSession.setVideoSink(sink);
+	//emit videoSinkChanged(sink);
 }
 
 void Camera::setDevice(QCameraDevice device)

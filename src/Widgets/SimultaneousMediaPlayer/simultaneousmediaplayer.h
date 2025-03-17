@@ -35,7 +35,7 @@ private:
 
 	QList<QMediaPlayer*> mMediaPlayers;
 	QList<QAudioOutput*> mAudioOutputs;
-	QList<QVideoWidget*> mVideoWidgets;
+	QList<QVideoWidget*> mSinkWidgets;
 	QMediaPlayer* pRootMedia = nullptr;
 
 	void initWidgets();

@@ -22,7 +22,7 @@ SimultaneousMediaPlayer::SimultaneousMediaPlayer(QWidget *parent, QStringList me
 		mediaWidget->setVideoOutput(videoWidget);
 		mMediaPlayers.push_back(mediaWidget);
 		mAudioOutputs.push_back(audioOutput);
-		mVideoWidgets.push_back(videoWidget);
+		mSinkWidgets.push_back(videoWidget);
 		QString name = file.fileName();
 		ui.playbackGrid->addWidget(videoWidget);
 		//ui.tabs->addTab(videoWidget, name);
@@ -39,7 +39,7 @@ SimultaneousMediaPlayer::SimultaneousMediaPlayer(QWidget *parent, QStringList me
 SimultaneousMediaPlayer::~SimultaneousMediaPlayer()
 {
 	mMediaPlayers.clear();
-	mVideoWidgets.clear();
+	mSinkWidgets.clear();
 }
 
 void SimultaneousMediaPlayer::handleSkip()

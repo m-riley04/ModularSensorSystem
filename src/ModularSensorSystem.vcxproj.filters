@@ -91,6 +91,12 @@
     <ClCompile Include="Widgets\SinkView\sinkview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Processing\yolo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Processing\opencvworker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor.h">
@@ -141,6 +147,12 @@
     <QtMoc Include="Widgets\SinkView\sinkview.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Processing\yolo.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Processing\opencvworker.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -172,5 +184,11 @@
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\yolo11n.onnx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Processing\data\classes.txt" />
   </ItemGroup>
 </Project>
