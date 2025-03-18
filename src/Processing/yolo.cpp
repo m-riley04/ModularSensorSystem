@@ -18,6 +18,16 @@ void Yolo::setup(void) {
 
     // Initialize YOLO classes
     mClasses.push_back("person");
+    mClasses.push_back("tvmonitor");
+    mClasses.push_back("bed");
+    mClasses.push_back("chair");
+    mClasses.push_back("remote");
+    mClasses.push_back("cell phone");
+
+    // Add periodic processing of last frame
+    pTimer = new QTimer(this);
+	connect(pTimer, &QTimer::timeout, this, &Yolo::processLatestFrame);
+	pTimer->start(30);
 
     // Configure Network
     // Give the configuration and weight files for the model
@@ -104,7 +114,7 @@ std::vector<Yolo::Detection> Yolo::postProcess(const std::vector<Mat>& outs) {
 void Yolo::feedForward(Mat& frame_) {
     // Create blob
     cv::Mat blob;
-    cv::dnn::blobFromImage(mFrame, blob, 1.0 / 255.0, cv::Size(NET_WIDTH, NET_HEIGHT), cv::Scalar(), true, false);
+    cv::dnn::blobFromImage(frame_, blob, 1.0 / 255.0, cv::Size(NET_WIDTH, NET_HEIGHT), cv::Scalar(), true, false);
 
     // Sets the input to classId the network
     mNet.setInput(blob);
@@ -113,33 +123,47 @@ void Yolo::feedForward(Mat& frame_) {
     mNet.forward(mOuts, mNet.getUnconnectedOutLayersNames());
 }
 
+
 void Yolo::receiveNewFrame(QImage imageFrame) {
-    // Check if image frame is empty
-	if (imageFrame.isNull()) {
-        emit sendDetections(std::vector<Detection>());
-		return;
-	}
+    // Lock the mutex and update the latest frame.
+    QMutexLocker locker(&mMutex);
+    mLatestFrame = imageFrame;  // Overwrite previous frame.
+}
 
-    // Set the frame input width and height
-	mFrameWidth = imageFrame.width();
-	mFrameHeight = imageFrame.height();
+void Yolo::processLatestFrame() {
+    QImage frameToProcess;
+    {
+        // Lock the mutex to safely retrieve and clear latest frame
+        QMutexLocker locker(&mMutex);
+        if (mLatestFrame.isNull()) {
+            // No new frame available
+            return;
+        }
 
-    QImage formatted = imageFrame.convertToFormat(QImage::Format_ARGB32);
+        // Copy the latest frame for processing
+        frameToProcess = mLatestFrame;
 
-    // Convert QImage to cv::Mat
+        // Clear the stored frame so that subsequent calls know it's been processed
+        mLatestFrame = QImage();
+    }
+
+    // Convert frameToProcess to the appropriate format (cv::Mat)
+    QImage formatted = frameToProcess.convertToFormat(QImage::Format_ARGB32);
     cv::Mat mat = cv::Mat(formatted.height(), formatted.width(), CV_8UC4,
-        reinterpret_cast<uchar*>(formatted.bits()), formatted.bytesPerLine()).clone(); // TODO: use this repo to make it more accurate: https://github.com/dbzhang800/QtOpenCV/blob/master/cvmatandqimage.cp
-    
+        reinterpret_cast<uchar*>(formatted.bits()), formatted.bytesPerLine()).clone();
     cv::Mat matBGR;
     cv::cvtColor(mat, matBGR, cv::COLOR_BGRA2BGR);
-    mFrame = matBGR.clone();
-    
-    // Run the network
-    this->feedForward(mFrame);
+
+    // Update frame size parameters
+    mFrameWidth = frameToProcess.width();
+    mFrameHeight = frameToProcess.height();
+
+    // Create blob and run network
+	this->feedForward(matBGR);
 
     // Process raw outputs into detection results
-	std::vector<Detection> detections = postProcess(mOuts);
+    std::vector<Detection> detections = postProcess(mOuts);
 
     // Emit detections
-    emit sendDetections(detections); // send new detected vector<Mat> for next boxes drawing
+    emit sendDetections(detections);
 }

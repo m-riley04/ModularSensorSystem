@@ -18,6 +18,7 @@
 #include <QObject>
 #include <QImage>
 #include <QThread>
+#include <QMutex>
 
 using Mat = cv::Mat;
 using Net = cv::dnn::Net;
@@ -49,6 +50,10 @@ private:
     std::vector<Mat> mOuts;
     std::string mModelConfig;
 
+    QImage mLatestFrame;
+    QMutex mMutex;
+    QTimer* pTimer = nullptr;
+
 
 public:
     explicit Yolo(QObject* parent = 0);
@@ -60,6 +65,7 @@ public:
 
 public slots:
     void receiveNewFrame(QImage imageFrame);
+    void processLatestFrame();
 
 signals:
     void sendDetections(std::vector<Detection> detections);

@@ -1,7 +1,7 @@
 #include "sinkview.h"
 
 SinkView::SinkView(QWidget *parent)
-	: QWidget(parent), pSink(std::make_unique<QVideoSink>()), pYolo(new Yolo(this)), pYoloThread(new QThread(this))
+	: QWidget(parent), pSink(std::make_unique<QVideoSink>())
 {
 	ui.setupUi(this);
 
@@ -25,6 +25,8 @@ SinkView::~SinkView()
 void SinkView::initializeYolo()
 {
     // Initialize YOLO thread
+	pYoloThread = new QThread(this);
+	pYolo = new Yolo();
     pYolo->moveToThread(pYoloThread);
 
     // Check when frame finishes
@@ -37,9 +39,11 @@ void SinkView::initializeYolo()
 
     // Initialize YOLO classes
     mClasses.push_back("person");
-    mClasses.push_back("bottle");
-    mClasses.push_back("pen");
-    mClasses.push_back("pencil");
+    mClasses.push_back("tvmonitor");
+    mClasses.push_back("bed");
+    mClasses.push_back("chair");
+    mClasses.push_back("remote");
+    mClasses.push_back("cell phone");
 
     // Connect yolo signals
     connect(pYolo, &Yolo::sendDetections, this, &SinkView::receiveDetections);
