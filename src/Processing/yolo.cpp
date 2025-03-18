@@ -18,10 +18,6 @@ void Yolo::setup(void) {
 
     // Initialize YOLO classes
     mClasses.push_back("person");
-    mClasses.push_back("bottle");
-    mClasses.push_back("car");
-    mClasses.push_back("dog");
-    mClasses.push_back("cat");
 
     // Configure Network
     // Give the configuration and weight files for the model
@@ -49,44 +45,46 @@ std::vector<Yolo::Detection> Yolo::postProcess(const std::vector<Mat>& outs) {
     std::vector<float> confidences;
     std::vector<cv::Rect> boxes;
 
-    // Use the original frame dimensions for scaling
-    int frameWidth = mFrameWidth;
-    int frameHeight = mFrameHeight;
+    float x_factor = mFrameWidth / NET_WIDTH;
+    float y_factor = mFrameHeight / NET_HEIGHT;
 
-    // Compute scaling factors (from network input size to original image size)
-    float x_factor = frameWidth / static_cast<float>(NET_WIDTH);
-    float y_factor = frameHeight / static_cast<float>(NET_HEIGHT);
+    float* data = (float*)outs[0].data;
 
-    // Loop over each output layer.
-    for (size_t i = 0; i < outs.size(); ++i) {
-        float* data = reinterpret_cast<float*>(outs[i].data);
-        int dimensions = outs[i].cols; // number of elements per detection row
-        int rows = outs[i].rows;
-        for (int j = 0; j < rows; ++j, data += dimensions) {
-            float confidence = data[4];
-            if (confidence > mConfidenceThreshold) {
-                // Get class scores (assume scores start at index 5)
-                cv::Mat scores = outs[i].row(j).colRange(5, dimensions);
-                cv::Point classIdPoint;
-                double max_class_score;
-                cv::minMaxLoc(scores, 0, &max_class_score, 0, &classIdPoint);
-                if (max_class_score > mConfidenceThreshold) {
-                    // Get bounding box coordinates in network scale (normalized for NET_WIDTH/NET_HEIGHT)
-                    float cx = data[0];
-                    float cy = data[1];
-                    float w = data[2];
-                    float h = data[3];
-                    // Convert to top-left corner coordinates on the original image scale
-                    int left = static_cast<int>((cx - 0.5f * w) * x_factor);
-                    int top = static_cast<int>((cy - 0.5f * h) * y_factor);
-                    int width = static_cast<int>(w * x_factor);
-                    int height = static_cast<int>(h * y_factor);
-                    classIds.push_back(classIdPoint.x);
-                    confidences.push_back(confidence);
-                    boxes.push_back(cv::Rect(left, top, width, height));
-                }
+    const int dimensions = 85;
+    const int rows = 25200;
+
+	for (int i = 0; i < rows; ++i) { // Heavily based on this implementation: https://learnopencv.com/object-detection-using-yolov5-and-opencv-dnn-in-c-and-python/
+
+        float confidence = data[4];
+        if (confidence >= mConfidenceThreshold) {
+
+            float* classes_scores = data + 5;
+            cv::Mat scores(1, mClasses.size(), CV_32FC1, classes_scores);
+            cv::Point class_id;
+            double max_class_score;
+            minMaxLoc(scores, 0, &max_class_score, 0, &class_id);
+            if (max_class_score > mNonMaximumSuppressionThreshold) {
+
+                confidences.push_back(confidence);
+
+                classIds.push_back(class_id.x);
+
+                float x = data[0];
+                float y = data[1];
+                float w = data[2];
+                float h = data[3];
+                // Width, height and x,y coordinates of bounding box
+
+                int left = int((x - 0.5 * w) * x_factor);
+                int top = int((y - 0.5 * h) * y_factor);
+                int width = int(w * x_factor);
+                int height = int(h * y_factor);
+                boxes.push_back(cv::Rect(left, top, width, height));
             }
+
         }
+        data += 85;
+
     }
 
     std::vector<int> indices;
@@ -103,22 +101,18 @@ std::vector<Yolo::Detection> Yolo::postProcess(const std::vector<Mat>& outs) {
     return detections;
 }
 
-
-
-//---- compute network with frame
 void Yolo::feedForward(Mat& frame_) {
-    // create dnn input variable
+    // Create blob
     cv::Mat blob;
     cv::dnn::blobFromImage(mFrame, blob, 1.0 / 255.0, cv::Size(NET_WIDTH, NET_HEIGHT), cv::Scalar(), true, false);
 
-    //Sets the input to classId the network
+    // Sets the input to classId the network
     mNet.setInput(blob);
 
-    //Runs the forward pass to get output of the output layers
+    // Runs the forward pass to get output of the output layers
     mNet.forward(mOuts, mNet.getUnconnectedOutLayersNames());
 }
 
-//---- receive a new frame to compute
 void Yolo::receiveNewFrame(QImage imageFrame) {
     // Check if image frame is empty
 	if (imageFrame.isNull()) {

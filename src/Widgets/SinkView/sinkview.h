@@ -4,6 +4,7 @@
 #include <QtMultimedia>
 #include "ui_sinkview.h"
 #include "Processing/yolo.h"
+#include <QThread>
 
 class SinkView : public QWidget
 {
@@ -17,11 +18,14 @@ private:
 	QVideoFrame mFrame;
 	std::unique_ptr<QVideoSink> pSink = nullptr;
 	
+	QThread* pYoloThread = nullptr;
 	bool isDetectionActive = false;
 	int captureIntervalMs = 30;
-	std::unique_ptr<Yolo> pYolo = nullptr;
+	Yolo* pYolo = nullptr;
 	std::vector<std::string> mClasses;
 	std::vector<Yolo::Detection> mDetections;
+
+	void initializeYolo();
 
 	void captureFrame();
 	void activateYOLO();
