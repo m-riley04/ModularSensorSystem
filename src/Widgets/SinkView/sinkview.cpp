@@ -7,7 +7,14 @@ SinkView::SinkView(QWidget *parent)
 
     // Create timer to capture frames
     QTimer* trigger = new QTimer(this);
-    trigger->setInterval(1);
+    trigger->setInterval(30);
+
+	// Initialize YOLO classes
+    mClasses.push_back("person");
+	mClasses.push_back("pencil");
+	mClasses.push_back("tv");
+    mClasses.push_back("pen");
+	mClasses.push_back("television");
 
     // Connect raw video frame signal
     connect(pSink.get(), &QVideoSink::videoFrameChanged, [this](QVideoFrame frame) {

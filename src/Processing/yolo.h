@@ -38,16 +38,16 @@ public:
 private:
     float mInputWidth = 640.0;        // Width of network's input image (YOLO model width)
     float mInputHeight = 640.0;       // Height of network's input image (YOLO model height)
-    int mFrameWidth = 640;        // Width of network's input image
-    int mFrameHeight = 640;       // Height of network's input image
-    const float mConfidenceThreshold = 0.5f; // Confidence threshold
+    int mFrameWidth = 640;
+    int mFrameHeight = 640;
+    const float mConfidenceThreshold = 0.2f; // Confidence threshold
     const float mNonMaximumSuppressionThreshold = 0.4f; // NMS threshold
 
     std::vector<std::string> mClasses;
     Net mNet;
     Mat mFrame;
     std::vector<Mat> mOuts;
-    cv::String mModelConfig;
+    std::string mModelConfig;
 
 
 public:

@@ -20,8 +20,18 @@ void Yolo::setup(void) {
     // Give the configuration and weight files for the model
     mModelConfig = "Processing/data/yolo11n.onnx";
 
+    if (!QFile(QString::fromStdString(mModelConfig)).exists()) {
+        // TODO: Do more here
+    }
+
     // Load the network
     mNet = cv::dnn::readNet(mModelConfig);
+
+    if (mNet.empty()) {
+        // TODO: add something here
+        return;
+    }
+
     mNet.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
     mNet.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 }
@@ -91,7 +101,7 @@ std::vector<Yolo::Detection> Yolo::postProcess(const std::vector<Mat>& outs) {
 void Yolo::feedForward(Mat& frame_) {
     // create dnn input variable
     cv::Mat blob;
-    cv::dnn::blobFromImage(frame_, blob, 1.0 / 255.0, cv::Size(NET_WIDTH, NET_HEIGHT), cv::Scalar(), true, false);
+    cv::dnn::blobFromImage(mFrame, blob, 1.0 / 255.0, cv::Size(NET_WIDTH, NET_HEIGHT), cv::Scalar(), true, false);
 
     //Sets the input to classId the network
     mNet.setInput(blob);
@@ -112,13 +122,15 @@ void Yolo::receiveNewFrame(QImage imageFrame) {
 	mFrameWidth = imageFrame.width();
 	mFrameHeight = imageFrame.height();
 
+    QImage formatted = imageFrame.convertToFormat(QImage::Format_ARGB32);
+
     // Convert QImage to cv::Mat
-    cv::Mat mat = cv::Mat(imageFrame.height(), imageFrame.width(), CV_8U, 
-        (uchar*)imageFrame.bits(), imageFrame.bytesPerLine()).clone(); // TODO: use this repo to make it more accurate: https://github.com/dbzhang800/QtOpenCV/blob/master/cvmatandqimage.cp
+    cv::Mat mat = cv::Mat(formatted.height(), formatted.width(), CV_8UC4,
+        reinterpret_cast<uchar*>(formatted.bits()), formatted.bytesPerLine()).clone(); // TODO: use this repo to make it more accurate: https://github.com/dbzhang800/QtOpenCV/blob/master/cvmatandqimage.cp
     
-    cv::Mat convertedMat;
-    cv::cvtColor(mat, convertedMat, cv::COLOR_BGRA2BGR);
-    mFrame = convertedMat.clone();
+    cv::Mat matBGR;
+    cv::cvtColor(mat, matBGR, cv::COLOR_BGRA2BGR);
+    mFrame = matBGR.clone();
     
     // Run the network
     this->feedForward(mFrame);

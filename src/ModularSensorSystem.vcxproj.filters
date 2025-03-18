@@ -184,5 +184,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Processing\data\yolo11n.onnx" />
+    <None Include="Processing\data\yolov5n.onnx" />
   </ItemGroup>
 </Project>
