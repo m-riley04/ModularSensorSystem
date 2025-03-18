@@ -7,14 +7,14 @@ SinkView::SinkView(QWidget *parent)
 
     // Create timer to capture frames
     QTimer* trigger = new QTimer(this);
-    trigger->setInterval(30);
+    trigger->setInterval(captureIntervalMs);
 
 	// Initialize YOLO classes
     mClasses.push_back("person");
-	mClasses.push_back("pencil");
-	mClasses.push_back("tv");
-    mClasses.push_back("pen");
-	mClasses.push_back("television");
+	mClasses.push_back("bottle");
+	mClasses.push_back("car");
+	mClasses.push_back("dog");
+	mClasses.push_back("cat");
 
     // Connect raw video frame signal
     connect(pSink.get(), &QVideoSink::videoFrameChanged, [this](QVideoFrame frame) {
@@ -26,7 +26,7 @@ SinkView::SinkView(QWidget *parent)
 	connect(this, &SinkView::sendNewFrameYolo, pYolo.get(), &Yolo::receiveNewFrame);
 	connect(trigger, &QTimer::timeout, this, &SinkView::captureFrame);
 
-    activateYOLO();
+	// Start the timer
 	trigger->start();
     
 }
@@ -40,6 +40,15 @@ void SinkView::setVideoFrame(const QVideoFrame & frame)
         mFrame = frame;
         update(); // schedules a paint event
     }
+}
+
+void SinkView::setDetectionState(bool state)
+{
+	if (state != isDetectionActive) {
+        // Change detection state
+		isDetectionActive = state;
+		emit detectionStateChanged(isDetectionActive);
+	}
 }
 
 void SinkView::paintEvent(QPaintEvent* event)
@@ -79,6 +88,7 @@ void SinkView::paintEvent(QPaintEvent* event)
 
 void SinkView::captureFrame()
 {
+    if (!isDetectionActive) return;
     if (mFrame.size().isEmpty()) return;
 
     // Convert the current video frame to a QImage and send it to YOLO.

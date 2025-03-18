@@ -16,12 +16,20 @@ Yolo::~Yolo() {
 void Yolo::setup(void) {
     mOuts.clear();
 
+    // Initialize YOLO classes
+    mClasses.push_back("person");
+    mClasses.push_back("bottle");
+    mClasses.push_back("car");
+    mClasses.push_back("dog");
+    mClasses.push_back("cat");
+
     // Configure Network
     // Give the configuration and weight files for the model
-    mModelConfig = "Processing/data/yolo11n.onnx";
+    mModelConfig = "Processing/data/yolov5n.onnx";
 
     if (!QFile(QString::fromStdString(mModelConfig)).exists()) {
         // TODO: Do more here
+        return;
     }
 
     // Load the network

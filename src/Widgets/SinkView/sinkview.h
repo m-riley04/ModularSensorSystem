@@ -16,8 +16,10 @@ private:
 	Ui::SinkViewClass ui;
 	QVideoFrame mFrame;
 	std::unique_ptr<QVideoSink> pSink = nullptr;
+	
+	bool isDetectionActive = false;
+	int captureIntervalMs = 30;
 	std::unique_ptr<Yolo> pYolo = nullptr;
-
 	std::vector<std::string> mClasses;
 	std::vector<Yolo::Detection> mDetections;
 
@@ -33,7 +35,9 @@ public:
 	
 public slots:
 	void receiveDetections(std::vector<Yolo::Detection> detections);
+	void setDetectionState(bool state);
 
 signals:
 	void sendNewFrameYolo(QImage imageFrame);
+	void detectionStateChanged(bool state);
 };

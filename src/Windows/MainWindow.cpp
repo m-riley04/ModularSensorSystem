@@ -37,6 +37,17 @@ void MainWindow::initSignals() {
         ui.stackedWidget->setCurrentIndex(1);
         });
 
+    // Connect detection checkbox to current SinkView's detection state
+	connect(ui.checkboxDetection, &QCheckBox::checkStateChanged, [this](int state) {
+		if (ui.tabCameras->currentIndex() == -1 || !(ui.tabCameras->currentIndex() < mSinkWidgets.size())) return;
+
+		// Find the current SinkView
+		auto& videoWidget = mSinkWidgets.at(ui.tabCameras->currentIndex());
+
+		// Set the detection state
+		videoWidget->setDetectionState(state == Qt::Checked);
+		});
+
     // Camera View
     connect(ui.buttonAddSensor, &QPushButton::clicked, this, &MainWindow::addCamera);
     connect(ui.buttonRemoveSensor, &QPushButton::clicked, this, &MainWindow::removeCamera);
