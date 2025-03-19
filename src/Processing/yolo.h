@@ -45,7 +45,7 @@ private:
     Net mNet;
     Mat mFrame;
     std::vector<Mat> mOuts;
-    std::string mModelConfig;
+    std::string mModelConfig = "models/yolov5n.onnx";
 
     QImage mLatestFrame;
     QMutex mMutex;

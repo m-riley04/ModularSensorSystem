@@ -51,13 +51,13 @@ private:
 	int mCaptureIntervalMs = 30;
 
 	void initializeYolo();
+	void activateYOLO();
 
 	FrameSizeCalculations calculateFrameSizings();
+	void captureFrame();
+	
 	void paintDebugInfo(QPainter& painter, FrameSizeCalculations& calculations);
 	void paintDetections(QPainter& painter, FrameSizeCalculations& sizing, QRectF& outputRect);
-
-	void captureFrame();
-	void activateYOLO();
 
 public:
 	SinkView(QWidget *parent = nullptr);

@@ -26,10 +26,6 @@ void Yolo::setup(void) {
 	connect(pTimer, &QTimer::timeout, this, &Yolo::processLatestFrame);
 	pTimer->start(30);
 
-    // Configure Network
-    // Give the configuration and weight files for the model
-    mModelConfig = "models/yolov5n.onnx";
-
     // Check if model file exists
     if (!QFile(QString::fromStdString(mModelConfig)).exists()) {
         // TODO: Do more here
