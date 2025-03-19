@@ -181,11 +181,8 @@
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Processing\data\classes.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Processing\data\yolo11n.onnx" />
-    <None Include="Processing\data\yolov5n.onnx" />
+    <None Include="models\yolo11n.onnx" />
+    <None Include="models\yolov5n.onnx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -13,19 +13,48 @@ class SinkView : public QWidget
 protected:
 	void paintEvent(QPaintEvent* event) override;
 
+public:
+	/// <summary>
+	/// Contains all the necessary values for calculating the frame size and position
+	/// </summary>
+	struct FrameSizeCalculations {
+		double widgetRatio;
+		double frameRatio;
+		double actualFrameWidth;
+		double actualFrameHeight;
+		double widthScalingFactor;
+		double heightScalingFactor;
+		double xOffset;
+		double yOffset;
+	};
+
+	/// <summary>
+	/// Represents a simple debug item and value to be painted on the screen
+	/// </summary>
+	struct FrameDebugItem {
+		QString label;
+		QVariant value;
+	};
+
 private:
 	Ui::SinkViewClass ui;
 	QVideoFrame mFrame;
 	std::unique_ptr<QVideoSink> pSink = nullptr;
+
+	bool mIsDebugInfoVisible = false;
+	bool mIsDetectionActive = false;
 	
 	QThread* pYoloThread = nullptr;
-	bool isDetectionActive = false;
-	int captureIntervalMs = 30;
 	Yolo* pYolo = nullptr;
 	std::vector<std::string> mClasses;
 	std::vector<Yolo::Detection> mDetections;
+	int mCaptureIntervalMs = 30;
 
 	void initializeYolo();
+
+	FrameSizeCalculations calculateFrameSizings();
+	void paintDebugInfo(QPainter& painter, FrameSizeCalculations& calculations);
+	void paintDetections(QPainter& painter, FrameSizeCalculations& sizing, QRectF& outputRect);
 
 	void captureFrame();
 	void activateYOLO();
@@ -34,14 +63,18 @@ public:
 	SinkView(QWidget *parent = nullptr);
 	~SinkView();
 
+	bool detectionState() const { return mIsDetectionActive; }
+	bool isDebugInfoVisible() const { return mIsDebugInfoVisible; }
 	QVideoSink* sink() const { return pSink.get(); }
 	void setVideoFrame(const QVideoFrame& frame);
 	
 public slots:
 	void receiveDetections(std::vector<Yolo::Detection> detections);
 	void setDetectionState(bool state);
+	void setDebugInfoVisible(bool visible);
 
 signals:
 	void sendNewFrameYolo(QImage imageFrame);
 	void detectionStateChanged(bool state);
+	void debugInfoVisibleChanged(bool visible);
 };

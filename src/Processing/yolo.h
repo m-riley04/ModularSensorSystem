@@ -37,12 +37,9 @@ public:
     };
 
 private:
-    float mInputWidth = 640.0;        // Width of network's input image (YOLO model width)
-    float mInputHeight = 640.0;       // Height of network's input image (YOLO model height)
-    int mFrameWidth = 640;
-    int mFrameHeight = 640;
-    const float mConfidenceThreshold = 0.5f; // Confidence threshold
-    const float mNonMaximumSuppressionThreshold = 0.4f; // NMS threshold
+    double mInputWidth, mInputHeight;
+    int mFrameWidth, mFrameHeight;
+    double mConfidenceThreshold, mNmsThreshold;
 
     std::vector<std::string> mClasses;
     Net mNet;
@@ -54,18 +51,26 @@ private:
     QMutex mMutex;
     QTimer* pTimer = nullptr;
 
+    void setup(void);
+    void preProcess(Mat& frame);
+    std::vector<Detection> postProcess(const std::vector<Mat>& outs);
 
 public:
-    explicit Yolo(QObject* parent = 0);
+    Yolo(QObject* parent = nullptr, 
+        double inputWidth = 640.0, 
+        double inputHeight = 640.0, 
+        double confidenceThreshold = 0.5, 
+        double nmsThreshold = 0.4,
+        std::vector<std::string> classes = std::vector<std::string>());
     ~Yolo();
+    
+	std::vector<std::string> classes() const { return mClasses; }
 
-    void setup(void);
-    void feedForward(Mat& frame);
-    std::vector<Detection> postProcess(const std::vector<Mat>& outs);
 
 public slots:
     void receiveNewFrame(QImage imageFrame);
     void processLatestFrame();
+	void setClasses(std::vector<std::string> classes);
 
 signals:
     void sendDetections(std::vector<Detection> detections);

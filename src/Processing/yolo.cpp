@@ -5,7 +5,11 @@
 const int NET_WIDTH = 640;
 const int NET_HEIGHT = 640;
 
-Yolo::Yolo(QObject* parent) :QObject(parent) {
+Yolo::Yolo(QObject* parent, double inputWidth, double inputHeight, double confidenceThreshold, double nmsThreshold, std::vector<std::string> classes)
+	: QObject(parent), mInputWidth(inputWidth), mInputHeight(inputHeight), 
+    mConfidenceThreshold(confidenceThreshold), mNmsThreshold(nmsThreshold),
+    mClasses(classes)
+{
     setup();
 }
 
@@ -14,15 +18,8 @@ Yolo::~Yolo() {
 
 //---- Setup network
 void Yolo::setup(void) {
+    // Clear outputs
     mOuts.clear();
-
-    // Initialize YOLO classes
-    mClasses.push_back("person");
-    mClasses.push_back("tvmonitor");
-    mClasses.push_back("bed");
-    mClasses.push_back("chair");
-    mClasses.push_back("remote");
-    mClasses.push_back("cell phone");
 
     // Add periodic processing of last frame
     pTimer = new QTimer(this);
@@ -31,8 +28,9 @@ void Yolo::setup(void) {
 
     // Configure Network
     // Give the configuration and weight files for the model
-    mModelConfig = "Processing/data/yolov5n.onnx";
+    mModelConfig = "models/yolov5n.onnx";
 
+    // Check if model file exists
     if (!QFile(QString::fromStdString(mModelConfig)).exists()) {
         // TODO: Do more here
         return;
@@ -41,11 +39,13 @@ void Yolo::setup(void) {
     // Load the network
     mNet = cv::dnn::readNet(mModelConfig);
 
+	// Check if network is empty
     if (mNet.empty()) {
         // TODO: add something here
         return;
     }
 
+	// Set backend and target
     mNet.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
     mNet.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 }
@@ -55,8 +55,8 @@ std::vector<Yolo::Detection> Yolo::postProcess(const std::vector<Mat>& outs) {
     std::vector<float> confidences;
     std::vector<cv::Rect> boxes;
 
-    float x_factor = mFrameWidth / NET_WIDTH;
-    float y_factor = mFrameHeight / NET_HEIGHT;
+    float x_factor = static_cast<float>(mFrameWidth) / NET_WIDTH;
+    float y_factor = static_cast<float>(mFrameHeight) / NET_HEIGHT;
 
     float* data = (float*)outs[0].data;
 
@@ -73,7 +73,7 @@ std::vector<Yolo::Detection> Yolo::postProcess(const std::vector<Mat>& outs) {
             cv::Point class_id;
             double max_class_score;
             minMaxLoc(scores, 0, &max_class_score, 0, &class_id);
-            if (max_class_score > mNonMaximumSuppressionThreshold) {
+            if (max_class_score > mNmsThreshold) {
 
                 confidences.push_back(confidence);
 
@@ -98,7 +98,7 @@ std::vector<Yolo::Detection> Yolo::postProcess(const std::vector<Mat>& outs) {
     }
 
     std::vector<int> indices;
-    cv::dnn::NMSBoxes(boxes, confidences, mConfidenceThreshold, mNonMaximumSuppressionThreshold, indices);
+    cv::dnn::NMSBoxes(boxes, confidences, mConfidenceThreshold, mNmsThreshold, indices);
 
     std::vector<Detection> detections;
     for (int idx : indices) {
@@ -111,7 +111,7 @@ std::vector<Yolo::Detection> Yolo::postProcess(const std::vector<Mat>& outs) {
     return detections;
 }
 
-void Yolo::feedForward(Mat& frame_) {
+void Yolo::preProcess(Mat& frame_) {
     // Create blob
     cv::Mat blob;
     cv::dnn::blobFromImage(frame_, blob, 1.0 / 255.0, cv::Size(NET_WIDTH, NET_HEIGHT), cv::Scalar(), true, false);
@@ -159,11 +159,16 @@ void Yolo::processLatestFrame() {
     mFrameHeight = frameToProcess.height();
 
     // Create blob and run network
-	this->feedForward(matBGR);
+	this->preProcess(matBGR);
 
     // Process raw outputs into detection results
     std::vector<Detection> detections = postProcess(mOuts);
 
     // Emit detections
     emit sendDetections(detections);
+}
+
+void Yolo::setClasses(std::vector<std::string> classes)
+{
+	mClasses = classes;
 }
