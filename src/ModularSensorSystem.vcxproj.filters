@@ -94,6 +94,9 @@
     <ClCompile Include="Processing\yolo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Helpers\unitconversionhelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor.h">
@@ -178,9 +181,14 @@
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Helpers\unitconversionhelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="models\yolo11n.onnx" />
     <None Include="models\yolov5n.onnx" />
+    <None Include="models\yolov5su.onnx" />
+    <None Include="models\yolov8n.onnx" />
   </ItemGroup>
 </Project>

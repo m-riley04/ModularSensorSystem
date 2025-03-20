@@ -116,6 +116,7 @@
     <ClCompile Include="Sensors\GPS.cpp" />
     <ClCompile Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.cpp" />
     <ClCompile Include="Sensors\Sensor.cpp" />
+    <ClCompile Include="Helpers\unitconversionhelper.cpp" />
     <ClCompile Include="Widgets\CameraControls\cameracontrols.cpp" />
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
     <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp" />
@@ -178,11 +179,14 @@
     <QtMoc Include="Sensors\Camera\TOPDON_TC001\topdontc001.h" />
     <QtMoc Include="Controllers\PresetsController\presetscontroller.h" />
     <QtMoc Include="Processing\yolo.h" />
+    <ClInclude Include="Helpers\unitconversionhelper.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="models\yolo11n.onnx" />
     <None Include="models\yolov5n.onnx" />
+    <None Include="models\yolov5su.onnx" />
+    <None Include="models\yolov8n.onnx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
