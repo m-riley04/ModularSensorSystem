@@ -1,17 +1,5 @@
 #include "cameracontrols.h"
 
-double bytesToKilobytes(qint64 bytes) {
-	return bytes / static_cast<double>(1024);
-}
-
-double bytesToMegabytes(qint64 bytes) {
-	return bytes / static_cast<double>(1024 * 1024);
-}
-
-double bytesToGigabytes(qint64 bytes) {
-	return bytes / static_cast<double>(1024 * 1024 * 1024);
-}
-
 CameraControls::CameraControls(QWidget* parent, Camera* camera)
 	: QWidget(parent), pCamera(camera)
 {
@@ -39,8 +27,45 @@ void CameraControls::initSignals()
 	connect(ui.buttonRestart, &QPushButton::clicked, pCamera, &Camera::restart);
 
 	// Devices
-	connect(ui.checkboxVideoProcessing, &QCheckBox::checkStateChanged, [this](Qt::CheckState state) {
-		pCamera->changeVideoInputMethod(state == Qt::CheckState::Checked ? VideoInputMethod::QVIDEOFRAMEINPUT : VideoInputMethod::QCAMERA);
+	connect(ui.checkboxObjectDetection, &QCheckBox::checkStateChanged, [this](int state) {
+		if (!pCamera) return;
+		
+		// Find the current SinkView
+		auto videoWidget = pCamera->sinkView();
+
+		// Set the detection state
+		videoWidget->setDetectionState(state == Qt::Checked);
+		});
+
+	// Connect debug checkbox to current SinkView's debug state
+	connect(ui.checkboxDebugInfo, &QCheckBox::checkStateChanged, [this](int state) {
+		if (!pCamera) return;
+
+		// Find the current SinkView
+		auto videoWidget = pCamera->sinkView();
+
+		// Set the debug state
+		videoWidget->setDebugInfoVisible(state == Qt::Checked);
+		});
+
+	// Connect model changing button
+	connect(ui.buttonLoadModel, &QPushButton::clicked, [this]() {
+		if (!pCamera) return;
+
+		// Get the new model path from a file dialog
+		QUrl newModelPath = QFileDialog::getOpenFileUrl(this, "Select YOLO Model", QString(), "Model Files (*.onnx);;All Files (*)", nullptr, QFileDialog::Option::DontUseNativeDialog);
+
+		// Find the current SinkView
+		auto videoWidget = pCamera->sinkView();
+		
+
+		if (videoWidget->yolo() != nullptr) {
+			// Set the new model path
+			videoWidget->yolo()->setModel(newModelPath.toLocalFile());
+		}
+		else {
+			QMessageBox::warning(this, "Error", "YOLO not initialized", QMessageBox::StandardButton::Ok);
+		}
 		});
 
 	connect(ui.dropdownAudioDevices, &QComboBox::currentIndexChanged, [this](int index) {
@@ -106,18 +131,18 @@ void CameraControls::updateStorageLabel(qint64 availableBytes)
 	QString label = QString::number(availableBytes) + "B";
 
 	// Get kilobytes
-	double available = bytesToKilobytes(availableBytes);
+	double available = UnitConversionHelper::bytesToKilobytes(availableBytes);
 	label = QString::number(available) + "KB";
 
 	// Check if it's bigger than a megabyte
-	if (available > 1024) {
-		available = bytesToMegabytes(availableBytes);
+	if (available > InBytes::KILOBYTE) {
+		available = UnitConversionHelper::bytesToMegabytes(availableBytes);
 		label = QString::number(available) + "MB";
 	}
 
 	// Check if it's bigger than a gigabyte
-	if (available > 1024) {
-		available = bytesToGigabytes(availableBytes);
+	if (available > InBytes::KILOBYTE) {
+		available = UnitConversionHelper::bytesToGigabytes(availableBytes);
 		label = QString::number(available) + "GB";
 	}
 

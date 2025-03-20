@@ -33,30 +33,8 @@ void MainWindow::initSignals() {
 	connect(ui.buttonHome, &QPushButton::clicked, [this]() {
 		ui.stackedWidget->setCurrentIndex(0);
 		});
-    connect(ui.buttonTest, &QPushButton::clicked, [this]() {
+    connect(ui.buttonPlayback, &QPushButton::clicked, [this]() {
         ui.stackedWidget->setCurrentIndex(1);
-        });
-
-    // Connect detection checkbox to current SinkView's detection state
-	connect(ui.checkboxDetection, &QCheckBox::checkStateChanged, [this](int state) {
-		if (ui.tabCameras->currentIndex() == -1 || !(ui.tabCameras->currentIndex() < mSinkWidgets.size())) return;
-
-		// Find the current SinkView
-		auto& videoWidget = mSinkWidgets.at(ui.tabCameras->currentIndex());
-
-		// Set the detection state
-		videoWidget->setDetectionState(state == Qt::Checked);
-		});
-
-    // Connect debug checkbox to current SinkView's debug state
-    connect(ui.checkboxDebugInfo, &QCheckBox::checkStateChanged, [this](int state) {
-        if (ui.tabCameras->currentIndex() == -1 || !(ui.tabCameras->currentIndex() < mSinkWidgets.size())) return;
-
-        // Find the current SinkView
-        auto& videoWidget = mSinkWidgets.at(ui.tabCameras->currentIndex());
-
-        // Set the debug state
-        videoWidget->setDebugInfoVisible(state == Qt::Checked);
         });
 
     // Camera View
@@ -107,7 +85,7 @@ void MainWindow::addVideoWidget(Camera *camera)
     auto sink = new SinkView(this);
     mSinkWidgets.push_back(sink);
     QString name = camera->camera()->cameraDevice().description();
-    camera->setVideoSink(sink->sink()); // Set output BEFORE adding tab
+    camera->setVideoOutput(sink); // Set output BEFORE adding tab
     ui.tabCameras->addTab(sink, name);
 }
 

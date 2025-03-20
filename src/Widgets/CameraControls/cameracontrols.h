@@ -6,6 +6,7 @@
 #include <Sensors/Camera/Camera.h>
 #include <Windows/QtCameraControlsWindow/QtCameraControlsDialog.h>
 #include <Windows/QtRecordingControlsDialog/qtrecordingcontrolsdialog.h>
+#include "Helpers/unitconversionhelper.h"
 
 class CameraControls : public QWidget
 {
