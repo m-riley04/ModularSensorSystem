@@ -46,6 +46,8 @@ private:
     Mat mFrame;
     std::vector<Mat> mOuts;
     std::string mModelConfig = "models/yolov5n.onnx";
+    int mCaptureIntervalMs = 30;
+    bool mError = false;
 
     QImage mLatestFrame;
     QMutex mMutex;
@@ -59,7 +61,7 @@ public:
     Yolo(QObject* parent = nullptr, 
         double inputWidth = 640.0, 
         double inputHeight = 640.0, 
-        double confidenceThreshold = 0.5, 
+        double confidenceThreshold = 0.35, 
         double nmsThreshold = 0.4,
         std::vector<std::string> classes = std::vector<std::string>());
     ~Yolo();
@@ -71,10 +73,12 @@ public slots:
     void receiveNewFrame(QImage imageFrame);
     void processLatestFrame();
 	void setClasses(std::vector<std::string> classes);
+    void setModel(QString modelPath);
 
 signals:
     void sendDetections(std::vector<Detection> detections);
-
+	void modelChanged(QString modelPath);
+	void errorOccurred(QString errorMessage);
 };
 
 #endif // YOLO_H

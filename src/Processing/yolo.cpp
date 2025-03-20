@@ -18,26 +18,38 @@ Yolo::~Yolo() {
 
 //---- Setup network
 void Yolo::setup(void) {
+	// Reset error flag
+	mError = false;
+
     // Clear outputs
     mOuts.clear();
 
     // Add periodic processing of last frame
     pTimer = new QTimer(this);
 	connect(pTimer, &QTimer::timeout, this, &Yolo::processLatestFrame);
-	pTimer->start(30);
+	pTimer->start(mCaptureIntervalMs);
 
     // Check if model file exists
     if (!QFile(QString::fromStdString(mModelConfig)).exists()) {
-        // TODO: Do more here
+        mError = true;
+		emit errorOccurred(QString("Model file not found: %1").arg(QString::fromStdString(mModelConfig)));
         return;
     }
 
-    // Load the network
-    mNet = cv::dnn::readNet(mModelConfig);
+    try {
+        // Load the network
+        mNet = cv::dnn::readNet(mModelConfig);
+	}
+	catch (const cv::Exception& e) {
+		mError = true;
+		emit errorOccurred(QString("Failed to load model: %1").arg(e.what()));
+		return;
+	}
 
 	// Check if network is empty
     if (mNet.empty()) {
-        // TODO: add something here
+        mError = true;
+        emit errorOccurred(QString("The network loaded as empty: %1").arg(QString::fromStdString(mModelConfig)));
         return;
     }
 
@@ -167,4 +179,30 @@ void Yolo::processLatestFrame() {
 void Yolo::setClasses(std::vector<std::string> classes)
 {
 	mClasses = classes;
+}
+
+void Yolo::setModel(QString modelPath)
+{
+    // Check if model is different
+	if (modelPath.toStdString() == mModelConfig) {
+		qDebug() << "Model path is the same as current model, no change made.";
+		return;
+	}
+
+    if (modelPath.isEmpty()) {
+        qDebug() << "Error: Model path is empty.";
+        return;
+	}
+	// Stop the timer to prevent processing while changing model
+	if (pTimer) {
+		pTimer->stop();
+		delete pTimer;
+		pTimer = nullptr;
+	}
+
+    // Change model path
+	mModelConfig = modelPath.toStdString();
+	setup();
+
+	emit modelChanged(modelPath);
 }
