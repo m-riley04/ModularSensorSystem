@@ -10,17 +10,12 @@
 #include <QtConcurrent>
 #include <chrono>
 #include "Generators/OpenCVGenerator/opencvcamera.h"
+#include <Widgets/SinkView/sinkview.h>
 
 #define DEFAULT_FRAME_RATE 30
 
-enum VideoInputMethod
-{
-    QCAMERA,
-	QVIDEOFRAMEINPUT
-};
-
 /// <summary>
-/// Represents a type of Sensor specifically targeting audio/video. Encapsulates a QCamera, QMediaCaptureSession, QVideoSink, QMediaRecorder, and QAudioInput.
+/// Represents a type of Sensor specifically targeting audio/video
 /// </summary>
 class Camera : public Sensor
 {
@@ -31,26 +26,20 @@ private:
     QCamera mCamera;
     QMediaRecorder mRecorder;
     QAudioInput mAudioInput;
-	QVideoFrameInput mFrameInput;
-	OpenCVGenerator mGenerator;
-
-	VideoInputMethod mVideoInputMethod = VideoInputMethod::QCAMERA;
+    SinkView* pSinkView = nullptr;
 
 public:
-	Camera(QObject *parent = nullptr, VideoInputMethod method = VideoInputMethod::QCAMERA);
+	Camera(QObject *parent = nullptr);
 	~Camera();
 
 	QVariant read() override;
 	static bool checkCameraAvailability();
 
+	SinkView* sinkView() const { return pSinkView; }
     QMediaCaptureSession* session() { return &mSession; }
 	QCamera* camera() { return &mCamera; }
 	QMediaRecorder* recorder() { return &mRecorder; }
     QAudioInput* audioInput() { return &mAudioInput; }
-	QVideoFrameInput* frameInput() { return &mFrameInput; }
-    OpenCVGenerator* generator() { return &mGenerator; }
-
-    void changeVideoInputMethod(VideoInputMethod method);
 
 public slots:
     void initialize() override;
@@ -58,14 +47,12 @@ public slots:
     void stop() override;
     void restart() override;
     
-    void setVideoOutput(QVideoWidget* widget);
-    void setVideoSink(QVideoSink* sink);
+    void setVideoOutput(SinkView* widget);
     void setDevice(QCameraDevice device);
 	void setMediaDirectory(QUrl directory);
 
 signals:
-    void videoInputMethodChanged(VideoInputMethod method);
-	void videoOutputChanged(QVideoWidget* widget);
+	void videoOutputChanged(SinkView* widget);
     void cameraDeviceChanged(QCameraDevice device);
     void audioDeviceChanged(QAudioDevice audioDevice);
 	void mediaDirectoryChanged(QUrl directory);

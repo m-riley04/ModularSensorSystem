@@ -63,9 +63,10 @@ public:
 	SinkView(QWidget *parent = nullptr);
 	~SinkView();
 
+	Yolo* yolo() const { return pYolo; }
 	bool detectionState() const { return mIsDetectionActive; }
 	bool isDebugInfoVisible() const { return mIsDebugInfoVisible; }
-	QVideoSink* sink() const { return pSink.get(); }
+	QVideoSink* videoSink() const { return pSink.get(); }
 	void setVideoFrame(const QVideoFrame& frame);
 	
 public slots:

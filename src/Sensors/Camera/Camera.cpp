@@ -1,7 +1,7 @@
 #include "Camera.h"
 
-Camera::Camera(QObject *parent, VideoInputMethod method)
-	: Sensor(parent), mVideoInputMethod(method)
+Camera::Camera(QObject *parent)
+	: Sensor(parent)
 {
     // Default the camera
     initialize();
@@ -31,8 +31,7 @@ void Camera::initialize() {
     mRecorder.setOutputLocation(QDir::currentPath() + "/output");
     
     // Initialize capture session
-    if (mVideoInputMethod == VideoInputMethod::QCAMERA) mSession.setCamera(&mCamera);
-    if (mVideoInputMethod == VideoInputMethod::QVIDEOFRAMEINPUT) mSession.setVideoFrameInput(&mFrameInput);
+    mSession.setCamera(&mCamera);
 	mSession.setRecorder(&mRecorder);
     mSession.setAudioInput(&mAudioInput);
 
@@ -43,42 +42,6 @@ void Camera::initialize() {
     connect(&mCamera, &QCamera::cameraDeviceChanged, [this]() {
         emit cameraDeviceChanged(mCamera.cameraDevice());
         });
-
-	// Initialize generator signal connections
-    connect(&mFrameInput, &QVideoFrameInput::readyToSendVideoFrame,
-        &mGenerator, &OpenCVGenerator::nextFrame);
-    connect(&mGenerator, &OpenCVGenerator::frameReady,
-        &mFrameInput, [this](const QVideoFrame& frame) {
-            bool successfullySent = mFrameInput.sendVideoFrame(frame);
-
-            if (!successfullySent) {
-                qDebug() << "Error: Could not send video frame";
-            }
-        });
-}
-
-void Camera::changeVideoInputMethod(VideoInputMethod method)
-{
-	if (mVideoInputMethod == method) return;
-    mVideoInputMethod = method;
-
-    switch (mVideoInputMethod) {
-	case VideoInputMethod::QCAMERA:
-        mSession.setVideoFrameInput(nullptr);
-		mSession.setCamera(&mCamera);
-        mGenerator.stop();
-        mCamera.start();
-		break;
-
-	case VideoInputMethod::QVIDEOFRAMEINPUT:
-        mSession.setCamera(nullptr);
-        mCamera.stop();
-        mGenerator.start(); /// TODO: Set this to correct input index
-		mSession.setVideoFrameInput(&mFrameInput);
-		break;
-    }
-
-	emit videoInputMethodChanged(mVideoInputMethod);
 }
 
 void Camera::start() {
@@ -109,19 +72,16 @@ QVariant Camera::read() {
     return QVariant::fromValue(frame);
 }
 
-void Camera::setVideoOutput(QVideoWidget* widget)
+void Camera::setVideoOutput(SinkView* widget)
 {
-	if (mSession.videoOutput() == widget) return;
+    if (widget == nullptr) return;
 
-    mSession.setVideoOutput(widget);
+	if (mSession.videoSink() == widget->videoSink()) return;
+
+    pSinkView = widget;
+
+    mSession.setVideoOutput(widget->videoSink());
     emit videoOutputChanged(widget);
-}
-
-void Camera::setVideoSink(QVideoSink* sink)
-{
-	if (mSession.videoSink() == sink) return;
-	mSession.setVideoSink(sink);
-	//emit videoSinkChanged(sink);
 }
 
 void Camera::setDevice(QCameraDevice device)
