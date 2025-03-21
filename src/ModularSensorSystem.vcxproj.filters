@@ -214,11 +214,7 @@
     <None Include="models\yolov5n.onnx" />
     <None Include="models\yolov5su.onnx" />
     <None Include="models\yolov8n.onnx" />
-    <None Include="models\yolov10b.onnx" />
-    <None Include="models\yolov10l.onnx" />
-    <None Include="models\yolov10m.onnx" />
     <None Include="models\yolov10n.onnx" />
     <None Include="models\yolov10s.onnx" />
-    <None Include="models\yolov10x.onnx" />
   </ItemGroup>
 </Project>

@@ -45,7 +45,7 @@ private:
     Net mNet;
     Mat mFrame;
     std::vector<Mat> mOuts;
-    std::string mModelConfig = "models/yolov5n.onnx";
+    std::string mModelConfig = "models/yolov10n.onnx";
     int mCaptureIntervalMs = 30;
     bool mError = false;
 
@@ -55,7 +55,7 @@ private:
 
     void setup(void);
     void preProcess(Mat& frame);
-    std::vector<Detection> postProcess(const std::vector<Mat>& outs);
+    std::vector<Detection> postProcess(Mat& frame, const std::vector<Mat>& outs);
 
 public:
     Yolo(QObject* parent = nullptr, 

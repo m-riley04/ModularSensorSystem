@@ -4,11 +4,11 @@
 #include <QtMultimedia>
 #include <QFileDialog>
 #include <qmessagebox.h>
-#include "Sensors/Sensor/sensor.h"
 #include <QThread>
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
+#include "Sensors/Sensor/sensor.h"
 #include "Generators/OpenCVGenerator/opencvcamera.h"
 #include "Widgets/CustomSinkWidget/customsinkwidget.h"
 
