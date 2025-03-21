@@ -7,7 +7,7 @@
 #include "../Sensors/Camera/camera.h"
 #include <memory>
 #include <vector>
-#include "Widgets/SinkView/sinkview.h"
+#include "Widgets/CustomSinkWidget/customsinkwidget.h"
 
 class SensorController : public QObject
 {
@@ -41,7 +41,7 @@ public slots:
 	void recordCameras();
 
 	Camera* findCamera(QVideoWidget* widget);
-	Camera* findCamera(SinkView* widget);
+	Camera* findCamera(CustomSinkWidget* widget);
 
 signals:
 	void sensorAdded(Sensor *sensor);

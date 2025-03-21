@@ -33,6 +33,12 @@ void CameraControls::initSignals()
 		// Find the current SinkView
 		auto videoWidget = pCamera->sinkView();
 
+		// Check if sinkView is valid
+		if (!videoWidget) {
+			QMessageBox::warning(this, "Error", "No video widget available", QMessageBox::StandardButton::Ok);
+			return;
+		}
+
 		// Set the detection state
 		videoWidget->setDetectionState(state == Qt::Checked);
 		});
@@ -43,6 +49,12 @@ void CameraControls::initSignals()
 
 		// Find the current SinkView
 		auto videoWidget = pCamera->sinkView();
+
+		// Check if sinkView is valid
+		if (!videoWidget) {
+			QMessageBox::warning(this, "Error", "No video widget available", QMessageBox::StandardButton::Ok);
+			return;
+		}
 
 		// Set the debug state
 		videoWidget->setDebugInfoVisible(state == Qt::Checked);
@@ -57,7 +69,12 @@ void CameraControls::initSignals()
 
 		// Find the current SinkView
 		auto videoWidget = pCamera->sinkView();
-		
+
+		// Check if sinkView is valid
+		if (!videoWidget) {
+			QMessageBox::warning(this, "Error", "No video widget available", QMessageBox::StandardButton::Ok);
+			return;
+		}
 
 		if (videoWidget->yolo() != nullptr) {
 			// Set the new model path

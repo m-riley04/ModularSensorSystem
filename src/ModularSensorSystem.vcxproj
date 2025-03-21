@@ -118,10 +118,12 @@
     <ClCompile Include="Sensors\Sensor.cpp" />
     <ClCompile Include="Helpers\unitconversionhelper.cpp" />
     <ClCompile Include="Widgets\CameraControls\cameracontrols.cpp" />
+    <ClCompile Include="Controllers\MainController\maincontroller.cpp" />
+    <ClCompile Include="Widgets\GroupControls\groupcontrols.cpp" />
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
     <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp" />
     <ClCompile Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
-    <ClCompile Include="Widgets\SinkView\sinkview.cpp" />
+    <ClCompile Include="Widgets\CustomSinkWidget\customsinkwidget.cpp" />
     <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp" />
     <ClCompile Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp" />
     <ClCompile Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp" />
@@ -129,8 +131,9 @@
     <ClCompile Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="Widgets\CameraControls\cameracontrols.ui" />
+    <QtUic Include="Widgets\GroupControls\groupcontrols.ui" />
     <QtUic Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
-    <QtUic Include="Widgets\SinkView\sinkview.ui" />
+    <QtUic Include="Widgets\CustomSinkWidget\customsinkwidget.ui" />
     <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui" />
     <QtUic Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.ui" />
     <QtUic Include="Windows\MainWindow.ui" />
@@ -169,7 +172,7 @@
     <QtMoc Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Widgets\SinkView\sinkview.h" />
+    <QtMoc Include="Widgets\CustomSinkWidget\customsinkwidget.h" />
     <QtMoc Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.h" />
     <QtMoc Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h" />
@@ -180,6 +183,8 @@
     <QtMoc Include="Controllers\PresetsController\presetscontroller.h" />
     <QtMoc Include="Processing\yolo.h" />
     <ClInclude Include="Helpers\unitconversionhelper.h" />
+    <QtMoc Include="Controllers\MainController\maincontroller.h" />
+    <QtMoc Include="Widgets\GroupControls\groupcontrols.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <ItemGroup>

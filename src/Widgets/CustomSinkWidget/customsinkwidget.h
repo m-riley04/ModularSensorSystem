@@ -6,7 +6,7 @@
 #include "Processing/yolo.h"
 #include <QThread>
 
-class SinkView : public QWidget
+class CustomSinkWidget : public QWidget
 {
 	Q_OBJECT
 
@@ -60,8 +60,8 @@ private:
 	void paintDetections(QPainter& painter, FrameSizeCalculations& sizing, QRectF& outputRect);
 
 public:
-	SinkView(QWidget *parent = nullptr);
-	~SinkView();
+	CustomSinkWidget(QWidget *parent = nullptr);
+	~CustomSinkWidget();
 
 	Yolo* yolo() const { return pYolo; }
 	bool detectionState() const { return mIsDetectionActive; }

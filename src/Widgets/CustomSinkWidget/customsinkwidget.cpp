@@ -1,6 +1,6 @@
-#include "sinkview.h"
+#include "customsinkwidget.h"
 
-SinkView::SinkView(QWidget *parent)
+CustomSinkWidget::CustomSinkWidget(QWidget *parent)
 	: QWidget(parent), pSink(std::make_unique<QVideoSink>())
 {
 	ui.setupUi(this);
@@ -14,7 +14,7 @@ SinkView::SinkView(QWidget *parent)
 	initializeYolo();
 }
 
-SinkView::~SinkView()
+CustomSinkWidget::~CustomSinkWidget()
 {
     if (pYoloThread) {
         pYoloThread->quit();
@@ -22,7 +22,7 @@ SinkView::~SinkView()
     }
 }
 
-void SinkView::initializeYolo()
+void CustomSinkWidget::initializeYolo()
 {
     // Initialize YOLO classes
     mClasses.push_back("person");
@@ -47,15 +47,15 @@ void SinkView::initializeYolo()
     trigger->setInterval(mCaptureIntervalMs);
 
     // Connect yolo signals
-    connect(pYolo, &Yolo::sendDetections, this, &SinkView::receiveDetections);
-    connect(this, &SinkView::sendNewFrameYolo, pYolo, &Yolo::receiveNewFrame);
-    connect(trigger, &QTimer::timeout, this, &SinkView::captureFrame);
+    connect(pYolo, &Yolo::sendDetections, this, &CustomSinkWidget::receiveDetections);
+    connect(this, &CustomSinkWidget::sendNewFrameYolo, pYolo, &Yolo::receiveNewFrame);
+    connect(trigger, &QTimer::timeout, this, &CustomSinkWidget::captureFrame);
 
     // Start the timer
     trigger->start();
 }
 
-SinkView::FrameSizeCalculations SinkView::calculateFrameSizings()
+CustomSinkWidget::FrameSizeCalculations CustomSinkWidget::calculateFrameSizings()
 {
 	FrameSizeCalculations result;
 
@@ -85,7 +85,7 @@ SinkView::FrameSizeCalculations SinkView::calculateFrameSizings()
     return result;
 }
 
-void SinkView::paintDebugInfo(QPainter& painter, FrameSizeCalculations& sizing)
+void CustomSinkWidget::paintDebugInfo(QPainter& painter, FrameSizeCalculations& sizing)
 {
     if (!mFrame.isValid()) return;
 
@@ -125,7 +125,7 @@ void SinkView::paintDebugInfo(QPainter& painter, FrameSizeCalculations& sizing)
 	}
 }
 
-void SinkView::paintDetections(QPainter& painter, FrameSizeCalculations& sizing, QRectF& outputRect)
+void CustomSinkWidget::paintDetections(QPainter& painter, FrameSizeCalculations& sizing, QRectF& outputRect)
 {
 	if (!mFrame.isValid()) return;
 
@@ -154,7 +154,7 @@ void SinkView::paintDetections(QPainter& painter, FrameSizeCalculations& sizing,
     }
 }
 
-void SinkView::paintEvent(QPaintEvent* event)
+void CustomSinkWidget::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
@@ -182,7 +182,7 @@ void SinkView::paintEvent(QPaintEvent* event)
     }
 }
 
-void SinkView::setVideoFrame(const QVideoFrame & frame)
+void CustomSinkWidget::setVideoFrame(const QVideoFrame & frame)
 {
     if (frame.isValid()) {
         mFrame = frame;
@@ -190,7 +190,7 @@ void SinkView::setVideoFrame(const QVideoFrame & frame)
     }
 }
 
-void SinkView::setDetectionState(bool state)
+void CustomSinkWidget::setDetectionState(bool state)
 {
 	if (state != mIsDetectionActive) {
         // Change detection state
@@ -199,7 +199,7 @@ void SinkView::setDetectionState(bool state)
 	}
 }
 
-void SinkView::setDebugInfoVisible(bool visible)
+void CustomSinkWidget::setDebugInfoVisible(bool visible)
 {
 	if (visible != mIsDebugInfoVisible) {
 		// Change debug info visibility
@@ -208,7 +208,7 @@ void SinkView::setDebugInfoVisible(bool visible)
 	}
 }
 
-void SinkView::captureFrame()
+void CustomSinkWidget::captureFrame()
 {
     if (!mIsDetectionActive) return;
     if (mFrame.size().isEmpty()) return;
@@ -220,12 +220,12 @@ void SinkView::captureFrame()
     emit sendNewFrameYolo(img);
 }
 
-void SinkView::activateYOLO() {
+void CustomSinkWidget::activateYOLO() {
     QImage img = mFrame.toImage();
     emit sendNewFrameYolo(img);
 }
 
-void SinkView::receiveDetections(std::vector<Yolo::Detection> detections)
+void CustomSinkWidget::receiveDetections(std::vector<Yolo::Detection> detections)
 {
     mDetections = detections;
     update(); // Trigger a repaint with the new detections.

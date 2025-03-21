@@ -88,13 +88,19 @@
     <ClCompile Include="Controllers\PresetsController\presetscontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\SinkView\sinkview.cpp">
+    <ClCompile Include="Widgets\CustomSinkWidget\customsinkwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Processing\yolo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Helpers\unitconversionhelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MainController\maincontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\GroupControls\groupcontrols.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -144,10 +150,16 @@
     <QtMoc Include="Controllers\PresetsController\presetscontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\SinkView\sinkview.h">
+    <QtMoc Include="Widgets\CustomSinkWidget\customsinkwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Processing\yolo.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Controllers\MainController\maincontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Widgets\GroupControls\groupcontrols.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -173,7 +185,10 @@
     <QtUic Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Widgets\SinkView\sinkview.ui">
+    <QtUic Include="Widgets\CustomSinkWidget\customsinkwidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Widgets\GroupControls\groupcontrols.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

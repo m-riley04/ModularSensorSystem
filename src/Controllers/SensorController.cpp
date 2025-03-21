@@ -133,7 +133,7 @@ Camera* SensorController::findCamera(QVideoWidget* widget)
 	}
 }
 
-Camera* SensorController::findCamera(SinkView* widget)
+Camera* SensorController::findCamera(CustomSinkWidget* widget)
 {
 	for (const auto& camera : mCameras) {
 		if (camera->session()->videoSink() == widget->videoSink()) return camera.get();

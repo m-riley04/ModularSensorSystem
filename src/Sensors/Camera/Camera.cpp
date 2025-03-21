@@ -72,13 +72,13 @@ QVariant Camera::read() {
     return QVariant::fromValue(frame);
 }
 
-void Camera::setVideoOutput(SinkView* widget)
+void Camera::setVideoOutput(CustomSinkWidget* widget)
 {
     if (widget == nullptr) return;
 
 	if (mSession.videoSink() == widget->videoSink()) return;
 
-    pSinkView = widget;
+    pSinkWidget = widget;
 
     mSession.setVideoOutput(widget->videoSink());
     emit videoOutputChanged(widget);

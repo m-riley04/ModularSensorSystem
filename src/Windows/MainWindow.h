@@ -2,11 +2,14 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include "../Controllers/SensorController.h"
 #include <QVideoFrame>
 #include <QVideoWidget>
 #include "AddCameraDialog/AddCameraDialog.h"
-#include "Widgets/SinkView/sinkview.h";
+#include "Widgets/CustomSinkWidget/customsinkwidget.h";
+#include "QtCameraControlsWindow/qtcameracontrolsdialog.h"
+#include "Widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
+#include "Controllers/MainController/maincontroller.h"
+#include "Controllers/SensorController.h"
 
 class MainWindow : public QMainWindow
 {
@@ -18,15 +21,12 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    std::unique_ptr<SensorController> pController;
-    std::vector<SinkView*> mSinkWidgets;
-    bool isRecording = false;
+    std::unique_ptr<SensorController> pSensorController;
+    std::unique_ptr<MainController> pController;
+    std::vector<CustomSinkWidget*> mSinkWidgets;
 
     void initWidgets();
     void initSignals();
-
-public:
-    bool recording() const { return isRecording; }
 
 public slots:
     void addVideoWidget(Camera *camera);
@@ -38,7 +38,4 @@ public slots:
 
 signals:
 	void cameraChanged(Camera* camera);
-    void clicked_record();
-    void clicked_stop();
-    void clicked_display_video(QVideoWidget *widget);
 };
