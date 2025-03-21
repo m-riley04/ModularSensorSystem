@@ -3,8 +3,8 @@
 #include <QObject>
 #include <QThread>
 #include <QtMultimedia>
-#include "../Sensors/sensor.h"
-#include "../Sensors/Camera/camera.h"
+#include "Sensors/Sensor/sensor.h"
+#include "Sensors/Camera/camera.h"
 #include <memory>
 #include <vector>
 #include "Widgets/CustomSinkWidget/customsinkwidget.h"

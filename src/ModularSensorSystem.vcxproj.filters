@@ -26,10 +26,10 @@
     <QtRcc Include="MainWindow.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtUic Include="Windows\MainWindow.ui">
+    <QtUic Include="Windows\MainWindow\MainWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtMoc Include="Windows\MainWindow.h">
+    <QtMoc Include="Windows\MainWindow\MainWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -40,19 +40,19 @@
     <ClCompile Include="Sensors\Camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sensors\Sensor.cpp">
+    <ClCompile Include="Sensors\Sensor\Sensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Controllers\SensorController.cpp">
+    <ClCompile Include="Controllers\SensorController\SensorController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sensors\GPS.cpp">
+    <ClCompile Include="Sensors\GPS\GPS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Windows\MainWindow.cpp">
+    <ClCompile Include="Windows\MainWindow\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp">
@@ -103,21 +103,24 @@
     <ClCompile Include="Widgets\GroupControls\groupcontrols.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Widgets\CustomPanTiltWidget\custompantiltwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Sensors\Sensor.h">
+    <QtMoc Include="Sensors\Sensor\Sensor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Sensors\Camera\Camera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Controllers\SensorController.h">
+    <QtMoc Include="Controllers\SensorController\SensorController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Widgets\SensorListItem\SensorListItem.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Sensors\GPS.h">
+    <QtMoc Include="Sensors\GPS\GPS.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Windows\AddCameraDialog\AddCameraDialog.h">
@@ -162,6 +165,9 @@
     <QtMoc Include="Widgets\GroupControls\groupcontrols.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Widgets\CustomPanTiltWidget\custompantiltwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -189,6 +195,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\GroupControls\groupcontrols.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Widgets\CustomPanTiltWidget\custompantiltwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

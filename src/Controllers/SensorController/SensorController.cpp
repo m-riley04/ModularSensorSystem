@@ -1,5 +1,5 @@
 #include "SensorController.h"
-#include "../Windows/MainWindow.h"
+#include "Windows/MainWindow/MainWindow.h"
 
 SensorController::SensorController(QObject *parent)
 	: QObject(parent)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "Sensor.h"
+#include "Sensors/Sensor/Sensor.h"
 
 class GPS : public Sensor
 {

@@ -4,12 +4,12 @@
 #include "ui_MainWindow.h"
 #include <QVideoFrame>
 #include <QVideoWidget>
-#include "AddCameraDialog/AddCameraDialog.h"
+#include "Windows/AddCameraDialog/AddCameraDialog.h"
 #include "Widgets/CustomSinkWidget/customsinkwidget.h";
-#include "QtCameraControlsWindow/qtcameracontrolsdialog.h"
+#include "Windows/QtCameraControlsWindow/qtcameracontrolsdialog.h"
 #include "Widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "Controllers/MainController/maincontroller.h"
-#include "Controllers/SensorController.h"
+#include "Controllers/SensorController/SensorController.h"
 
 class MainWindow : public QMainWindow
 {

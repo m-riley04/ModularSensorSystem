@@ -2,8 +2,8 @@
 
 #include <QWidget>
 #include "ui_groupcontrols.h"
-#include <Controllers/SensorController.h>
-#include <Controllers/MainController/maincontroller.h>
+#include "Controllers/SensorController/SensorController.h"
+#include "Controllers/MainController/maincontroller.h"
 
 class GroupControls : public QWidget
 {

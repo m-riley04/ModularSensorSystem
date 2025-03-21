@@ -4,7 +4,7 @@
 #include <QtMultimedia>
 #include <QFileDialog>
 #include <qmessagebox.h>
-#include "../sensor.h"
+#include "Sensors/Sensor/sensor.h"
 #include <QThread>
 #include <QVideoWidget>
 #include <QtConcurrent>
