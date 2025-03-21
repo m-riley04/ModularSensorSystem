@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include <QtMultimedia>
-#include "ui_sinkview.h"
+#include "ui_customsinkwidget.h"
 #include "Processing/yolo.h"
 #include <QThread>
 
@@ -37,7 +37,7 @@ public:
 	};
 
 private:
-	Ui::SinkViewClass ui;
+	Ui::CustomSinkWidgetClass ui;
 	QVideoFrame mFrame;
 	std::unique_ptr<QVideoSink> pSink = nullptr;
 

@@ -48,7 +48,7 @@ void MainWindow::initSignals() {
         });
 
     // Camera View
-    connect(ui.buttonAddSensor, &QPushButton::clicked, this, &MainWindow::addCamera);
+    connect(ui.buttonAddSensor, &QPushButton::clicked, this, &MainWindow::openAddCameraDialog);
     connect(ui.buttonRemoveSensor, &QPushButton::clicked, this, &MainWindow::removeCamera);
     connect(pSensorController.get(), &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
 
@@ -89,7 +89,7 @@ void MainWindow::addVideoWidget(Camera *camera)
     ui.tabCameras->addTab(sinkWidget, name);
 }
 
-void MainWindow::addCamera()
+void MainWindow::openAddCameraDialog()
 {
     AddCameraDialog* addDialog = new AddCameraDialog(this, pSensorController->videoDevices());
     connect(addDialog, &AddCameraDialog::deviceSelected, pSensorController.get(), &SensorController::addCamera);
