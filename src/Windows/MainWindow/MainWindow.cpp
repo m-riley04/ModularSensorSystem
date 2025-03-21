@@ -55,6 +55,8 @@ void MainWindow::initSignals() {
     connect(pController->sensorController(), &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
 
     // Camera Controls
+	connect(ui.checkboxControls, &QCheckBox::toggled, ui.frameControls, &QFrame::setVisible);
+
     connect(ui.tabCameras, &QTabWidget::currentChanged, [this](int index) {
         if (index == -1 || !(index < mSinkWidgets.size())) return;
 
