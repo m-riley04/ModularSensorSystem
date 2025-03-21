@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include "Controllers/SensorController/SensorController.h"
 
 class MainController  : public QObject
 {
@@ -9,4 +10,9 @@ class MainController  : public QObject
 public:
 	MainController(QObject *parent);
 	~MainController();
+
+	SensorController* sensorController() const { return pSensorController.get(); }
+
+private:
+	std::unique_ptr<SensorController> pSensorController;
 };

@@ -4,7 +4,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    pSensorController = std::make_unique<SensorController>(this);
+
+	// Initialize the main controller
+	pController = std::make_unique<MainController>(this);
 
     // Initialize core app
     QCoreApplication::setApplicationName("ModularSensorSystem");
@@ -28,7 +30,7 @@ void MainWindow::initWidgets()
 	ui.stackedWidget->setCurrentIndex(0);
 
 	// Set the sensor controller
-	ui.groupControls->setSensorController(pSensorController.get());
+	ui.groupControls->setSensorController(pController->sensorController());
 	ui.groupControls->setController(pController.get());
 
 	// Set the camera controls
@@ -50,14 +52,14 @@ void MainWindow::initSignals() {
     // Camera View
     connect(ui.buttonAddSensor, &QPushButton::clicked, this, &MainWindow::openAddCameraDialog);
     connect(ui.buttonRemoveSensor, &QPushButton::clicked, this, &MainWindow::removeCamera);
-    connect(pSensorController.get(), &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
+    connect(pController->sensorController(), &SensorController::cameraAdded, this, &MainWindow::addVideoWidget);
 
     // Camera Controls
     connect(ui.tabCameras, &QTabWidget::currentChanged, [this](int index) {
         if (index == -1 || !(index < mSinkWidgets.size())) return;
 
         // Get the camera from the video widgets
-		Camera* cam = pSensorController->findCamera(mSinkWidgets.at(index));
+		Camera* cam = pController->sensorController()->findCamera(mSinkWidgets.at(index));
 
         // Emit the camera changed signal
         emit cameraChanged(cam);
@@ -91,8 +93,8 @@ void MainWindow::addVideoWidget(Camera *camera)
 
 void MainWindow::openAddCameraDialog()
 {
-    AddCameraDialog* addDialog = new AddCameraDialog(this, pSensorController->videoDevices());
-    connect(addDialog, &AddCameraDialog::deviceSelected, pSensorController.get(), &SensorController::addCamera);
+    AddCameraDialog* addDialog = new AddCameraDialog(this, pController->sensorController()->videoDevices());
+    connect(addDialog, &AddCameraDialog::deviceSelected, pController->sensorController(), &SensorController::addCamera);
     addDialog->show();
 }
 
@@ -115,13 +117,13 @@ void MainWindow::removeCamera()
 
         // Find camera and video widget
         auto &videoWidget = mSinkWidgets.at(currentTabIndex);
-        Camera* cam = pSensorController->findCamera(videoWidget);
+        Camera* cam = pController->sensorController()->findCamera(videoWidget);
 
         // Remove video widget from UI
         videoWidget->deleteLater();
 
         // Remove camera and video widget
-        pSensorController->removeCamera(cam);
+        pController->sensorController()->removeCamera(cam);
         mSinkWidgets.erase(mSinkWidgets.begin() + currentTabIndex);
     }
 }

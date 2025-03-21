@@ -9,7 +9,6 @@
 #include "Windows/QtCameraControlsWindow/qtcameracontrolsdialog.h"
 #include "Widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "Controllers/MainController/maincontroller.h"
-#include "Controllers/SensorController/SensorController.h"
 
 class MainWindow : public QMainWindow
 {
@@ -21,7 +20,6 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    std::unique_ptr<SensorController> pSensorController;
     std::unique_ptr<MainController> pController;
     std::vector<CustomSinkWidget*> mSinkWidgets;
 
