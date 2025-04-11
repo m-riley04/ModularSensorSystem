@@ -1,6 +1,8 @@
 {
   "dependencies": [
+    "libusb",
+    "onnx",
     "opencv",
-    "libusb"
+    "onnxruntime-gpu"
   ]
 }
