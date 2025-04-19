@@ -3,6 +3,7 @@
     "libusb",
     "onnx",
     "opencv",
-    "onnxruntime-gpu"
+    "onnxruntime-gpu",
+    "ffmpeg"
   ]
 }

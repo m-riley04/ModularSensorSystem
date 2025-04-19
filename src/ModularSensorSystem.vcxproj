@@ -109,16 +109,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Controllers\ClipController\clipcontroller.cpp" />
     <ClCompile Include="Controllers\PresetsController\presetscontroller.cpp" />
     <ClCompile Include="Processing\yolo.cpp" />
     <ClCompile Include="Sensors\Camera\Generators\mediagenerator.cpp" />
     <ClCompile Include="Sensors\Camera\TOPDON_TC001\topdontc001.cpp" />
+    <ClCompile Include="Sensors\Camera\VideoBuffer\videobuffer.cpp" />
     <ClCompile Include="Sensors\GPS\GPS.cpp" />
     <ClCompile Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.cpp" />
     <ClCompile Include="Sensors\Sensor\Sensor.cpp" />
     <ClCompile Include="Helpers\unitconversionhelper.cpp" />
     <ClCompile Include="Widgets\CameraControls\cameracontrols.cpp" />
     <ClCompile Include="Controllers\MainController\maincontroller.cpp" />
+    <ClCompile Include="Widgets\ClippingControls\clippingcontrolswidget.cpp" />
     <ClCompile Include="Widgets\CustomPanTiltWidget\custompantiltwidget.cpp" />
     <ClCompile Include="Widgets\GroupControls\groupcontrols.cpp" />
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
@@ -132,6 +135,7 @@
     <ClCompile Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="Widgets\CameraControls\cameracontrols.ui" />
+    <QtUic Include="Widgets\ClippingControls\clippingcontrolswidget.ui" />
     <QtUic Include="Widgets\CustomPanTiltWidget\custompantiltwidget.ui" />
     <QtUic Include="Widgets\GroupControls\groupcontrols.ui" />
     <QtUic Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
@@ -184,10 +188,13 @@
     <QtMoc Include="Sensors\Camera\TOPDON_TC001\topdontc001.h" />
     <QtMoc Include="Controllers\PresetsController\presetscontroller.h" />
     <QtMoc Include="Processing\yolo.h" />
+    <QtMoc Include="Controllers\ClipController\clipcontroller.h" />
     <ClInclude Include="Helpers\unitconversionhelper.h" />
     <QtMoc Include="Controllers\MainController\maincontroller.h" />
     <QtMoc Include="Widgets\GroupControls\groupcontrols.h" />
     <QtMoc Include="Widgets\CustomPanTiltWidget\custompantiltwidget.h" />
+    <QtMoc Include="Sensors\Camera\VideoBuffer\videobuffer.h" />
+    <QtMoc Include="Widgets\ClippingControls\clippingcontrolswidget.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <ItemGroup>

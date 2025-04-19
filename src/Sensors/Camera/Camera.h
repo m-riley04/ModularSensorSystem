@@ -11,6 +11,7 @@
 #include "Sensors/Sensor/sensor.h"
 #include "Generators/OpenCVGenerator/opencvcamera.h"
 #include "Widgets/CustomSinkWidget/customsinkwidget.h"
+#include "VideoBuffer/videobuffer.h"
 
 #define DEFAULT_FRAME_RATE 30
 
@@ -27,6 +28,7 @@ private:
     QMediaRecorder mRecorder;
     QAudioInput mAudioInput;
     CustomSinkWidget* pSinkWidget = nullptr;
+	VideoBuffer* pVideoBuffer = nullptr;
 
 public:
 	Camera(QObject *parent = nullptr);
@@ -40,6 +42,7 @@ public:
 	QCamera* camera() { return &mCamera; }
 	QMediaRecorder* recorder() { return &mRecorder; }
     QAudioInput* audioInput() { return &mAudioInput; }
+	VideoBuffer* videoBuffer() { return pVideoBuffer; }
 
 public slots:
     void initialize() override;

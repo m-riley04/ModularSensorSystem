@@ -106,6 +106,15 @@
     <ClCompile Include="Widgets\CustomPanTiltWidget\custompantiltwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sensors\Camera\VideoBuffer\videobuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ClipController\clipcontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\ClippingControls\clippingcontrolswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor\Sensor.h">
@@ -168,6 +177,15 @@
     <QtMoc Include="Widgets\CustomPanTiltWidget\custompantiltwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Sensors\Camera\VideoBuffer\videobuffer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Controllers\ClipController\clipcontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Widgets\ClippingControls\clippingcontrolswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -198,6 +216,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\CustomPanTiltWidget\custompantiltwidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Widgets\ClippingControls\clippingcontrolswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

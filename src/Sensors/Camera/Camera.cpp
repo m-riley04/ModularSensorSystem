@@ -27,6 +27,9 @@ void Camera::initialize() {
 		_.mkdir("output");
 	}
 
+    // Init buffer
+	pVideoBuffer = new VideoBuffer(2, DEFAULT_FRAME_RATE, this); // TODO: make sure the frame rate is updated whenever the format is
+
     // Init recorder
     mRecorder.setOutputLocation(QDir::currentPath() + "/output");
     
@@ -82,6 +85,12 @@ void Camera::setVideoOutput(CustomSinkWidget* widget)
 
     mSession.setVideoOutput(widget->videoSink());
     emit videoOutputChanged(widget);
+
+	// Connect the video sink to the buffer
+    connect(widget->videoSink(), &QVideoSink::videoFrameChanged, [this](QVideoFrame frame) {
+        // Add the frame to the buffer
+        pVideoBuffer->addFrame(frame);
+        });
 }
 
 void Camera::setDevice(QCameraDevice device)

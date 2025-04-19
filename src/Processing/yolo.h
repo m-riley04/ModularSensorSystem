@@ -42,7 +42,7 @@ private:
     int mFrameWidth, mFrameHeight;
     double mConfidenceThreshold, mNmsThreshold;
     std::vector<std::string> mClasses;
-    std::string mModelConfig = "models/yolov5n.onnx";
+    std::string mModelConfig = "models/yolov10m.onnx";
     int mCaptureIntervalMs = 30;
     bool mError = false;
 
