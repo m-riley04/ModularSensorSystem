@@ -9,6 +9,7 @@
 #include "Windows/QtCameraControlsWindow/qtcameracontrolsdialog.h"
 #include "Widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "Controllers/MainController/maincontroller.h"
+#include "Widgets/ClippingControls/clippingcontrolswidget.h"
 
 class MainWindow : public QMainWindow
 {

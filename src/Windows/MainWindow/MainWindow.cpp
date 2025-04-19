@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include <Controllers/ClipController/clipcontroller.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -91,6 +92,9 @@ void MainWindow::addVideoWidget(Camera *camera)
     QString name = camera->camera()->cameraDevice().description();
     camera->setVideoOutput(sinkWidget); // Set output BEFORE adding tab
     ui.tabCameras->addTab(sinkWidget, name);
+
+	// Set the video buffer to the clipping controls
+	ui.clippingControls->setVideoBuffer(camera->videoBuffer());
 }
 
 void MainWindow::openAddCameraDialog()

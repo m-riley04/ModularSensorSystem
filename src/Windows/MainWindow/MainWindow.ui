@@ -77,6 +77,13 @@
             <enum>QFrame::Shadow::Raised</enum>
            </property>
            <layout class="QGridLayout" name="gridLayout_3">
+            <item row="1" column="1">
+             <widget class="QCheckBox" name="checkboxControls">
+              <property name="text">
+               <string>Controls</string>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="0">
              <spacer name="horizontalSpacer">
               <property name="orientation">
@@ -97,13 +104,6 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0" colspan="4">
-             <widget class="QTabWidget" name="tabCameras">
-              <property name="currentIndex">
-               <number>-1</number>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="3">
              <widget class="QPushButton" name="buttonRemoveSensor">
               <property name="text">
@@ -111,10 +111,10 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QCheckBox" name="checkboxControls">
-              <property name="text">
-               <string>Controls</string>
+            <item row="0" column="0" colspan="4">
+             <widget class="QTabWidget" name="tabCameras">
+              <property name="currentIndex">
+               <number>-1</number>
               </property>
              </widget>
             </item>
@@ -148,6 +148,18 @@
               <layout class="QVBoxLayout" name="verticalLayout">
                <item>
                 <widget class="GroupControls" name="groupControls" native="true"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="title">
+               <string>Clipping Controls</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_3">
+               <item>
+                <widget class="ClippingControlsWidget" name="clippingControls" native="true"/>
                </item>
               </layout>
              </widget>
@@ -279,6 +291,12 @@
    <class>GroupControls</class>
    <extends>QWidget</extends>
    <header>Widgets/GroupControls/groupcontrols.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ClippingControlsWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets/ClippingControls/clippingcontrolswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
