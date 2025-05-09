@@ -26,6 +26,8 @@ ClippingControlsWidget::ClippingControlsWidget(QWidget *parent)
 		if (pVideoBuffer) {
 			pVideoBuffer->clear();
 			emit bufferCleared();
+
+			updateUiElements();
 		}
 		});
 
@@ -68,6 +70,7 @@ void ClippingControlsWidget::updateUiElements()
 	ui.frameParameters->setEnabled(pVideoBuffer && pClipController);
 	ui.buttonToggleClipping->setText(mClippingEnabled ? "Stop Clipping" : "Start Clipping");
 	ui.labelMaxFramesQueued->setText(QString("%1").arg(pVideoBuffer ? pVideoBuffer->maxFrames() : 0));
+	ui.labelFramesQueued->setText(QString(pVideoBuffer ? "%1" : "0").arg(pVideoBuffer->frames()));
 }
 
 void ClippingControlsWidget::connectSignals()
