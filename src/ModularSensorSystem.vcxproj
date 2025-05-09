@@ -126,6 +126,7 @@
     <ClCompile Include="Widgets\GroupControls\groupcontrols.cpp" />
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
     <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp" />
+    <ClCompile Include="Widgets\SensorControllerWidget\sensorcontrollerwidget.cpp" />
     <ClCompile Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
     <ClCompile Include="Widgets\CustomSinkWidget\customsinkwidget.cpp" />
     <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp" />
@@ -138,6 +139,7 @@
     <QtUic Include="Widgets\ClippingControls\clippingcontrolswidget.ui" />
     <QtUic Include="Widgets\CustomPanTiltWidget\custompantiltwidget.ui" />
     <QtUic Include="Widgets\GroupControls\groupcontrols.ui" />
+    <QtUic Include="Widgets\SensorControllerWidget\sensorcontrollerwidget.ui" />
     <QtUic Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
     <QtUic Include="Widgets\CustomSinkWidget\customsinkwidget.ui" />
     <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui" />
@@ -178,6 +180,7 @@
     <QtMoc Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Widgets\SensorControllerWidget\sensorcontrollerwidget.h" />
     <QtMoc Include="Widgets\CustomSinkWidget\customsinkwidget.h" />
     <QtMoc Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.h" />
     <QtMoc Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />

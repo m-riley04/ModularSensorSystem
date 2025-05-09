@@ -10,6 +10,8 @@
 #include "Widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "Controllers/MainController/maincontroller.h"
 #include "Widgets/ClippingControls/clippingcontrolswidget.h"
+#include <Controllers/ClipController/clipcontroller.h>
+#include <Widgets/SensorControllerWidget/sensorcontrollerwidget.h>
 
 class MainWindow : public QMainWindow
 {
@@ -22,19 +24,11 @@ public:
 private:
     Ui::MainWindowClass ui;
     std::unique_ptr<MainController> pController;
-    std::vector<CustomSinkWidget*> mSinkWidgets;
 
     void initWidgets();
     void initSignals();
 
 public slots:
-    void addVideoWidget(Camera *camera);
-    void openAddCameraDialog();
-    void removeCamera();
-
     void quit();
     void restart();
-
-signals:
-	void cameraChanged(Camera* camera);
 };

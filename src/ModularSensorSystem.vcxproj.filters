@@ -115,6 +115,9 @@
     <ClCompile Include="Widgets\ClippingControls\clippingcontrolswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Widgets\SensorControllerWidget\sensorcontrollerwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor\Sensor.h">
@@ -186,6 +189,9 @@
     <QtMoc Include="Widgets\ClippingControls\clippingcontrolswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Widgets\SensorControllerWidget\sensorcontrollerwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -219,6 +225,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\ClippingControls\clippingcontrolswidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Widgets\SensorControllerWidget\sensorcontrollerwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
