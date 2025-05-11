@@ -5,10 +5,11 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QVariant>
+#include "Devices/Device/device.h"
 
 #define DEFAULT_INTERVAL 1.0
 
-class Sensor : public QObject
+class Sensor : public Device
 {
 	Q_OBJECT
 

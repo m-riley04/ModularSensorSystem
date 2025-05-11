@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 Camera::Camera(QObject *parent)
-	: Sensor(parent)
+	: Device(parent)
 {
     // Default the camera
     initialize();

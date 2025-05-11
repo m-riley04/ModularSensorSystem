@@ -8,7 +8,7 @@
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
-#include "Sensors/Sensor/sensor.h"
+#include "Devices/Device/device.h"
 #include "Generators/OpenCVGenerator/opencvcamera.h"
 #include "Widgets/CustomSinkWidget/customsinkwidget.h"
 #include "VideoBuffer/videobuffer.h"
@@ -18,7 +18,7 @@
 /// <summary>
 /// Represents a type of Sensor specifically targeting audio/video
 /// </summary>
-class Camera : public Sensor
+class Camera : public Device
 {
 	Q_OBJECT
 

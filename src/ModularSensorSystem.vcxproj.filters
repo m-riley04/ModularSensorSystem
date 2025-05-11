@@ -124,6 +124,18 @@
     <ClCompile Include="Widgets\SensorsContainerItemWidget\sensorscontaineritemwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Devices\Device\device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Devices\Sensors\Sensor\sensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Devices\Camera\VideoBuffer\videobuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Devices\Camera\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Sensors\Sensor\Sensor.h">
@@ -204,6 +216,12 @@
     <QtMoc Include="Widgets\SensorsContainerItemWidget\sensorscontaineritemwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Devices\Sensors\Sensor\sensor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Devices\Camera\Camera.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -254,6 +272,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Helpers\unitconversionhelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Devices\Device\device.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Devices\Camera\VideoBuffer\videobuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

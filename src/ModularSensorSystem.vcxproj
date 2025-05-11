@@ -111,6 +111,10 @@
   <ItemGroup>
     <ClCompile Include="Controllers\ClipController\clipcontroller.cpp" />
     <ClCompile Include="Controllers\PresetsController\presetscontroller.cpp" />
+    <ClCompile Include="Devices\Camera\Camera.cpp" />
+    <ClCompile Include="Devices\Camera\VideoBuffer\videobuffer.cpp" />
+    <ClCompile Include="Devices\Device\device.cpp" />
+    <ClCompile Include="Devices\Sensors\Sensor\sensor.cpp" />
     <ClCompile Include="Processing\yolo.cpp" />
     <ClCompile Include="Sensors\Camera\Generators\mediagenerator.cpp" />
     <ClCompile Include="Sensors\Camera\TOPDON_TC001\topdontc001.cpp" />
@@ -198,6 +202,10 @@
     <QtMoc Include="Controllers\PresetsController\presetscontroller.h" />
     <QtMoc Include="Processing\yolo.h" />
     <QtMoc Include="Controllers\ClipController\clipcontroller.h" />
+    <QtMoc Include="Devices\Camera\Camera.h" />
+    <ClInclude Include="Devices\Camera\VideoBuffer\videobuffer.h" />
+    <ClInclude Include="Devices\Device\device.h" />
+    <QtMoc Include="Devices\Sensors\Sensor\sensor.h" />
     <ClInclude Include="Helpers\unitconversionhelper.h" />
     <QtMoc Include="Controllers\MainController\maincontroller.h" />
     <QtMoc Include="Widgets\GroupControls\groupcontrols.h" />
