@@ -112,12 +112,8 @@
     <ClCompile Include="Controllers\ClipController\clipcontroller.cpp" />
     <ClCompile Include="Controllers\PresetsController\presetscontroller.cpp" />
     <ClCompile Include="Processing\yolo.cpp" />
-    <ClCompile Include="Sensors\Camera\Generators\mediagenerator.cpp" />
-    <ClCompile Include="Sensors\Camera\TOPDON_TC001\topdontc001.cpp" />
-    <ClCompile Include="Sensors\Camera\VideoBuffer\videobuffer.cpp" />
-    <ClCompile Include="Sensors\GPS\GPS.cpp" />
-    <ClCompile Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.cpp" />
-    <ClCompile Include="Sensors\Sensor\Sensor.cpp" />
+    <ClCompile Include="Devices\Sensors\Camera\VideoBuffer\videobuffer.cpp" />
+    <ClCompile Include="Devices\Sensors\Sensor\Sensor.cpp" />
     <ClCompile Include="Helpers\unitconversionhelper.cpp" />
     <ClCompile Include="Widgets\CameraControls\cameracontrols.cpp" />
     <ClCompile Include="Controllers\MainController\maincontroller.cpp" />
@@ -150,7 +146,7 @@
     <QtUic Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.ui" />
     <QtUic Include="Windows\MainWindow\MainWindow.ui" />
     <QtMoc Include="Windows\MainWindow\MainWindow.h" />
-    <ClCompile Include="Sensors\Camera\Camera.cpp" />
+    <ClCompile Include="Devices\Sensors\Camera\Camera.cpp" />
     <ClCompile Include="Windows\MainWindow\MainWindow.cpp">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
@@ -163,19 +159,16 @@
     <QtUic Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Sensors\Camera\Camera.h" />
+    <QtMoc Include="Devices\Sensors\Camera\Camera.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Sensors\Sensor\Sensor.h" />
+    <QtMoc Include="Devices\Sensors\Sensor\Sensor.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Controllers\SensorController\SensorController.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Widgets\SensorListItem\SensorListItem.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="Sensors\GPS\GPS.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Windows\AddCameraDialog\AddCameraDialog.h" />
@@ -192,9 +185,6 @@
     <QtMoc Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h" />
     <QtMoc Include="Widgets\CameraControls\cameracontrols.h" />
-    <QtMoc Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.h" />
-    <QtMoc Include="Sensors\Camera\Generators\mediagenerator.h" />
-    <QtMoc Include="Sensors\Camera\TOPDON_TC001\topdontc001.h" />
     <QtMoc Include="Controllers\PresetsController\presetscontroller.h" />
     <QtMoc Include="Processing\yolo.h" />
     <QtMoc Include="Controllers\ClipController\clipcontroller.h" />
@@ -202,7 +192,7 @@
     <QtMoc Include="Controllers\MainController\maincontroller.h" />
     <QtMoc Include="Widgets\GroupControls\groupcontrols.h" />
     <QtMoc Include="Widgets\CustomPanTiltWidget\custompantiltwidget.h" />
-    <QtMoc Include="Sensors\Camera\VideoBuffer\videobuffer.h" />
+    <QtMoc Include="Devices\Sensors\Camera\VideoBuffer\videobuffer.h" />
     <QtMoc Include="Widgets\ClippingControls\clippingcontrolswidget.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>

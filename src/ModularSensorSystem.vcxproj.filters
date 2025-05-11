@@ -37,19 +37,16 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sensors\Camera\Camera.cpp">
+    <ClCompile Include="Devices\Sensors\Camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sensors\Sensor\Sensor.cpp">
+    <ClCompile Include="Devices\Sensors\Sensor\Sensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Controllers\SensorController\SensorController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sensors\GPS\GPS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Windows\MainWindow\MainWindow.cpp">
@@ -71,15 +68,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sensors\Camera\Generators\mediagenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sensors\Camera\TOPDON_TC001\topdontc001.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp">
@@ -106,7 +94,7 @@
     <ClCompile Include="Widgets\CustomPanTiltWidget\custompantiltwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sensors\Camera\VideoBuffer\videobuffer.cpp">
+    <ClCompile Include="Devices\Sensors\Camera\VideoBuffer\videobuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Controllers\ClipController\clipcontroller.cpp">
@@ -126,19 +114,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Sensors\Sensor\Sensor.h">
+    <QtMoc Include="Devices\Sensors\Sensor\Sensor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Sensors\Camera\Camera.h">
+    <QtMoc Include="Devices\Sensors\Camera\Camera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Controllers\SensorController\SensorController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Widgets\SensorListItem\SensorListItem.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Sensors\GPS\GPS.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Windows\AddCameraDialog\AddCameraDialog.h">
@@ -154,15 +139,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Sensors\Camera\Generators\OpenCVGenerator\opencvcamera.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Sensors\Camera\Generators\mediagenerator.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Sensors\Camera\TOPDON_TC001\topdontc001.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.h">
@@ -186,7 +162,7 @@
     <QtMoc Include="Widgets\CustomPanTiltWidget\custompantiltwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Sensors\Camera\VideoBuffer\videobuffer.h">
+    <QtMoc Include="Devices\Sensors\Camera\VideoBuffer\videobuffer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Controllers\ClipController\clipcontroller.h">
