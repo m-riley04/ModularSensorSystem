@@ -3,7 +3,7 @@
 #include <QWidget>
 #include <QtMultimedia>
 #include "ui_cameracontrols.h"
-#include <Sensors/Camera/Camera.h>
+#include "Devices/CameraDevice/cameradevice.h"
 #include <Windows/QtCameraControlsWindow/QtCameraControlsDialog.h>
 #include <Windows/QtRecordingControlsDialog/qtrecordingcontrolsdialog.h>
 #include "Helpers/unitconversionhelper.h"
@@ -13,12 +13,12 @@ class CameraControls : public QWidget
 	Q_OBJECT
 
 public:
-	CameraControls(QWidget* parent = nullptr, Camera* camera = nullptr);
+	CameraControls(QWidget* parent = nullptr, CameraDevice* camera = nullptr);
 	~CameraControls();
 
 private:
 	Ui::CameraControlsClass ui;
-	Camera* pCamera = nullptr;
+	CameraDevice* pCamera = nullptr;
 	QStorageInfo storageInfo;
 	bool areSignalsInitialized = false;
 
@@ -30,8 +30,8 @@ private:
 	void populateAudioDevices();
 
 public slots:
-	void setCamera(Camera* camera);
+	void setCamera(CameraDevice* camera);
 
 signals:
-	void cameraChanged(Camera* camera);
+	void cameraChanged(CameraDevice* camera);
 };

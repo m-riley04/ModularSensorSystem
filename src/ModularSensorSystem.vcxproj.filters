@@ -37,15 +37,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Devices\Sensors\Camera\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Devices\Sensors\Sensor\Sensor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\SensorController\SensorController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -73,9 +64,6 @@
     <ClCompile Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Controllers\PresetsController\presetscontroller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Widgets\CustomSinkWidget\customsinkwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -88,41 +76,32 @@
     <ClCompile Include="Controllers\MainController\maincontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\GroupControls\groupcontrols.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Widgets\CustomPanTiltWidget\custompantiltwidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Devices\Sensors\Camera\VideoBuffer\videobuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Controllers\ClipController\clipcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Widgets\ClippingControls\clippingcontrolswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\SensorControllerWidget\sensorcontrollerwidget.cpp">
+    <ClCompile Include="Devices\AbstractDevice\abstractdevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\SensorsContainerWidget\sensorscontainerwidget.cpp">
+    <ClCompile Include="Devices\CameraDevice\VideoBuffer\videobuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\SensorsContainerItemWidget\sensorscontaineritemwidget.cpp">
+    <ClCompile Include="Devices\CameraDevice\cameradevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\PreviewContainerWidget\previewcontainerwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\DeviceListWidget\devicelistwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\DeviceController\devicecontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Devices\Sensors\Sensor\Sensor.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Devices\Sensors\Camera\Camera.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Controllers\SensorController\SensorController.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Widgets\SensorListItem\SensorListItem.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -144,9 +123,6 @@
     <QtMoc Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Controllers\PresetsController\presetscontroller.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Widgets\CustomSinkWidget\customsinkwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -156,28 +132,28 @@
     <QtMoc Include="Controllers\MainController\maincontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\GroupControls\groupcontrols.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Widgets\CustomPanTiltWidget\custompantiltwidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Devices\Sensors\Camera\VideoBuffer\videobuffer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Controllers\ClipController\clipcontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Widgets\ClippingControls\clippingcontrolswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\SensorControllerWidget\sensorcontrollerwidget.h">
+    <QtMoc Include="Devices\AbstractDevice\abstractdevice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\SensorsContainerWidget\sensorscontainerwidget.h">
+    <QtMoc Include="Devices\CameraDevice\cameradevice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\SensorsContainerItemWidget\sensorscontaineritemwidget.h">
+    <QtMoc Include="Devices\CameraDevice\VideoBuffer\videobuffer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Widgets\PreviewContainerWidget\previewcontainerwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Widgets\DeviceListWidget\devicelistwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Controllers\DeviceController\devicecontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -206,22 +182,13 @@
     <QtUic Include="Widgets\CustomSinkWidget\customsinkwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Widgets\GroupControls\groupcontrols.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="Widgets\CustomPanTiltWidget\custompantiltwidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="Widgets\ClippingControls\clippingcontrolswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Widgets\SensorControllerWidget\sensorcontrollerwidget.ui">
+    <QtUic Include="Widgets\PreviewContainerWidget\previewcontainerwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Widgets\SensorsContainerWidget\sensorscontainerwidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="Widgets\SensorsContainerItemWidget\sensorscontaineritemwidget.ui">
+    <QtUic Include="Widgets\DeviceListWidget\devicelistwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

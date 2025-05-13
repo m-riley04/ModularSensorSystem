@@ -11,7 +11,6 @@
 #include "Controllers/MainController/maincontroller.h"
 #include "Widgets/ClippingControls/clippingcontrolswidget.h"
 #include <Controllers/ClipController/clipcontroller.h>
-#include <Widgets/SensorControllerWidget/sensorcontrollerwidget.h>
 
 class MainWindow : public QMainWindow
 {

@@ -1,6 +1,6 @@
 #include "cameracontrols.h"
 
-CameraControls::CameraControls(QWidget* parent, Camera* camera)
+CameraControls::CameraControls(QWidget* parent, CameraDevice* camera)
 	: QWidget(parent), pCamera(camera)
 {
 	ui.setupUi(this);
@@ -22,9 +22,9 @@ CameraControls::~CameraControls()
 void CameraControls::initSignals()
 {
 	// Camera Controls
-	connect(ui.buttonStart, &QPushButton::clicked, pCamera, &Camera::start);
-	connect(ui.buttonStop, &QPushButton::clicked, pCamera, &Camera::stop);
-	connect(ui.buttonRestart, &QPushButton::clicked, pCamera, &Camera::restart);
+	connect(ui.buttonStart, &QPushButton::clicked, pCamera, &CameraDevice::start);
+	connect(ui.buttonStop, &QPushButton::clicked, pCamera, &CameraDevice::stop);
+	connect(ui.buttonRestart, &QPushButton::clicked, pCamera, &CameraDevice::restart);
 
 	// Devices
 	connect(ui.checkboxObjectDetection, &QCheckBox::checkStateChanged, [this](int state) {
@@ -182,7 +182,7 @@ void CameraControls::populateAudioDevices()
 	ui.dropdownAudioDevices->blockSignals(false);
 }
 
-void CameraControls::setCamera(Camera* camera) {
+void CameraControls::setCamera(CameraDevice* camera) {
 	// Set camera
 	pCamera = camera;
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "Sensors/Camera/VideoBuffer/videobuffer.h"
+#include "Devices/CameraDevice/VideoBuffer/videobuffer.h"
 #include <QDebug>
 #include <QVideoFrame>
 

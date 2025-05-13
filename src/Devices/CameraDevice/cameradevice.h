@@ -8,17 +8,13 @@
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
-#include "Sensors/Sensor/sensor.h"
-#include "Generators/OpenCVGenerator/opencvcamera.h"
+#include "Devices/AbstractDevice/abstractdevice.h"
 #include "Widgets/CustomSinkWidget/customsinkwidget.h"
 #include "VideoBuffer/videobuffer.h"
 
 #define DEFAULT_FRAME_RATE 30
 
-/// <summary>
-/// Represents a type of Sensor specifically targeting audio/video
-/// </summary>
-class Camera : public Sensor
+class CameraDevice : public AbstractDevice
 {
 	Q_OBJECT
 
@@ -31,10 +27,9 @@ private:
 	VideoBuffer* pVideoBuffer = nullptr;
 
 public:
-	Camera(QObject *parent = nullptr);
-	~Camera();
+	CameraDevice(QObject *parent = nullptr);
+	~CameraDevice();
 
-	QVariant read() override;
 	static bool checkCameraAvailability();
 
     CustomSinkWidget* sinkView() const { return pSinkWidget; }
@@ -45,7 +40,7 @@ public:
 	VideoBuffer* videoBuffer() { return pVideoBuffer; }
 
 public slots:
-    void initialize() override;
+    void open() override;
     void start() override;
     void stop() override;
     void restart() override;
@@ -59,5 +54,4 @@ signals:
     void cameraDeviceChanged(QCameraDevice device);
     void audioDeviceChanged(QAudioDevice audioDevice);
 	void mediaDirectoryChanged(QUrl directory);
-    void deviceError();
 };

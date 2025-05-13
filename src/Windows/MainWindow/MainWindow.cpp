@@ -28,11 +28,11 @@ void MainWindow::initWidgets()
 	ui.stackedWidget->setCurrentIndex(0);
 
 	// Init sensor controller widget
-	ui.sensorControllerWidget->setSensorController(pController->sensorController());
+	//ui.sensorControllerWidget->setSensorController(pController->sensorController());
 
 	// Init group controls
-	ui.groupControls->setSensorController(pController->sensorController());
-	ui.groupControls->setController(pController.get());
+	/*ui.groupControls->setSensorController(pController->sensorController());
+	ui.groupControls->setController(pController.get());*/
 
 	// Set the camera controls
 	ui.cameraControls->setCamera(nullptr); // No camera selected by default
@@ -48,12 +48,12 @@ void MainWindow::initSignals() {
         });
 
     // Sensor view widget
-	connect(ui.sensorControllerWidget, &SensorControllerWidget::controlsChanged, ui.frameControls, &QFrame::setVisible);
-	connect(ui.sensorControllerWidget, &SensorControllerWidget::cameraChanged, ui.cameraControls, &CameraControls::setCamera);
-    connect(ui.sensorControllerWidget, &SensorControllerWidget::videoWidgetAdded, [this](Camera* camera) {
-        // Set clipping controls video buffer
-        ui.clippingControls->setVideoBuffer(camera->videoBuffer());
-        });
+	//connect(ui.sensorControllerWidget, &SensorControllerWidget::controlsChanged, ui.frameControls, &QFrame::setVisible);
+	//connect(ui.sensorControllerWidget, &SensorControllerWidget::cameraChanged, ui.cameraControls, &CameraControls::setCamera);
+ //   connect(ui.sensorControllerWidget, &SensorControllerWidget::videoWidgetAdded, [this](Camera* camera) {
+ //       // Set clipping controls video buffer
+ //       ui.clippingControls->setVideoBuffer(camera->videoBuffer());
+ //       });
 
     // Playback button
     connect(ui.buttonPlayback, &QPushButton::clicked, [this]() {

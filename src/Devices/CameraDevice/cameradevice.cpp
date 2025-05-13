@@ -1,13 +1,13 @@
-#include "Camera.h"
+#include "cameradevice.h"
 
-Camera::Camera(QObject *parent)
-	: Sensor(parent)
+CameraDevice::CameraDevice(QObject *parent)
+	: AbstractDevice(parent)
 {
-    // Default the camera
-    initialize();
+    // init camera
+    open();
 }
 
-Camera::~Camera()
+CameraDevice::~CameraDevice()
 {
     // Release the camera
     if (mCamera.isActive()) {
@@ -15,7 +15,7 @@ Camera::~Camera()
     }
 }
 
-void Camera::initialize() {
+void CameraDevice::open() {
     // Default the video device
 	if (checkCameraAvailability()) {
 		setDevice(QCameraDevice());
@@ -47,7 +47,7 @@ void Camera::initialize() {
         });
 }
 
-void Camera::start() {
+void CameraDevice::start() {
     // Check if the camera is available/is idle
     if (!mCamera.isAvailable() || mCamera.isActive()) return; // TODO: Do more logging here
 
@@ -58,7 +58,7 @@ void Camera::start() {
     emit started();
 }
 
-void Camera::stop() {
+void CameraDevice::stop() {
     // Check if camera is good to go/is active
     if (!mCamera.isAvailable() || !mCamera.isActive()) return; // TODO: Do more logging here
     
@@ -69,13 +69,7 @@ void Camera::stop() {
     emit stopped();
 }
 
-QVariant Camera::read() {
-    QVideoFrame frame = QVideoFrame();
-
-    return QVariant::fromValue(frame);
-}
-
-void Camera::setVideoOutput(CustomSinkWidget* widget)
+void CameraDevice::setVideoOutput(CustomSinkWidget* widget)
 {
     if (widget == nullptr) return;
 
@@ -93,23 +87,23 @@ void Camera::setVideoOutput(CustomSinkWidget* widget)
         });
 }
 
-void Camera::setDevice(QCameraDevice device)
+void CameraDevice::setDevice(QCameraDevice device)
 {
     mCamera.setCameraDevice(device);
     emit cameraDeviceChanged(device);
 }
 
-void Camera::setMediaDirectory(QUrl directory)
+void CameraDevice::setMediaDirectory(QUrl directory)
 {
 	mRecorder.setOutputLocation(directory);
 	emit mediaDirectoryChanged(directory);
 }
 
-bool Camera::checkCameraAvailability() {
+bool CameraDevice::checkCameraAvailability() {
     return QMediaDevices::videoInputs().count() > 0;
 }
 
-void Camera::restart() {
+void CameraDevice::restart() {
     stop();
     start();
 }
