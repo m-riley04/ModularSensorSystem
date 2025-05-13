@@ -1,8 +1,9 @@
 #pragma once
 
 #include <QObject>
+#include "Controllers/RecordingSession/recordingsession.h"
 
-
+class RecordingSession;
 
 class Device : public QObject
 {
@@ -37,8 +38,10 @@ private:
 	qint64 mStartTime = 0;
 	Device::ErrorState mErrorState;
 
+	RecordingSession* pRecordingSession;
+
 public:
-	Device(QObject *parent);
+	Device(RecordingSession* recordingSession, QObject *parent);
 	~Device();
 
 	virtual void open() = 0;

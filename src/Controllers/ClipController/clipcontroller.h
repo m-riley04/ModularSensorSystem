@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "Devices/CameraDevice/VideoBuffer/videobuffer.h"
+#include "Clipping/Buffers/VideoClipBuffer/videoclipbuffer.h"
 #include <QDebug>
 #include <QVideoFrame>
 
@@ -18,16 +18,16 @@ class ClipController : public QObject
 	Q_OBJECT
 
 public:
-	ClipController(VideoBuffer* buffer, int width, int height, double fps, int bitrate, QObject *parent = nullptr);
+	ClipController(VideoClipBuffer* buffer, int width, int height, double fps, int bitrate, QObject *parent = nullptr);
 	~ClipController();
 
-	VideoBuffer* videoBuffer() const { return pBuffer; }
+	VideoClipBuffer* videoBuffer() const { return pBuffer; }
 
 public slots:
 	void saveClip(const QString& fileName);
 
 private:
-	VideoBuffer* pBuffer = nullptr;
+	VideoClipBuffer* pBuffer = nullptr;
 
 	AVPixelFormat mPixelFormat = AV_PIX_FMT_YUV420P;
 	AVCodecID mEncoderCodec = AV_CODEC_ID_MPEG4;

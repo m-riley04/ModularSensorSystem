@@ -3,7 +3,7 @@
 #include <QWidget>
 #include <QtMultimedia>
 #include "ui_customsinkwidget.h"
-#include "Processing/yolo.h"
+#include "Processing/YOLO/yolo.h"
 #include <QThread>
 
 class CustomSinkWidget : public QWidget

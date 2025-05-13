@@ -27,7 +27,8 @@ private:
 	std::unique_ptr<VideoClipBuffer> pVideoBuffer = nullptr;
 
 public:
-	CameraDevice(QObject *parent = nullptr);
+    CameraDevice(RecordingSession* recordingSession, QObject* parent);
+    CameraDevice(QCameraDevice qCameraDevice, RecordingSession* recordingSession, QObject *parent);
 	~CameraDevice();
 
 	static bool checkCameraAvailability();
@@ -43,6 +44,7 @@ public slots:
     void open() override;
     void start() override;
     void stop() override;
+	void close() override;
     void restart() override;
     
     void setVideoOutput(CustomSinkWidget* widget);

@@ -1,6 +1,6 @@
 #include "clipcontroller.h"
 
-ClipController::ClipController(VideoBuffer* buffer, int width, int height, double fps, int bitrate, QObject *parent)
+ClipController::ClipController(VideoClipBuffer* buffer, int width, int height, double fps, int bitrate, QObject *parent)
 	: QObject(parent), pBuffer(buffer), mWidth(width), mHeight(height), mFps(fps), mBitrate(bitrate)
 {
 
@@ -100,14 +100,14 @@ AVFrame* ClipController::convertQFrameToAVFrame(const QVideoFrame& videoFrame, i
 void ClipController::saveClip(const QString& fileName)
 {
     // Retrieve buffered QVideoFrame objects.
-    auto frames = pBuffer->getFrames();
+    auto frames = pBuffer->data();
     if (frames.empty()) {
         qDebug() << "No frames in buffer to save.";
         return;
     }
 
     // Use the first frame's startTime as the base.
-    qint64 baseTime = frames.front().startTime();
+    qint64 baseTime = frames.front().timestamp;
     if (baseTime < 0) {
         // Fallback: if the QVideoFrame doesn't have valid timing info.
         baseTime = 0;
@@ -200,9 +200,11 @@ void ClipController::saveClip(const QString& fileName)
 
     // --- Encoding loop ---
     int64_t pts = 0;
-    for (const QVideoFrame& qvframe : frames) {
+    for (const VideoClipBuffer::Item& item : frames) {
+		QVideoFrame qvframe = item.frame;
+		qint64 frameStart = item.timestamp;
+        
         // Compute relative time:
-        qint64 frameStart = qvframe.startTime();
         if (frameStart < 0)
             frameStart = 0; // fallback if invalid
 

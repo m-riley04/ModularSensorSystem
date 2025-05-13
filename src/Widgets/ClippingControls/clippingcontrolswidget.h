@@ -2,7 +2,8 @@
 
 #include <QWidget>
 #include "ui_clippingcontrolswidget.h"
-#include <Controllers/ClipController/clipcontroller.h>
+#include "Controllers/ClipController/clipcontroller.h"
+#include "Clipping/Buffers/VideoClipBuffer/videoclipbuffer.h"
 
 class ClippingControlsWidget : public QWidget
 {
@@ -13,16 +14,16 @@ public:
 	~ClippingControlsWidget();
 
 	ClipController* clipController() const { return pClipController; }
-	VideoBuffer* videoBuffer() const { return pVideoBuffer; }
+	VideoClipBuffer* videoBuffer() const { return pVideoBuffer; }
 
-	void setVideoBuffer(VideoBuffer* buffer);
+	void setVideoBuffer(VideoClipBuffer* buffer);
 	void setClippingEnabled(bool enabled);
 
 private:
 	Ui::ClippingControlsWidgetClass ui;
 
 	ClipController* pClipController = nullptr;
-	VideoBuffer* pVideoBuffer = nullptr;
+	VideoClipBuffer* pVideoBuffer = nullptr;
 	bool mClippingEnabled = false;
 
 	void updateUiElements();

@@ -1,9 +1,14 @@
 #include "cameradevice.h"
 
-CameraDevice::CameraDevice(QObject *parent)
-	: Device(parent)
+CameraDevice::CameraDevice(RecordingSession* recordingSession, QObject* parent)
+	: Device(recordingSession, parent)
 {
-    // init camera
+    open();
+}
+
+CameraDevice::CameraDevice(QCameraDevice qCameraDevice, RecordingSession* recordingSession, QObject* parent)
+	: Device(recordingSession, parent), mCamera(qCameraDevice)
+{
     open();
 }
 
@@ -69,6 +74,11 @@ void CameraDevice::stop() {
     emit stopped();
 }
 
+void CameraDevice::close()
+{
+	// TODO: Implement close
+}
+
 void CameraDevice::setVideoOutput(CustomSinkWidget* widget)
 {
     if (widget == nullptr) return;
@@ -81,7 +91,7 @@ void CameraDevice::setVideoOutput(CustomSinkWidget* widget)
     emit videoOutputChanged(widget);
 
 	// Connect the video sink to the buffer
-    connect(widget->videoSink(), &QVideoSink::videoFrameChanged, onNewFrame);
+    connect(widget->videoSink(), &QVideoSink::videoFrameChanged, this, &CameraDevice::onNewFrame);
 }
 
 void CameraDevice::onNewFrame(const QVideoFrame& frame) {

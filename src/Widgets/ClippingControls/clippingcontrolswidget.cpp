@@ -12,7 +12,7 @@ ClippingControlsWidget::ClippingControlsWidget(QWidget *parent)
 	connect(ui.buttonToggleClipping, &QPushButton::clicked, this, [this]() {
 		setClippingEnabled(!mClippingEnabled);
 		if (pVideoBuffer) {
-			pVideoBuffer->setIsBuffering(mClippingEnabled);
+			pVideoBuffer->setBuffering(mClippingEnabled);
 		}
 		});
 	connect(ui.buttonClip, &QPushButton::clicked, this, [this]() {
@@ -37,7 +37,7 @@ ClippingControlsWidget::ClippingControlsWidget(QWidget *parent)
 ClippingControlsWidget::~ClippingControlsWidget()
 {}
 
-void ClippingControlsWidget::setVideoBuffer(VideoBuffer* buffer) {
+void ClippingControlsWidget::setVideoBuffer(VideoClipBuffer* buffer) {
 	if (pVideoBuffer == buffer) return; // No change
 	pVideoBuffer = buffer;
 	if (pClipController) {
@@ -69,15 +69,15 @@ void ClippingControlsWidget::updateUiElements()
 	ui.frameButtons->setEnabled(pVideoBuffer && pClipController);
 	ui.frameParameters->setEnabled(pVideoBuffer && pClipController);
 	ui.buttonToggleClipping->setText(mClippingEnabled ? "Stop Clipping" : "Start Clipping");
-	ui.labelMaxFramesQueued->setText(QString("%1").arg(pVideoBuffer ? pVideoBuffer->maxFrames() : 0));
-	ui.labelFramesQueued->setText(QString(pVideoBuffer ? "%1" : "0").arg(pVideoBuffer->frames()));
+	ui.labelMaxFramesQueued->setText(QString("%1").arg(pVideoBuffer ? pVideoBuffer->size() : 0));
+	ui.labelFramesQueued->setText(QString(pVideoBuffer ? "%1" : "0").arg(pVideoBuffer->size())); // TODO: This is supposed to be only current frames queued. Add method.
 }
 
 void ClippingControlsWidget::connectSignals()
 {
-	connect(pVideoBuffer, &VideoBuffer::frameAdded, this, [this]() {
+	connect(pVideoBuffer, &VideoClipBuffer::frameAdded, this, [this]() {
 		if (pVideoBuffer) {
-			ui.labelFramesQueued->setText(QString("%1").arg(pVideoBuffer->frames()));
+			ui.labelFramesQueued->setText(QString("%1").arg(pVideoBuffer->size())); // TODO: This is supposed to be only current frames queued. Add method.
 		}
 		});
 }

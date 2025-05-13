@@ -1,7 +1,7 @@
 #include "devicecontroller.h"
 
-DeviceController::DeviceController(QObject *parent)
-	: QObject(parent)
+DeviceController::DeviceController(RecordingSession* recordingSession, QObject *parent)
+	: QObject(parent), pRecordingSession(recordingSession)
 {}
 
 DeviceController::~DeviceController()
@@ -45,6 +45,12 @@ void DeviceController::closeDevices()
 		}
 	}
 	emit devicesClosed();
+}
+
+void DeviceController::addCamera(const QCameraDevice& cameraDevice) {
+	auto cam = new CameraDevice(cameraDevice, pRecordingSession, this);
+
+	mDevices.append(cam);
 }
 
 void DeviceController::addDevice(Device* device) {

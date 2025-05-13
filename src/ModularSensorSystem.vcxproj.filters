@@ -109,6 +109,9 @@
     <ClCompile Include="Processing\FrameProcessor\frameprocessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Controllers\RecordingSession\recordingsession.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Widgets\SensorListItem\SensorListItem.h">
@@ -172,6 +175,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Processing\FrameProcessor\frameprocessor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Controllers\RecordingSession\recordingsession.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
