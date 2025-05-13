@@ -1,7 +1,7 @@
 #include "cameradevice.h"
 
 CameraDevice::CameraDevice(QObject *parent)
-	: AbstractDevice(parent)
+	: Device(parent)
 {
     // init camera
     open();
@@ -28,7 +28,7 @@ void CameraDevice::open() {
 	}
 
     // Init buffer
-	pVideoBuffer = new VideoBuffer(2, DEFAULT_FRAME_RATE, this); // TODO: make sure the frame rate is updated whenever the format is
+	pVideoBuffer = std::make_unique<VideoClipBuffer>(2, this);
 
     // Init recorder
     mRecorder.setOutputLocation(QDir::currentPath() + "/output");
@@ -81,10 +81,15 @@ void CameraDevice::setVideoOutput(CustomSinkWidget* widget)
     emit videoOutputChanged(widget);
 
 	// Connect the video sink to the buffer
-    connect(widget->videoSink(), &QVideoSink::videoFrameChanged, [this](QVideoFrame frame) {
-        // Add the frame to the buffer
-        pVideoBuffer->addFrame(frame);
-        });
+    connect(widget->videoSink(), &QVideoSink::videoFrameChanged, onNewFrame);
+}
+
+void CameraDevice::onNewFrame(const QVideoFrame& frame) {
+	// Get the timestamp
+	ClipBufferBase::time timestamp = 0; // TODO: Get the timestamp from the frame
+    
+    // Add the frame to the buffer
+	pVideoBuffer->push(frame, timestamp);
 }
 
 void CameraDevice::setDevice(QCameraDevice device)

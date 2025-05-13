@@ -8,13 +8,13 @@
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
-#include "Devices/AbstractDevice/abstractdevice.h"
+#include "Devices/Device/device.h"
 #include "Widgets/CustomSinkWidget/customsinkwidget.h"
-#include "VideoBuffer/videobuffer.h"
+#include "Clipping/Buffers/VideoClipBuffer/videoclipbuffer.h"
 
 #define DEFAULT_FRAME_RATE 30
 
-class CameraDevice : public AbstractDevice
+class CameraDevice : public Device
 {
 	Q_OBJECT
 
@@ -24,7 +24,7 @@ private:
     QMediaRecorder mRecorder;
     QAudioInput mAudioInput;
     CustomSinkWidget* pSinkWidget = nullptr;
-	VideoBuffer* pVideoBuffer = nullptr;
+	std::unique_ptr<VideoClipBuffer> pVideoBuffer = nullptr;
 
 public:
 	CameraDevice(QObject *parent = nullptr);
@@ -37,7 +37,7 @@ public:
 	QCamera* camera() { return &mCamera; }
 	QMediaRecorder* recorder() { return &mRecorder; }
     QAudioInput* audioInput() { return &mAudioInput; }
-	VideoBuffer* videoBuffer() { return pVideoBuffer; }
+	VideoClipBuffer* videoBuffer() { return pVideoBuffer.get(); }
 
 public slots:
     void open() override;
@@ -48,6 +48,9 @@ public slots:
     void setVideoOutput(CustomSinkWidget* widget);
     void setDevice(QCameraDevice device);
 	void setMediaDirectory(QUrl directory);
+
+private slots:
+	void onNewFrame(const QVideoFrame& frame);
 
 signals:
 	void videoOutputChanged(CustomSinkWidget* widget);
