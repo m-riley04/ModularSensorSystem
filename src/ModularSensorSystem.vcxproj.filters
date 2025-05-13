@@ -67,7 +67,7 @@
     <ClCompile Include="Widgets\CustomSinkWidget\customsinkwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Processing\yolo.cpp">
+    <ClCompile Include="Processing\YOLO\yolo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Helpers\unitconversionhelper.cpp">
@@ -82,10 +82,10 @@
     <ClCompile Include="Widgets\ClippingControls\clippingcontrolswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Devices\AbstractDevice\abstractdevice.cpp">
+    <ClCompile Include="Devices\Device\device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Devices\CameraDevice\VideoBuffer\videobuffer.cpp">
+    <ClCompile Include="Clipping\Buffers\VideoClipBuffer\videoclipbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Devices\CameraDevice\cameradevice.cpp">
@@ -98,6 +98,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Controllers\DeviceController\devicecontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Devices\Device\DeviceMetadata\devicemetadata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Clipping\Buffers\ClipBufferBase\clipbufferbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Processing\FrameProcessor\frameprocessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -126,7 +135,7 @@
     <QtMoc Include="Widgets\CustomSinkWidget\customsinkwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Processing\yolo.h">
+    <QtMoc Include="Processing\YOLO\yolo.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Controllers\MainController\maincontroller.h">
@@ -138,13 +147,13 @@
     <QtMoc Include="Widgets\ClippingControls\clippingcontrolswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Devices\AbstractDevice\abstractdevice.h">
+    <QtMoc Include="Devices\Device\device.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Devices\CameraDevice\cameradevice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Devices\CameraDevice\VideoBuffer\videobuffer.h">
+    <QtMoc Include="Clipping\Buffers\VideoClipBuffer\videoclipbuffer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Widgets\PreviewContainerWidget\previewcontainerwidget.h">
@@ -154,6 +163,15 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Controllers\DeviceController\devicecontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Devices\Device\DeviceMetadata\devicemetadata.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Clipping\Buffers\ClipBufferBase\clipbufferbase.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Processing\FrameProcessor\frameprocessor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

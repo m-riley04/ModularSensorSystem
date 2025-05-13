@@ -111,9 +111,12 @@
   <ItemGroup>
     <ClCompile Include="Controllers\ClipController\clipcontroller.cpp" />
     <ClCompile Include="Controllers\DeviceController\devicecontroller.cpp" />
-    <ClCompile Include="Devices\AbstractDevice\abstractdevice.cpp" />
-    <ClCompile Include="Processing\yolo.cpp" />
-    <ClCompile Include="Devices\CameraDevice\VideoBuffer\videobuffer.cpp" />
+    <ClCompile Include="Devices\Device\device.cpp" />
+    <ClCompile Include="Clipping\Buffers\ClipBufferBase\clipbufferbase.cpp" />
+    <ClCompile Include="Devices\Device\DeviceMetadata\devicemetadata.cpp" />
+    <ClCompile Include="Processing\FrameProcessor\frameprocessor.cpp" />
+    <ClCompile Include="Processing\YOLO\yolo.cpp" />
+    <ClCompile Include="Clipping\Buffers\VideoClipBuffer\videoclipbuffer.cpp" />
     <ClCompile Include="Helpers\unitconversionhelper.cpp" />
     <ClCompile Include="Widgets\CameraControls\cameracontrols.cpp" />
     <ClCompile Include="Controllers\MainController\maincontroller.cpp" />
@@ -169,16 +172,19 @@
     <QtMoc Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h" />
     <QtMoc Include="Widgets\CameraControls\cameracontrols.h" />
-    <QtMoc Include="Processing\yolo.h" />
+    <QtMoc Include="Processing\YOLO\yolo.h" />
     <QtMoc Include="Controllers\ClipController\clipcontroller.h" />
-    <QtMoc Include="Devices\AbstractDevice\abstractdevice.h" />
+    <QtMoc Include="Devices\Device\device.h" />
     <QtMoc Include="Controllers\DeviceController\devicecontroller.h" />
+    <QtMoc Include="Devices\Device\DeviceMetadata\devicemetadata.h" />
+    <QtMoc Include="Clipping\Buffers\ClipBufferBase\clipbufferbase.h" />
     <ClInclude Include="Helpers\unitconversionhelper.h" />
     <QtMoc Include="Controllers\MainController\maincontroller.h" />
-    <QtMoc Include="Devices\CameraDevice\VideoBuffer\videobuffer.h" />
+    <QtMoc Include="Clipping\Buffers\VideoClipBuffer\videoclipbuffer.h" />
     <QtMoc Include="Widgets\ClippingControls\clippingcontrolswidget.h" />
     <QtMoc Include="Widgets\PreviewContainerWidget\previewcontainerwidget.h" />
     <QtMoc Include="Widgets\DeviceListWidget\devicelistwidget.h" />
+    <QtMoc Include="Processing\FrameProcessor\frameprocessor.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <ItemGroup>
