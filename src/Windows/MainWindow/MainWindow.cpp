@@ -27,6 +27,9 @@ void MainWindow::initWidgets()
 	// Set default page to home
 	ui.stackedWidget->setCurrentIndex(0);
 
+	// Init device list widget
+	ui.deviceListWidget->setDeviceController(pController->deviceController());
+
 	// Init sensor controller widget
 	//ui.sensorControllerWidget->setSensorController(pController->sensorController());
 
@@ -46,6 +49,20 @@ void MainWindow::initSignals() {
     connect(ui.buttonPlayback, &QPushButton::clicked, [this]() {
         ui.stackedWidget->setCurrentIndex(1);
         });
+
+	connect(pController->deviceController(), &DeviceController::deviceAdded, [this](Device* device) {
+		// Check if the device is a camera
+		if (device->deviceType() == Device::Type::CAMERA) {
+			// Add the camera to the preview widget
+			ui.devicePreviewWidget->addVideoWidget(static_cast<CameraDevice*>(device));
+
+			// Set the camera controls
+			ui.cameraControls->setCamera(static_cast<CameraDevice*>(device));
+
+			// Set the clipping controls
+			ui.clippingControls->setVideoBuffer(static_cast<CameraDevice*>(device)->videoBuffer());
+		}
+		});
 
     // Sensor view widget
 	//connect(ui.sensorControllerWidget, &SensorControllerWidget::controlsChanged, ui.frameControls, &QFrame::setVisible);

@@ -90,13 +90,13 @@
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QGroupBox" name="groupBox_4">
+             <widget class="QGroupBox" name="groupBox_2">
               <property name="title">
-               <string>Camera-Specific Controls</string>
+               <string>Presets</string>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_2">
-               <item>
-                <widget class="CameraControls" name="cameraControls" native="true"/>
+              <layout class="QGridLayout" name="gridLayout_4">
+               <item row="0" column="0">
+                <widget class="PresetsWidget" name="presetsWidget" native="true"/>
                </item>
               </layout>
              </widget>
@@ -121,6 +121,18 @@
               <layout class="QVBoxLayout" name="verticalLayout_3">
                <item>
                 <widget class="ClippingControlsWidget" name="clippingControls" native="true"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_4">
+              <property name="title">
+               <string>Camera-Specific Controls</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <widget class="CameraControls" name="cameraControls" native="true"/>
                </item>
               </layout>
              </widget>
@@ -264,6 +276,12 @@
    <class>PreviewContainerWidget</class>
    <extends>QWidget</extends>
    <header>Widgets/PreviewContainerWidget/previewcontainerwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PresetsWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets/PresetsWidget/presetswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

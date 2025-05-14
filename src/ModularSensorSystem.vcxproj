@@ -123,6 +123,7 @@
     <ClCompile Include="Controllers\MainController\maincontroller.cpp" />
     <ClCompile Include="Widgets\ClippingControls\clippingcontrolswidget.cpp" />
     <ClCompile Include="Widgets\DeviceListWidget\devicelistwidget.cpp" />
+    <ClCompile Include="Widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="Widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
     <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp" />
@@ -136,6 +137,7 @@
     <QtUic Include="Widgets\CameraControls\cameracontrols.ui" />
     <QtUic Include="Widgets\ClippingControls\clippingcontrolswidget.ui" />
     <QtUic Include="Widgets\DeviceListWidget\devicelistwidget.ui" />
+    <QtUic Include="Widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="Widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
     <QtUic Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
     <QtUic Include="Widgets\CustomSinkWidget\customsinkwidget.ui" />
@@ -187,6 +189,7 @@
     <QtMoc Include="Widgets\PreviewContainerWidget\previewcontainerwidget.h" />
     <QtMoc Include="Widgets\DeviceListWidget\devicelistwidget.h" />
     <QtMoc Include="Processing\FrameProcessor\frameprocessor.h" />
+    <QtMoc Include="Widgets\PresetsWidget\presetswidget.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <ItemGroup>

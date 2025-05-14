@@ -112,6 +112,9 @@
     <ClCompile Include="Controllers\RecordingSession\recordingsession.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Widgets\PresetsWidget\presetswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Widgets\SensorListItem\SensorListItem.h">
@@ -180,6 +183,9 @@
     <QtMoc Include="Controllers\RecordingSession\recordingsession.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Widgets\PresetsWidget\presetswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -213,6 +219,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\DeviceListWidget\devicelistwidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Widgets\PresetsWidget\presetswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
