@@ -26,6 +26,12 @@ void AddCameraDialog::populateDropdown()
 			mDevices.append(device);
 		//}
 	}
+
+	// Check if there are any devices
+	if (mDevices.isEmpty()) return;
+
+	// Set default selected device
+	mSelectedDevice = mDevices[0];
 }
 
 void AddCameraDialog::findDeviceFromIndex(int index) {

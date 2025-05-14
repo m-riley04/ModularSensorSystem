@@ -38,7 +38,7 @@ void DeviceListWidget::initDeviceControllerSignals()
 		if (device == nullptr) return;
 
 		// Add the device to the list
-		QString listItemName = device->id() + " (" + Device::typeToString(device->deviceType()) + ")";
+		QString listItemName = device->name() + " (" + Device::typeToString(device->deviceType()) + ")";
 		ui.listDevices->addItem(listItemName);
 		});
 }
@@ -60,7 +60,5 @@ void DeviceListWidget::openAddDeviceDialog()
 
 	connect(addCameraDialog, &AddCameraDialog::deviceSelected, pDeviceController, &DeviceController::addCamera);
 
-	addCameraDialog->setAttribute(Qt::WA_DeleteOnClose);
-	addCameraDialog->setWindowModality(Qt::WindowModal);
 	addCameraDialog->show();
 }

@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include "Controllers/RecordingSession/recordingsession.h"
+#include <quuid.h>
 
 class RecordingSession;
 
@@ -67,11 +68,12 @@ public:
 	}
 
 protected:
-	QString mId;
+	QUuid mId;
+	QString mName = "New Device";
 	Device::Type mDeviceType = Device::Type::OTHER;
 	Device::State mState = Device::State::CLOSED;
 	qint64 mStartTime = 0;
-	Device::ErrorState mErrorState;
+	Device::ErrorState mErrorState = ErrorState::NO_ERROR;
 
 	RecordingSession* pRecordingSession;
 
@@ -85,7 +87,8 @@ public:
 	virtual void close() = 0;
 	virtual void restart() = 0;
 
-	QString id() const { return mId; }
+	QUuid id() const { return mId; }
+	QString name() const { return mName; }
 	Device::Type deviceType() const { return mDeviceType; }
 	Device::State state() const { return mState; }
 

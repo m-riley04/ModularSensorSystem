@@ -3,17 +3,17 @@
 CameraDevice::CameraDevice(RecordingSession* recordingSession, QObject* parent)
 	: Device(recordingSession, parent)
 {
-	this->mId = "CameraDevice"; // TODO: Set a unique ID
+	this->mName = "CameraDevice";
     this->mDeviceType = Device::Type::CAMERA;
-    open();
+    open(); // TODO: Change this method to more represent it's purpose
 }
 
 CameraDevice::CameraDevice(QCameraDevice qCameraDevice, RecordingSession* recordingSession, QObject* parent)
 	: Device(recordingSession, parent), mCamera(qCameraDevice)
 {
-    this->mId = qCameraDevice.description(); // TODO: Unique id?
+    this->mName = qCameraDevice.description();
     this->mDeviceType = Device::Type::CAMERA;
-    open();
+    open(); // TODO: Change this method to more represent it's purpose
 }
 
 CameraDevice::~CameraDevice()
@@ -25,9 +25,9 @@ CameraDevice::~CameraDevice()
 }
 
 void CameraDevice::open() {
-    // Default the video device
-	if (checkCameraAvailability()) {
-		setDevice(QCameraDevice());
+	if (!mCamera.isAvailable()) {
+		QMessageBox::warning(nullptr, "Camera Error", "No camera available.");
+		return;
 	}
 
     // Set default output location
@@ -108,6 +108,9 @@ void CameraDevice::onNewFrame(const QVideoFrame& frame) {
 
 void CameraDevice::setDevice(QCameraDevice device)
 {
+    // Set name
+    this->mName = device.description();
+
     mCamera.setCameraDevice(device);
     emit cameraDeviceChanged(device);
 }
