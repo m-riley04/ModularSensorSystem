@@ -3,12 +3,16 @@
 CameraDevice::CameraDevice(RecordingSession* recordingSession, QObject* parent)
 	: Device(recordingSession, parent)
 {
+	this->mId = "CameraDevice"; // TODO: Set a unique ID
+    this->mDeviceType = Device::Type::CAMERA;
     open();
 }
 
 CameraDevice::CameraDevice(QCameraDevice qCameraDevice, RecordingSession* recordingSession, QObject* parent)
 	: Device(recordingSession, parent), mCamera(qCameraDevice)
 {
+    this->mId = qCameraDevice.description(); // TODO: Unique id?
+    this->mDeviceType = Device::Type::CAMERA;
     open();
 }
 
