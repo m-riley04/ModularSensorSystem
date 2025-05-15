@@ -10,11 +10,31 @@ class DeviceController : public QObject
 	Q_OBJECT
 
 public:
+	enum State {
+		OPENED,
+		CLOSED,
+		STARTED,
+		STOPPED,
+		ERROR
+	};
+
+public:
 	DeviceController(RecordingSession* recordingSession, QObject *parent);
 	~DeviceController();
 
+	DeviceController::State state() const { return mState; }
+
+	bool isEmpty() const { return mDevices.isEmpty(); }
+	bool isOpen() const { return mState == OPENED; }
+	bool isStarted() const { return mState == STARTED; }
+	bool isStopped() const { return mState == STOPPED; }
+	bool isClosed() const { return mState == CLOSED; }
+	bool isError() const { return mState == ERROR; }
+
 private:
 	QList<Device*> mDevices;
+	DeviceController::State mState = CLOSED;
+
 	RecordingSession* pRecordingSession;
 
 public slots:
@@ -29,11 +49,17 @@ public slots:
 	void stopDevices();
 	void closeDevices();
 
+	void restartDevices();
+
 signals:
 	void devicesOpened();
 	void devicesStarted();
 	void devicesStopped();
 	void devicesClosed();
+
+	void devicesRestarted();
+
+	void stateChanged(DeviceController::State state);
 
 	void deviceAdded(Device* device);
 	void deviceRemoved(Device* device);

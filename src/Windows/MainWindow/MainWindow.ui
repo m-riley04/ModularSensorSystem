@@ -1,4 +1,5 @@
-<UI version="4.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>MainWindowClass</class>
  <widget class="QMainWindow" name="MainWindowClass">
   <property name="geometry">
@@ -128,11 +129,11 @@
             <item>
              <widget class="QGroupBox" name="groupBox_4">
               <property name="title">
-               <string>Camera-Specific Controls</string>
+               <string>Controls</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_2">
                <item>
-                <widget class="CameraControls" name="cameraControls" native="true"/>
+                <widget class="SessionControlsWidget" name="sessionControls" native="true"/>
                </item>
               </layout>
              </widget>
@@ -255,12 +256,6 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>CameraControls</class>
-   <extends>QWidget</extends>
-   <header>Widgets/CameraControls/cameracontrols.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>ClippingControlsWidget</class>
    <extends>QWidget</extends>
    <header>Widgets/ClippingControls/clippingcontrolswidget.h</header>
@@ -284,9 +279,15 @@
    <header>Widgets/PresetsWidget/presetswidget.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>SessionControlsWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets/SessionControlsWidget/sessioncontrolswidget.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <resources>
   <include location="../../MainWindow.qrc"/>
  </resources>
  <connections/>
-</UI>
+</ui>

@@ -52,9 +52,6 @@
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\CameraControls\cameracontrols.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -115,6 +112,9 @@
     <ClCompile Include="Widgets\PresetsWidget\presetswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Widgets\SessionControlsWidget\sessioncontrolswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Widgets\SensorListItem\SensorListItem.h">
@@ -124,9 +124,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Widgets\CameraControls\cameracontrols.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h">
@@ -186,6 +183,9 @@
     <QtMoc Include="Widgets\PresetsWidget\presetswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Widgets\SessionControlsWidget\sessioncontrolswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -195,9 +195,6 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="Widgets\CameraControls\cameracontrols.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui">
@@ -222,6 +219,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\PresetsWidget\presetswidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Widgets\SessionControlsWidget\sessioncontrolswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

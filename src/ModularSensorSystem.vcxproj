@@ -119,7 +119,6 @@
     <ClCompile Include="Processing\YOLO\yolo.cpp" />
     <ClCompile Include="Clipping\Buffers\VideoClipBuffer\videoclipbuffer.cpp" />
     <ClCompile Include="Helpers\unitconversionhelper.cpp" />
-    <ClCompile Include="Widgets\CameraControls\cameracontrols.cpp" />
     <ClCompile Include="Controllers\MainController\maincontroller.cpp" />
     <ClCompile Include="Widgets\ClippingControls\clippingcontrolswidget.cpp" />
     <ClCompile Include="Widgets\DeviceListWidget\devicelistwidget.cpp" />
@@ -127,6 +126,7 @@
     <ClCompile Include="Widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
     <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
     <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp" />
+    <ClCompile Include="Widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
     <ClCompile Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
     <ClCompile Include="Widgets\CustomSinkWidget\customsinkwidget.cpp" />
     <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp" />
@@ -134,11 +134,11 @@
     <ClCompile Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp" />
     <ClCompile Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
-    <QtUic Include="Widgets\CameraControls\cameracontrols.ui" />
     <QtUic Include="Widgets\ClippingControls\clippingcontrolswidget.ui" />
     <QtUic Include="Widgets\DeviceListWidget\devicelistwidget.ui" />
     <QtUic Include="Widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="Widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
+    <QtUic Include="Widgets\SessionControlsWidget\sessioncontrolswidget.ui" />
     <QtUic Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
     <QtUic Include="Widgets\CustomSinkWidget\customsinkwidget.ui" />
     <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui" />
@@ -170,11 +170,11 @@
     <QtMoc Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Widgets\SessionControlsWidget\sessioncontrolswidget.h" />
     <QtMoc Include="Widgets\CustomSinkWidget\customsinkwidget.h" />
     <QtMoc Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.h" />
     <QtMoc Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h" />
-    <QtMoc Include="Widgets\CameraControls\cameracontrols.h" />
     <QtMoc Include="Processing\YOLO\yolo.h" />
     <QtMoc Include="Controllers\ClipController\clipcontroller.h" />
     <QtMoc Include="Devices\Device\device.h" />

@@ -14,7 +14,9 @@ void DeviceController::openDevices()
 			device->open();
 		}
 	}
-	emit devicesOpened();
+
+	mState = OPENED;
+	emit stateChanged(OPENED);
 }
 
 void DeviceController::startDevices()
@@ -24,7 +26,9 @@ void DeviceController::startDevices()
 			device->start();
 		}
 	}
-	emit devicesStarted();
+
+	mState = STARTED;
+	emit stateChanged(STARTED);
 }
 
 void DeviceController::stopDevices()
@@ -34,7 +38,9 @@ void DeviceController::stopDevices()
 			device->stop();
 		}
 	}
-	emit devicesStopped();
+
+	mState = STOPPED;
+	emit stateChanged(STOPPED);
 }
 
 void DeviceController::closeDevices()
@@ -44,7 +50,20 @@ void DeviceController::closeDevices()
 			device->close();
 		}
 	}
-	emit devicesClosed();
+
+	mState = CLOSED;
+	emit stateChanged(CLOSED);
+}
+
+void DeviceController::restartDevices()
+{
+	for (Device* device : mDevices) {
+		if (device) {
+			device->restart();
+		}
+	}
+
+	emit devicesRestarted();
 }
 
 void DeviceController::addCamera(const QCameraDevice& cameraDevice) {
