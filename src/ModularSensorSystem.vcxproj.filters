@@ -115,6 +115,12 @@
     <ClCompile Include="Widgets\SessionControlsWidget\sessioncontrolswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Pages\MainPage\mainpage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Windows\SessionPropertiesDialog\sessionpropertiesdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Widgets\SensorListItem\SensorListItem.h">
@@ -186,6 +192,12 @@
     <QtMoc Include="Widgets\SessionControlsWidget\sessioncontrolswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Pages\MainPage\mainpage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Windows\SessionPropertiesDialog\sessionpropertiesdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
@@ -222,6 +234,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\SessionControlsWidget\sessioncontrolswidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Pages\MainPage\mainpage.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Windows\SessionPropertiesDialog\sessionpropertiesdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

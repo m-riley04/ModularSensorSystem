@@ -115,6 +115,7 @@
     <ClCompile Include="Devices\Device\device.cpp" />
     <ClCompile Include="Clipping\Buffers\ClipBufferBase\clipbufferbase.cpp" />
     <ClCompile Include="Devices\Device\DeviceMetadata\devicemetadata.cpp" />
+    <ClCompile Include="Pages\MainPage\mainpage.cpp" />
     <ClCompile Include="Processing\FrameProcessor\frameprocessor.cpp" />
     <ClCompile Include="Processing\YOLO\yolo.cpp" />
     <ClCompile Include="Clipping\Buffers\VideoClipBuffer\videoclipbuffer.cpp" />
@@ -133,7 +134,9 @@
     <ClCompile Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp" />
     <ClCompile Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp" />
     <ClCompile Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp" />
+    <ClCompile Include="Windows\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="Pages\MainPage\mainpage.ui" />
     <QtUic Include="Widgets\ClippingControls\clippingcontrolswidget.ui" />
     <QtUic Include="Widgets\DeviceListWidget\devicelistwidget.ui" />
     <QtUic Include="Widgets\PresetsWidget\presetswidget.ui" />
@@ -156,6 +159,7 @@
     <QtUic Include="Widgets\SensorListItem\SensorListItem.ui" />
     <QtUic Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui" />
     <QtUic Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui" />
+    <QtUic Include="Windows\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Devices\CameraDevice\cameradevice.h" />
@@ -170,6 +174,7 @@
     <QtMoc Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="Windows\SessionPropertiesDialog\sessionpropertiesdialog.h" />
     <QtMoc Include="Widgets\SessionControlsWidget\sessioncontrolswidget.h" />
     <QtMoc Include="Widgets\CustomSinkWidget\customsinkwidget.h" />
     <QtMoc Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.h" />
@@ -190,6 +195,7 @@
     <QtMoc Include="Widgets\DeviceListWidget\devicelistwidget.h" />
     <QtMoc Include="Processing\FrameProcessor\frameprocessor.h" />
     <QtMoc Include="Widgets\PresetsWidget\presetswidget.h" />
+    <QtMoc Include="Pages\MainPage\mainpage.h" />
     <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <ItemGroup>
