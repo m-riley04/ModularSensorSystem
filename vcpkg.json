@@ -4,6 +4,9 @@
     "onnx",
     "opencv",
     "onnxruntime-gpu",
-    "ffmpeg"
+    {
+      "name": "ffmpeg",
+      "version>=": "7.1"
+    }
   ]
 }

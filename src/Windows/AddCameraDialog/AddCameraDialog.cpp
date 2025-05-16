@@ -9,6 +9,12 @@ AddCameraDialog::AddCameraDialog(QWidget *parent, QList<QCameraDevice> currentCa
 
 	connect(ui.buttonBox, &QDialogButtonBox::clicked, this, &AddCameraDialog::transmit);
 	connect(ui.dropdownDevices, &QComboBox::currentIndexChanged, this, &AddCameraDialog::findDeviceFromIndex);
+
+	// Refresh dropdown
+	connect(ui.buttonRefresh, &QPushButton::clicked, this, [this]() {
+		ui.dropdownDevices->clear();
+		populateDropdown();
+		});
 }
 
 AddCameraDialog::~AddCameraDialog()
@@ -17,6 +23,8 @@ AddCameraDialog::~AddCameraDialog()
 void AddCameraDialog::populateDropdown()
 {
 	mDevices.clear();
+
+	QMediaDevices::videoInputs();
 
 	// Get current devices
 	for (QCameraDevice device : QMediaDevices::videoInputs()) {
