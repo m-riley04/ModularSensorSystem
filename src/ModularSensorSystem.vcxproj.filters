@@ -76,9 +76,6 @@
     <ClCompile Include="Controllers\ClipController\clipcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\ClippingControls\clippingcontrolswidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Devices\Device\device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -153,9 +150,6 @@
     <QtMoc Include="Controllers\ClipController\clipcontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\ClippingControls\clippingcontrolswidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Devices\Device\device.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -219,9 +213,6 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\CustomSinkWidget\customsinkwidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="Widgets\ClippingControls\clippingcontrolswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Widgets\PreviewContainerWidget\previewcontainerwidget.ui">

@@ -24,6 +24,7 @@ private:
 
 public slots:
 	void openAddDeviceDialog();
+	void openRemoveDeviceDialog();
 	void setDeviceController(DeviceController* deviceController);
 
 signals:

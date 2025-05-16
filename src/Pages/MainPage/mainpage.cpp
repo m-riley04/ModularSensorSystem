@@ -19,18 +19,11 @@ void MainPage::initWidgets()
 
 	// Init session controls widget
 	ui.sessionControls->setController(pController);
+
+	// Init preview container widget
+	ui.devicePreviewWidget->setController(pController);
 }
 
 void MainPage::initSignals() {
-	DeviceController* pDeviceController = pController->deviceController();
-
-	// Device added ui updates
-	connect(pDeviceController, &DeviceController::deviceAdded, [this](Device* device) {
-		// Check if the device is a camera
-		if (device->deviceType() == Device::Type::CAMERA) {
-			// Add the camera to the preview widget
-			ui.devicePreviewWidget->addVideoWidget(static_cast<CameraDevice*>(device));
-		}
-		});
-
+	// TODO: think of what to do here
 }

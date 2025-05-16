@@ -121,7 +121,6 @@
     <ClCompile Include="Clipping\Buffers\VideoClipBuffer\videoclipbuffer.cpp" />
     <ClCompile Include="Helpers\unitconversionhelper.cpp" />
     <ClCompile Include="Controllers\MainController\maincontroller.cpp" />
-    <ClCompile Include="Widgets\ClippingControls\clippingcontrolswidget.cpp" />
     <ClCompile Include="Widgets\DeviceListWidget\devicelistwidget.cpp" />
     <ClCompile Include="Widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="Widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
@@ -137,7 +136,6 @@
     <ClCompile Include="Windows\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="Pages\MainPage\mainpage.ui" />
-    <QtUic Include="Widgets\ClippingControls\clippingcontrolswidget.ui" />
     <QtUic Include="Widgets\DeviceListWidget\devicelistwidget.ui" />
     <QtUic Include="Widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="Widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
@@ -190,7 +188,6 @@
     <ClInclude Include="Helpers\unitconversionhelper.h" />
     <QtMoc Include="Controllers\MainController\maincontroller.h" />
     <QtMoc Include="Clipping\Buffers\VideoClipBuffer\videoclipbuffer.h" />
-    <QtMoc Include="Widgets\ClippingControls\clippingcontrolswidget.h" />
     <QtMoc Include="Widgets\PreviewContainerWidget\previewcontainerwidget.h" />
     <QtMoc Include="Widgets\DeviceListWidget\devicelistwidget.h" />
     <QtMoc Include="Processing\FrameProcessor\frameprocessor.h" />

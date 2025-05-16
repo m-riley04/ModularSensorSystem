@@ -84,10 +84,13 @@ void DeviceController::addDevice(Device* device) {
 
 void DeviceController::removeDevice(Device* device)
 {
-	if (device) {
-		mDevices.removeAll(device);
-		delete device; // CONSIDER: determine where to clean up
-	}
+	if (!device) return;
 
-	emit deviceRemoved(device);
+	// Get device id before deleting
+	QUuid deviceId = device->id();
+
+	// Remove device from the list
+	mDevices.removeAll(device);
+
+	emit deviceRemoved(device); // TODO: Emit the device's ID instead of the device itself
 }

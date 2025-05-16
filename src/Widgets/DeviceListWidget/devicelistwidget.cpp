@@ -21,7 +21,7 @@ void DeviceListWidget::initSignals()
 {
 	// UI button signals
 	connect(ui.buttonAdd, &QPushButton::clicked, this, &DeviceListWidget::openAddDeviceDialog);
-	//connect(ui.buttonRemove, &QPushButton::clicked, this, &DeviceListWidget::openRemoveDeviceDialog);
+	connect(ui.buttonRemove, &QPushButton::clicked, this, &DeviceListWidget::openRemoveDeviceDialog);
 
 	initDeviceControllerSignals();
 }
@@ -39,8 +39,29 @@ void DeviceListWidget::initDeviceControllerSignals()
 
 		// Add the device to the list
 		QString listItemName = device->name() + " (" + Device::typeToString(device->deviceType()) + ")";
-		ui.listDevices->addItem(listItemName);
+		QVariant devicePtr = QVariant::fromValue(device);
+		QListWidgetItem* item = new QListWidgetItem(listItemName, ui.listDevices);
+		item->setData(Qt::UserRole, devicePtr);
+		ui.listDevices->addItem(item);
 		});
+}
+
+void DeviceListWidget::openRemoveDeviceDialog()
+{
+	auto response = QMessageBox::question(this, "Remove Device", "Are you sure you want to remove the selected device?", QMessageBox::Yes | QMessageBox::No);
+
+	if (response == QMessageBox::Yes) {
+		auto selectedItem = ui.listDevices->currentItem();
+		if (selectedItem) {
+			Device* device = selectedItem->data(Qt::UserRole).value<Device*>();
+
+			// Remove device from the controller
+			pDeviceController->removeDevice(device);
+
+			// Cleanup memory of list item (as specified by docs)
+			delete selectedItem;
+		}
+	}
 }
 
 void DeviceListWidget::setDeviceController(DeviceController* deviceController)

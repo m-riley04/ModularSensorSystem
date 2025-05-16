@@ -5,6 +5,7 @@
 #include "Widgets/CustomSinkWidget/customsinkwidget.h"
 #include <QList>
 #include <Devices/CameraDevice/cameradevice.h>
+#include <Controllers/MainController/maincontroller.h>
 
 class PreviewContainerWidget : public QWidget
 {
@@ -14,14 +15,27 @@ public:
 	PreviewContainerWidget(QWidget *parent = nullptr);
 	~PreviewContainerWidget();
 
+	void setController(MainController* controller) { 
+		if (pController == controller) return;
+		pController = controller;
+		initSignals();
+	}
+
 private:
 	Ui::PreviewContainerWidgetClass ui;
 	QList<CustomSinkWidget*> mVideoWidgets;
 
+	MainController* pController = nullptr;
+
+	void initSignals();
+	CustomSinkWidget* addVideoWidget(CameraDevice* camera);
+
 public slots:
-	void addVideoWidget(CameraDevice* camera);
+	void addDeviceWidget(Device* device);
+	void removeDeviceWidget(Device* device);
 
 signals:
-	void videoWidgetAdded(CustomSinkWidget* widget);
+	void deviceWidgetAdded(CustomSinkWidget* widget);
+	void deviceWidgetRemoved(CustomSinkWidget* widget);
 
 };

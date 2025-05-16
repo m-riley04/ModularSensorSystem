@@ -5,6 +5,7 @@
 #include "ui_customsinkwidget.h"
 #include "Processing/YOLO/yolo.h"
 #include <QThread>
+#include <Devices/Device/device.h>
 
 class CustomSinkWidget : public QWidget
 {
@@ -50,6 +51,8 @@ private:
 	std::vector<Yolo::Detection> mDetections;
 	int mCaptureIntervalMs = 30;
 
+	Device* pDevice = nullptr;
+
 	void initializeYolo();
 	void activateYOLO();
 
@@ -60,8 +63,10 @@ private:
 	void paintDetections(QPainter& painter, FrameSizeCalculations& sizing, QRectF& outputRect);
 
 public:
-	CustomSinkWidget(QWidget *parent = nullptr);
+	CustomSinkWidget(Device* device, QWidget *parent = nullptr);
 	~CustomSinkWidget();
+
+	Device* device() const { return pDevice; }
 
 	Yolo* yolo() const { return pYolo; }
 	bool detectionState() const { return mIsDetectionActive; }

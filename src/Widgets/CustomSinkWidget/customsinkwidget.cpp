@@ -1,7 +1,7 @@
 #include "customsinkwidget.h"
 
-CustomSinkWidget::CustomSinkWidget(QWidget *parent)
-	: QWidget(parent), pSink(std::make_unique<QVideoSink>())
+CustomSinkWidget::CustomSinkWidget(Device* device, QWidget *parent)
+	: QWidget(parent), pSink(std::make_unique<QVideoSink>()), pDevice(device)
 {
 	ui.setupUi(this);
 
