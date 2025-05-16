@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QFrame" name="frame_3">
+     <widget class="QFrame" name="frameNav">
       <property name="frameShape">
        <enum>QFrame::Shape::StyledPanel</enum>
       </property>
@@ -55,99 +55,7 @@
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QStackedWidget" name="stackedWidget">
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="page">
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QSplitter" name="splitter">
-          <property name="orientation">
-           <enum>Qt::Orientation::Vertical</enum>
-          </property>
-          <property name="opaqueResize">
-           <bool>false</bool>
-          </property>
-          <widget class="QFrame" name="frameViews">
-           <property name="frameShape">
-            <enum>QFrame::Shape::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Shadow::Raised</enum>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_3">
-            <item row="0" column="0">
-             <widget class="PreviewContainerWidget" name="devicePreviewWidget" native="true"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QFrame" name="frameControls">
-           <property name="frameShape">
-            <enum>QFrame::Shape::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Shadow::Raised</enum>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QGroupBox" name="groupBox_2">
-              <property name="title">
-               <string>Presets</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_4">
-               <item row="0" column="0">
-                <widget class="PresetsWidget" name="presetsWidget" native="true"/>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox_3">
-              <property name="title">
-               <string>Devices</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout">
-               <item>
-                <widget class="DeviceListWidget" name="deviceListWidget" native="true"/>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox">
-              <property name="title">
-               <string>Clipping Controls</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_3">
-               <item>
-                <widget class="ClippingControlsWidget" name="clippingControls" native="true"/>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox_4">
-              <property name="title">
-               <string>Controls</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_2">
-               <item>
-                <widget class="SessionControlsWidget" name="sessionControls" native="true"/>
-               </item>
-              </layout>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="page_2">
-       <layout class="QVBoxLayout" name="verticalLayout_4"/>
-      </widget>
-     </widget>
+     <widget class="QStackedWidget" name="pagesStack"/>
     </item>
    </layout>
   </widget>
@@ -254,38 +162,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>ClippingControlsWidget</class>
-   <extends>QWidget</extends>
-   <header>Widgets/ClippingControls/clippingcontrolswidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>DeviceListWidget</class>
-   <extends>QWidget</extends>
-   <header>Widgets/DeviceListWidget/devicelistwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>PreviewContainerWidget</class>
-   <extends>QWidget</extends>
-   <header>Widgets/PreviewContainerWidget/previewcontainerwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>PresetsWidget</class>
-   <extends>QWidget</extends>
-   <header>Widgets/PresetsWidget/presetswidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>SessionControlsWidget</class>
-   <extends>QWidget</extends>
-   <header>Widgets/SessionControlsWidget/sessioncontrolswidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../../MainWindow.qrc"/>
  </resources>

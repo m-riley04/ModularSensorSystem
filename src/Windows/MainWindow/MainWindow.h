@@ -24,6 +24,7 @@ private:
     Ui::MainWindowClass ui;
     std::unique_ptr<MainController> pController;
 
+    void initPages();
     void initWidgets();
     void initSignals();
 

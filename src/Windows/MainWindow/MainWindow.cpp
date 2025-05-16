@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include <Pages/MainPage/mainpage.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
 
     // Initialize
+	initPages();
     initWidgets();
     initSignals();
 }
@@ -22,16 +24,22 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {}
 
+void MainWindow::initPages()
+{
+	if (!pController) {
+		qDebug() << "MainController is not initialized.";
+		return;
+	}
+
+	MainPage* mainPage = new MainPage(pController.get(), this);
+	ui.pagesStack->addWidget(mainPage);
+	mainPage->setLayout(ui.pagesStack->layout());
+}
+
 void MainWindow::initWidgets()
 {
 	// Set default page to home
-	ui.stackedWidget->setCurrentIndex(0);
-
-	// Init device list widget
-	ui.deviceListWidget->setDeviceController(pController->deviceController());
-
-	// Init session controls widget
-	ui.sessionControls->setController(pController.get());
+	ui.pagesStack->setCurrentIndex(0);
 }
 
 void MainWindow::initSignals() {
@@ -39,23 +47,11 @@ void MainWindow::initSignals() {
 
     // Pages
 	connect(ui.buttonHome, &QPushButton::clicked, [this]() {
-		ui.stackedWidget->setCurrentIndex(0);
+		ui.pagesStack->setCurrentIndex(0);
 		});
     connect(ui.buttonPlayback, &QPushButton::clicked, [this]() {
-        ui.stackedWidget->setCurrentIndex(1);
+        ui.pagesStack->setCurrentIndex(1);
         });
-
-	// Device added ui updates
-	connect(pDeviceController, &DeviceController::deviceAdded, [this](Device* device) {
-		// Check if the device is a camera
-		if (device->deviceType() == Device::Type::CAMERA) {
-			// Add the camera to the preview widget
-			ui.devicePreviewWidget->addVideoWidget(static_cast<CameraDevice*>(device));
-
-			// Set the clipping controls
-			ui.clippingControls->setVideoBuffer(static_cast<CameraDevice*>(device)->videoBuffer());
-		}
-		});
 
     // Menu Bar
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
