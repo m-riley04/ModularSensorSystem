@@ -43,9 +43,9 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="buttonProcessing">
+    <widget class="QPushButton" name="buttonClip">
      <property name="text">
-      <string>Start Processing</string>
+      <string>Capture Clip</string>
      </property>
     </widget>
    </item>

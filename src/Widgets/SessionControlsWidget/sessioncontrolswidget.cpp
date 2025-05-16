@@ -1,4 +1,5 @@
 #include "sessioncontrolswidget.h"
+#include <Windows/SessionPropertiesDialog/sessionpropertiesdialog.h>
 
 SessionControlsWidget::SessionControlsWidget(QWidget* parent)
 	: QWidget(parent)
@@ -40,10 +41,18 @@ void SessionControlsWidget::initSignals()
 		}
 		});
 
-	// External UI updates
-	connect(pDeviceController, &DeviceController::deviceRemoved, this, &SessionControlsWidget::updateUi);
-	connect(pDeviceController, &DeviceController::deviceAdded, this, &SessionControlsWidget::updateUi);
-	connect(pDeviceController, &DeviceController::stateChanged, this, &SessionControlsWidget::updateUi);
+	// Clip button
+	connect(ui.buttonClip, &QPushButton::clicked, [this, pDeviceController]() {
+		// TODO: Implement clip button
+		});
+
+	// Properties button
+	connect(ui.buttonProperties, &QPushButton::clicked, [this]() {
+		SessionPropertiesDialog* pSessionPropertiesDialog = new SessionPropertiesDialog(pController, this);
+		pSessionPropertiesDialog->setAttribute(Qt::WA_DeleteOnClose);
+		//pSessionPropertiesDialog->setWindowModality(Qt::WindowModal);
+		pSessionPropertiesDialog->show();
+		});
 
 	// Init restart button
 	connect(ui.buttonRestartDevices, &QPushButton::clicked, [this]() {
@@ -55,6 +64,10 @@ void SessionControlsWidget::initSignals()
 		ui.buttonRestartDevices->setEnabled(true);
 		});
 
+	// External UI updates
+	connect(pDeviceController, &DeviceController::deviceRemoved, this, &SessionControlsWidget::updateUi);
+	connect(pDeviceController, &DeviceController::deviceAdded, this, &SessionControlsWidget::updateUi);
+	connect(pDeviceController, &DeviceController::stateChanged, this, &SessionControlsWidget::updateUi);
 	
 }
 
