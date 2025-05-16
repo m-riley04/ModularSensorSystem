@@ -1,4 +1,5 @@
-<UI version="4.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>MainWindowClass</class>
  <widget class="QMainWindow" name="MainWindowClass">
   <property name="geometry">
@@ -15,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QFrame" name="frame_3">
+     <widget class="QFrame" name="frameNav">
       <property name="frameShape">
        <enum>QFrame::Shape::StyledPanel</enum>
       </property>
@@ -54,87 +55,7 @@
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QStackedWidget" name="stackedWidget">
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="page">
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QSplitter" name="splitter">
-          <property name="orientation">
-           <enum>Qt::Orientation::Vertical</enum>
-          </property>
-          <property name="opaqueResize">
-           <bool>false</bool>
-          </property>
-          <widget class="QFrame" name="frameViews">
-           <property name="frameShape">
-            <enum>QFrame::Shape::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Shadow::Raised</enum>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_3">
-            <item row="0" column="0">
-             <widget class="SensorControllerWidget" name="sensorControllerWidget" native="true"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QFrame" name="frameControls">
-           <property name="frameShape">
-            <enum>QFrame::Shape::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Shadow::Raised</enum>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QGroupBox" name="groupBox_4">
-              <property name="title">
-               <string>Camera-Specific Controls</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_2">
-               <item>
-                <widget class="CameraControls" name="cameraControls" native="true"/>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox_3">
-              <property name="title">
-               <string>Group Controls</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout">
-               <item>
-                <widget class="GroupControls" name="groupControls" native="true"/>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox">
-              <property name="title">
-               <string>Clipping Controls</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_3">
-               <item>
-                <widget class="ClippingControlsWidget" name="clippingControls" native="true"/>
-               </item>
-              </layout>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="page_2">
-       <layout class="QVBoxLayout" name="verticalLayout_4"/>
-      </widget>
-     </widget>
+     <widget class="QStackedWidget" name="pagesStack"/>
     </item>
    </layout>
   </widget>
@@ -241,34 +162,8 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>CameraControls</class>
-   <extends>QWidget</extends>
-   <header>Widgets/CameraControls/cameracontrols.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>GroupControls</class>
-   <extends>QWidget</extends>
-   <header>Widgets/GroupControls/groupcontrols.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ClippingControlsWidget</class>
-   <extends>QWidget</extends>
-   <header>Widgets/ClippingControls/clippingcontrolswidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>SensorControllerWidget</class>
-   <extends>QWidget</extends>
-   <header>Widgets/SensorControllerWidget/sensorcontrollerwidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../../MainWindow.qrc"/>
  </resources>
  <connections/>
-</UI>
+</ui>

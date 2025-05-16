@@ -3,7 +3,8 @@
 MainController::MainController(QObject *parent)
 	: QObject(parent)
 {
-	pSensorController = std::make_unique<SensorController>(this);
+	pRecordingSession = std::make_unique<RecordingSession>(this);
+	pDeviceController = std::make_unique<DeviceController>(pRecordingSession.get(), this);
 }
 
 MainController::~MainController()

@@ -9,9 +9,7 @@
 #include "Windows/QtCameraControlsWindow/qtcameracontrolsdialog.h"
 #include "Widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "Controllers/MainController/maincontroller.h"
-#include "Widgets/ClippingControls/clippingcontrolswidget.h"
 #include <Controllers/ClipController/clipcontroller.h>
-#include <Widgets/SensorControllerWidget/sensorcontrollerwidget.h>
 
 class MainWindow : public QMainWindow
 {
@@ -25,6 +23,7 @@ private:
     Ui::MainWindowClass ui;
     std::unique_ptr<MainController> pController;
 
+    void initPages();
     void initWidgets();
     void initSignals();
 

@@ -1,16 +1,16 @@
 #pragma once
 
 #include <QObject>
-#include "Sensors/Camera/VideoBuffer/videobuffer.h"
+#include "Clipping/Buffers/VideoClipBuffer/videoclipbuffer.h"
 #include <QDebug>
 #include <QVideoFrame>
 
 extern "C" {
-#include <libavformat/avformat.h>
-#include <libavcodec/avcodec.h>
-#include <libswscale/swscale.h>
-#include <libavutil/imgutils.h>
-#include <libavutil/opt.h>
+	#include <libavformat/avformat.h>
+	#include <libavcodec/avcodec.h>
+	#include <libswscale/swscale.h>
+	#include <libavutil/imgutils.h>
+	#include <libavutil/opt.h>
 }
 
 class ClipController : public QObject
@@ -18,16 +18,22 @@ class ClipController : public QObject
 	Q_OBJECT
 
 public:
-	ClipController(VideoBuffer* buffer, int width, int height, double fps, int bitrate, QObject *parent = nullptr);
+	enum State {
+		IDLE,
+		CAPTURING
+	};
+
+public:
+	ClipController(QObject *parent = nullptr);
 	~ClipController();
 
-	VideoBuffer* videoBuffer() const { return pBuffer; }
-
-public slots:
 	void saveClip(const QString& fileName);
+	void saveIndividualClip(ClipBufferBase* buffer, const QString& fileName);
+	void addClipBuffer(ClipBufferBase* buffer);
+	//void removeClipBuffer(ClipBufferBase* buffer) { mClipBuffers.append(buffer); }
 
 private:
-	VideoBuffer* pBuffer = nullptr;
+	QList<ClipBufferBase*> mClipBuffers;
 
 	AVPixelFormat mPixelFormat = AV_PIX_FMT_YUV420P;
 	AVCodecID mEncoderCodec = AV_CODEC_ID_MPEG4;
@@ -38,4 +44,10 @@ private:
 
 	AVFrame* allocateFrame();
 	AVFrame* convertQFrameToAVFrame(const QVideoFrame& image, int width, int height);
+
+signals:
+	void clipBufferAdded(ClipBufferBase* buffer);
+	void clipBufferRemoved(ClipBufferBase* buffer);
+	void buffersCleared();
+	void clipSaved(const QString& fileName);
 };

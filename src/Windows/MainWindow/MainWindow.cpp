@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include <Pages/MainPage/mainpage.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
 
     // Initialize
+	initPages();
     initWidgets();
     initSignals();
 }
@@ -22,48 +24,33 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {}
 
+void MainWindow::initPages()
+{
+	if (!pController) {
+		qDebug() << "MainController is not initialized.";
+		return;
+	}
+
+	MainPage* mainPage = new MainPage(pController.get(), this);
+	ui.pagesStack->addWidget(mainPage);
+	mainPage->setLayout(ui.pagesStack->layout());
+}
+
 void MainWindow::initWidgets()
 {
 	// Set default page to home
-	ui.stackedWidget->setCurrentIndex(0);
-
-	// Init sensor controller widget
-	ui.sensorControllerWidget->setSensorController(pController->sensorController());
-
-	// Init group controls
-	ui.groupControls->setSensorController(pController->sensorController());
-	ui.groupControls->setController(pController.get());
-
-	// Set the camera controls
-	ui.cameraControls->setCamera(nullptr); // No camera selected by default
+	ui.pagesStack->setCurrentIndex(0);
 }
 
 void MainWindow::initSignals() {
+	DeviceController* pDeviceController = pController->deviceController();
+
     // Pages
 	connect(ui.buttonHome, &QPushButton::clicked, [this]() {
-		ui.stackedWidget->setCurrentIndex(0);
+		ui.pagesStack->setCurrentIndex(0);
 		});
     connect(ui.buttonPlayback, &QPushButton::clicked, [this]() {
-        ui.stackedWidget->setCurrentIndex(1);
-        });
-
-    // Sensor view widget
-	connect(ui.sensorControllerWidget, &SensorControllerWidget::controlsChanged, ui.frameControls, &QFrame::setVisible);
-	connect(ui.sensorControllerWidget, &SensorControllerWidget::cameraChanged, ui.cameraControls, &CameraControls::setCamera);
-    connect(ui.sensorControllerWidget, &SensorControllerWidget::videoWidgetAdded, [this](Camera* camera) {
-        // Set clipping controls video buffer
-        ui.clippingControls->setVideoBuffer(camera->videoBuffer());
-        });
-
-    // Playback button
-    connect(ui.buttonPlayback, &QPushButton::clicked, [this]() {
-        // Get files to open for playback
-        QStringList files = QFileDialog::getOpenFileNames(this, "Open recorded files");
-
-        if (files.length() <= 0) return; // Empty list
-
-        SimultaneousMediaPlayer* player = new SimultaneousMediaPlayer(this, files);
-        player->show();
+        ui.pagesStack->setCurrentIndex(1);
         });
 
     // Menu Bar
