@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<UI version="4.0">
  <class>MainPageClass</class>
  <widget class="QWidget" name="MainPageClass">
   <property name="geometry">
@@ -120,4 +119,4 @@
  </customwidgets>
  <resources/>
  <connections/>
-</ui>
+</UI>
