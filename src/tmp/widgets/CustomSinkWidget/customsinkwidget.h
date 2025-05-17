@@ -5,7 +5,7 @@
 #include "ui_customsinkwidget.h"
 #include "Processing/YOLO/yolo.h"
 #include <QThread>
-#include <Devices/Device/device.h>
+#include "devices/Device/device.h"
 
 class CustomSinkWidget : public QWidget
 {

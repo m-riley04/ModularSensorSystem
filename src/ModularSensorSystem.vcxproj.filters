@@ -26,10 +26,10 @@
     <QtRcc Include="MainWindow.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtUic Include="Windows\MainWindow\MainWindow.ui">
+    <QtUic Include="tmp\windows\MainWindow\MainWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtMoc Include="Windows\MainWindow\MainWindow.h">
+    <QtMoc Include="tmp\windows\MainWindow\MainWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -37,208 +37,208 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\SensorListItem\SensorListItem.cpp">
+    <ClCompile Include="tmp\widgets\SensorListItem\SensorListItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Windows\MainWindow\MainWindow.cpp">
+    <ClCompile Include="tmp\windows\MainWindow\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Windows\AddCameraDialog\AddCameraDialog.cpp">
+    <ClCompile Include="tmp\windows\AddCameraDialog\AddCameraDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp">
+    <ClCompile Include="tmp\windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp">
+    <ClCompile Include="tmp\widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp">
+    <ClCompile Include="tmp\windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp">
+    <ClCompile Include="tmp\widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp">
+    <ClCompile Include="tmp\windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\CustomSinkWidget\customsinkwidget.cpp">
+    <ClCompile Include="tmp\widgets\CustomSinkWidget\customsinkwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Processing\YOLO\yolo.cpp">
+    <ClCompile Include="tmp\processing\YOLO\yolo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Helpers\unitconversionhelper.cpp">
+    <ClCompile Include="tmp\helpers\unitconversionhelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Controllers\MainController\maincontroller.cpp">
+    <ClCompile Include="tmp\controllers\MainController\maincontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Controllers\ClipController\clipcontroller.cpp">
+    <ClCompile Include="tmp\controllers\ClipController\clipcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Devices\Device\device.cpp">
+    <ClCompile Include="tmp\devices\Device\device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Clipping\Buffers\VideoClipBuffer\videoclipbuffer.cpp">
+    <ClCompile Include="tmp\clipping\buffers\VideoClipBuffer\videoclipbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Devices\CameraDevice\cameradevice.cpp">
+    <ClCompile Include="tmp\devices\CameraDevice\cameradevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\PreviewContainerWidget\previewcontainerwidget.cpp">
+    <ClCompile Include="tmp\widgets\PreviewContainerWidget\previewcontainerwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\DeviceListWidget\devicelistwidget.cpp">
+    <ClCompile Include="tmp\widgets\DeviceListWidget\devicelistwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Controllers\DeviceController\devicecontroller.cpp">
+    <ClCompile Include="tmp\controllers\DeviceController\devicecontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Devices\Device\DeviceMetadata\devicemetadata.cpp">
+    <ClCompile Include="tmp\devices\Device\DeviceMetadata\devicemetadata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Clipping\Buffers\ClipBufferBase\clipbufferbase.cpp">
+    <ClCompile Include="tmp\clipping\buffers\ClipBufferBase\clipbufferbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Processing\FrameProcessor\frameprocessor.cpp">
+    <ClCompile Include="tmp\processing\FrameProcessor\frameprocessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Controllers\RecordingSession\recordingsession.cpp">
+    <ClCompile Include="tmp\controllers\RecordingSession\recordingsession.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\PresetsWidget\presetswidget.cpp">
+    <ClCompile Include="tmp\widgets\PresetsWidget\presetswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\SessionControlsWidget\sessioncontrolswidget.cpp">
+    <ClCompile Include="tmp\widgets\SessionControlsWidget\sessioncontrolswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pages\MainPage\mainpage.cpp">
+    <ClCompile Include="tmp\pages\MainPage\mainpage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Windows\SessionPropertiesDialog\sessionpropertiesdialog.cpp">
+    <ClCompile Include="tmp\windows\SessionPropertiesDialog\sessionpropertiesdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Widgets\SensorListItem\SensorListItem.h">
+    <QtMoc Include="tmp\widgets\SensorListItem\SensorListItem.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Windows\AddCameraDialog\AddCameraDialog.h">
+    <QtMoc Include="tmp\windows\AddCameraDialog\AddCameraDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.h">
+    <QtMoc Include="tmp\windows\QtCameraControlsWindow\qtcameracontrolsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h">
+    <QtMoc Include="tmp\windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
+    <QtMoc Include="tmp\widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.h">
+    <QtMoc Include="tmp\windows\ApplicationSettingsDialog\applicationsettingsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\CustomSinkWidget\customsinkwidget.h">
+    <QtMoc Include="tmp\widgets\CustomSinkWidget\customsinkwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Processing\YOLO\yolo.h">
+    <QtMoc Include="tmp\processing\YOLO\yolo.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Controllers\MainController\maincontroller.h">
+    <QtMoc Include="tmp\controllers\MainController\maincontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Controllers\ClipController\clipcontroller.h">
+    <QtMoc Include="tmp\controllers\ClipController\clipcontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Devices\Device\device.h">
+    <QtMoc Include="tmp\devices\Device\device.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Devices\CameraDevice\cameradevice.h">
+    <QtMoc Include="tmp\devices\CameraDevice\cameradevice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Clipping\Buffers\VideoClipBuffer\videoclipbuffer.h">
+    <QtMoc Include="tmp\clipping\buffers\VideoClipBuffer\videoclipbuffer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\PreviewContainerWidget\previewcontainerwidget.h">
+    <QtMoc Include="tmp\widgets\PreviewContainerWidget\previewcontainerwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\DeviceListWidget\devicelistwidget.h">
+    <QtMoc Include="tmp\widgets\DeviceListWidget\devicelistwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Controllers\DeviceController\devicecontroller.h">
+    <QtMoc Include="tmp\controllers\DeviceController\devicecontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Devices\Device\DeviceMetadata\devicemetadata.h">
+    <QtMoc Include="tmp\devices\Device\DeviceMetadata\devicemetadata.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Clipping\Buffers\ClipBufferBase\clipbufferbase.h">
+    <QtMoc Include="tmp\clipping\buffers\ClipBufferBase\clipbufferbase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Processing\FrameProcessor\frameprocessor.h">
+    <QtMoc Include="tmp\processing\FrameProcessor\frameprocessor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Controllers\RecordingSession\recordingsession.h">
+    <QtMoc Include="tmp\controllers\RecordingSession\recordingsession.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\PresetsWidget\presetswidget.h">
+    <QtMoc Include="tmp\widgets\PresetsWidget\presetswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Widgets\SessionControlsWidget\sessioncontrolswidget.h">
+    <QtMoc Include="tmp\widgets\SessionControlsWidget\sessioncontrolswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Pages\MainPage\mainpage.h">
+    <QtMoc Include="tmp\pages\MainPage\mainpage.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Windows\SessionPropertiesDialog\sessionpropertiesdialog.h">
+    <QtMoc Include="tmp\windows\SessionPropertiesDialog\sessionpropertiesdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="Widgets\SensorListItem\SensorListItem.ui">
+    <QtUic Include="tmp\widgets\SensorListItem\SensorListItem.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Windows\AddCameraDialog\AddCameraDialog.ui">
+    <QtUic Include="tmp\windows\AddCameraDialog\AddCameraDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui">
+    <QtUic Include="tmp\windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui">
+    <QtUic Include="tmp\windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
+    <QtUic Include="tmp\widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Windows\ApplicationSettingsDialog\applicationsettingsdialog.ui">
+    <QtUic Include="tmp\windows\ApplicationSettingsDialog\applicationsettingsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Widgets\CustomSinkWidget\customsinkwidget.ui">
+    <QtUic Include="tmp\widgets\CustomSinkWidget\customsinkwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Widgets\PreviewContainerWidget\previewcontainerwidget.ui">
+    <QtUic Include="tmp\widgets\PreviewContainerWidget\previewcontainerwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Widgets\DeviceListWidget\devicelistwidget.ui">
+    <QtUic Include="tmp\widgets\DeviceListWidget\devicelistwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Widgets\PresetsWidget\presetswidget.ui">
+    <QtUic Include="tmp\widgets\PresetsWidget\presetswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Widgets\SessionControlsWidget\sessioncontrolswidget.ui">
+    <QtUic Include="tmp\widgets\SessionControlsWidget\sessioncontrolswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Pages\MainPage\mainpage.ui">
+    <QtUic Include="tmp\pages\MainPage\mainpage.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Windows\SessionPropertiesDialog\sessionpropertiesdialog.ui">
+    <QtUic Include="tmp\windows\SessionPropertiesDialog\sessionpropertiesdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
+    <ClInclude Include="tmp\widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Helpers\unitconversionhelper.h">
+    <ClInclude Include="tmp\helpers\unitconversionhelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
