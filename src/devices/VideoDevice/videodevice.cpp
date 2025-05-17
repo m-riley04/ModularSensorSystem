@@ -5,7 +5,8 @@ VideoDevice::VideoDevice(RecordingSession* recordingSession, QObject* parent)
 {
 	this->mName = "VideoDevice";
     this->mDeviceType = Device::Type::CAMERA;
-    open(); // TODO: Change this method to more represent it's purpose
+    pDevicePreview = new VideoPreview(&mSession, this); // TODO: Make this a unique_ptr?
+    // TODO/CONSIDER: add initializing back for certain stuff?
 }
 
 VideoDevice::VideoDevice(QCameraDevice qVideoDevice, RecordingSession* recordingSession, QObject* parent)
@@ -13,7 +14,8 @@ VideoDevice::VideoDevice(QCameraDevice qVideoDevice, RecordingSession* recording
 {
     this->mName = qVideoDevice.description();
     this->mDeviceType = Device::Type::CAMERA;
-    open(); // TODO: Change this method to more represent it's purpose
+    pDevicePreview = new VideoPreview(&mSession, this); // TODO: Make this a unique_ptr?
+    // TODO/CONSIDER: add initializing back for certain stuff?
 }
 
 VideoDevice::~VideoDevice()
@@ -25,10 +27,18 @@ VideoDevice::~VideoDevice()
 }
 
 void VideoDevice::open() {
+	if (mState == OPENED || mState == STARTED) return; // Already opened or started
+
+    // TODO: Move checks up/somewhere else?
 	if (!mCamera.isAvailable()) {
 		QMessageBox::warning(nullptr, "Camera Error", "No camera available.");
 		return;
 	}
+
+    if (mCamera.isActive()) {
+        QMessageBox::warning(nullptr, "Camera Error", "Camera is already active.");
+        return;
+    }
 
     // Initialize capture session
     mSession.setCamera(&mCamera);
@@ -47,6 +57,8 @@ void VideoDevice::open() {
 }
 
 void VideoDevice::start() {
+    if (mState == STARTED) return;
+
     // Check if the camera is available/is idle
     if (!mCamera.isAvailable() || mCamera.isActive()) return; // TODO: Do more logging here
 
@@ -58,6 +70,8 @@ void VideoDevice::start() {
 }
 
 void VideoDevice::stop() {
+    if (mState == STOPPED) return;
+
     // Check if camera is good to go/is active
     if (!mCamera.isAvailable() || !mCamera.isActive()) return; // TODO: Do more logging here
     
@@ -70,6 +84,7 @@ void VideoDevice::stop() {
 
 void VideoDevice::close()
 {
+    if (mState == CLOSED || mState == STOPPED) return;
 	// TODO: Implement close
 }
 
