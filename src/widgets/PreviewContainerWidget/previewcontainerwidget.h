@@ -2,7 +2,6 @@
 
 #include <QWidget>
 #include "ui_previewcontainerwidget.h"
-#include "Widgets/CustomSinkWidget/customsinkwidget.h"
 #include <QList>
 #include "devices/VideoDevice/videodevice.h"
 #include <Controllers/MainController/maincontroller.h>

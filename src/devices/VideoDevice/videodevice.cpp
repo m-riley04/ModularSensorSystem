@@ -5,7 +5,6 @@ VideoDevice::VideoDevice(RecordingSession* recordingSession, QObject* parent)
 {
 	this->mName = "VideoDevice";
     this->mDeviceType = Device::Type::CAMERA;
-    this->pDevicePreview = new VideoPreview(&mSession, this);
     open(); // TODO: Change this method to more represent it's purpose
 }
 
@@ -14,7 +13,6 @@ VideoDevice::VideoDevice(QCameraDevice qVideoDevice, RecordingSession* recording
 {
     this->mName = qVideoDevice.description();
     this->mDeviceType = Device::Type::CAMERA;
-	this->pDevicePreview = new VideoPreview(&mSession, this);
     open(); // TODO: Change this method to more represent it's purpose
 }
 
@@ -32,25 +30,18 @@ void VideoDevice::open() {
 		return;
 	}
 
-    // Set default output location
-	QDir _(QDir::currentPath()); 
-	if (!_.exists("output")) {
-		_.mkdir("output");
-	}
+    // Initialize capture session
+    mSession.setCamera(&mCamera);
+    mSession.setRecorder(&mRecorder);
 
     // Init preview
-    auto pVideoPreview = new VideoPreview(&mSession, this);
-	pDevicePreview = pVideoPreview;
+	if (!pDevicePreview) pDevicePreview = new VideoPreview(&mSession, this);
 
     // Init buffer
 	pVideoBuffer = std::make_unique<VideoClipBuffer>(2, this);
 
     // Init recorder
     mRecorder.setOutputLocation(QDir::currentPath() + "/output");
-    
-    // Initialize capture session
-    mSession.setCamera(&mCamera);
-	mSession.setRecorder(&mRecorder);
 
     emit previewAvailable(this, pDevicePreview);
 }
