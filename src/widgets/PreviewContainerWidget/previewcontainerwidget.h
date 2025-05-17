@@ -4,8 +4,10 @@
 #include "ui_previewcontainerwidget.h"
 #include "Widgets/CustomSinkWidget/customsinkwidget.h"
 #include <QList>
-#include <Devices/CameraDevice/cameradevice.h>
+#include "devices/VideoDevice/videodevice.h"
 #include <Controllers/MainController/maincontroller.h>
+#include "devices/Device/DevicePreview/devicepreview.h"
+#include "widgets/DevicePreviewWidget/devicepreviewwidget.h"
 
 class PreviewContainerWidget : public QWidget
 {
@@ -23,19 +25,18 @@ public:
 
 private:
 	Ui::PreviewContainerWidgetClass ui;
-	QList<CustomSinkWidget*> mVideoWidgets;
+	QList<DevicePreviewWidget*> mDevicePreviewWidgets;
 
 	MainController* pController = nullptr;
 
 	void initSignals();
-	CustomSinkWidget* addVideoWidget(CameraDevice* camera);
 
 public slots:
 	void addDeviceWidget(Device* device);
 	void removeDeviceWidget(Device* device);
 
 signals:
-	void deviceWidgetAdded(CustomSinkWidget* widget);
-	void deviceWidgetRemoved(CustomSinkWidget* widget);
+	void deviceWidgetAdded(DevicePreviewWidget* widget);
+	void deviceWidgetRemoved(DevicePreviewWidget* widget);
 
 };

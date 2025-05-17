@@ -1,7 +1,9 @@
 #pragma once
 
 #include <QObject>
-#include <devices/VideoDevice/videodevice.h>
+#include "devices/Device/device.h"
+
+class Device;
 
 class DevicePreview  : public QObject
 {

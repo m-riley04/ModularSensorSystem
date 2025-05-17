@@ -3,20 +3,22 @@
 VideoDevice::VideoDevice(RecordingSession* recordingSession, QObject* parent)
 	: Device(recordingSession, parent)
 {
-	this->mName = "CameraDevice";
+	this->mName = "VideoDevice";
     this->mDeviceType = Device::Type::CAMERA;
+    this->pDevicePreview = new VideoPreview(&mSession, this);
     open(); // TODO: Change this method to more represent it's purpose
 }
 
-VideoDevice::VideoDevice(QCameraDevice qCameraDevice, RecordingSession* recordingSession, QObject* parent)
-	: Device(recordingSession, parent), mCamera(qCameraDevice)
+VideoDevice::VideoDevice(QCameraDevice qVideoDevice, RecordingSession* recordingSession, QObject* parent)
+	: Device(recordingSession, parent), mCamera(qVideoDevice)
 {
-    this->mName = qCameraDevice.description();
+    this->mName = qVideoDevice.description();
     this->mDeviceType = Device::Type::CAMERA;
+	this->pDevicePreview = new VideoPreview(&mSession, this);
     open(); // TODO: Change this method to more represent it's purpose
 }
 
-VideoDevice::~CameraDevice()
+VideoDevice::~VideoDevice()
 {
     // Release the camera
     if (mCamera.isActive()) {
@@ -36,6 +38,10 @@ void VideoDevice::open() {
 		_.mkdir("output");
 	}
 
+    // Init preview
+    auto pVideoPreview = new VideoPreview(&mSession, this);
+	pDevicePreview = pVideoPreview;
+
     // Init buffer
 	pVideoBuffer = std::make_unique<VideoClipBuffer>(2, this);
 
@@ -45,15 +51,8 @@ void VideoDevice::open() {
     // Initialize capture session
     mSession.setCamera(&mCamera);
 	mSession.setRecorder(&mRecorder);
-    mSession.setAudioInput(&mAudioInput);
 
-    // Initialize deep signal connections
-    connect(&mAudioInput, &QAudioInput::deviceChanged, [this]() {
-        emit audioDeviceChanged(mAudioInput.device());
-        });
-    connect(&mCamera, &QCamera::cameraDeviceChanged, [this]() {
-        emit cameraDeviceChanged(mCamera.cameraDevice());
-        });
+    emit previewAvailable(this, pDevicePreview);
 }
 
 void VideoDevice::start() {
@@ -83,36 +82,12 @@ void VideoDevice::close()
 	// TODO: Implement close
 }
 
-void VideoDevice::setVideoOutput(CustomSinkWidget* widget)
-{
-    if (widget == nullptr) return;
-
-	if (mSession.videoSink() == widget->videoSink()) return;
-
-    pSinkWidget = widget;
-
-    mSession.setVideoOutput(widget->videoSink());
-    emit videoOutputChanged(widget);
-
-	// Connect the video sink to the buffer
-    connect(widget->videoSink(), &QVideoSink::videoFrameChanged, this, &CameraDevice::onNewFrame);
-}
-
 void VideoDevice::onNewFrame(const QVideoFrame& frame) {
 	// Get the timestamp
 	ClipBufferBase::time timestamp = 0; // TODO: Get the timestamp from the frame
     
     // Add the frame to the buffer
 	pVideoBuffer->push(frame, timestamp);
-}
-
-void VideoDevice::setDevice(QCameraDevice device)
-{
-    // Set name
-    this->mName = device.description();
-
-    mCamera.setCameraDevice(device);
-    emit cameraDeviceChanged(device);
 }
 
 void VideoDevice::setMediaDirectory(QUrl directory)

@@ -3,8 +3,10 @@
 #include <QObject>
 #include "Controllers/RecordingSession/recordingsession.h"
 #include <quuid.h>
+#include "DevicePreview/devicepreview.h"
 
 class RecordingSession;
+class DevicePreview;
 
 class Device : public QObject
 {
@@ -75,7 +77,8 @@ protected:
 	qint64 mStartTime = 0;
 	Device::ErrorState mErrorState = ErrorState::NO_ERROR;
 
-	RecordingSession* pRecordingSession;
+	RecordingSession* pRecordingSession = nullptr;
+	DevicePreview* pDevicePreview = nullptr;
 
 public:
 	Device(RecordingSession* recordingSession, QObject *parent);
@@ -91,10 +94,13 @@ public:
 	QString name() const { return mName; }
 	Device::Type deviceType() const { return mDeviceType; }
 	Device::State state() const { return mState; }
+	DevicePreview* preview() const { return pDevicePreview; }
 
 signals:
 	void opened();
 	void started();
 	void stopped();
 	void closed();
+
+	void previewAvailable(Device* device, DevicePreview* preview);
 };

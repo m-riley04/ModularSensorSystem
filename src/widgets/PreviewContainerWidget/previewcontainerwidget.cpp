@@ -35,20 +35,7 @@ void PreviewContainerWidget::addDeviceWidget(Device* device)
 		return;
 	}
 
-	// Init widget ptr and tab display stuff
-	CustomSinkWidget* widget = nullptr;
-	QString tabName = device->name();
-
-	// Check what type of device it is
-	auto type = device->deviceType();
-	switch (type) {
-	case Device::Type::CAMERA:
-		widget = addVideoWidget(static_cast<CameraDevice*>(device));
-		break;
-	default:
-		widget = new CustomSinkWidget(device, this);
-		break;
-	}
+	auto* widget = new DevicePreviewWidget(device->preview(), ui.tabDevicePreviews);
 
 	// Null check
 	if (widget == nullptr) {
@@ -56,7 +43,11 @@ void PreviewContainerWidget::addDeviceWidget(Device* device)
 		return;
 	}
 
+	// Add widget to list
+	mDevicePreviewWidgets.append(widget);
+
 	// Add tab
+	QString tabName = device->name();
 	ui.tabDevicePreviews->addTab(widget, tabName);
 
 	// Emit signal
@@ -71,12 +62,12 @@ void PreviewContainerWidget::removeDeviceWidget(Device* device)
 	}
 
 	// Find the video widget for the device
-	for (int i = 0; i < mVideoWidgets.size(); ++i) {
-		CustomSinkWidget* widget = mVideoWidgets[i];
-		if (widget->device() == device) {
-			// Remove the video widget from the list and UI
+	for (int i = 0; i < mDevicePreviewWidgets.size(); ++i) {
+		DevicePreviewWidget* widget = mDevicePreviewWidgets[i];
+		if (widget->preview()->device() == device) {
+			// Remove the widget from the list and UI
 			ui.tabDevicePreviews->removeTab(i);
-			mVideoWidgets.removeAt(i);
+			mDevicePreviewWidgets.removeAt(i);
 
 			// TODO: Implement proper/more cleanup for the widget (if needed, READ QT DOCS ON QLIST/QTAB MEMORY)
 			widget->deleteLater();
@@ -86,24 +77,3 @@ void PreviewContainerWidget::removeDeviceWidget(Device* device)
 		}
 	}
 }
-
-
-CustomSinkWidget* PreviewContainerWidget::addVideoWidget(CameraDevice* camera)
-{
-	if (camera == nullptr) return nullptr;
-	// Create a new video widget
-	CustomSinkWidget* videoWidget = new CustomSinkWidget(camera, this);
-
-	// Add video widget to list
-	mVideoWidgets.append(videoWidget);
-
-	// Set camera and get props
-	QString name = camera->camera()->cameraDevice().description();
-	camera->setVideoOutput(videoWidget);
-
-	// Add tab to widget
-	//ui.tabDevicePreviews->addTab(videoWidget, name); /// CONSIDER: Consolidate and separate the adding of tabs to the general addDeviceWidget method
-
-	return videoWidget;
-}
-
