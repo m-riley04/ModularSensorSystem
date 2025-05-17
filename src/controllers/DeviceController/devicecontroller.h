@@ -3,7 +3,7 @@
 #include <QObject>
 #include <Devices/Device/device.h>
 #include <Controllers/RecordingSession/recordingsession.h>
-#include "Devices/CameraDevice/cameradevice.h"
+#include "devices/VideoDevice/videodevice.h"
 
 class DeviceController : public QObject
 {

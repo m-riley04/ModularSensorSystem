@@ -67,7 +67,7 @@ void DeviceController::restartDevices()
 }
 
 void DeviceController::addCamera(const QCameraDevice& cameraDevice) {
-	auto cam = new CameraDevice(cameraDevice, pRecordingSession, this);
+	auto cam = new VideoDevice(cameraDevice, pRecordingSession, this);
 
 	mDevices.append(cam);
 
