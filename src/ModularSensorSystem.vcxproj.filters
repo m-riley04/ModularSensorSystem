@@ -61,9 +61,6 @@
     <ClCompile Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\CustomSinkWidget\customsinkwidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="processing\YOLO\yolo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -82,7 +79,7 @@
     <ClCompile Include="clipping\buffers\VideoClipBuffer\videoclipbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="devices\CameraDevice\cameradevice.cpp">
+    <ClCompile Include="devices\VideoDevice\videodevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp">
@@ -118,6 +115,15 @@
     <ClCompile Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="devices\Device\DevicePreview\devicepreview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\DevicePreviewWidget\devicepreviewwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="devices\VideoDevice\VideoPreview\videopreview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SensorListItem\SensorListItem.h">
@@ -138,9 +144,6 @@
     <QtMoc Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\CustomSinkWidget\customsinkwidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="processing\YOLO\yolo.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -153,7 +156,7 @@
     <QtMoc Include="devices\Device\device.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="devices\CameraDevice\cameradevice.h">
+    <QtMoc Include="devices\VideoDevice\videodevice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="clipping\buffers\VideoClipBuffer\videoclipbuffer.h">
@@ -192,6 +195,15 @@
     <QtMoc Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="devices\Device\DevicePreview\devicepreview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\DevicePreviewWidget\devicepreviewwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="devices\VideoDevice\VideoPreview\videopreview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\SensorListItem\SensorListItem.ui">
@@ -212,9 +224,6 @@
     <QtUic Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="widgets\CustomSinkWidget\customsinkwidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -231,6 +240,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="widgets\DevicePreviewWidget\devicepreviewwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
