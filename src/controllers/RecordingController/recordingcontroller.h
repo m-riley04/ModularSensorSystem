@@ -6,16 +6,18 @@
 #include <devices/Device/device.h>
 #include <QDateTime>
 #include "controllers/RecordingSession/recordingsession.h"
+#include <controllers/DeviceController/devicecontroller.h>
 
 class RecordingController  : public QObject
 {
 	Q_OBJECT
 
 public:
-	RecordingController(QObject *parent);
+	RecordingController(DeviceController* deviceController, QObject *parent);
 	~RecordingController();
 
 private:
+	QPointer<DeviceController> pDeviceController;
 	std::unique_ptr<RecordingSession> pSession;
 
 public slots:

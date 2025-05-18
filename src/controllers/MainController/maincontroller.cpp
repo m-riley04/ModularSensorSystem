@@ -1,10 +1,12 @@
 #include "maincontroller.h"
+#include <controllers/RecordingController/recordingcontroller.h>
 
 MainController::MainController(QObject *parent)
 	: QObject(parent)
 {
-	pRecordingSession = std::make_unique<RecordingSession>(this);
-	pDeviceController = std::make_unique<DeviceController>(pRecordingSession.get(), this);
+	pDeviceController = std::make_unique<DeviceController>(this);
+	pRecordingController = std::make_unique<RecordingController>(pDeviceController.get(), this);
+	
 }
 
 MainController::~MainController()

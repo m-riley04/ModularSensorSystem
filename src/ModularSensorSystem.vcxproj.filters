@@ -127,6 +127,9 @@
     <ClCompile Include="controllers\RecordingController\recordingcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeviceHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SensorListItem\SensorListItem.h">
@@ -257,6 +260,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="helpers\unitconversionhelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

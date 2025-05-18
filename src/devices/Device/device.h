@@ -86,18 +86,8 @@ protected:
 	QPointer<RecordingSession> pRecordingSession;
 	DevicePreview* pDevicePreview = nullptr;
 
-	bool operator==(const Device& other) const
-	{
-		return mId == other.mId; // NOTE: SHOULD only need mId since it is unique, but narrowing down with name and device type might be worthwhile in future
-	}
-
-	bool operator!=(const Device& other) const
-	{
-		return mId != other.mId; // NOTE: SHOULD only need mId since it is unique, but narrowing down with name and device type might be worthwhile in future
-	}
-
 public:
-	Device(RecordingSession* recordingSession, QObject *parent);
+	Device(QObject *parent);
 	~Device();
 
 	virtual void open() = 0;
@@ -136,6 +126,8 @@ public:
 	{
 		pRecordingSession = session;
 	}
+
+	
 
 signals:
 	void opened();

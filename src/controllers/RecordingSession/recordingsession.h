@@ -9,7 +9,7 @@
 
 class Device;
 
-class RecordingSession  : public QObject
+class RecordingSession : public QObject
 {
 	Q_OBJECT
 

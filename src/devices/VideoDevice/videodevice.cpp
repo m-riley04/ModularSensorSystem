@@ -1,7 +1,7 @@
 #include "videodevice.h"
 
-VideoDevice::VideoDevice(QCameraDevice qVideoDevice, RecordingSession* recordingSession, QObject* parent)
-	: Device(recordingSession, parent), mCamera(qVideoDevice)
+VideoDevice::VideoDevice(QCameraDevice qVideoDevice, QObject* parent)
+	: Device(parent), mCamera(qVideoDevice)
 {
     mId = qVideoDevice.id();
     mName = qVideoDevice.description();

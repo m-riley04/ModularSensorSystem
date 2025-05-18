@@ -1,7 +1,7 @@
 #include "devicecontroller.h"
 
-DeviceController::DeviceController(RecordingSession* recordingSession, QObject *parent)
-	: QObject(parent), pRecordingSession(recordingSession)
+DeviceController::DeviceController(QObject *parent)
+	: QObject(parent)
 {}
 
 DeviceController::~DeviceController()
@@ -67,7 +67,7 @@ void DeviceController::restartDevices()
 }
 
 void DeviceController::addCamera(const QCameraDevice& cameraDevice) {
-	auto cam = new VideoDevice(cameraDevice, pRecordingSession, this);
+	auto cam = new VideoDevice(cameraDevice, this);
 
 	mDevices.append(cam);
 

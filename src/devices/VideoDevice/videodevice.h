@@ -25,7 +25,7 @@ private:
 	std::unique_ptr<VideoClipBuffer> pVideoBuffer = nullptr;
 
 public:
-    VideoDevice(QCameraDevice qVideoDevice, RecordingSession* recordingSession, QObject *parent);
+    VideoDevice(QCameraDevice qVideoDevice, QObject *parent);
 	~VideoDevice();
 
 	static bool checkCameraAvailability();

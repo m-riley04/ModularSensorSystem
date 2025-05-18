@@ -19,10 +19,11 @@ public:
 	};
 
 public:
-	DeviceController(RecordingSession* recordingSession, QObject *parent);
+	DeviceController(QObject *parent);
 	~DeviceController();
 
 	DeviceController::State state() const { return mState; }
+	QList<Device*> devices() const { return mDevices; }
 
 	bool isEmpty() const { return mDevices.isEmpty(); }
 	bool isOpen() const { return mState == OPENED; }
