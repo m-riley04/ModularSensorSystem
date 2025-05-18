@@ -124,6 +124,9 @@
     <ClCompile Include="devices\VideoDevice\VideoPreview\videopreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controllers\RecordingController\recordingcontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SensorListItem\SensorListItem.h">
@@ -202,6 +205,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="devices\VideoDevice\VideoPreview\videopreview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controllers\RecordingController\recordingcontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

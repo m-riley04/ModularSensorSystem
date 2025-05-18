@@ -4,6 +4,7 @@
 #include "Controllers/RecordingSession/recordingsession.h"
 #include <quuid.h>
 #include "DevicePreview/devicepreview.h"
+#include <QPointer>
 
 class RecordingSession;
 class DevicePreview;
@@ -82,7 +83,7 @@ protected:
 	qint64 mStartTime = 0;
 	Device::ErrorState mErrorState = ErrorState::NO_ERROR;
 
-	RecordingSession* pRecordingSession = nullptr;
+	QPointer<RecordingSession> pRecordingSession;
 	DevicePreview* pDevicePreview = nullptr;
 
 	bool operator==(const Device& other) const
@@ -130,6 +131,11 @@ public:
 	/// Used for previewing the device's output.
 	/// </summary>
 	DevicePreview* preview() const { return pDevicePreview; }
+
+	void setSession(RecordingSession* session)
+	{
+		pRecordingSession = session;
+	}
 
 signals:
 	void opened();

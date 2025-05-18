@@ -13,28 +13,19 @@ class RecordingSession  : public QObject
 {
 	Q_OBJECT
 
-	enum State {
-		IDLE,
-		RECORDING
-	};
-
-	enum Error {
-		NONE,
-		RECORDER_ERROR,
-		DEVICE_ERROR,
-		UNKNOWN_ERROR
-	};
-
 public:
-	RecordingSession(QObject *parent);
+	RecordingSession(const QString& baseDir, QObject *parent);
 	~RecordingSession();
 
+	qint64 currentTimeNs() const { return mTimer.nsecsElapsed(); }
+	QDir outputDir() const { return mDir; }
+
 private:
-	QList<Device*> mDevices;
 	QElapsedTimer mTimer;
-	QMediaRecorder* mMasterRecorder;
-	//Preset mPreset;
-	QDir mOutputDir;
-	RecordingSession::Error error;
+	QDir mDir;
+
+signals:
+	void started();
+	void stopped();
 
 };
