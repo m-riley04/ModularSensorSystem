@@ -1,19 +1,11 @@
 #include "videodevice.h"
 
-VideoDevice::VideoDevice(RecordingSession* recordingSession, QObject* parent)
-	: Device(recordingSession, parent)
-{
-	this->mName = "VideoDevice";
-    this->mDeviceType = Device::Type::CAMERA;
-    pDevicePreview = new VideoPreview(&mSession, this); // TODO: Make this a unique_ptr?
-    // TODO/CONSIDER: add initializing back for certain stuff?
-}
-
 VideoDevice::VideoDevice(QCameraDevice qVideoDevice, RecordingSession* recordingSession, QObject* parent)
 	: Device(recordingSession, parent), mCamera(qVideoDevice)
 {
-    this->mName = qVideoDevice.description();
-    this->mDeviceType = Device::Type::CAMERA;
+    mId = qVideoDevice.id();
+    mName = qVideoDevice.description();
+    mDeviceType = Device::Type::CAMERA;
     pDevicePreview = new VideoPreview(&mSession, this); // TODO: Make this a unique_ptr?
     // TODO/CONSIDER: add initializing back for certain stuff?
 }

@@ -70,7 +70,12 @@ public:
 	}
 
 protected:
-	QUuid mId;
+	/// <summary>
+	/// The unique hardware ID if possible.
+	/// Should be set in each child's initializer.
+	/// </summary>
+	QByteArray mId;
+
 	QString mName = "New Device";
 	Device::Type mDeviceType = Device::Type::OTHER;
 	Device::State mState = Device::State::CLOSED;
@@ -79,6 +84,16 @@ protected:
 
 	RecordingSession* pRecordingSession = nullptr;
 	DevicePreview* pDevicePreview = nullptr;
+
+	bool operator==(const Device& other) const
+	{
+		return mId == other.mId; // NOTE: SHOULD only need mId since it is unique, but narrowing down with name and device type might be worthwhile in future
+	}
+
+	bool operator!=(const Device& other) const
+	{
+		return mId != other.mId; // NOTE: SHOULD only need mId since it is unique, but narrowing down with name and device type might be worthwhile in future
+	}
 
 public:
 	Device(RecordingSession* recordingSession, QObject *parent);
@@ -90,10 +105,30 @@ public:
 	virtual void close() = 0;
 	virtual void restart() = 0;
 
-	QUuid id() const { return mId; }
+	/// <summary>
+	/// The unique ID for the device
+	/// </summary>
+	QByteArray id() const { return mId; }
+
+	/// <summary>
+	/// The user-facing name of the device.
+	/// </summary>
 	QString name() const { return mName; }
+
+	/// <summary>
+	/// The type of device
+	/// </summary>
 	Device::Type deviceType() const { return mDeviceType; }
+
+	/// <summary>
+	/// The current state of the device
+	/// </summary>
 	Device::State state() const { return mState; }
+
+	/// <summary>
+	/// The DevicePreview object for the device.
+	/// Used for previewing the device's output.
+	/// </summary>
 	DevicePreview* preview() const { return pDevicePreview; }
 
 signals:
@@ -102,5 +137,8 @@ signals:
 	void stopped();
 	void closed();
 
+	/// <summary>
+	/// Emitted when the device's preview is available.
+	/// </summary>
 	void previewAvailable(Device* device, DevicePreview* preview);
 };

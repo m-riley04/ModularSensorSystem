@@ -40,7 +40,7 @@ private:
 public slots:
 	void addDevice(Device* device);
 	void removeDevice(Device* device);
-	//Device* getDevice(int index) const;
+	Device* getDevice(QByteArray id) const;
 
 	void addCamera(const QCameraDevice& cameraDevice);
 

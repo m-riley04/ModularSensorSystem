@@ -35,7 +35,6 @@ private:
 	QMediaRecorder* mMasterRecorder;
 	//Preset mPreset;
 	QDir mOutputDir;
-	QList<ClipBufferBase*> mClipBuffers;
 	RecordingSession::Error error;
 
 };

@@ -25,7 +25,6 @@ private:
 	std::unique_ptr<VideoClipBuffer> pVideoBuffer = nullptr;
 
 public:
-    VideoDevice(RecordingSession* recordingSession, QObject* parent);
     VideoDevice(QCameraDevice qVideoDevice, RecordingSession* recordingSession, QObject *parent);
 	~VideoDevice();
 

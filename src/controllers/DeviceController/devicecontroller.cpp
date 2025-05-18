@@ -87,10 +87,21 @@ void DeviceController::removeDevice(Device* device)
 	if (!device) return;
 
 	// Get device id before deleting
-	QUuid deviceId = device->id();
+	QByteArray deviceId = device->id();
 
 	// Remove device from the list
 	mDevices.removeAll(device);
 
 	emit deviceRemoved(device); // TODO: Emit the device's ID instead of the device itself
+}
+
+Device* DeviceController::getDevice(QByteArray id) const
+{
+	for (Device* device : mDevices) {
+		if (device && device->id() == id) {
+			return device;
+		}
+	}
+
+	return nullptr;
 }
