@@ -130,6 +130,15 @@
     <ClCompile Include="devices\Device\DeviceHelpers\DeviceHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controllers\PluginController\plugincontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plugins\device\IDevicePlugin\ideviceplugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plugins\device\VideoDevicePlugin\videodeviceplugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SensorListItem\SensorListItem.h">
@@ -213,6 +222,12 @@
     <QtMoc Include="controllers\RecordingController\recordingcontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="controllers\PluginController\plugincontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="plugins\device\VideoDevicePlugin\videodeviceplugin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\SensorListItem\SensorListItem.ui">
@@ -265,6 +280,9 @@
     <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="plugins\device\IDevicePlugin\ideviceplugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="models\yolo11n.onnx" />
@@ -273,5 +291,6 @@
     <None Include="models\yolov8n.onnx" />
     <None Include="models\yolov10n.onnx" />
     <None Include="models\yolov10s.onnx" />
+    <None Include="plugins\device\VideoDevicePlugin\videodeviceplugin.json" />
   </ItemGroup>
 </Project>
