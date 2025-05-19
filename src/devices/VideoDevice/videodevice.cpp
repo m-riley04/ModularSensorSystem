@@ -102,3 +102,18 @@ void VideoDevice::restart() {
     stop();
     start();
 }
+
+void VideoDevice::beginRecording(RecordingSession* s)
+{
+	// Update recording session
+	pRecordingSession = s;
+
+    QString f = s->outputDir().filePath(mName + ".mp4"); // TODO: Change from mName to something better for file names
+	mRecorder.setOutputLocation(QUrl::fromLocalFile(f));
+    mRecorder.record();
+}
+
+void VideoDevice::endRecording()
+{
+    mRecorder.stop();
+}

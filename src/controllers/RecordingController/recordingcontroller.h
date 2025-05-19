@@ -13,12 +13,24 @@ class RecordingController  : public QObject
 	Q_OBJECT
 
 public:
+	enum State {
+		STARTED,
+		STOPPED
+	};
+
+public:
 	RecordingController(DeviceController* deviceController, QObject *parent);
 	~RecordingController();
+
+	RecordingController::State state() const { return mState; }
+	bool isRecording() const { return mState == STARTED; }
+	bool isStopped() const { return mState == STOPPED; }
 
 private:
 	QPointer<DeviceController> pDeviceController;
 	std::unique_ptr<RecordingSession> pSession;
+
+	RecordingController::State mState = STOPPED;
 
 public slots:
 	void start();

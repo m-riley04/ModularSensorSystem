@@ -20,6 +20,7 @@ void SessionControlsWidget::initSignals()
 	}
 
 	DeviceController* pDeviceController = pController->deviceController();
+	RecordingController* pRecordingController = pController->recordingController();
 
 	// Init open/close button
 	connect(ui.buttonOpenCloseDevices, &QPushButton::clicked, [this, pDeviceController]() {
@@ -33,11 +34,21 @@ void SessionControlsWidget::initSignals()
 
 	// Init start/stop button
 	connect(ui.buttonStartStopDevices, &QPushButton::clicked, [this, pDeviceController]() {
-		if (pDeviceController->isStopped() || pDeviceController->isOpen()) {
+		if (pDeviceController->isStopped() || pDeviceController->isOpen()) { // CONSIDER: check recording state too?
 			pDeviceController->startDevices();
 		}
 		else if (pDeviceController->isStarted()) {
 			pDeviceController->stopDevices();
+		}
+		});
+
+	// Recording button
+	connect(ui.buttonRecord, &QPushButton::clicked, [this, pRecordingController]() {
+		if (pRecordingController->isRecording()) { // CONSIDER: check device state too?
+			pRecordingController->stop();
+		}
+		else if (pRecordingController->isStopped()) {
+			pRecordingController->start();
 		}
 		});
 
@@ -68,6 +79,8 @@ void SessionControlsWidget::initSignals()
 	connect(pDeviceController, &DeviceController::deviceRemoved, this, &SessionControlsWidget::updateUi);
 	connect(pDeviceController, &DeviceController::deviceAdded, this, &SessionControlsWidget::updateUi);
 	connect(pDeviceController, &DeviceController::stateChanged, this, &SessionControlsWidget::updateUi);
+	connect(pRecordingController, &RecordingController::started, this, &SessionControlsWidget::updateUi);
+	connect(pRecordingController, &RecordingController::stopped, this, &SessionControlsWidget::updateUi);
 	
 }
 
@@ -84,30 +97,60 @@ void SessionControlsWidget::updateUi()
 	ui.buttonRestartDevices->setEnabled(!isEmpty);
 	if (isEmpty) return;
 
-	// Check state
-	DeviceController::State state = pController->deviceController()->state();
-	switch (state) {
+	// Device controller updates
+	DeviceController::State deviceState = pController->deviceController()->state();
+	switch (deviceState) {
 	case DeviceController::OPENED:
 		ui.buttonOpenCloseDevices->setText("Close Devices");
 		ui.buttonStartStopDevices->setEnabled(true);
+		ui.buttonRecord->setEnabled(false);
+		ui.buttonClip->setEnabled(false);
 		break;
 	case DeviceController::CLOSED:
 		ui.buttonOpenCloseDevices->setText("Open Devices");
 		ui.buttonStartStopDevices->setEnabled(false);
+		ui.buttonRecord->setEnabled(false);
+		ui.buttonClip->setEnabled(false);
 		break;
 	case DeviceController::STARTED:
 		ui.buttonStartStopDevices->setText("Stop Devices");
 		ui.buttonOpenCloseDevices->setEnabled(false);
+		ui.buttonRecord->setEnabled(true);
+		ui.buttonClip->setEnabled(true);
 		break;
 	case DeviceController::STOPPED:
 		ui.buttonStartStopDevices->setText("Start Devices");
 		ui.buttonOpenCloseDevices->setEnabled(true);
+		ui.buttonRecord->setEnabled(false);
+		ui.buttonClip->setEnabled(false);
 		break;
 	case DeviceController::ERROR:
 		ui.buttonOpenCloseDevices->setText("Open Devices");
+		ui.buttonStartStopDevices->setText("Start Devices");
+		ui.buttonOpenCloseDevices->setEnabled(true);
 		ui.buttonStartStopDevices->setEnabled(false);
 		break;
 	default:
+		break;
+	}
+
+	// Recording controller updates
+	RecordingController::State recState = pController->recordingController()->state();
+	switch (recState) {
+	case RecordingController::STARTED:
+		ui.buttonRecord->setText("Stop Recording");
+		//ui.buttonOpenCloseDevices->setEnabled(false);
+		//ui.buttonStartStopDevices->setEnabled(false);
+		break;
+	case DeviceController::STOPPED:
+		ui.buttonRecord->setText("Start Recording");
+		//ui.buttonOpenCloseDevices->setEnabled(true);
+		//ui.buttonStartStopDevices->setEnabled(true);
+		break;
+	default:
+		ui.buttonRecord->setText("Start Recording");
+		//ui.buttonOpenCloseDevices->setEnabled(true);
+		//ui.buttonStartStopDevices->setEnabled(true);
 		break;
 	}
 }

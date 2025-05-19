@@ -12,12 +12,18 @@ RecordingController::~RecordingController()
 
 void RecordingController::start()
 {
+	// Init session
 	QString rootOutputDirName = "output";
-	auto dirName = QDateTime::currentDateTime()
-		.toString("'Session_'yyyyMMdd_hhmmss");
-	pSession = std::make_unique<RecordingSession>(QDir::currentPath() + "/" + rootOutputDirName + "/" + dirName, this);
+	auto dirName = QDateTime::currentDateTime().toString("'Session_'yyyyMMdd_hhmmss");
+	pSession.reset(new RecordingSession(QDir::currentPath() + "/" + rootOutputDirName + "/" + dirName, this));
 
-	emit started(pSession.get());      // devices grab the pointer
+	for (Device* d : pDeviceController->devices()) {
+		d->beginRecording(pSession.get());
+	}
+
+	// Update state
+	mState = STARTED;
+	emit started(pSession.get()); // devices grab the pointer
 }
 
 void RecordingController::stop()
@@ -25,7 +31,16 @@ void RecordingController::stop()
 	//for (auto d : mDevices)  d->stop(); // Probably do not need (starting/stopping is performed by DeviceController)
 	QDir outputSessionDir = pSession->outputDir();
 
+	// Stop all devices
+	for (Device* d : pDeviceController->devices()) {
+		d->endRecording();
+	}
+	
+	// Reset session
 	pSession.reset();
+
+	// Update state
+	mState = STOPPED;
 	emit stopped(outputSessionDir);
 }
 

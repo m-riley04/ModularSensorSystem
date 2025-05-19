@@ -127,7 +127,7 @@
     <ClCompile Include="controllers\RecordingController\recordingcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DeviceHelpers.cpp">
+    <ClCompile Include="devices\Device\DeviceHelpers\DeviceHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -262,7 +262,7 @@
     <ClInclude Include="helpers\unitconversionhelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DeviceHelpers.h">
+    <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

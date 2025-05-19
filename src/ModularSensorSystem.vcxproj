@@ -113,7 +113,7 @@
     <ClCompile Include="controllers\DeviceController\devicecontroller.cpp" />
     <ClCompile Include="controllers\RecordingController\recordingcontroller.cpp" />
     <ClCompile Include="controllers\RecordingSession\recordingsession.cpp" />
-    <ClCompile Include="DeviceHelpers.cpp" />
+    <ClCompile Include="devices\Device\DeviceHelpers\DeviceHelpers.cpp" />
     <ClCompile Include="devices\Device\device.cpp" />
     <ClCompile Include="clipping\buffers\ClipBufferBase\clipbufferbase.cpp" />
     <ClCompile Include="devices\Device\DeviceMetadata\devicemetadata.cpp" />
@@ -191,7 +191,7 @@
     <QtMoc Include="devices\Device\DevicePreview\devicepreview.h" />
     <QtMoc Include="devices\VideoDevice\VideoPreview\videopreview.h" />
     <QtMoc Include="controllers\RecordingController\recordingcontroller.h" />
-    <ClInclude Include="DeviceHelpers.h" />
+    <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h" />
     <ClInclude Include="helpers\unitconversionhelper.h" />
     <QtMoc Include="controllers\MainController\maincontroller.h" />
     <QtMoc Include="clipping\buffers\VideoClipBuffer\videoclipbuffer.h" />

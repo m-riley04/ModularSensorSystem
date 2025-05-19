@@ -41,6 +41,9 @@ public slots:
     void stop() override;
 	void close() override;
     void restart() override;
+
+	void beginRecording(RecordingSession*) override;
+	void endRecording() override;
     
 	void setMediaDirectory(QUrl directory);
 

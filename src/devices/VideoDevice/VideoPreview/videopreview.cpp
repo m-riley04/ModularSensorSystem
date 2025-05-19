@@ -16,7 +16,5 @@ VideoPreview::~VideoPreview()
 void VideoPreview::onVideoFrameChanged(const QVideoFrame& frame)
 {
 	QImage img = frame.toImage();
-	qDebug() << "emitter" << this  // check address against widget debug
-		<< "img isNull?" << img.isNull();
 	emit frameReady(img);
 }

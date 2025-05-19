@@ -96,6 +96,9 @@ public:
 	virtual void close() = 0;
 	virtual void restart() = 0;
 
+	virtual void beginRecording(RecordingSession*) = 0;
+	virtual void endRecording() = 0;
+
 	/// <summary>
 	/// The unique ID for the device
 	/// </summary>
