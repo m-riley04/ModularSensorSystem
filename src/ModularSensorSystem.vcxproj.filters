@@ -43,9 +43,6 @@
     <ClCompile Include="windows\MainWindow\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windows\AddCameraDialog\AddCameraDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -74,12 +71,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="devices\Device\device.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="clipping\buffers\VideoClipBuffer\videoclipbuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="devices\VideoDevice\videodevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp">
@@ -121,9 +112,6 @@
     <ClCompile Include="widgets\DevicePreviewWidget\devicepreviewwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="devices\VideoDevice\VideoPreview\videopreview.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="controllers\RecordingController\recordingcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -133,18 +121,12 @@
     <ClCompile Include="controllers\PluginController\plugincontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="plugins\device\IDevicePlugin\ideviceplugin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="plugins\device\VideoDevicePlugin\videodeviceplugin.cpp">
+    <ClCompile Include="dialogs\AddDeviceDialog\adddevicedialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SensorListItem\SensorListItem.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="windows\AddCameraDialog\AddCameraDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.h">
@@ -169,12 +151,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="devices\Device\device.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="devices\VideoDevice\videodevice.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="clipping\buffers\VideoClipBuffer\videoclipbuffer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h">
@@ -216,24 +192,18 @@
     <QtMoc Include="widgets\DevicePreviewWidget\devicepreviewwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="devices\VideoDevice\VideoPreview\videopreview.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="controllers\RecordingController\recordingcontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="controllers\PluginController\plugincontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="plugins\device\VideoDevicePlugin\videodeviceplugin.h">
+    <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\SensorListItem\SensorListItem.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="windows\AddCameraDialog\AddCameraDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui">
@@ -269,6 +239,9 @@
     <QtUic Include="widgets\DevicePreviewWidget\devicepreviewwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="dialogs\AddDeviceDialog\adddevicedialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
@@ -280,7 +253,7 @@
     <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="plugins\device\IDevicePlugin\ideviceplugin.h">
+    <ClInclude Include="plugins\device\ideviceplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -291,6 +264,5 @@
     <None Include="models\yolov8n.onnx" />
     <None Include="models\yolov10n.onnx" />
     <None Include="models\yolov10s.onnx" />
-    <None Include="plugins\device\VideoDevicePlugin\videodeviceplugin.json" />
   </ItemGroup>
 </Project>

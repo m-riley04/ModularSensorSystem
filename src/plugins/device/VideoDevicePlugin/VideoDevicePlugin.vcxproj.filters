@@ -23,9 +23,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="videodeviceplugin_global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="videodeviceplugin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -57,5 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="videodeviceplugin.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="videodeviceplugin_global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

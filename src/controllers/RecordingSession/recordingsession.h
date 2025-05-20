@@ -1,9 +1,9 @@
 #pragma once
 
 #include <QObject>
-#include "Devices/Device/device.h"
+#include "devices/Device/device.h"
 #include <qelapsedtimer.h>
-#include "Clipping/Buffers/ClipBufferBase/clipbufferbase.h"
+#include "clipping/Buffers/ClipBufferBase/clipbufferbase.h"
 #include <qdir.h>
 #include <QtMultimedia/qmediarecorder.h>
 

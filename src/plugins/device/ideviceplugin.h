@@ -1,6 +1,6 @@
 #pragma once
 
-#include <devices/Device/device.h>
+#include "devices/Device/device.h"
 
 struct DeviceInfo {
 	QString id;

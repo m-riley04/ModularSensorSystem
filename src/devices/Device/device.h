@@ -1,9 +1,9 @@
 #pragma once
 
 #include <QObject>
-#include <controllers/RecordingSession/recordingsession.h>
+#include "controllers/RecordingSession/recordingsession.h"
 #include <quuid.h>
-#include "DevicePreview/devicepreview.h"
+#include "devices/Device/DevicePreview/devicepreview.h"
 #include <QPointer>
 
 class RecordingSession;

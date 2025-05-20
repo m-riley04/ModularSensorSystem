@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <devices/Device/device.h>
+#include "devices/Device/device.h"
 
 class Device;
 

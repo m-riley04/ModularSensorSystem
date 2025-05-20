@@ -36,9 +36,10 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>6.8.0_msvc2022_64</QtInstall>
+    <QtInstall>6.9.0_msvc2022_64</QtInstall>
     <QtModules>core;gui;testlib;widgets;concurrent;multimedia;multimediawidgets;sensors;serialbus;serialport;positioning</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
+    <QtPlugin>true</QtPlugin>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.8.0_msvc2022_64</QtInstall>
@@ -61,6 +62,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <IncludePath>$(SolutionDir)/src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\plugins\devices\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
@@ -70,10 +72,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/src/devices;$(SolutionDir)/src/clipping;$(SolutionDir)/src/plugins;$(SolutionDir)/src/controllers;$(SolutionDir)/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <QtMoc />
     <QtMoc>
-      <AdditionalDependencies>$(SolutionDir)/src;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)/src;$(SolutionDir)/src/controllers;$(SolutionDir)/src/plugins;$(SolutionDir)/src/devices;$(SolutionDir)/src/clipping;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalIncludeDirectories>$(SolutionDir)/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -112,13 +116,20 @@
     <ClCompile Include="VideoPreview\videopreview.cpp" />
     <QtMoc Include="VideoDevice\videodevice.h" />
     <QtMoc Include="VideoClipBuffer\videoclipbuffer.h" />
-    <ClInclude Include="videodeviceplugin_global.h" />
     <QtMoc Include="VideoPreview\videopreview.h" />
     <QtMoc Include="videodeviceplugin.h" />
     <ClCompile Include="videodeviceplugin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="videodeviceplugin.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="videodeviceplugin_global.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\ModularSensorSystem.vcxproj">
+      <Project>{3010c0c6-4a46-4f62-ae8e-eacfa6aad148}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

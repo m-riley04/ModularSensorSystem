@@ -4,6 +4,9 @@ AddDeviceDialog::AddDeviceDialog(PluginController* pluginController, QWidget *pa
 	: QDialog(parent), pPluginController(pluginController)
 {
 	ui.setupUi(this);
+
+	populateDeviceTypeDropdown();
+	populateDeviceDropdown();
 }
 
 AddDeviceDialog::~AddDeviceDialog()

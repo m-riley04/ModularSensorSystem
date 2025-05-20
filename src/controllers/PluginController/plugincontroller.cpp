@@ -34,4 +34,6 @@ void PluginController::loadPlugin(const QString& fullPath, const QString& fileNa
 		loader.unload();  // Unload if not the correct plugin type
 		return;
 	}
+
+	mDevicePlugins.append(devicePlugin);
 }
