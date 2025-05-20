@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModularSensorSystem", "src\ModularSensorSystem.vcxproj", "{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}"
+	ProjectSection(ProjectDependencies) = postProject
+		{64E71030-1FA0-4CA6-AA77-6866284F8C67} = {64E71030-1FA0-4CA6-AA77-6866284F8C67}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{227DF51C-4F8C-4C96-AC7E-39617C0AEF82}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,7 +20,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VideoDevicePlugin", "src\plugins\device\VideoDevicePlugin\VideoDevicePlugin.vcxproj", "{6C30785C-86DE-4623-A382-E178F73D3E4F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148} = {3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}
+		{64E71030-1FA0-4CA6-AA77-6866284F8C67} = {64E71030-1FA0-4CA6-AA77-6866284F8C67}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceCore", "src\devicecore\DeviceCore\DeviceCore.vcxproj", "{64E71030-1FA0-4CA6-AA77-6866284F8C67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +39,10 @@ Global
 		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Debug|x64.Build.0 = Debug|x64
 		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Release|x64.ActiveCfg = Release|x64
 		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Release|x64.Build.0 = Release|x64
+		{64E71030-1FA0-4CA6-AA77-6866284F8C67}.Debug|x64.ActiveCfg = Debug|x64
+		{64E71030-1FA0-4CA6-AA77-6866284F8C67}.Debug|x64.Build.0 = Debug|x64
+		{64E71030-1FA0-4CA6-AA77-6866284F8C67}.Release|x64.ActiveCfg = Release|x64
+		{64E71030-1FA0-4CA6-AA77-6866284F8C67}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
