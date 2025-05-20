@@ -3,9 +3,10 @@
 MainController::MainController(QObject *parent)
 	: QObject(parent)
 {
-	pDeviceController = std::make_unique<DeviceController>(this);
+	pPluginController = std::make_unique<PluginController>(QCoreApplication::applicationDirPath() + "/plugins");
+	pDeviceController = std::make_unique<DeviceController>(pPluginController.get(), this);
 	pRecordingController = std::make_unique<RecordingController>(pDeviceController.get(), this);
-	pPluginController = std::make_unique<PluginManager>(qApp->applicationDirPath() + "/plugins");
+	
 }
 
 MainController::~MainController()

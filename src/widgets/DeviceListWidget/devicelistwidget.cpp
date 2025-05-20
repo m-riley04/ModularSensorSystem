@@ -77,9 +77,9 @@ void DeviceListWidget::setDeviceController(DeviceController* deviceController)
 
 void DeviceListWidget::openAddDeviceDialog()
 {
-	AddCameraDialog* addCameraDialog = new AddCameraDialog(this);
+	AddDeviceDialog* addDeviceDialog = new AddDeviceDialog(pDeviceController->pluginController(), this);
 
-	connect(addCameraDialog, &AddCameraDialog::deviceSelected, pDeviceController, &DeviceController::addCamera);
+	//connect(addDeviceDialog, &AddDeviceDialog::deviceSelected, pDeviceController, &DeviceController::addDevice);
 
-	addCameraDialog->show();
+	addDeviceDialog->show();
 }

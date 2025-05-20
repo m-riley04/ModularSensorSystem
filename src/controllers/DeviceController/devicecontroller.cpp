@@ -1,7 +1,7 @@
 #include "devicecontroller.h"
 
-DeviceController::DeviceController(QObject *parent)
-	: QObject(parent)
+DeviceController::DeviceController(PluginController* pluginController, QObject *parent)
+	: QObject(parent), pPluginController(pluginController)
 {}
 
 DeviceController::~DeviceController()

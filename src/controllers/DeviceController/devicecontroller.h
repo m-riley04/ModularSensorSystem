@@ -4,6 +4,7 @@
 #include <Devices/Device/device.h>
 #include <Controllers/RecordingSession/recordingsession.h>
 #include <qcameradevice.h>
+#include <controllers/PluginController/plugincontroller.h>
 
 class DeviceController : public QObject
 {
@@ -19,11 +20,13 @@ public:
 	};
 
 public:
-	DeviceController(QObject *parent);
+	DeviceController(PluginController* pluginController, QObject *parent);
 	~DeviceController();
 
 	DeviceController::State state() const { return mState; }
 	QList<Device*> devices() const { return mDevices; }
+
+	PluginController* pluginController() const { return pPluginController; }
 
 	bool isEmpty() const { return mDevices.isEmpty(); }
 	bool isOpen() const { return mState == OPENED; }
@@ -36,6 +39,7 @@ private:
 	QList<Device*> mDevices;
 	DeviceController::State mState = CLOSED;
 
+	QPointer<PluginController> pPluginController;
 	RecordingSession* pRecordingSession;
 
 public slots:

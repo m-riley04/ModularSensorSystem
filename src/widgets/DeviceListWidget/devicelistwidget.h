@@ -2,8 +2,8 @@
 
 #include <QWidget>
 #include "ui_devicelistwidget.h"
-
-#include "Windows/AddCameraDialog/AddCameraDialog.h"
+#include <qmessagebox.h>
+#include "dialogs/AddDeviceDialog/adddevicedialog.h"
 #include <Controllers/DeviceController/devicecontroller.h>
 
 class DeviceListWidget : public QWidget

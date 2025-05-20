@@ -5,6 +5,8 @@
 #include <Controllers/ClipController/clipcontroller.h>
 #include <controllers/RecordingController/recordingcontroller.h>
 #include <controllers/PluginController/plugincontroller.h>
+#include <qcoreapplication.h>
+#include <QtMultimedia>
 
 class MainController  : public QObject
 {

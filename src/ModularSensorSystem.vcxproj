@@ -132,7 +132,7 @@
     <ClCompile Include="widgets\SensorListItem\SensorListItem.cpp" />
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
     <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
-    <ClCompile Include="windows\AddCameraDialog\AddCameraDialog.cpp" />
+    <ClCompile Include="dialogs\AddDeviceDialog\adddevicedialog.cpp" />
     <ClCompile Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp" />
     <ClCompile Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp" />
     <ClCompile Include="windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp" />
@@ -145,7 +145,7 @@
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
     <QtUic Include="widgets\SessionControlsWidget\sessioncontrolswidget.ui" />
     <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
-    <QtUic Include="windows\AddCameraDialog\AddCameraDialog.ui" />
+    <QtUic Include="dialogs\AddDeviceDialog\adddevicedialog.ui" />
     <QtUic Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.ui" />
     <QtUic Include="windows\MainWindow\MainWindow.ui" />
     <QtMoc Include="windows\MainWindow\MainWindow.h" />
@@ -165,12 +165,10 @@
     <QtMoc Include="widgets\SensorListItem\SensorListItem.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="windows\AddCameraDialog\AddCameraDialog.h" />
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h" />
     <QtMoc Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.h" />
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h" />
     <QtMoc Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.h" />

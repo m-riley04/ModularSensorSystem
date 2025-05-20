@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "Controllers/RecordingSession/recordingsession.h"
+#include <controllers/RecordingSession/recordingsession.h>
 #include <quuid.h>
 #include "DevicePreview/devicepreview.h"
 #include <QPointer>
