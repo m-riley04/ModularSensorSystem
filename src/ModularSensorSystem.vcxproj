@@ -65,11 +65,15 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <QtMoc />
     <Link>
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\DeviceCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <QtMoc>
+      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\DeviceCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </QtMoc>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -209,7 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="devicecore\DeviceCore\DeviceCore.vcxproj">
-      <Project>{64e71030-1fa0-4ca6-aa77-6866284f8c67}</Project>
+      <Project>{40e5c193-67df-4084-b1e6-d521d94aa232}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -23,19 +23,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\controllers\RecordingSession\recordingsession.cpp">
+    <ClInclude Include="devicecore_global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="devicecore.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClCompile Include="devicecore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\clipping\buffers\ClipBufferBase\clipbufferbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="..\..\devices\Device\device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\devices\Device\DeviceMetadata\devicemetadata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\devices\Device\DevicePreview\devicepreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\devices\Device\DeviceMetadata\devicemetadata.cpp">
+    <ClCompile Include="..\..\clipping\buffers\ClipBufferBase\clipbufferbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\controllers\RecordingSession\recordingsession.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

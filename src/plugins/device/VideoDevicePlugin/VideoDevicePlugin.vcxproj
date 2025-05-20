@@ -76,12 +76,12 @@
     </ClCompile>
     <QtMoc />
     <QtMoc>
-      <AdditionalDependencies>DeviceCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\DeviceCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalIncludeDirectories>$(SolutionDir)/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </QtMoc>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\DeviceCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DeviceCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -132,7 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\devicecore\DeviceCore\DeviceCore.vcxproj">
-      <Project>{64e71030-1fa0-4ca6-aa77-6866284f8c67}</Project>
+      <Project>{40e5c193-67df-4084-b1e6-d521d94aa232}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\ModularSensorSystem.vcxproj">
       <Project>{3010c0c6-4a46-4f62-ae8e-eacfa6aad148}</Project>
