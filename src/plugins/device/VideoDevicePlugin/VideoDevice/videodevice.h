@@ -8,7 +8,7 @@
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
-#include "../../../devices/Device/device.h"
+#include "devices/Device/device.h"
 #include "VideoClipBuffer/videoclipbuffer.h"
 #include "VideoPreview/videopreview.h"
 

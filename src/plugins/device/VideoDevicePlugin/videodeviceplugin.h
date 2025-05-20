@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QObject>
-#include "../ideviceplugin.h"
-#include "../../../devices/Device/device.h"
+#include "plugins/device/ideviceplugin.h"
+#include "devices/Device/device.h"
 #include "VideoDevice/videodevice.h"
 #include <QtMultimedia>
 

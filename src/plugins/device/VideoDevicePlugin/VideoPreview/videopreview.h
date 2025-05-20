@@ -1,11 +1,9 @@
 #pragma once
 
-//#include "../../../devices/Device/DevicePreview/devicepreview.h"
+#include "devices/Device/DevicePreview/devicepreview.h"
 #include <qmediacapturesession.h>
 #include <QtMultimedia>
 #include <QObject>
-
-class DevicePreview;
 
 class VideoPreview : public DevicePreview
 {

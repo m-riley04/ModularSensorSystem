@@ -1,6 +1,6 @@
 // videoclipbuffer.h
 #pragma once
-#include "../../../Clipping/Buffers/ClipBufferBase/clipbufferbase.h"
+#include "clipping/Buffers/ClipBufferBase/clipbufferbase.h"
 #include <QVideoFrame>
 #include <deque>
 
