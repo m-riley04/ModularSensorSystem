@@ -128,9 +128,6 @@
     <None Include="videodeviceplugin.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="videodeviceplugin_global.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\devicecore\DeviceCore\DeviceCore.vcxproj">
       <Project>{40e5c193-67df-4084-b1e6-d521d94aa232}</Project>
     </ProjectReference>

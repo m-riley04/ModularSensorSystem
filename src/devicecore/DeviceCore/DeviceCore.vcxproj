@@ -104,14 +104,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="devicecore_global.h" />
-    <QtMoc Include="devicecore.h" />
     <ClCompile Include="..\..\clipping\buffers\ClipBufferBase\clipbufferbase.cpp" />
     <ClCompile Include="..\..\controllers\RecordingSession\recordingsession.cpp" />
     <ClCompile Include="..\..\devices\Device\device.cpp" />
     <ClCompile Include="..\..\devices\Device\DeviceMetadata\devicemetadata.cpp" />
     <ClCompile Include="..\..\devices\Device\DevicePreview\devicepreview.cpp" />
-    <ClCompile Include="devicecore.cpp" />
     <QtMoc Include="..\..\devices\Device\device.h" />
     <QtMoc Include="..\..\devices\Device\DevicePreview\devicepreview.h" />
     <QtMoc Include="..\..\devices\Device\DeviceMetadata\devicemetadata.h" />

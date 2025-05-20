@@ -55,9 +55,4 @@
   <ItemGroup>
     <None Include="videodeviceplugin.json" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="videodeviceplugin_global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>
