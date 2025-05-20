@@ -67,6 +67,9 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <QtMoc />
+    <Link>
+      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\DeviceCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -203,6 +206,11 @@
     <None Include="models\yolov5n.onnx" />
     <None Include="models\yolov5su.onnx" />
     <None Include="models\yolov8n.onnx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="devicecore\DeviceCore\DeviceCore.vcxproj">
+      <Project>{64e71030-1fa0-4ca6-aa77-6866284f8c67}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

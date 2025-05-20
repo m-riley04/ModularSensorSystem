@@ -81,6 +81,7 @@
     </QtMoc>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\DeviceCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -130,6 +131,9 @@
     <ClInclude Include="videodeviceplugin_global.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\devicecore\DeviceCore\DeviceCore.vcxproj">
+      <Project>{64e71030-1fa0-4ca6-aa77-6866284f8c67}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\ModularSensorSystem.vcxproj">
       <Project>{3010c0c6-4a46-4f62-ae8e-eacfa6aad148}</Project>
     </ProjectReference>
