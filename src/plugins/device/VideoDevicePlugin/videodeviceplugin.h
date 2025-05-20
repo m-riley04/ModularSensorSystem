@@ -1,16 +1,20 @@
 #pragma once
 
 #include <QObject>
-#include <plugins/device/IDevicePlugin/ideviceplugin.h>
-#include <devices/VideoDevice/videodevice.h>
+#include "../ideviceplugin.h"
+#include "../../../devices/Device/device.h"
+#include "VideoDevice/videodevice.h"
+#include <QtMultimedia>
 
-class VideoDevicePlugin  : public QObject, public IDevicePlugin
+class VideoDevicePlugin : public QObject, public IDevicePlugin
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID IDevicePlugin_iid FILE "videodeviceplugin.json")
 	Q_INTERFACES(IDevicePlugin)
 
 public:
-	QList<DeviceInfo> enumerate() const override;
-	Device* create(const QString& id, QObject* parent) override;
+	QList<DeviceInfo> availableDevices() const override;
+	Device* createDevice(const QByteArray& id, QObject* parent) override;
+	QString pluginName() const override { return "VideoDevice"; }
+	Device::Type deviceType() const override { return Device::Type::CAMERA; }
 };

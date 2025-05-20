@@ -3,7 +3,6 @@
 #include <QWidget>
 #include "ui_previewcontainerwidget.h"
 #include <QList>
-#include "devices/VideoDevice/videodevice.h"
 #include <Controllers/MainController/maincontroller.h>
 #include "devices/Device/DevicePreview/devicepreview.h"
 #include "widgets/DevicePreviewWidget/devicepreviewwidget.h"

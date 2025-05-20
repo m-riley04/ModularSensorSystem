@@ -3,7 +3,7 @@
 #include <QObject>
 #include <Devices/Device/device.h>
 #include <Controllers/RecordingSession/recordingsession.h>
-#include "devices/VideoDevice/videodevice.h"
+#include <qcameradevice.h>
 
 class DeviceController : public QObject
 {
@@ -42,8 +42,6 @@ public slots:
 	void addDevice(Device* device);
 	void removeDevice(Device* device);
 	Device* getDevice(QByteArray id) const;
-
-	void addCamera(const QCameraDevice& cameraDevice);
 
 	void openDevices();
 	void startDevices();

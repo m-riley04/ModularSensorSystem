@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "Clipping/Buffers/VideoClipBuffer/videoclipbuffer.h"
+#include "Clipping/Buffers/ClipBufferBase/clipbufferbase.h"
 #include <QDebug>
 #include <QVideoFrame>
 

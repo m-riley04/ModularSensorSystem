@@ -14,6 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		vcpkg.json = vcpkg.json
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VideoDevicePlugin", "src\plugins\device\VideoDevicePlugin\VideoDevicePlugin.vcxproj", "{6C30785C-86DE-4623-A382-E178F73D3E4F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148} = {3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -24,6 +29,10 @@ Global
 		{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}.Debug|x64.Build.0 = Debug|x64
 		{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}.Release|x64.ActiveCfg = Release|x64
 		{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}.Release|x64.Build.0 = Release|x64
+		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Debug|x64.ActiveCfg = Debug|x64
+		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Debug|x64.Build.0 = Debug|x64
+		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Release|x64.ActiveCfg = Release|x64
+		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

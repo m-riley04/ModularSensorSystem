@@ -1,23 +1,24 @@
 #include "videodeviceplugin.h"
 
-QList<DeviceInfo> VideoDevicePlugin::enumerate() const
+QList<DeviceInfo> VideoDevicePlugin::availableDevices() const
 {
     QList<DeviceInfo> list;
-    for (auto const& cam : QMediaDevices::videoInputs()) {
-        DeviceInfo info;
-        info.id = cam.id();
-        info.displayName = cam.description();
-        info.type = Device::CAMERA;
-        list << info;
+    for (const QCameraDevice& cam : QMediaDevices::videoInputs()) {
+        DeviceInfo info{ cam.id(), cam.description() };
+        list.append(info);
     }
     return list;
 }
 
-Device* VideoDevicePlugin::create(const QString& id, QObject* parent)
+Device* VideoDevicePlugin::createDevice(const QByteArray& id, QObject* parent)
 {
-    for (auto const& cam : QMediaDevices::videoInputs()) {
-        if (cam.id() == id.toUtf8())
-            return new VideoDevice(cam, parent);  // your class
+    // Find the QCameraDevice by id from QMediaDevices
+    QCameraDevice selected;
+    for (const QCameraDevice& cam : QMediaDevices::videoInputs()) {
+        if (cam.id() == id) { selected = cam; break; }
+    }
+    if (!selected.isNull()) {
+        return new VideoDevice(selected, parent);  // create the concrete device
     }
     return nullptr;
 }

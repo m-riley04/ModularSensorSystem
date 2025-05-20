@@ -8,9 +8,9 @@
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
-#include "devices/Device/device.h"
-#include "Clipping/Buffers/VideoClipBuffer/videoclipbuffer.h"
-#include "devices/VideoDevice/VideoPreview/videopreview.h"
+#include "../../../devices/Device/device.h"
+#include "VideoClipBuffer/videoclipbuffer.h"
+#include "VideoPreview/videopreview.h"
 
 #define DEFAULT_FRAME_RATE 30
 

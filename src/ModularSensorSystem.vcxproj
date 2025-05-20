@@ -119,13 +119,9 @@
     <ClCompile Include="clipping\buffers\ClipBufferBase\clipbufferbase.cpp" />
     <ClCompile Include="devices\Device\DeviceMetadata\devicemetadata.cpp" />
     <ClCompile Include="devices\Device\DevicePreview\devicepreview.cpp" />
-    <ClCompile Include="devices\VideoDevice\VideoPreview\videopreview.cpp" />
     <ClCompile Include="pages\MainPage\mainpage.cpp" />
-    <ClCompile Include="plugins\device\IDevicePlugin\ideviceplugin.cpp" />
-    <ClCompile Include="plugins\device\VideoDevicePlugin\videodeviceplugin.cpp" />
     <ClCompile Include="processing\FrameProcessor\frameprocessor.cpp" />
     <ClCompile Include="processing\YOLO\yolo.cpp" />
-    <ClCompile Include="clipping\buffers\VideoClipBuffer\videoclipbuffer.cpp" />
     <ClCompile Include="helpers\unitconversionhelper.cpp" />
     <ClCompile Include="controllers\MainController\maincontroller.cpp" />
     <ClCompile Include="widgets\DeviceListWidget\devicelistwidget.cpp" />
@@ -153,7 +149,6 @@
     <QtUic Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.ui" />
     <QtUic Include="windows\MainWindow\MainWindow.ui" />
     <QtMoc Include="windows\MainWindow\MainWindow.h" />
-    <ClCompile Include="devices\VideoDevice\videodevice.cpp" />
     <ClCompile Include="windows\MainWindow\MainWindow.cpp">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
@@ -165,9 +160,6 @@
     <QtUic Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui" />
     <QtUic Include="windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui" />
     <QtUic Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="devices\VideoDevice\videodevice.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SensorListItem\SensorListItem.h" />
@@ -192,21 +184,18 @@
     <QtMoc Include="clipping\buffers\ClipBufferBase\clipbufferbase.h" />
     <QtMoc Include="controllers\RecordingSession\recordingsession.h" />
     <QtMoc Include="devices\Device\DevicePreview\devicepreview.h" />
-    <QtMoc Include="devices\VideoDevice\VideoPreview\videopreview.h" />
     <QtMoc Include="controllers\RecordingController\recordingcontroller.h" />
     <QtMoc Include="controllers\PluginController\plugincontroller.h" />
     <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h" />
     <ClInclude Include="helpers\unitconversionhelper.h" />
     <QtMoc Include="controllers\MainController\maincontroller.h" />
-    <QtMoc Include="clipping\buffers\VideoClipBuffer\videoclipbuffer.h" />
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />
     <QtMoc Include="widgets\DeviceListWidget\devicelistwidget.h" />
     <QtMoc Include="processing\FrameProcessor\frameprocessor.h" />
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />
     <QtMoc Include="pages\MainPage\mainpage.h" />
     <QtMoc Include="widgets\DevicePreviewWidget\devicepreviewwidget.h" />
-    <ClInclude Include="plugins\device\IDevicePlugin\ideviceplugin.h" />
-    <QtMoc Include="plugins\device\VideoDevicePlugin\videodeviceplugin.h" />
+    <ClInclude Include="plugins\device\ideviceplugin.h" />
     <ClInclude Include="widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <ItemGroup>
@@ -216,7 +205,6 @@
     <None Include="models\yolov5n.onnx" />
     <None Include="models\yolov5su.onnx" />
     <None Include="models\yolov8n.onnx" />
-    <None Include="plugins\device\VideoDevicePlugin\videodeviceplugin.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

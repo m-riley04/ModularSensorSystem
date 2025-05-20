@@ -66,14 +66,6 @@ void DeviceController::restartDevices()
 	emit devicesRestarted();
 }
 
-void DeviceController::addCamera(const QCameraDevice& cameraDevice) {
-	auto cam = new VideoDevice(cameraDevice, this);
-
-	mDevices.append(cam);
-
-	emit deviceAdded(cam);
-}
-
 void DeviceController::addDevice(Device* device) {
 	if (device) {
 		mDevices.append(device);

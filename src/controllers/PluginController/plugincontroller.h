@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QDir>
-#include <plugins/device/IDevicePlugin/ideviceplugin.h>
+#include <plugins/device/ideviceplugin.h>
 #include <QPluginLoader>
 
 class PluginManager : public QObject

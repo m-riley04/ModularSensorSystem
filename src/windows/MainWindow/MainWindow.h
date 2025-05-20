@@ -5,7 +5,6 @@
 #include <QVideoFrame>
 #include <QVideoWidget>
 #include "Windows/AddCameraDialog/AddCameraDialog.h"
-#include "Widgets/CustomSinkWidget/customsinkwidget.h";
 #include "Windows/QtCameraControlsWindow/qtcameracontrolsdialog.h"
 #include "Widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "Controllers/MainController/maincontroller.h"
