@@ -247,6 +247,9 @@
     <ClInclude Include="plugins\device\ideviceplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="devices\IConfigurableDevice\iconfigurabledevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="models\yolo11n.onnx" />

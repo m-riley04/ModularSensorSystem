@@ -5,6 +5,8 @@
 #include <qmessagebox.h>
 #include "dialogs/AddDeviceDialog/adddevicedialog.h"
 #include <Controllers/DeviceController/devicecontroller.h>
+#include <devices/IConfigurableDevice/iconfigurabledevice.h>
+#include <qobject.h>
 
 class DeviceListWidget : public QWidget
 {
@@ -25,6 +27,7 @@ private:
 public slots:
 	void openAddDeviceDialog();
 	void openRemoveDeviceDialog();
+	void openProperties();
 	void setDeviceController(DeviceController* deviceController);
 
 signals:

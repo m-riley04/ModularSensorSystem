@@ -22,6 +22,7 @@ void DeviceListWidget::initSignals()
 	// UI button signals
 	connect(ui.buttonAdd, &QPushButton::clicked, this, &DeviceListWidget::openAddDeviceDialog);
 	connect(ui.buttonRemove, &QPushButton::clicked, this, &DeviceListWidget::openRemoveDeviceDialog);
+	connect(ui.buttonProperties, &QPushButton::clicked, this, &DeviceListWidget::openProperties);
 
 	initDeviceControllerSignals();
 }
@@ -61,6 +62,30 @@ void DeviceListWidget::openRemoveDeviceDialog()
 			// Cleanup memory of list item (as specified by docs)
 			delete selectedItem;
 		}
+	}
+}
+
+void DeviceListWidget::openProperties()
+{
+	// Get the selected device
+	auto selectedItem = ui.listDevices->currentItem();
+
+	if (!selectedItem) return;
+
+	Device* device = selectedItem->data(Qt::UserRole).value<Device*>();
+
+	if (auto cfg = qobject_cast<IConfigurableDevice*>(device)) {
+		QWidget* w = cfg->createConfigWidget(this);
+		QDialog dlg(this);
+		dlg.setWindowTitle(device->name() + " Properties");
+		QVBoxLayout lay(&dlg);
+		lay.addWidget(w);
+		dlg.exec();
+	}
+	else {
+		// fallback: show generic property inspector
+		//showGenericPropertyDialog(device);
+		QMessageBox::information(this, "Properties", "No properties available for this device.");
 	}
 }
 

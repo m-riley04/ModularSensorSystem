@@ -6,6 +6,7 @@
 class ClipBufferBase : public QObject
 {
     Q_OBJECT
+
 public:
     using ns = std::chrono::nanoseconds;
     using time = std::int64_t; // monotonic ns since session start

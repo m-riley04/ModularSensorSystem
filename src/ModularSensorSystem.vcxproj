@@ -197,6 +197,7 @@
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />
     <QtMoc Include="pages\MainPage\mainpage.h" />
     <QtMoc Include="widgets\DevicePreviewWidget\devicepreviewwidget.h" />
+    <ClInclude Include="devices\IConfigurableDevice\iconfigurabledevice.h" />
     <ClInclude Include="plugins\device\ideviceplugin.h" />
     <ClInclude Include="widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
