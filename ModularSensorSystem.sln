@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VideoDevicePlugin", "src\pl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceCore", "src\devicecore\DeviceCore\DeviceCore.vcxproj", "{40E5C193-67DF-4084-B1E6-D521D94AA232}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DevicePluginTemplate", "src\plugins\device\DevicePluginTemplate\DevicePluginTemplate.vcxproj", "{4CB41DDB-FD91-4D5E-8166-C7616A78D20D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -43,6 +45,10 @@ Global
 		{40E5C193-67DF-4084-B1E6-D521D94AA232}.Debug|x64.Build.0 = Debug|x64
 		{40E5C193-67DF-4084-B1E6-D521D94AA232}.Release|x64.ActiveCfg = Release|x64
 		{40E5C193-67DF-4084-B1E6-D521D94AA232}.Release|x64.Build.0 = Release|x64
+		{4CB41DDB-FD91-4D5E-8166-C7616A78D20D}.Debug|x64.ActiveCfg = Debug|x64
+		{4CB41DDB-FD91-4D5E-8166-C7616A78D20D}.Debug|x64.Build.0 = Debug|x64
+		{4CB41DDB-FD91-4D5E-8166-C7616A78D20D}.Release|x64.ActiveCfg = Release|x64
+		{4CB41DDB-FD91-4D5E-8166-C7616A78D20D}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
