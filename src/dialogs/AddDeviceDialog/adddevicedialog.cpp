@@ -11,9 +11,10 @@ AddDeviceDialog::AddDeviceDialog(PluginController* pluginController, QWidget *pa
 	// Connect signals
 	connect(ui.dropdownDeviceType, &QComboBox::currentIndexChanged, this, [this](int index) {
 		if (index >= 0) {
+			
 			QVariant data = ui.dropdownDeviceType->itemData(index);
 			IDevicePlugin* plugin = data.value<IDevicePlugin*>();
-			pSelectedDevicePlugin = plugin;
+			pSelectedDevicePlugin = pPluginController->devicePlugins().at(index);;
 			emit deviceTypeSelected(plugin);
 
 			// Repopulate with available devices of the selected type
@@ -26,7 +27,6 @@ AddDeviceDialog::AddDeviceDialog(PluginController* pluginController, QWidget *pa
 			DeviceInfo deviceInfo = ui.dropdownDevice->itemData(index).value<DeviceInfo>();
 			mSelectedDeviceInfo = deviceInfo;
 			emit deviceSelected(pSelectedDevicePlugin, mSelectedDeviceInfo);
-            
 		}
 		});
 
@@ -60,19 +60,11 @@ void AddDeviceDialog::populateDeviceTypeDropdown()
 	// Clear the existing items in the dropdown
 	ui.dropdownDeviceType->clear();
 
-	// Set to store unique device types
-	QSet<Device::Type> uniqueDeviceTypes;
-
 	// Populate the device type dropdown with available device types
 	for (const auto& plugin : pPluginController->devicePlugins()) {
 		if (plugin) {
-			uniqueDeviceTypes.insert(plugin->deviceType());
+			ui.dropdownDeviceType->addItem(plugin->pluginName(), QVariant::fromValue(plugin));
 		}
-	}
-	
-	// Add the unique device types to the dropdown
-	for (const auto& type : uniqueDeviceTypes) {
-		ui.dropdownDeviceType->addItem(Device::typeToString(type), static_cast<int>(type));
 	}
 
 	// Set the default selection to the first item

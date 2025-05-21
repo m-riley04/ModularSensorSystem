@@ -12,8 +12,6 @@
 #include "VideoClipBuffer/videoclipbuffer.h"
 #include "VideoPreview/videopreview.h"
 
-#define DEFAULT_FRAME_RATE 30
-
 class VideoDevice : public Device
 {
 	Q_OBJECT
@@ -22,7 +20,6 @@ private:
     QMediaCaptureSession mSession;
     QCamera mCamera;
     QMediaRecorder mRecorder;
-	std::unique_ptr<VideoClipBuffer> pVideoBuffer = nullptr;
 
 public:
     VideoDevice(QCameraDevice qVideoDevice, QObject *parent);
@@ -33,7 +30,6 @@ public:
     QMediaCaptureSession* session() { return &mSession; }
 	QCamera* camera() { return &mCamera; }
 	QMediaRecorder* recorder() { return &mRecorder; }
-	VideoClipBuffer* videoBuffer() { return pVideoBuffer.get(); }
 
 public slots:
     void open() override;

@@ -78,6 +78,7 @@ void DeviceListWidget::setDeviceController(DeviceController* deviceController)
 void DeviceListWidget::openAddDeviceDialog()
 {
 	AddDeviceDialog* addDeviceDialog = new AddDeviceDialog(pDeviceController->pluginController(), this);
+	addDeviceDialog->setWindowModality(Qt::WindowModal);
 
 	connect(addDeviceDialog, &AddDeviceDialog::deviceConfirmed, pDeviceController, &DeviceController::addDevice);
 

@@ -6,8 +6,7 @@ VideoDevice::VideoDevice(QCameraDevice qVideoDevice, QObject* parent)
     mId = qVideoDevice.id();
     mName = qVideoDevice.description();
     mDeviceType = Device::Type::CAMERA;
-    pDevicePreview = new VideoPreview(&mSession, this); // TODO: Make this a unique_ptr?
-    // TODO/CONSIDER: add initializing back for certain stuff?
+    pPreview.reset(new VideoPreview(&mSession, this));
 }
 
 VideoDevice::~VideoDevice()
@@ -37,15 +36,15 @@ void VideoDevice::open() {
     mSession.setRecorder(&mRecorder);
 
     // Init preview
-	if (!pDevicePreview) pDevicePreview = new VideoPreview(&mSession, this);
+	if (!pPreview) pPreview.reset(new VideoPreview(&mSession, this));
 
     // Init buffer
-	pVideoBuffer = std::make_unique<VideoClipBuffer>(2, this);
+    if (!pClipBuffer) pClipBuffer.reset(new VideoClipBuffer(2, this));
 
     // Init recorder
     mRecorder.setOutputLocation(QDir::currentPath() + "/output");
 
-    emit previewAvailable(this, pDevicePreview);
+    emit previewAvailable(this, pPreview.get());
 }
 
 void VideoDevice::start() {
@@ -83,6 +82,9 @@ void VideoDevice::close()
 void VideoDevice::onNewFrame(const QVideoFrame& frame) {
 	// Get the timestamp
 	ClipBufferBase::time timestamp = 0; // TODO: Get the timestamp from the frame
+
+	// Cast buffer to VideoClipBuffer
+	VideoClipBuffer* pVideoBuffer = static_cast<VideoClipBuffer*>(pClipBuffer.get()); // CONSIDER: Do this differently/no casting?
     
     // Add the frame to the buffer
 	pVideoBuffer->push(frame, timestamp);

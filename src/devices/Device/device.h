@@ -5,6 +5,7 @@
 #include <quuid.h>
 #include "devices/Device/DevicePreview/devicepreview.h"
 #include <QPointer>
+#include "clipping/buffers/ClipBufferBase/clipbufferbase.h"
 
 class RecordingSession;
 class DevicePreview;
@@ -84,7 +85,8 @@ protected:
 	Device::ErrorState mErrorState = ErrorState::NO_ERROR;
 
 	QPointer<RecordingSession> pRecordingSession;
-	DevicePreview* pDevicePreview = nullptr;
+	std::unique_ptr<DevicePreview> pPreview = nullptr;
+	std::unique_ptr<ClipBufferBase> pClipBuffer = nullptr;
 
 public:
 	Device(QObject *parent);
@@ -123,14 +125,12 @@ public:
 	/// The DevicePreview object for the device.
 	/// Used for previewing the device's output.
 	/// </summary>
-	DevicePreview* preview() const { return pDevicePreview; }
+	DevicePreview* preview() const { return pPreview.get(); }
 
 	void setSession(RecordingSession* session)
 	{
 		pRecordingSession = session;
 	}
-
-	
 
 signals:
 	void opened();
