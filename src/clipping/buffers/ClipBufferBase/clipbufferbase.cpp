@@ -2,7 +2,7 @@
 
 ClipBufferBase::ClipBufferBase(double minutes, QObject* p)
     : QObject(p),
-    mWindow{ std::chrono::duration_cast<ns>(std::chrono::duration<double,std::ratio<60>>(minutes)) }
+    mWindow(std::chrono::duration_cast<ns>(std::chrono::duration<double,std::ratio<60>>(minutes)))
 {}
 
 void ClipBufferBase::setClipDuration(double minutes)
@@ -14,5 +14,6 @@ void ClipBufferBase::setClipDuration(double minutes)
         QMutexLocker L(&mMx);
         mWindow = newWin; // subclasses will trim on next push
     }
+
     emit clipDurationChanged(minutes);
 }
