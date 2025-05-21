@@ -4,8 +4,6 @@
 #include "ui_MainWindow.h"
 #include <QVideoFrame>
 #include <QVideoWidget>
-#include "dialogs/AddDeviceDialog/adddevicedialog.h"
-#include "dialogs/QtCameraControlsDialog/qtcameracontrolsdialog.h"
 #include "Widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "Controllers/MainController/maincontroller.h"
 #include <Controllers/ClipController/clipcontroller.h>

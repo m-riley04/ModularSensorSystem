@@ -135,12 +135,9 @@
     <ClCompile Include="widgets\DevicePreviewWidget\devicepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
-    <ClCompile Include="widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
-    <ClCompile Include="widgets\SensorListItem\SensorListItem.cpp" />
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
     <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
     <ClCompile Include="dialogs\AddDeviceDialog\adddevicedialog.cpp" />
-    <ClCompile Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.cpp" />
     <ClCompile Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp" />
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
@@ -161,16 +158,8 @@
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <QtUic Include="widgets\SensorListItem\SensorListItem.ui" />
-    <QtUic Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.ui" />
     <QtUic Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui" />
     <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="widgets\SensorListItem\SensorListItem.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h" />
@@ -199,7 +188,6 @@
     <QtMoc Include="widgets\DevicePreviewWidget\devicepreviewwidget.h" />
     <ClInclude Include="devices\IConfigurableDevice\iconfigurabledevice.h" />
     <ClInclude Include="plugins\device\ideviceplugin.h" />
-    <ClInclude Include="widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="models\yolo11n.onnx" />

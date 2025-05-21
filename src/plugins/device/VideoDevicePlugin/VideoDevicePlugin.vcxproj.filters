@@ -29,6 +29,9 @@
     <ClCompile Include="videodeviceplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <QtMoc Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VideoPreview\videopreview.cpp">
@@ -38,6 +41,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VideoClipBuffer\videoclipbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,5 +63,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="videodeviceplugin.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

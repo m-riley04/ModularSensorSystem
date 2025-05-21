@@ -11,15 +11,13 @@
 #include "devices/Device/device.h"
 #include "VideoClipBuffer/videoclipbuffer.h"
 #include "VideoPreview/videopreview.h"
+#include "devices/IConfigurableDevice/iconfigurabledevice.h"
+#include "VideoDevicePropertiesWidget/videodevicepropertieswidget.h"
 
-class VideoDevice : public Device
+class VideoDevice : public Device, public IConfigurableDevice
 {
 	Q_OBJECT
-
-private:
-    QMediaCaptureSession mSession;
-    QCamera mCamera;
-    QMediaRecorder mRecorder;
+	Q_INTERFACES(IConfigurableDevice)
 
 public:
     VideoDevice(QCameraDevice qVideoDevice, QObject *parent);
@@ -30,6 +28,16 @@ public:
     QMediaCaptureSession* session() { return &mSession; }
 	QCamera* camera() { return &mCamera; }
 	QMediaRecorder* recorder() { return &mRecorder; }
+
+	// IConfigurableDevice interface
+	QWidget* createConfigWidget(QWidget* parent = nullptr) override;
+	void loadSettings(const QJsonObject& obj) override;
+	void saveSettings(QJsonObject& obj) const override;
+
+private:
+	QMediaCaptureSession mSession;
+	QCamera mCamera;
+	QMediaRecorder mRecorder;
 
 public slots:
     void open() override;

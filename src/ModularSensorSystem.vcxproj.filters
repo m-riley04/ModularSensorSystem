@@ -37,16 +37,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\SensorListItem\SensorListItem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="windows\MainWindow\MainWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp">
@@ -123,12 +114,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="widgets\SensorListItem\SensorListItem.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -197,12 +182,6 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="widgets\SensorListItem\SensorListItem.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -235,9 +214,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="helpers\unitconversionhelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>

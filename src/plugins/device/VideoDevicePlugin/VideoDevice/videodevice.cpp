@@ -100,6 +100,21 @@ bool VideoDevice::checkCameraAvailability() {
     return QMediaDevices::videoInputs().count() > 0;
 }
 
+QWidget* VideoDevice::createConfigWidget(QWidget* parent)
+{
+	return new VideoDevicePropertiesWidget(this, parent);
+}
+
+void VideoDevice::loadSettings(const QJsonObject& obj)
+{
+    // TODO: implement
+}
+
+void VideoDevice::saveSettings(QJsonObject& obj) const
+{
+    // TODO: implement
+}
+
 void VideoDevice::restart() {
     stop();
     start();

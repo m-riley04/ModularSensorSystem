@@ -116,6 +116,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="VideoClipBuffer\videoclipbuffer.cpp" />
+    <ClCompile Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
+    <ClCompile Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.cpp" />
     <ClCompile Include="VideoDevice\videodevice.cpp" />
     <ClCompile Include="VideoPreview\videopreview.cpp" />
     <QtMoc Include="VideoDevice\videodevice.h" />
@@ -134,6 +136,13 @@
     <ProjectReference Include="..\..\..\ModularSensorSystem.vcxproj">
       <Project>{3010c0c6-4a46-4f62-ae8e-eacfa6aad148}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
+    <QtMoc Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -1,4 +1,4 @@
-#include "QtCameraControlsDialog.h"
+#include "videodevicepropertieswidget.h"
 
 /// <summary>
 /// A map of pixel formats to their string representations.
@@ -107,22 +107,16 @@ QMap<QString, QCamera::FocusMode> focusModeMap{
 	{ "Manual",      QCamera::FocusMode::FocusModeManual }
 };
 
-QtCameraControlsDialog::QtCameraControlsDialog(QCamera* camera, QMediaCaptureSession* cap, QWidget* parent)
-	: QDialog(parent), pCamera(camera), pCaptureSession(cap)
+VideoDevicePropertiesWidget::VideoDevicePropertiesWidget(VideoDevice* videoDevice, QWidget* parent)
+	: QWidget(parent), pVideoDevice(videoDevice)
 {
 	ui.setupUi(this);
 
-	if (pCamera == nullptr) {
-		QMessageBox::warning(this, "Error", "Could not initialize camera: Camera is null.");
-		return;
-	}
-
 	/// Initialzie camera device
-	mName = camera->cameraDevice().description();
-	ui.labelCameraDevice->setText(camera->cameraDevice().description());
-	ui.checkboxActive->setChecked(camera->isActive());
-	connect(ui.checkboxActive, &QCheckBox::checkStateChanged, camera, [camera](Qt::CheckState state) {
-		camera->setActive(state == Qt::CheckState::Checked);
+	ui.labelCameraDevice->setText(pVideoDevice->name());
+	ui.checkboxActive->setChecked(pVideoDevice->camera()->isActive());
+	connect(ui.checkboxActive, &QCheckBox::checkStateChanged, pVideoDevice->camera(), [this](Qt::CheckState state) {
+		pVideoDevice->camera()->setActive(state == Qt::CheckState::Checked);
 		});
 
 	// Initialize supported features
@@ -138,16 +132,16 @@ QtCameraControlsDialog::QtCameraControlsDialog(QCamera* camera, QMediaCaptureSes
 	initializeSettingsGroup();
 }
 
-QtCameraControlsDialog::~QtCameraControlsDialog()
+VideoDevicePropertiesWidget::~VideoDevicePropertiesWidget()
 {
 }
 
-QString QtCameraControlsDialog::sizeToString(QSize size)
+QString VideoDevicePropertiesWidget::sizeToString(QSize size)
 {
 	return QString::number(size.width()) + "x" + QString::number(size.height());
 }
 
-QSize QtCameraControlsDialog::stringToSize(const QString& str)
+QSize VideoDevicePropertiesWidget::stringToSize(const QString& str)
 {
 	QStringList parts = str.split('x');
 	if (parts.size() == 2)
@@ -155,7 +149,7 @@ QSize QtCameraControlsDialog::stringToSize(const QString& str)
 	return QSize(); // invalid if parsing failed
 }
 
-void QtCameraControlsDialog::populateFilterDropdowns()
+void VideoDevicePropertiesWidget::populateFilterDropdowns()
 {
 	// Clear existing items
 	ui.dropdownFps->clear();
@@ -209,7 +203,7 @@ void QtCameraControlsDialog::populateFilterDropdowns()
 	}
 }
 
-void QtCameraControlsDialog::populateExposureModes()
+void VideoDevicePropertiesWidget::populateExposureModes()
 {
 	ui.dropdownExposureMode->blockSignals(true);
 	ui.dropdownExposureMode->clear();
@@ -219,12 +213,12 @@ void QtCameraControlsDialog::populateExposureModes()
 		QCamera::ExposureMode mode = itr.value();
 
 		// Add mode if it is supported
-		if (pCamera->isExposureModeSupported(mode)) ui.dropdownExposureMode->addItem(name, mode);
+		if (pVideoDevice->camera()->isExposureModeSupported(mode)) ui.dropdownExposureMode->addItem(name, mode);
 	}
 	ui.dropdownExposureMode->blockSignals(false);
 }
 
-void QtCameraControlsDialog::populateFlashModes()
+void VideoDevicePropertiesWidget::populateFlashModes()
 {
 	ui.dropdownFlashMode->blockSignals(true);
 	ui.dropdownFlashMode->clear();
@@ -234,12 +228,12 @@ void QtCameraControlsDialog::populateFlashModes()
 		QCamera::FlashMode mode = itr.value();
 
 		// Add mode if it is supported
-		if (pCamera->isFlashModeSupported(mode)) ui.dropdownFlashMode->addItem(name, mode);
+		if (pVideoDevice->camera()->isFlashModeSupported(mode)) ui.dropdownFlashMode->addItem(name, mode);
 	}
 	ui.dropdownFlashMode->blockSignals(false);
 }
 
-void QtCameraControlsDialog::populateFocusModes()
+void VideoDevicePropertiesWidget::populateFocusModes()
 {
 	ui.dropdownFocusMode->blockSignals(true);
 	ui.dropdownFocusMode->clear();
@@ -249,12 +243,12 @@ void QtCameraControlsDialog::populateFocusModes()
 		QCamera::FocusMode mode = itr.value();
 
 		// Add mode if it is supported
-		if (pCamera->isFocusModeSupported(mode)) ui.dropdownFocusMode->addItem(name, mode);
+		if (pVideoDevice->camera()->isFocusModeSupported(mode)) ui.dropdownFocusMode->addItem(name, mode);
 	}
 	ui.dropdownFocusMode->blockSignals(false);
 }
 
-void QtCameraControlsDialog::populateTorchModes()
+void VideoDevicePropertiesWidget::populateTorchModes()
 {
 	ui.dropdownTorchMode->blockSignals(true);
 	ui.dropdownTorchMode->clear();
@@ -264,12 +258,12 @@ void QtCameraControlsDialog::populateTorchModes()
 		QCamera::TorchMode mode = itr.value();
 
 		// Add mode if it is supported
-		if (pCamera->isTorchModeSupported(mode)) ui.dropdownTorchMode->addItem(name, mode);
+		if (pVideoDevice->camera()->isTorchModeSupported(mode)) ui.dropdownTorchMode->addItem(name, mode);
 	}
 	ui.dropdownTorchMode->blockSignals(false);
 }
 
-void QtCameraControlsDialog::populateWhiteBalanceModes()
+void VideoDevicePropertiesWidget::populateWhiteBalanceModes()
 {
 	ui.dropdownWhiteBalanceMode->blockSignals(true);
 	ui.dropdownWhiteBalanceMode->clear();
@@ -279,14 +273,14 @@ void QtCameraControlsDialog::populateWhiteBalanceModes()
 		QCamera::WhiteBalanceMode mode = itr.value();
 
 		// Add mode if it is supported
-		if (pCamera->isWhiteBalanceModeSupported(mode)) ui.dropdownWhiteBalanceMode->addItem(name, mode);
+		if (pVideoDevice->camera()->isWhiteBalanceModeSupported(mode)) ui.dropdownWhiteBalanceMode->addItem(name, mode);
 	}
 	ui.dropdownWhiteBalanceMode->blockSignals(false);
 }
 
-void QtCameraControlsDialog::initializeSupportedFeatures()
+void VideoDevicePropertiesWidget::initializeSupportedFeatures()
 {
-	QCamera::Features features = pCamera->supportedFeatures();
+	QCamera::Features features = pVideoDevice->camera()->supportedFeatures();
 
 	// Check if color temperature is supported
 	bool colorTempSupported = features & QCamera::Feature::ColorTemperature;
@@ -329,10 +323,10 @@ void QtCameraControlsDialog::initializeSupportedFeatures()
 
 }
 
-void QtCameraControlsDialog::initializeFormatGroup()
+void VideoDevicePropertiesWidget::initializeFormatGroup()
 {
 	// Initialize format list
-	mFormats = pCamera->cameraDevice().videoFormats();
+	mFormats = pVideoDevice->camera()->cameraDevice().videoFormats();
 
 	// Check if no formats are available
 	if (mFormats.isEmpty())
@@ -367,8 +361,10 @@ void QtCameraControlsDialog::initializeFormatGroup()
 	connectFormatControls();
 }
 
-void QtCameraControlsDialog::initializeZoomFocusGroup()
+void VideoDevicePropertiesWidget::initializeZoomFocusGroup()
 {
+	QCamera* pCamera = pVideoDevice->camera();
+
 	/// Initialize Zoom/Focus Box values
 	ui.sliderZoom->setValue(pCamera->zoomFactor());
 	ui.sliderFocusDistance->setValue(pCamera->focusDistance());
@@ -384,8 +380,10 @@ void QtCameraControlsDialog::initializeZoomFocusGroup()
 	connectZoomFocusControls();
 }
 
-void QtCameraControlsDialog::initializeSettingsGroup()
+void VideoDevicePropertiesWidget::initializeSettingsGroup()
 {
+	QCamera* pCamera = pVideoDevice->camera();
+
 	// Populate dropdowns
 	populateExposureModes();
 	populateFlashModes();
@@ -419,81 +417,85 @@ void QtCameraControlsDialog::initializeSettingsGroup()
 	connectSettingsControls();
 }
 
-void QtCameraControlsDialog::connectFormatControls()
+void VideoDevicePropertiesWidget::connectFormatControls()
 {
 	// Initialize filters
-	connect(ui.dropdownFps, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::updateFormatTable);
-	connect(ui.dropdownResolution, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::updateFormatTable);
-	connect(ui.dropdownPixelFormat, &QComboBox::currentIndexChanged, this, &QtCameraControlsDialog::updateFormatTable);
+	connect(ui.dropdownFps, &QComboBox::currentIndexChanged, this, &VideoDevicePropertiesWidget::updateFormatTable);
+	connect(ui.dropdownResolution, &QComboBox::currentIndexChanged, this, &VideoDevicePropertiesWidget::updateFormatTable);
+	connect(ui.dropdownPixelFormat, &QComboBox::currentIndexChanged, this, &VideoDevicePropertiesWidget::updateFormatTable);
 
 	// Initialize reset button
-	connect(ui.buttonResetFilters, &QPushButton::clicked, this, &QtCameraControlsDialog::resetFilters);
+	connect(ui.buttonResetFilters, &QPushButton::clicked, this, &VideoDevicePropertiesWidget::resetFilters);
 
 	// Initialize select button
-	connect(ui.buttonSelect, &QPushButton::clicked, this, &QtCameraControlsDialog::onSelectClicked);
+	connect(ui.buttonSelect, &QPushButton::clicked, this, &VideoDevicePropertiesWidget::onSelectClicked);
 
 	// Initialize format table
-	connect(ui.tableFormats, &QTableWidget::cellClicked, this, &QtCameraControlsDialog::onFormatClicked);
+	connect(ui.tableFormats, &QTableWidget::cellClicked, this, &VideoDevicePropertiesWidget::onFormatClicked);
 }
 
-void QtCameraControlsDialog::connectZoomFocusControls()
+void VideoDevicePropertiesWidget::connectZoomFocusControls()
 {
-	connect(ui.sliderZoomRate, &QSlider::valueChanged, pCamera, [this](int value) {
+	QCamera* pCamera = pVideoDevice->camera();
+
+	connect(ui.sliderZoomRate, &QSlider::valueChanged, pCamera, [pCamera](int value) {
 		pCamera->zoomTo(pCamera->zoomFactor(), value);
 		});
 
-	connect(ui.sliderZoom, &QSlider::valueChanged, pCamera, [this](int value) {
+	connect(ui.sliderZoom, &QSlider::valueChanged, pCamera, [pCamera](int value) {
 		pCamera->setZoomFactor(value);
 		pCamera->zoomTo(value, 1);
 		});
 
-	connect(ui.dropdownFocusMode, &QComboBox::currentIndexChanged, pCamera, [this](int index) {
+	connect(ui.dropdownFocusMode, &QComboBox::currentIndexChanged, pCamera, [pCamera](int index) {
 		pCamera->setFocusMode(static_cast<QCamera::FocusMode>(index));
 		});
 
-	connect(ui.sliderFocusDistance, &QSlider::valueChanged, pCamera, [this](int value) {
+	connect(ui.sliderFocusDistance, &QSlider::valueChanged, pCamera, [pCamera](int value) {
 		pCamera->setFocusDistance(value);
 		});
 }
 
-void QtCameraControlsDialog::connectSettingsControls()
+void VideoDevicePropertiesWidget::connectSettingsControls()
 {
-	connect(ui.sliderColorTemp, &QSlider::valueChanged, pCamera, [this](int value) {
+	QCamera* pCamera = pVideoDevice->camera();
+
+	connect(ui.sliderColorTemp, &QSlider::valueChanged, pCamera, [pCamera](int value) {
 		pCamera->setColorTemperature(value);
 		});
-	connect(ui.dropdownExposureMode, &QComboBox::currentIndexChanged, pCamera, [this](int index) {
+	connect(ui.dropdownExposureMode, &QComboBox::currentIndexChanged, pCamera, [pCamera](int index) {
 		pCamera->setExposureMode(static_cast<QCamera::ExposureMode>(index));
 		});
-	connect(ui.sliderExposureComp, &QSlider::valueChanged, pCamera, [this](int value) {
+	connect(ui.sliderExposureComp, &QSlider::valueChanged, pCamera, [pCamera](int value) {
 		pCamera->setExposureCompensation(value);
 		});
-	connect(ui.dropdownFlashMode, &QComboBox::currentIndexChanged, pCamera, [this](int index) {
+	connect(ui.dropdownFlashMode, &QComboBox::currentIndexChanged, pCamera, [pCamera](int index) {
 		pCamera->setFlashMode(static_cast<QCamera::FlashMode>(index));
 		});
-	connect(ui.checkboxAutoExposureTime, &QCheckBox::checkStateChanged, pCamera, [this](Qt::CheckState state) {
+	connect(ui.checkboxAutoExposureTime, &QCheckBox::checkStateChanged, pCamera, [pCamera](Qt::CheckState state) {
 		pCamera->setAutoExposureTime(); // TODO: add functionality
 		});
-	connect(ui.sliderManualExposureTime, &QSlider::valueChanged, pCamera, [this](int value) {
+	connect(ui.sliderManualExposureTime, &QSlider::valueChanged, pCamera, [pCamera](int value) {
 		pCamera->setManualExposureTime(value);
 		});
-	connect(ui.checkboxAutoIsoSensitivity, &QCheckBox::checkStateChanged, pCamera, [this](Qt::CheckState state) {
+	connect(ui.checkboxAutoIsoSensitivity, &QCheckBox::checkStateChanged, pCamera, [pCamera](Qt::CheckState state) {
 		pCamera->setAutoIsoSensitivity(); // TODO: add functionality
 		});
-	connect(ui.sliderManualIsoSensitivity, &QSlider::valueChanged, pCamera, [this](int value) {
+	connect(ui.sliderManualIsoSensitivity, &QSlider::valueChanged, pCamera, [pCamera](int value) {
 		pCamera->setManualIsoSensitivity(value);
 		});
-	connect(ui.dropdownTorchMode, &QComboBox::currentIndexChanged, pCamera, [this](int index) {
+	connect(ui.dropdownTorchMode, &QComboBox::currentIndexChanged, pCamera, [pCamera](int index) {
 		pCamera->setTorchMode(static_cast<QCamera::TorchMode>(index));
 		});
-	connect(ui.dropdownWhiteBalanceMode, &QComboBox::currentIndexChanged, pCamera, [this](int index) {
+	connect(ui.dropdownWhiteBalanceMode, &QComboBox::currentIndexChanged, pCamera, [pCamera](int index) {
 		pCamera->setWhiteBalanceMode(static_cast<QCamera::WhiteBalanceMode>(index));
 		});
 
 	// Connect ffmpeg settings button
-	connect(ui.buttonFFMPEG, &QPushButton::clicked, this, &QtCameraControlsDialog::openFFMPEGSettings);
+	connect(ui.buttonFFMPEG, &QPushButton::clicked, this, &VideoDevicePropertiesWidget::openFFMPEGSettings);
 }
 
-void QtCameraControlsDialog::resetFilters()
+void VideoDevicePropertiesWidget::resetFilters()
 {
 	// Block signals to prevent infinite loops
 	ui.dropdownFps->blockSignals(true);
@@ -512,7 +514,7 @@ void QtCameraControlsDialog::resetFilters()
 	ui.dropdownPixelFormat->blockSignals(false);
 }
 
-void QtCameraControlsDialog::onFormatClicked(int row, int column)
+void VideoDevicePropertiesWidget::onFormatClicked(int row, int column)
 {
 	// Find format that matches row
 	auto itr = std::find_if(mFormats.begin(), mFormats.end(), [this, row](const QCameraFormat& format) {
@@ -533,8 +535,10 @@ void QtCameraControlsDialog::onFormatClicked(int row, int column)
 	ui.buttonSelect->setEnabled(true);
 }
 
-void QtCameraControlsDialog::onSelectClicked()
+void VideoDevicePropertiesWidget::onSelectClicked()
 {
+	QCamera* pCamera = pVideoDevice->camera();
+
 	if (selectedFormat.isNull()) {
 		// TODO: Add error checking
 		QMessageBox::warning(this, "Error", "No format selected.");
@@ -557,7 +561,7 @@ void QtCameraControlsDialog::onSelectClicked()
 	ui.buttonSelect->setEnabled(false);
 }
 
-void QtCameraControlsDialog::updateFormatTable()
+void VideoDevicePropertiesWidget::updateFormatTable()
 {
 	// Clear existing entries
 	ui.tableFormats->clearContents();
@@ -629,7 +633,7 @@ void QtCameraControlsDialog::updateFormatTable()
 	}
 }
 
-void QtCameraControlsDialog::openFFMPEGSettings()
+void VideoDevicePropertiesWidget::openFFMPEGSettings()
 {
 	// Check OS for compatibility
 #ifdef Q_OS_WIN
@@ -667,6 +671,6 @@ void QtCameraControlsDialog::openFFMPEGSettings()
 		}
 		});
 	QStringList args;
-	args << "-f" << "dshow" << "-show_video_device_dialog" << "true" << "-i" << "video=" + this->mName;
+	args << "-f" << "dshow" << "-show_video_device_dialog" << "true" << "-i" << "video=" + pVideoDevice->name();
 	process->start("ffmpeg", args);
 }
