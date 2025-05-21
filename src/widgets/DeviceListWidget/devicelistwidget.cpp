@@ -79,7 +79,7 @@ void DeviceListWidget::openAddDeviceDialog()
 {
 	AddDeviceDialog* addDeviceDialog = new AddDeviceDialog(pDeviceController->pluginController(), this);
 
-	connect(addDeviceDialog, &AddDeviceDialog::deviceSelected, pDeviceController, &DeviceController::addDevice); // TODO/CONSIDER: Listen for "accepted" signal instead?
+	connect(addDeviceDialog, &AddDeviceDialog::deviceConfirmed, pDeviceController, &DeviceController::addDevice);
 
 	addDeviceDialog->show();
 }
