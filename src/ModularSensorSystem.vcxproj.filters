@@ -43,19 +43,16 @@
     <ClCompile Include="windows\MainWindow\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp">
+    <ClCompile Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="widgets\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp">
+    <ClCompile Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="processing\YOLO\yolo.cpp">
@@ -103,7 +100,7 @@
     <ClCompile Include="pages\MainPage\mainpage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.cpp">
+    <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="devices\Device\DevicePreview\devicepreview.cpp">
@@ -129,16 +126,13 @@
     <QtMoc Include="widgets\SensorListItem\SensorListItem.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.h">
+    <QtMoc Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h">
+    <QtMoc Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="processing\YOLO\yolo.h">
@@ -183,7 +177,7 @@
     <QtMoc Include="pages\MainPage\mainpage.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.h">
+    <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="devices\Device\DevicePreview\devicepreview.h">
@@ -206,16 +200,13 @@
     <QtUic Include="widgets\SensorListItem\SensorListItem.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui">
+    <QtUic Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui">
+    <QtUic Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui">
@@ -233,7 +224,7 @@
     <QtUic Include="pages\MainPage\mainpage.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.ui">
+    <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\DevicePreviewWidget\devicepreviewwidget.ui">

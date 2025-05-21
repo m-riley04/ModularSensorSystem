@@ -3,7 +3,7 @@
 #include "devices/Device/device.h"
 
 struct DeviceInfo {
-	QString id;
+	QByteArray id;
 	QString displayName;
 	Device::Type type;
 };

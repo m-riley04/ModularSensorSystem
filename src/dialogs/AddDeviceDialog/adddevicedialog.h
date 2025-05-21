@@ -4,6 +4,7 @@
 #include "ui_adddevicedialog.h"
 #include <plugins/device/ideviceplugin.h>
 #include <controllers/PluginController/plugincontroller.h>
+#include <QMessageBox>
 
 class AddDeviceDialog : public QDialog
 {
@@ -17,10 +18,15 @@ private:
 	Ui::AddDeviceDialogClass ui;
 	QPointer<PluginController> pPluginController;
 
+	IDevicePlugin* pSelectedDevicePlugin;
+	DeviceInfo mSelectedDeviceInfo;
+
 	void populateDeviceTypeDropdown();
 	void populateDeviceDropdown();
 
 signals:
-	void deviceSelected(DeviceInfo* deviceInfo);
-	void deviceTypeSelected(Device::Type type);
+	void deviceTypeSelected(IDevicePlugin* plugin);
+	void deviceSelected(IDevicePlugin* plugin, DeviceInfo deviceInfo);
+	void deviceConfirmed(IDevicePlugin* plugin, DeviceInfo deviceInfo);
+	
 };

@@ -66,8 +66,10 @@ void DeviceController::restartDevices()
 	emit devicesRestarted();
 }
 
-void DeviceController::addDevice(Device* device) {
-	if (device) {
+void DeviceController::addDevice(IDevicePlugin* plugin, DeviceInfo info) {
+	if (plugin) {
+		auto device = plugin->createDevice(info.id, this);
+
 		mDevices.append(device);
 
 		emit deviceAdded(device);

@@ -1,5 +1,5 @@
 #include "sessioncontrolswidget.h"
-#include <Windows/SessionPropertiesDialog/sessionpropertiesdialog.h>
+#include <dialogs/SessionPropertiesDialog/sessionpropertiesdialog.h>
 
 SessionControlsWidget::SessionControlsWidget(QWidget* parent)
 	: QWidget(parent)

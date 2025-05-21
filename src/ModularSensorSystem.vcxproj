@@ -140,10 +140,9 @@
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
     <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
     <ClCompile Include="dialogs\AddDeviceDialog\adddevicedialog.cpp" />
-    <ClCompile Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.cpp" />
-    <ClCompile Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.cpp" />
-    <ClCompile Include="windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp" />
-    <ClCompile Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
+    <ClCompile Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.cpp" />
+    <ClCompile Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp" />
+    <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="pages\MainPage\mainpage.ui" />
     <QtUic Include="widgets\DeviceListWidget\devicelistwidget.ui" />
@@ -153,7 +152,6 @@
     <QtUic Include="widgets\SessionControlsWidget\sessioncontrolswidget.ui" />
     <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
     <QtUic Include="dialogs\AddDeviceDialog\adddevicedialog.ui" />
-    <QtUic Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.ui" />
     <QtUic Include="windows\MainWindow\MainWindow.ui" />
     <QtMoc Include="windows\MainWindow\MainWindow.h" />
     <ClCompile Include="windows\MainWindow\MainWindow.cpp">
@@ -164,23 +162,22 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <QtUic Include="widgets\SensorListItem\SensorListItem.ui" />
-    <QtUic Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.ui" />
-    <QtUic Include="windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui" />
-    <QtUic Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
+    <QtUic Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.ui" />
+    <QtUic Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui" />
+    <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SensorListItem\SensorListItem.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="windows\QtCameraControlsWindow\qtcameracontrolsdialog.h" />
+    <QtMoc Include="dialogs\QtCameraControlsDialog\qtcameracontrolsdialog.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h" />
-    <QtMoc Include="windows\SessionPropertiesDialog\sessionpropertiesdialog.h" />
+    <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h" />
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h" />
-    <QtMoc Include="windows\ApplicationSettingsDialog\applicationsettingsdialog.h" />
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
-    <QtMoc Include="windows\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h" />
+    <QtMoc Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h" />
     <QtMoc Include="processing\YOLO\yolo.h" />
     <QtMoc Include="controllers\ClipController\clipcontroller.h" />
     <QtMoc Include="devices\Device\device.h" />
