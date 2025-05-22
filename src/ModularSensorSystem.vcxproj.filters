@@ -49,9 +49,6 @@
     <ClCompile Include="processing\YOLO\yolo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="helpers\unitconversionhelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="controllers\MainController\maincontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -214,9 +211,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="helpers\unitconversionhelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>

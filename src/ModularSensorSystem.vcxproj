@@ -129,7 +129,6 @@
     <ClCompile Include="pages\MainPage\mainpage.cpp" />
     <ClCompile Include="processing\FrameProcessor\frameprocessor.cpp" />
     <ClCompile Include="processing\YOLO\yolo.cpp" />
-    <ClCompile Include="helpers\unitconversionhelper.cpp" />
     <ClCompile Include="controllers\MainController\maincontroller.cpp" />
     <ClCompile Include="widgets\DeviceListWidget\devicelistwidget.cpp" />
     <ClCompile Include="widgets\DevicePreviewWidget\devicepreviewwidget.cpp" />
@@ -178,7 +177,6 @@
     <QtMoc Include="controllers\RecordingController\recordingcontroller.h" />
     <QtMoc Include="controllers\PluginController\plugincontroller.h" />
     <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h" />
-    <ClInclude Include="helpers\unitconversionhelper.h" />
     <QtMoc Include="controllers\MainController\maincontroller.h" />
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />
     <QtMoc Include="widgets\DeviceListWidget\devicelistwidget.h" />
