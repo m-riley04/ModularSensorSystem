@@ -4,7 +4,9 @@ DevicePropertiesWidget::DevicePropertiesWidget(Device* device, QWidget *parent)
 	: QWidget(parent), pDevice(device)
 {
 	// Init button frame
+	QVBoxLayout* buttonLayout = new QVBoxLayout(this);
 	pFrameButtons = new QFrame(this);
+	pFrameButtons->setLayout(buttonLayout);
 	pFrameButtons->setObjectName("frameButtons");
 	pFrameButtons->setGeometry(QRect(0, 0, 200, 600));
 	pFrameButtons->setStyleSheet("QFrame#frameButtons { background-color: #2E2E2E; }");
@@ -24,10 +26,10 @@ DevicePropertiesWidget::DevicePropertiesWidget(Device* device, QWidget *parent)
 	pStackPages->setMidLineWidth(1);
 
 	// Set layout
-	QGridLayout* layout = new QGridLayout(this);
-	this->setLayout(layout);
-	layout->addWidget(pFrameButtons, 0, 0);
-	layout->addWidget(pStackPages, 0, 1);
+	QGridLayout* mainLayout = new QGridLayout(this);
+	this->setLayout(mainLayout);
+	mainLayout->addWidget(pFrameButtons, 0, 0);
+	mainLayout->addWidget(pStackPages, 0, 1);
 }
 
 DevicePropertiesWidget::~DevicePropertiesWidget()

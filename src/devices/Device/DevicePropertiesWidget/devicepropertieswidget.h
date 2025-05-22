@@ -4,6 +4,8 @@
 #include <QtWidgets>
 #include "devices/Device/device.h"
 
+class Device;
+
 class DevicePropertiesWidget : public QWidget
 {
 	Q_OBJECT
