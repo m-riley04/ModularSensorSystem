@@ -1,5 +1,6 @@
 #include "videodevice.h"
 
+
 VideoDevice::VideoDevice(QCameraDevice qVideoDevice, QObject* parent)
 	: Device(parent), mCamera(qVideoDevice)
 {
@@ -102,7 +103,9 @@ bool VideoDevice::checkCameraAvailability() {
 
 QWidget* VideoDevice::createConfigWidget(QWidget* parent)
 {
-	return new VideoDevicePropertiesWidget(this, parent);
+	DevicePropertiesWidget* devicePropertiesWidget = new DevicePropertiesWidget(this, parent);
+	devicePropertiesWidget->addPage("Device", new VideoDevicePropertiesWidget(this, devicePropertiesWidget));
+    return devicePropertiesWidget;//new VideoDevicePropertiesWidget(this, parent);
 }
 
 void VideoDevice::loadSettings(const QJsonObject& obj)

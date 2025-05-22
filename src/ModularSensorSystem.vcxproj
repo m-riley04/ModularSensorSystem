@@ -126,6 +126,7 @@
     <ClCompile Include="clipping\buffers\ClipBufferBase\clipbufferbase.cpp" />
     <ClCompile Include="devices\Device\DeviceMetadata\devicemetadata.cpp" />
     <ClCompile Include="devices\Device\DevicePreview\devicepreview.cpp" />
+    <ClCompile Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.cpp" />
     <ClCompile Include="pages\MainPage\mainpage.cpp" />
     <ClCompile Include="processing\FrameProcessor\frameprocessor.cpp" />
     <ClCompile Include="processing\YOLO\yolo.cpp" />
@@ -140,6 +141,7 @@
     <ClCompile Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp" />
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.ui" />
     <QtUic Include="pages\MainPage\mainpage.ui" />
     <QtUic Include="widgets\DeviceListWidget\devicelistwidget.ui" />
     <QtUic Include="widgets\DevicePreviewWidget\devicepreviewwidget.ui" />
@@ -184,6 +186,7 @@
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />
     <QtMoc Include="pages\MainPage\mainpage.h" />
     <QtMoc Include="widgets\DevicePreviewWidget\devicepreviewwidget.h" />
+    <QtMoc Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.h" />
     <ClInclude Include="devices\IConfigurableDevice\iconfigurabledevice.h" />
     <ClInclude Include="plugins\device\ideviceplugin.h" />
   </ItemGroup>

@@ -23,17 +23,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="devicecore_global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <QtMoc Include="devicecore.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClCompile Include="devicecore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\devices\Device\device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -49,5 +38,35 @@
     <ClCompile Include="..\..\controllers\RecordingSession\recordingsession.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="..\..\devices\Device\device.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\..\devices\Device\DevicePreview\devicepreview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\..\devices\Device\DeviceMetadata\devicemetadata.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\..\controllers\RecordingSession\recordingsession.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\..\clipping\buffers\ClipBufferBase\clipbufferbase.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

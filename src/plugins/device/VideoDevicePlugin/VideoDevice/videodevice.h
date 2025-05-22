@@ -13,6 +13,7 @@
 #include "VideoPreview/videopreview.h"
 #include "devices/IConfigurableDevice/iconfigurabledevice.h"
 #include "VideoDevicePropertiesWidget/videodevicepropertieswidget.h"
+#include "devices/Device/DevicePropertiesWidget/devicepropertieswidget.h"
 
 class VideoDevice : public Device, public IConfigurableDevice
 {

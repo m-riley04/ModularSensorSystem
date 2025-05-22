@@ -112,13 +112,6 @@ VideoDevicePropertiesWidget::VideoDevicePropertiesWidget(VideoDevice* videoDevic
 {
 	ui.setupUi(this);
 
-	/// Initialzie camera device
-	ui.labelCameraDevice->setText(pVideoDevice->name());
-	ui.checkboxActive->setChecked(pVideoDevice->camera()->isActive());
-	connect(ui.checkboxActive, &QCheckBox::checkStateChanged, pVideoDevice->camera(), [this](Qt::CheckState state) {
-		pVideoDevice->camera()->setActive(state == Qt::CheckState::Checked);
-		});
-
 	// Initialize supported features
 	initializeSupportedFeatures();
 
@@ -332,7 +325,7 @@ void VideoDevicePropertiesWidget::initializeFormatGroup()
 	if (mFormats.isEmpty())
 	{
 		/// TODO: Maybe put a message instead?
-		ui.groupFormat->hide();
+		//ui.groupFormat->hide();
 		return;
 	}
 

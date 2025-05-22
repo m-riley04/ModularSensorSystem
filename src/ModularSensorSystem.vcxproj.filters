@@ -109,6 +109,9 @@
     <ClCompile Include="dialogs\AddDeviceDialog\adddevicedialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h">
@@ -177,6 +180,9 @@
     <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui">
@@ -207,6 +213,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogs\AddDeviceDialog\adddevicedialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
