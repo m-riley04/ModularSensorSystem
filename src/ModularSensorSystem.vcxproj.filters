@@ -215,9 +215,6 @@
     <QtUic Include="dialogs\AddDeviceDialog\adddevicedialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h">

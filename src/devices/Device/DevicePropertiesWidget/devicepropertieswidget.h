@@ -1,9 +1,8 @@
 #pragma once
 
 #include <QWidget>
+#include <QtWidgets>
 #include "devices/Device/device.h"
-#include <QPushButton>
-#include "ui_devicepropertieswidget.h"
 
 class DevicePropertiesWidget : public QWidget
 {
@@ -18,16 +17,18 @@ public:
 	void addPage(const QString& title, QWidget* page)
 	{
 		// Add button
-		auto button = new QPushButton(title, ui.frameButtons);
-		ui.stackPages->addWidget(page);
+		auto button = new QPushButton(title, pFrameButtons);
+		pStackPages->addWidget(page);
 
 		// Connect button to page
 		connect(button, &QPushButton::clicked, [this, page]() {
-			ui.stackPages->setCurrentWidget(page);
+			pStackPages->setCurrentWidget(page);
 			});
 	}
 
-private:
-	Ui::DevicePropertiesWidgetClass ui;
+protected:
 	Device* pDevice = nullptr;
+	QFrame* pFrameButtons = nullptr;
+	QStackedWidget* pStackPages = nullptr;
+	
 };

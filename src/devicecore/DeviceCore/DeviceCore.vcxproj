@@ -119,9 +119,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.h" />
   </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.ui" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

@@ -141,7 +141,6 @@
     <ClCompile Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp" />
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
-    <QtUic Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.ui" />
     <QtUic Include="pages\MainPage\mainpage.ui" />
     <QtUic Include="widgets\DeviceListWidget\devicelistwidget.ui" />
     <QtUic Include="widgets\DevicePreviewWidget\devicepreviewwidget.ui" />
