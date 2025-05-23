@@ -1,4 +1,4 @@
-#include "qtrecordingcontrolsdialog.h"
+#include "videodevicerecordingpropertieswidget.h"
 
 QList<QMediaFormat::VideoCodec> videoCodecs = {
 	QMediaFormat::VideoCodec::VP8,
@@ -47,7 +47,7 @@ QList<QMediaFormat::FileFormat> fileFormats = {
 	QMediaFormat::UnspecifiedFormat
 };
 
-QtRecordingControlsDialog::QtRecordingControlsDialog(QWidget *parent, QMediaRecorder* recorder)
+VideoDeviceRecordingPropertiesWidget::VideoDeviceRecordingPropertiesWidget(QWidget* parent, QMediaRecorder* recorder)
 	: QDialog(parent), pRecorder(recorder)
 {
 	ui.setupUi(this);
@@ -81,10 +81,11 @@ QtRecordingControlsDialog::QtRecordingControlsDialog(QWidget *parent, QMediaReco
 	initSignals();
 }
 
-QtRecordingControlsDialog::~QtRecordingControlsDialog()
-{}
+VideoDeviceRecordingPropertiesWidget::~VideoDeviceRecordingPropertiesWidget()
+{
+}
 
-QString QtRecordingControlsDialog::recorderStateDescription(QMediaRecorder::RecorderState state)
+QString VideoDeviceRecordingPropertiesWidget::recorderStateDescription(QMediaRecorder::RecorderState state)
 {
 	switch (state) {
 	case QMediaRecorder::RecorderState::PausedState:
@@ -98,7 +99,7 @@ QString QtRecordingControlsDialog::recorderStateDescription(QMediaRecorder::Reco
 	return QString();
 }
 
-void QtRecordingControlsDialog::initWidgets()
+void VideoDeviceRecordingPropertiesWidget::initWidgets()
 {
 	// Default set all tabs to disabled (except general)
 	ui.tabs->tabBar()->setTabEnabled(RecordingControlsTab::GENERAL, true);
@@ -115,7 +116,7 @@ void QtRecordingControlsDialog::initWidgets()
 	if (pAudioInput) initAudioWidgets();
 }
 
-void QtRecordingControlsDialog::initSignals()
+void VideoDeviceRecordingPropertiesWidget::initSignals()
 {
 	connect(pRecorder, &QMediaRecorder::errorOccurred, [this](QMediaRecorder::Error error, QString errorString) {
 		QMessageBox::warning(this, "Error #" + QString::number(error), errorString);
@@ -126,7 +127,7 @@ void QtRecordingControlsDialog::initSignals()
 	initAudioSignals();
 }
 
-void QtRecordingControlsDialog::initGeneralWidgets()
+void VideoDeviceRecordingPropertiesWidget::initGeneralWidgets()
 {
 	/// FIELDS
 	ui.labelRecordingStatus->setText(recorderStateDescription(pRecorder->recorderState()));
@@ -142,7 +143,7 @@ void QtRecordingControlsDialog::initGeneralWidgets()
 	ui.dropdownFileFormat->setCurrentIndex(i);
 }
 
-void QtRecordingControlsDialog::initVideoWidgets()
+void VideoDeviceRecordingPropertiesWidget::initVideoWidgets()
 {
 	/// TAB
 	ui.tabs->tabBar()->setTabEnabled(RecordingControlsTab::VIDEO, true);
@@ -162,7 +163,7 @@ void QtRecordingControlsDialog::initVideoWidgets()
 	ui.spinboxHeight->setValue(pRecorder->videoResolution().height());
 }
 
-void QtRecordingControlsDialog::initAudioWidgets()
+void VideoDeviceRecordingPropertiesWidget::initAudioWidgets()
 {
 	/// TAB
 	ui.tabs->tabBar()->setTabEnabled(RecordingControlsTab::AUDIO, true);
@@ -181,7 +182,7 @@ void QtRecordingControlsDialog::initAudioWidgets()
 	ui.spinboxChannels->setValue(pRecorder->audioChannelCount());
 }
 
-void QtRecordingControlsDialog::initGeneralSignals()
+void VideoDeviceRecordingPropertiesWidget::initGeneralSignals()
 {
 	connect(pRecorder, &QMediaRecorder::recorderStateChanged, [this](QMediaRecorder::RecorderState state) {
 		ui.labelRecordingStatus->setText(recorderStateDescription(state));
@@ -224,7 +225,7 @@ void QtRecordingControlsDialog::initGeneralSignals()
 		});
 }
 
-void QtRecordingControlsDialog::initVideoSignals()
+void VideoDeviceRecordingPropertiesWidget::initVideoSignals()
 {
 	connect(ui.dropdownVideoCodec, &QComboBox::currentIndexChanged, [this](int index) {
 		auto codec = ui.dropdownVideoCodec->itemData(index).value<QMediaFormat::VideoCodec>();
@@ -248,7 +249,7 @@ void QtRecordingControlsDialog::initVideoSignals()
 		});
 }
 
-void QtRecordingControlsDialog::initAudioSignals()
+void VideoDeviceRecordingPropertiesWidget::initAudioSignals()
 {
 	connect(ui.dropdownAudioCodec, &QComboBox::currentIndexChanged, [this](int index) {
 		auto codec = ui.dropdownAudioCodec->itemData(index).value<QMediaFormat::AudioCodec>();
@@ -268,9 +269,7 @@ void QtRecordingControlsDialog::initAudioSignals()
 		});
 }
 
-void QtRecordingControlsDialog::initDefaultValues()
+void VideoDeviceRecordingPropertiesWidget::initDefaultValues()
 {
-	
+
 }
-
-

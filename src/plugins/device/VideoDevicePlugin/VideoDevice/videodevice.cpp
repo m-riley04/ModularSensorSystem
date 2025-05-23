@@ -8,6 +8,13 @@ VideoDevice::VideoDevice(QCameraDevice qVideoDevice, QObject* parent)
     mName = qVideoDevice.description();
     mDeviceType = Device::Type::CAMERA;
     pPreview.reset(new VideoPreview(&mSession, this));
+
+    // Initialize capture session
+    mSession.setCamera(&mCamera);
+    mSession.setRecorder(&mRecorder);
+
+    // Init recorder
+    mRecorder.setOutputLocation(QDir::currentPath() + "/output");
 }
 
 VideoDevice::~VideoDevice()
@@ -32,18 +39,11 @@ void VideoDevice::open() {
         return;
     }
 
-    // Initialize capture session
-    mSession.setCamera(&mCamera);
-    mSession.setRecorder(&mRecorder);
-
     // Init preview
 	if (!pPreview) pPreview.reset(new VideoPreview(&mSession, this));
 
     // Init buffer
     if (!pClipBuffer) pClipBuffer.reset(new VideoClipBuffer(2, this));
-
-    // Init recorder
-    mRecorder.setOutputLocation(QDir::currentPath() + "/output");
 
     emit previewAvailable(this, pPreview.get());
 }
@@ -105,6 +105,7 @@ QWidget* VideoDevice::createConfigWidget(QWidget* parent)
 {
 	DevicePropertiesWidget* devicePropertiesWidget = new DevicePropertiesWidget(this, parent);
 	devicePropertiesWidget->addPage("Device", new VideoDevicePropertiesWidget(this, devicePropertiesWidget));
+    devicePropertiesWidget->addPage("Recording", new VideoDeviceRecordingPropertiesWidget(devicePropertiesWidget, &mRecorder));
     return devicePropertiesWidget;//new VideoDevicePropertiesWidget(this, parent);
 }
 

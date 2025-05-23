@@ -16,21 +16,12 @@ public:
 
 	Device* device() const { return pDevice; }
 
-	void addPage(const QString& title, QWidget* page)
-	{
-		// Add button
-		auto button = new QPushButton(title, pFrameButtons);
-		pStackPages->addWidget(page);
+	void addPage(const QString& title, QWidget* page);
 
-		// Connect button to page
-		connect(button, &QPushButton::clicked, [this, page]() {
-			pStackPages->setCurrentWidget(page);
-			});
-	}
-
-protected:
+private:
 	Device* pDevice = nullptr;
 	QFrame* pFrameButtons = nullptr;
 	QStackedWidget* pStackPages = nullptr;
+	QVBoxLayout* pButtonLayout = nullptr;
 	
 };

@@ -118,6 +118,7 @@
     <ClCompile Include="VideoClipBuffer\videoclipbuffer.cpp" />
     <ClCompile Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
     <ClCompile Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.cpp" />
+    <ClCompile Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.cpp" />
     <ClCompile Include="VideoDevice\videodevice.cpp" />
     <ClCompile Include="VideoPreview\videopreview.cpp" />
     <QtMoc Include="VideoDevice\videodevice.h" />
@@ -139,10 +140,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
+    <QtMoc Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.h" />
     <QtMoc Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.ui" />
+    <QtUic Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

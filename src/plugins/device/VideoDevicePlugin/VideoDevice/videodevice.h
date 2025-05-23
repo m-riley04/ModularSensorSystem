@@ -14,6 +14,7 @@
 #include "devices/IConfigurableDevice/iconfigurabledevice.h"
 #include "VideoDevicePropertiesWidget/videodevicepropertieswidget.h"
 #include "devices/Device/DevicePropertiesWidget/devicepropertieswidget.h"
+#include "VideoDeviceRecordingPropertiesWidget/videodevicerecordingpropertieswidget.h"
 
 class VideoDevice : public Device, public IConfigurableDevice
 {

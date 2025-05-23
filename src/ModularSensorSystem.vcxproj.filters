@@ -40,9 +40,6 @@
     <ClCompile Include="windows\MainWindow\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -114,9 +111,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -185,9 +179,6 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="dialogs\QtRecordingControlsDialog\qtrecordingcontrolsdialog.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
       <Filter>Form Files</Filter>
     </QtUic>
