@@ -1,10 +1,15 @@
 #include "videodevice.h"
 
 
+VideoDevice::VideoDevice(QByteArray hardwareId, QObject* parent)
+	: VideoDevice(getCameraDevice(hardwareId), parent)
+{}
+
 VideoDevice::VideoDevice(QCameraDevice qVideoDevice, QObject* parent)
 	: Device(parent), mCamera(qVideoDevice)
 {
     mId = qVideoDevice.id();
+	mPluginId = "videodevice";
     mName = qVideoDevice.description();
     mDeviceType = Device::Type::CAMERA;
     pPreview.reset(new VideoPreview(&mSession, this));
@@ -95,6 +100,19 @@ void VideoDevice::setMediaDirectory(QUrl directory)
 {
 	mRecorder.setOutputLocation(directory);
 	emit mediaDirectoryChanged(directory);
+}
+
+QCameraDevice VideoDevice::getCameraDevice(const QByteArray& id)
+{
+	// Get the camera device from the id
+	for (auto videoDevice : QMediaDevices::videoInputs()) {
+		if (videoDevice.id() == id) {
+			return videoDevice;
+		}
+	}
+    
+	// If not found, return an empty camera device
+    return QCameraDevice();
 }
 
 bool VideoDevice::checkCameraAvailability() {

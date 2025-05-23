@@ -109,6 +109,9 @@
     <ClCompile Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controllers\PresetsController\presetscontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
@@ -177,6 +180,9 @@
     <QtMoc Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="controllers\PresetsController\presetscontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
@@ -215,6 +221,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="devices\IConfigurableDevice\iconfigurabledevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="presets\Preset\preset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="presets\DevicePreset\devicepreset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

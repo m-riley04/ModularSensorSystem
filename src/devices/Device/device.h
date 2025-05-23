@@ -78,6 +78,8 @@ protected:
 	/// </summary>
 	QByteArray mId;
 
+	QString mPluginId = "Unknown Plugin";
+
 	QString mName = "New Device";
 	Device::Type mDeviceType = Device::Type::OTHER;
 	Device::State mState = Device::State::CLOSED;
@@ -89,6 +91,7 @@ protected:
 	std::unique_ptr<ClipBufferBase> pClipBuffer = nullptr;
 
 public:
+	Device(QByteArray hardwareId, QObject *parent);
 	Device(QObject *parent);
 	~Device();
 
@@ -105,6 +108,8 @@ public:
 	/// The unique ID for the device
 	/// </summary>
 	QByteArray id() const { return mId; }
+
+	QString pluginId() const { return mPluginId; }
 
 	/// <summary>
 	/// The user-facing name of the device.

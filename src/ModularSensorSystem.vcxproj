@@ -119,6 +119,7 @@
     <ClCompile Include="controllers\ClipController\clipcontroller.cpp" />
     <ClCompile Include="controllers\DeviceController\devicecontroller.cpp" />
     <ClCompile Include="controllers\PluginController\plugincontroller.cpp" />
+    <ClCompile Include="controllers\PresetsController\presetscontroller.cpp" />
     <ClCompile Include="controllers\RecordingController\recordingcontroller.cpp" />
     <ClCompile Include="controllers\RecordingSession\recordingsession.cpp" />
     <ClCompile Include="devices\Device\DeviceHelpers\DeviceHelpers.cpp" />
@@ -160,6 +161,8 @@
     <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="presets\DevicePreset\devicepreset.h" />
+    <ClInclude Include="presets\Preset\preset.h" />
     <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h" />
     <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h" />
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h" />
@@ -174,6 +177,7 @@
     <QtMoc Include="devices\Device\DevicePreview\devicepreview.h" />
     <QtMoc Include="controllers\RecordingController\recordingcontroller.h" />
     <QtMoc Include="controllers\PluginController\plugincontroller.h" />
+    <QtMoc Include="controllers\PresetsController\presetscontroller.h" />
     <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h" />
     <QtMoc Include="controllers\MainController\maincontroller.h" />
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />

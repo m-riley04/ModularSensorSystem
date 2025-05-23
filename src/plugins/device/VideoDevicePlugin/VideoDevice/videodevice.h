@@ -22,9 +22,11 @@ class VideoDevice : public Device, public IConfigurableDevice
 	Q_INTERFACES(IConfigurableDevice)
 
 public:
+	VideoDevice(QByteArray hardwareId, QObject* parent);
     VideoDevice(QCameraDevice qVideoDevice, QObject *parent);
 	~VideoDevice();
 
+	static QCameraDevice getCameraDevice(const QByteArray& id);
 	static bool checkCameraAvailability();
 
     QMediaCaptureSession* session() { return &mSession; }
