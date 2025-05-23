@@ -1,4 +1,5 @@
-<UI version="4.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DeviceListWidgetClass</class>
  <widget class="QWidget" name="DeviceListWidgetClass">
   <property name="geometry">
@@ -43,16 +44,16 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="buttonRemove">
+       <widget class="QPushButton" name="buttonAdd">
         <property name="text">
-         <string>-</string>
+         <string>+</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="buttonAdd">
+       <widget class="QPushButton" name="buttonRemove">
         <property name="text">
-         <string>+</string>
+         <string>-</string>
         </property>
        </widget>
       </item>
@@ -60,11 +61,18 @@
     </widget>
    </item>
    <item row="0" column="0">
-    <widget class="QListWidget" name="listDevices"/>
+    <widget class="QListWidget" name="listDevices">
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditTrigger::CurrentChanged|QAbstractItemView::EditTrigger::DoubleClicked</set>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
-</UI>
+</ui>

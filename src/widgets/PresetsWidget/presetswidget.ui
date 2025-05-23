@@ -47,16 +47,16 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="buttonRemove">
+       <widget class="QPushButton" name="buttonAdd">
         <property name="text">
-         <string>-</string>
+         <string>+</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="buttonAdd">
+       <widget class="QPushButton" name="buttonRemove">
         <property name="text">
-         <string>+</string>
+         <string>-</string>
         </property>
        </widget>
       </item>
