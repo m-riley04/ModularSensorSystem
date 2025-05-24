@@ -21,13 +21,13 @@ public:
 	void savePreset(const QString& path, QList<Device*>& activeDevices);
 	void loadPreset(const QString& path, DeviceController* deviceController);
 
+	void loadAllPresets(DeviceController* deviceController);
+
 private:
 	QString mPresetsDir;
 	QList<Preset> mPresets;
 
 	QJsonArray devicePresetsToJson(const QList<DevicePreset>& devicePresets);
-
-	void scanForPresets();
 
 signals:
 	void presetSaved(const QString& path);

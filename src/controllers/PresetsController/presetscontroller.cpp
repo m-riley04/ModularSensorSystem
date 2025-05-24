@@ -65,6 +65,17 @@ void PresetsController::loadPreset(const QString& path, DeviceController* device
 
 }
 
+void PresetsController::loadAllPresets(DeviceController* deviceController)
+{
+	QDir dir(mPresetsDir);
+	for (QString& file : dir.entryList(QDir::Files))
+	{
+		QString filePath = dir.absoluteFilePath(file);
+		
+		// Load preset
+	}
+}
+
 QJsonArray PresetsController::devicePresetsToJson(const QList<DevicePreset>& devicePresets)
 {
 	QJsonArray array;
@@ -78,9 +89,4 @@ QJsonArray PresetsController::devicePresetsToJson(const QList<DevicePreset>& dev
 		array.append(obj);
 	}
 	return QJsonArray();
-}
-
-void PresetsController::scanForPresets()
-{
-
 }
