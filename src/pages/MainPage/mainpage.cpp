@@ -22,6 +22,9 @@ void MainPage::initWidgets()
 
 	// Init preview container widget
 	ui.devicePreviewWidget->setController(pController);
+
+	// Init presets widget
+	ui.presetsWidget->setController(pController);
 }
 
 void MainPage::initSignals() {

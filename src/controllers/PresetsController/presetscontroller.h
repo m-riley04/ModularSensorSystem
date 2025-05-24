@@ -18,7 +18,9 @@ public:
 	~PresetsController();
 
 	QList<Preset> presets() const { return mPresets; }
-	void savePreset(const QString& path, QList<Device*>& activeDevices);
+	QString presetsDir() const { return mPresetsDir; }
+
+	void savePreset(QString name, QList<Device*> activeDevices = QList<Device*>(), QString dirPath = QString());
 	void loadPreset(const QString& path, DeviceController* deviceController);
 
 	void loadAllPresets(DeviceController* deviceController);
@@ -32,6 +34,5 @@ private:
 signals:
 	void presetSaved(const QString& path);
 	void presetLoaded(const QString& path);
-
 
 };

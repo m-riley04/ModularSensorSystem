@@ -18,8 +18,13 @@ PresetsController::PresetsController(const QString& dir, QObject *parent)
 PresetsController::~PresetsController()
 {}
 
-void PresetsController::savePreset(const QString & path, QList<Device*>&activeDevices)
+void PresetsController::savePreset(QString name, QList<Device*> activeDevices, QString dirPath)
 {
+	// Check dirPath
+	if (dirPath.isEmpty()) {
+		dirPath = mPresetsDir;
+	}
+
 	QList<DevicePreset> devicePresets;
 	// Iterate each device
 	for (auto device : activeDevices)
@@ -39,14 +44,15 @@ void PresetsController::savePreset(const QString & path, QList<Device*>&activeDe
 		devicePresets.append(preset);
 	}
 
+	QString fullPath = dirPath + "/" + name + ".json";
 	Preset preset{
-		QFileInfo(path).baseName(),
+		name,
+		fullPath,
 		devicePresets
 	};
 
-	mPresets.append(preset);
-
-	QFile file(path);
+	// Save preset to file
+	QFile file(fullPath);
 	if (!file.open(QIODevice::WriteOnly)) {
 		qWarning() << "Failed to open file for writing:" << file.errorString();
 		return;
@@ -58,6 +64,9 @@ void PresetsController::savePreset(const QString & path, QList<Device*>&activeDe
 	doc.setObject(obj);
 
 	file.write(doc.toJson());
+
+	// Append the preset if the writing finished successfully
+	mPresets.append(preset);
 }
 
 void PresetsController::loadPreset(const QString& path, DeviceController* deviceController)
