@@ -7,7 +7,16 @@ public:
 
     virtual QWidget* createConfigWidget(QWidget* parent = nullptr) = 0;
     
+    /// <summary>
+    /// Loads the settings from the given JSON object.
+    /// </summary>
+    /// <param name="obj"></param>
     virtual void loadSettings(const QJsonObject& obj) { Q_UNUSED(obj) }
+
+    /// <summary>
+    /// Saves the settings to the given JSON object
+    /// </summary>
+    /// <param name="obj"></param>
     virtual void saveSettings(QJsonObject& obj) const { Q_UNUSED(obj) }
 };
 

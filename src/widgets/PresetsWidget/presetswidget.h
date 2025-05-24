@@ -11,6 +11,8 @@ public:
 	PresetsWidget(QWidget *parent = nullptr);
 	~PresetsWidget();
 
+
+
 private:
 	Ui::PresetsWidgetClass ui;
 };
