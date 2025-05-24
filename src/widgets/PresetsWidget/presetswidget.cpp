@@ -111,6 +111,29 @@ void PresetsWidget::onDoubleClicked(QListWidgetItem* item)
 
 }
 
+void PresetsWidget::initWidgets()
+{
+	// Clear the list
+	ui.listPresets->clear();
+
+	// Load all presets
+	PresetsController* pPresetsController = pController->presetsController();
+	if (!pPresetsController) {
+		qWarning() << "PresetsController is null; aborting presets scan";
+		return;
+	}
+	pPresetsController->scanForPresets();
+
+	// Add presets to the list
+	for (const auto& preset : pPresetsController->presets()) {
+		QListWidgetItem* item = new QListWidgetItem(preset.name);
+		item->setData(Qt::UserRole, preset.path);
+		ui.listPresets->addItem(item);
+	}
+	ui.listPresets->setCurrentRow(0);
+	pSelectedItem = ui.listPresets->currentItem();
+}
+
 void PresetsWidget::initSignals()
 {
 	PresetsController* pPresetsController = pController->presetsController();

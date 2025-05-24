@@ -13,6 +13,9 @@ PresetsController::PresetsController(const QString& dir, QObject *parent)
 			return;
 		}
 	}
+
+	// Scan directory for presets
+	scanForPresets(mPresetsDir);
 }
 
 PresetsController::~PresetsController()
@@ -82,6 +85,73 @@ void PresetsController::loadAllPresets(DeviceController* deviceController)
 		QString filePath = dir.absoluteFilePath(file);
 		
 		// Load preset
+	}
+}
+
+void PresetsController::scanForPresets(QString presetDir)
+{
+	// Check passed dir
+	if (presetDir.isEmpty()) {
+		presetDir = mPresetsDir;
+	}
+
+	// Clear list of presets
+	mPresets.clear();
+
+	// Scan the presets directory
+	QDir dir(presetDir);
+	for (QString& file : dir.entryList(QDir::Files))
+	{
+		QString filePath = dir.absoluteFilePath(file);
+
+		// Load preset into memory
+		QFile file(filePath);
+		if (!file.open(QIODevice::ReadOnly)) {
+			qWarning() << "Failed to open file for reading:" << file.errorString();
+			continue;
+		}
+		QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+		if (doc.isNull()) {
+			qWarning() << "Failed to parse JSON:" << filePath;
+			continue;
+		}
+		QJsonObject obj = doc.object();
+		if (!obj.contains("name") || !obj.contains("devices")) {
+			qWarning() << "Invalid preset format:" << filePath;
+			continue;
+		}
+		QString name = obj["name"].toString();
+		QJsonArray devicesArray = obj["devices"].toArray();
+		QList<DevicePreset> devicePresets;
+		for (const QJsonValue& value : devicesArray)
+		{
+			QJsonObject deviceObj = value.toObject();
+			if (!deviceObj.contains("deviceId") || !deviceObj.contains("pluginId") || !deviceObj.contains("deviceType") || !deviceObj.contains("config")) {
+				qWarning() << "Invalid device preset format:" << filePath;
+				continue;
+
+				QByteArray deviceId = QByteArray(deviceObj["deviceId"].toString().toStdString());
+				QString pluginId = deviceObj["pluginId"].toString();
+				Device::Type deviceType = static_cast<Device::Type>(deviceObj["deviceType"].toInt());
+				QJsonObject config = deviceObj["config"].toObject();
+				DevicePreset preset{
+					deviceId,
+					pluginId,
+					deviceType,
+					config
+				};
+				devicePresets.append(preset);
+			}
+		}
+
+		Preset preset{
+			name,
+			filePath,
+			devicePresets
+		};
+
+		// Finally, add the preset to the list
+		mPresets.append(preset);
 	}
 }
 

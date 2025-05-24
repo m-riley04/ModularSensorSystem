@@ -16,6 +16,7 @@ public:
 	void setController(MainController* controller) {
 		if (pController == controller) return;
 		pController = controller;
+		initWidgets();
 		initSignals();
 	}
 
@@ -31,5 +32,6 @@ private:
 	MainController* pController = nullptr;
 	QListWidgetItem* pSelectedItem = nullptr;
 
+	void initWidgets();
 	void initSignals();
 };

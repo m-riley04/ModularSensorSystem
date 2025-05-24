@@ -25,6 +25,8 @@ public:
 
 	void loadAllPresets(DeviceController* deviceController);
 
+	void scanForPresets(QString presetDir = QString());
+
 private:
 	QString mPresetsDir;
 	QList<Preset> mPresets;
