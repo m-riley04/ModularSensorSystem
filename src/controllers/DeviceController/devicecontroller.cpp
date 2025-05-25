@@ -66,14 +66,18 @@ void DeviceController::restartDevices()
 	emit devicesRestarted();
 }
 
-void DeviceController::addDevice(IDevicePlugin* plugin, DeviceInfo info) {
-	if (plugin) {
-		auto device = plugin->createDevice(info.id, this);
-
-		mDevices.append(device);
-
-		emit deviceAdded(device);
+Device* DeviceController::addDevice(IDevicePlugin* plugin, DeviceInfo info) {
+	if (!plugin) {
+		qWarning() << "Plugin for device is null";
+		return nullptr;
 	}
+	
+	auto device = plugin->createDevice(info.id, this);
+
+	mDevices.append(device);
+
+	emit deviceAdded(device);
+	return device;
 }
 
 void DeviceController::removeDevice(Device* device)
@@ -98,4 +102,17 @@ Device* DeviceController::getDevice(QByteArray id) const
 	}
 
 	return nullptr;
+}
+
+void DeviceController::clearDevices()
+{
+	for (Device* device : mDevices) {
+		if (device) {
+			device->deleteLater();
+		}
+	}
+
+	mDevices.clear();
+	mState = CLOSED;
+	emit stateChanged(CLOSED);
 }

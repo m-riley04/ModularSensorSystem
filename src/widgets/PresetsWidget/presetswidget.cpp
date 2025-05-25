@@ -88,7 +88,7 @@ void PresetsWidget::onLoadClicked()
 		});
 	if (it != presets.end()) {
 		// Load the preset
-		pPresetsController->loadPreset(it->path, pController->deviceController());
+		pPresetsController->loadPreset(it->path, pController->deviceController(), pController->pluginController());
 	}
 }
 
@@ -111,6 +111,21 @@ void PresetsWidget::onDoubleClicked(QListWidgetItem* item)
 
 }
 
+void PresetsWidget::onRefreshClicked()
+{
+	PresetsController* pPresetsController = pController->presetsController();
+	if (!pPresetsController) {
+		qWarning() << "Cannot refresh: presets controller is null";
+	}
+
+	// Scan
+	pPresetsController->scanForPresets(); // CONSIDER: Pass specific path?
+
+	// Repopulate
+	repopulateList();
+
+}
+
 void PresetsWidget::initWidgets()
 {
 	// Clear the list
@@ -125,13 +140,7 @@ void PresetsWidget::initWidgets()
 	pPresetsController->scanForPresets();
 
 	// Add presets to the list
-	for (const auto& preset : pPresetsController->presets()) {
-		QListWidgetItem* item = new QListWidgetItem(preset.name);
-		item->setData(Qt::UserRole, preset.path);
-		ui.listPresets->addItem(item);
-	}
-	ui.listPresets->setCurrentRow(0);
-	pSelectedItem = ui.listPresets->currentItem();
+	repopulateList();
 }
 
 void PresetsWidget::initSignals()
@@ -143,4 +152,28 @@ void PresetsWidget::initSignals()
 	connect(ui.buttonLoad, &QPushButton::clicked, this, &PresetsWidget::onLoadClicked);
 
 	connect(ui.listPresets, &QListWidget::itemClicked, this, &PresetsWidget::onSelected);
+
+	connect(pPresetsController, &PresetsController::presetSaved, this, &PresetsWidget::repopulateList);
+}
+
+void PresetsWidget::repopulateList()
+{
+	// Get and check presets controller
+	PresetsController* pPresetsController = pController->presetsController();
+	if (!pPresetsController) {
+		qWarning() << "PresetsController is null; aborting presets population";
+		return;
+	}
+
+	// Clear list
+	ui.listPresets->clear();
+
+	// Iterate through presets
+	for (const auto& preset : pPresetsController->presets()) {
+		QListWidgetItem* item = new QListWidgetItem(preset.name);
+		item->setData(Qt::UserRole, preset.path);
+		ui.listPresets->addItem(item);
+	}
+	ui.listPresets->setCurrentRow(0);
+	pSelectedItem = ui.listPresets->currentItem();
 }

@@ -26,6 +26,8 @@ private slots:
 	void onLoadClicked();
 	void onSelected(QListWidgetItem* item);
 	void onDoubleClicked(QListWidgetItem* item);
+	void onRefreshClicked();
+	void repopulateList();
 
 private:
 	Ui::PresetsWidgetClass ui;

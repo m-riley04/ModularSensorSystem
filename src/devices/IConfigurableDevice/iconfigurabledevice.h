@@ -17,7 +17,7 @@ public:
     /// Saves the settings to the given JSON object
     /// </summary>
     /// <param name="obj"></param>
-    virtual void saveSettings(QJsonObject& obj) const { Q_UNUSED(obj) }
+    virtual QJsonObject saveSettings() = 0;
 };
 
 #define IConfigurableDevice_iid "com.rileymeyerkorth.IConfigurableDevice/1.0"

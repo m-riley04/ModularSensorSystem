@@ -21,9 +21,7 @@ public:
 	QString presetsDir() const { return mPresetsDir; }
 
 	void savePreset(QString name, QList<Device*> activeDevices = QList<Device*>(), QString dirPath = QString());
-	void loadPreset(const QString& path, DeviceController* deviceController);
-
-	void loadAllPresets(DeviceController* deviceController);
+	void loadPreset(const QString& path, DeviceController* deviceController, PluginController* pluginController);
 
 	void scanForPresets(QString presetDir = QString());
 
@@ -32,6 +30,7 @@ private:
 	QList<Preset> mPresets;
 
 	QJsonArray devicePresetsToJson(const QList<DevicePreset>& devicePresets);
+	QList<DevicePreset> jsonToDevicePresets(const QJsonArray& jsonArray);
 
 signals:
 	void presetSaved(const QString& path);

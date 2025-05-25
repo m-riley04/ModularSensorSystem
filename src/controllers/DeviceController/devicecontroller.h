@@ -43,9 +43,11 @@ private:
 	RecordingSession* pRecordingSession;
 
 public slots:
-	void addDevice(IDevicePlugin* plugin, DeviceInfo info);
+	Device* addDevice(IDevicePlugin* plugin, DeviceInfo info);
 	void removeDevice(Device* device);
 	Device* getDevice(QByteArray id) const;
+
+	void clearDevices();
 
 	void openDevices();
 	void startDevices();

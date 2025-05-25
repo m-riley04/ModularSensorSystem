@@ -20,6 +20,17 @@ void PluginController::loadPlugins()
 	}
 }
 
+IDevicePlugin* PluginController::getDevicePlugin(const QString& pluginId) const
+{
+	for (IDevicePlugin* plugin : mDevicePlugins) {
+		QString pluginName = plugin->pluginName();
+		if (plugin->pluginName() == pluginId) {
+			return plugin;
+		}
+	}
+	return nullptr;  // Return nullptr if not found
+}
+
 void PluginController::loadPlugin(const QString& fullPath, const QString& fileName)
 {
 	QPluginLoader loader(fullPath);

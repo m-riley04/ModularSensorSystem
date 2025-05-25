@@ -193,7 +193,7 @@ void VideoDevice::loadSettings(const QJsonObject& obj)
 
 }
 
-void VideoDevice::saveSettings(QJsonObject& obj) const
+QJsonObject VideoDevice::saveSettings()
 {
     // Save device format
     QJsonObject deviceFormat;
@@ -253,8 +253,11 @@ void VideoDevice::saveSettings(QJsonObject& obj) const
 	recording["video"] = recordingVideo;
 
 	// Save all properties
+    QJsonObject obj;
 	obj["device"] = device;
 	obj["recording"] = recording;
+
+    return obj;
 }
 
 void VideoDevice::restart() {

@@ -15,6 +15,6 @@ class VideoDevicePlugin : public QObject, public IDevicePlugin
 public:
 	QList<DeviceInfo> availableDevices() const override;
 	Device* createDevice(const QByteArray& id, QObject* parent) override;
-	QString pluginName() const override { return "VideoDevice"; }
+	QString pluginName() const override { return "videodevice"; }
 	Device::Type deviceType() const override { return Device::Type::CAMERA; }
 };

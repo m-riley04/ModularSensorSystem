@@ -13,6 +13,7 @@ public:
     explicit PluginController(const QString& pluginRoot, QObject* parent = nullptr);
 
     void loadPlugins();
+	IDevicePlugin* getDevicePlugin(const QString& pluginId) const;
 
     QList<IDevicePlugin*> devicePlugins() const { return mDevicePlugins; }
 

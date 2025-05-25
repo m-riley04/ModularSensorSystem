@@ -36,7 +36,7 @@ public:
 	// IConfigurableDevice interface
 	QWidget* createConfigWidget(QWidget* parent = nullptr) override;
 	void loadSettings(const QJsonObject& obj) override;
-	void saveSettings(QJsonObject& obj) const override;
+	QJsonObject saveSettings() override;
 
 private:
 	QMediaCaptureSession mSession;

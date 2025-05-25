@@ -6,6 +6,7 @@
 
 struct DevicePreset {
     QByteArray   deviceId;     // Device::id()
+	QString      deviceName;   // Device::name()
     QString      pluginId;     // IDevicePlugin::pluginName()
     Device::Type deviceType;
     QJsonObject  settings;     // arbitrary, written by plugin
