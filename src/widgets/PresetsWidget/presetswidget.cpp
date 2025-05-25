@@ -32,7 +32,7 @@ void PresetsWidget::onRemoveClicked()
 		});
 	if (it != presets.end()) {
 		// Remove the preset
-		//pPresetsController->removePreset(it->path); // TODO: Make this "removePreset" method
+		pPresetsController->removePreset(it->path);
 	}
 	ui.listPresets->removeItemWidget(pSelectedItem);
 	delete pSelectedItem;
@@ -154,6 +154,7 @@ void PresetsWidget::initSignals()
 	connect(ui.listPresets, &QListWidget::itemClicked, this, &PresetsWidget::onSelected);
 
 	connect(pPresetsController, &PresetsController::presetSaved, this, &PresetsWidget::repopulateList);
+	connect(pPresetsController, &PresetsController::presetRemoved, this, &PresetsWidget::repopulateList);
 }
 
 void PresetsWidget::repopulateList()

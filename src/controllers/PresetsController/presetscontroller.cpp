@@ -141,6 +141,29 @@ void PresetsController::loadPreset(const QString& path, DeviceController* device
 	}
 }
 
+void PresetsController::removePreset(QString filePath)
+{
+	// Get preset file
+	QFile presetFile(filePath);
+	if (!presetFile.exists()) {
+		qWarning() << "Cannot remove preset at " + filePath + ": file does not exist";
+		return;
+	}
+
+	// Remove preset from in-memory list
+	mPresets.removeIf([this, filePath](Preset preset) {
+		return preset.path == filePath;
+		});
+
+	// Remove file
+	if (!presetFile.remove()) {
+		qWarning() << "Unable to remove preset: error in removing";
+		return;
+	}
+
+	emit presetRemoved(filePath);
+}
+
 void PresetsController::scanForPresets(QString presetDir)
 {
 	// Check passed dir

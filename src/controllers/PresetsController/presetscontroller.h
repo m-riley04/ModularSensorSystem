@@ -22,6 +22,7 @@ public:
 
 	void savePreset(QString name, QList<Device*> activeDevices = QList<Device*>(), QString dirPath = QString());
 	void loadPreset(const QString& path, DeviceController* deviceController, PluginController* pluginController);
+	void removePreset(QString filePath);
 
 	void scanForPresets(QString presetDir = QString());
 
@@ -35,5 +36,6 @@ private:
 signals:
 	void presetSaved(const QString& path);
 	void presetLoaded(const QString& path);
+	void presetRemoved(const QString& path);
 
 };
