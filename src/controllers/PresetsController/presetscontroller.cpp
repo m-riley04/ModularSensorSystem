@@ -71,6 +71,8 @@ void PresetsController::savePreset(QString name, QList<Device*> activeDevices, Q
 
 	// Append the preset if the writing finished successfully
 	mPresets.append(preset);
+
+	emit presetSaved(fullPath);
 }
 
 void PresetsController::loadPreset(const QString& path, DeviceController* deviceController, PluginController* pluginController)
