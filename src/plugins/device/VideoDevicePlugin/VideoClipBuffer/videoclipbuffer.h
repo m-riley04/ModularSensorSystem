@@ -1,4 +1,3 @@
-// videoclipbuffer.h
 #pragma once
 #include "clipping/Buffers/ClipBufferBase/clipbufferbase.h"
 #include <QVideoFrame>
@@ -8,17 +7,14 @@ class VideoClipBuffer : public ClipBufferBase
 {
     Q_OBJECT
 public:
-    using ClipBufferBase::ClipBufferBase; // inherit ctor
+    using ClipBufferBase::ClipBufferBase;
 
     struct Item {
         QVideoFrame frame;
         time timestamp;
     };
 
-    // push a frame with session-relative timestamp (ns)
     void push(const QVideoFrame& f, time tsNs);
-
-    // current snapshot (thread-safe copy)
     std::deque<Item> data() const;
 
     // overrides
