@@ -229,6 +229,9 @@
     <ClInclude Include="presets\DevicePreset\devicepreset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="devices\IClippableDevice\iclippabledevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="models\yolo11n.onnx" />

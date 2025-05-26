@@ -14,19 +14,25 @@ public:
     explicit ClipBufferBase(double minutes = 2.0, QObject* parent = nullptr);
 
     bool isBuffering() const { return mBuffering; }
+
+    double clipDurationMin() const { return mWindow.count() / 6.0E10; }
+    void setClipDuration(double minutes);
+
+    virtual void clear() = 0;
+    virtual int size() const = 0;
+
+public slots:
     void setBuffering(bool b) { mBuffering = b; }
-
-    double clipDurationMin() const { return mWindow.count() / 60'000'000'000.0; }
-    void setClipDuration(double minutes); // thread-safe
-
-    virtual void clear() = 0; // must wipe subclass container
-    virtual int size() const = 0; // items currently held
 
 protected:
     /// <summary>
-	/// Subclasses will call this to trim their container
+	/// Subclasses will call this to trim their container.
     /// </summary>
-    /// <typeparam name="Container">A container type that each subclass will create</typeparam>
+    /// <typeparam name="Container">
+    ///     A container type that each subclass will create. 
+    ///     Must have a `empty()` method, a `front()` method, and a `pop_front()` method.
+    ///     Structs contained within the container must have a `timestamp` property.
+    /// </typeparam>
     template<typename Container>
     void trim(Container& c, time newestTs)
     {

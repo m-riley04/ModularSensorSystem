@@ -15,8 +15,9 @@
 #include "VideoDevicePropertiesWidget/videodevicepropertieswidget.h"
 #include "devices/Device/DevicePropertiesWidget/devicepropertieswidget.h"
 #include "VideoDeviceRecordingPropertiesWidget/videodevicerecordingpropertieswidget.h"
+#include "devices/IClippableDevice/iclippabledevice.h"
 
-class VideoDevice : public Device, public IConfigurableDevice
+class VideoDevice : public Device, public IConfigurableDevice, public IClippableDevice
 {
 	Q_OBJECT
 	Q_INTERFACES(IConfigurableDevice)

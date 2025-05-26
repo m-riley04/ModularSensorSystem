@@ -11,7 +11,7 @@ void ClipBufferBase::setClipDuration(double minutes)
     if (newWin == mWindow) return;
 
     {
-        QMutexLocker L(&mMx);
+        QMutexLocker locker(&mMx);
         mWindow = newWin; // subclasses will trim on next push
     }
 
