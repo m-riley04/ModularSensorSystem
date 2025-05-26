@@ -18,12 +18,12 @@ std::deque<VideoClipBuffer::Item> VideoClipBuffer::data() const
     return mBuf; // shallow copies QVideoFrame handles
 }
 
-void VideoClipBuffer::clear()
+void VideoClipBuffer::flush()
 {
     QMutexLocker L(&mLocalMx);
     mBuf.clear();
     L.unlock();
-    emit bufferCleared();
+    emit flushed();
 }
 
 int VideoClipBuffer::size() const

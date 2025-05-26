@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="VideoClipBuffer\videoclipbuffer.cpp" />
+    <ClCompile Include="VideoClipEncoder\videoclipencoder.cpp" />
     <ClCompile Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
     <ClCompile Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.cpp" />
     <ClCompile Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.cpp" />
@@ -139,6 +140,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="VideoClipEncoder\videoclipencoder.h" />
     <ClInclude Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
     <QtMoc Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.h" />
     <QtMoc Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.h" />

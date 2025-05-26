@@ -1,5 +1,5 @@
 #pragma once
-#include "clipping/Buffers/ClipBufferBase/clipbufferbase.h"
+#include "devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
 #include <QVideoFrame>
 #include <deque>
 
@@ -18,7 +18,7 @@ public:
     std::deque<Item> data() const;
 
     // overrides
-    void clear() override;
+    void flush() override;
     int  size()  const override;
 
 signals:

@@ -16,6 +16,7 @@
 #include "devices/Device/DevicePropertiesWidget/devicepropertieswidget.h"
 #include "VideoDeviceRecordingPropertiesWidget/videodevicerecordingpropertieswidget.h"
 #include "devices/IClippableDevice/iclippabledevice.h"
+#include <VideoClipEncoder/videoclipencoder.h>
 
 class VideoDevice : public Device, public IConfigurableDevice, public IClippableDevice
 {
@@ -38,6 +39,10 @@ public:
 	QWidget* createConfigWidget(QWidget* parent = nullptr) override;
 	void loadSettings(const QJsonObject& obj) override;
 	QJsonObject saveSettings() override;
+
+	// IClippableDevice interface
+	void clip(const QDir& dir) override;
+	ClipBufferBase* clipBuffer() override { return pClipBuffer.get(); }
 
 private:
 	QMediaCaptureSession mSession;

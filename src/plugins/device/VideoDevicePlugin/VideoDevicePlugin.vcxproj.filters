@@ -55,6 +55,9 @@
     <ClCompile Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VideoClipEncoder\videoclipencoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="VideoPreview\videopreview.h">
@@ -72,6 +75,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoClipEncoder\videoclipencoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

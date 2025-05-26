@@ -260,6 +260,25 @@ QJsonObject VideoDevice::saveSettings()
     return obj;
 }
 
+void VideoDevice::clip(const QDir& dir)
+{
+    // Snapshot the buffer
+    auto* vbuf = static_cast<VideoClipBuffer*>(pClipBuffer.get());
+    auto frames = vbuf->data(); // thread-safe copy
+
+    if (frames.empty()) return;
+
+    // Prepare encoder
+    QString file = dir.filePath(mName + ".mp4"); // TODO: Better file naming AND changing file type/extension
+    VideoClipEncoder enc(file, frames.front().frame.size(), mCamera.cameraFormat().maxFrameRate());
+    for (auto& it : frames) {
+        enc.addFrame(it.frame, it.timestamp);
+    }
+    enc.finish();
+
+    qDebug() << "Video clip written to" << file;
+}
+
 void VideoDevice::restart() {
     stop();
     start();
