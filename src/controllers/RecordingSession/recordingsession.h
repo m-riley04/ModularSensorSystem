@@ -3,7 +3,7 @@
 #include <QObject>
 #include "devices/Device/device.h"
 #include <qelapsedtimer.h>
-#include "clipping/Buffers/ClipBufferBase/clipbufferbase.h"
+#include "devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
 #include <qdir.h>
 #include <QtMultimedia/qmediarecorder.h>
 

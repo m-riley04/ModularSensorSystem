@@ -67,7 +67,7 @@
     <ClCompile Include="devices\Device\DeviceMetadata\devicemetadata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="clipping\buffers\ClipBufferBase\clipbufferbase.cpp">
+    <ClCompile Include="devices\IClippableDevice\ClipBufferBase\clipbufferbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="processing\FrameProcessor\frameprocessor.cpp">
@@ -141,7 +141,7 @@
     <QtMoc Include="devices\Device\DeviceMetadata\devicemetadata.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="clipping\buffers\ClipBufferBase\clipbufferbase.h">
+    <QtMoc Include="devices\IClippableDevice\ClipBufferBase\clipbufferbase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="processing\FrameProcessor\frameprocessor.h">

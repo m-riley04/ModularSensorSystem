@@ -1,6 +1,6 @@
 #include "templateclipbuffer.h"
 
-void TemplateClipBuffer::clear()
+void TemplateClipBuffer::flush()
 {
 	throw std::runtime_error("Not implemented");
 }

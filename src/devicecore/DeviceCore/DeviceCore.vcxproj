@@ -104,20 +104,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\clipping\buffers\ClipBufferBase\clipbufferbase.cpp" />
     <ClCompile Include="..\..\controllers\RecordingSession\recordingsession.cpp" />
     <ClCompile Include="..\..\devices\Device\device.cpp" />
     <ClCompile Include="..\..\devices\Device\DeviceMetadata\devicemetadata.cpp" />
     <ClCompile Include="..\..\devices\Device\DevicePreview\devicepreview.cpp" />
     <ClCompile Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.cpp" />
+    <ClCompile Include="..\..\devices\IClippableDevice\ClipBufferBase\clipbufferbase.cpp" />
     <QtMoc Include="..\..\devices\Device\device.h" />
     <QtMoc Include="..\..\devices\Device\DevicePreview\devicepreview.h" />
     <QtMoc Include="..\..\devices\Device\DeviceMetadata\devicemetadata.h" />
     <QtMoc Include="..\..\controllers\RecordingSession\recordingsession.h" />
-    <QtMoc Include="..\..\clipping\buffers\ClipBufferBase\clipbufferbase.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="..\..\devices\IClippableDevice\ClipBufferBase\clipbufferbase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

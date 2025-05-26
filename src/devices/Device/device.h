@@ -5,7 +5,7 @@
 #include <quuid.h>
 #include "devices/Device/DevicePreview/devicepreview.h"
 #include <QPointer>
-#include "clipping/buffers/ClipBufferBase/clipbufferbase.h"
+#include "devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
 
 class RecordingSession;
 class DevicePreview;

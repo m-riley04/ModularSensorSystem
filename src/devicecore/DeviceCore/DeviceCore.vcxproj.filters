@@ -32,13 +32,13 @@
     <ClCompile Include="..\..\devices\Device\DevicePreview\devicepreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\clipping\buffers\ClipBufferBase\clipbufferbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\controllers\RecordingSession\recordingsession.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\devices\IClippableDevice\ClipBufferBase\clipbufferbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -55,10 +55,10 @@
     <QtMoc Include="..\..\controllers\RecordingSession\recordingsession.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="..\..\clipping\buffers\ClipBufferBase\clipbufferbase.h">
+    <QtMoc Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.h">
+    <QtMoc Include="..\..\devices\IClippableDevice\ClipBufferBase\clipbufferbase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

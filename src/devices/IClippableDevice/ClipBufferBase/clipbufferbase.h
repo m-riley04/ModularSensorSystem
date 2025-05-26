@@ -18,7 +18,7 @@ public:
     double clipDurationMin() const { return mWindow.count() / 6.0E10; }
     void setClipDuration(double minutes);
 
-    virtual void clear() = 0;
+    virtual void flush() = 0;
     virtual int size() const = 0;
 
 public slots:
@@ -46,7 +46,7 @@ protected:
 
 signals:
     void clipDurationChanged(double minutes);
-    void bufferCleared();
+    void flushed();
 
 private:
     bool mBuffering = true;

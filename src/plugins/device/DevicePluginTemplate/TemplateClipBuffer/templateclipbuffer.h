@@ -1,5 +1,5 @@
 #pragma once
-#include "clipping/Buffers/ClipBufferBase/clipbufferbase.h"
+#include "devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
 #include <deque>
 
 class TemplateClipBuffer : public ClipBufferBase
@@ -8,6 +8,6 @@ class TemplateClipBuffer : public ClipBufferBase
 public:
     using ClipBufferBase::ClipBufferBase; // inherit ctor
 
-    void clear() override;
+    void flush() override;
     int  size() const override;
 };
