@@ -112,6 +112,9 @@
     <ClCompile Include="controllers\PresetsController\presetscontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controllers\ProcessingController\processingcontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
@@ -181,6 +184,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="controllers\PresetsController\presetscontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controllers\ProcessingController\processingcontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="interfaces\irealtimeprocessor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

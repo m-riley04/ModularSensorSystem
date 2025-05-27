@@ -120,6 +120,7 @@
     <ClCompile Include="controllers\DeviceController\devicecontroller.cpp" />
     <ClCompile Include="controllers\PluginController\plugincontroller.cpp" />
     <ClCompile Include="controllers\PresetsController\presetscontroller.cpp" />
+    <ClCompile Include="controllers\ProcessingController\processingcontroller.cpp" />
     <ClCompile Include="controllers\RecordingController\recordingcontroller.cpp" />
     <ClCompile Include="controllers\RecordingSession\recordingsession.cpp" />
     <ClCompile Include="devices\Device\DeviceHelpers\DeviceHelpers.cpp" />
@@ -161,8 +162,10 @@
     <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="controllers\ProcessingController\processingcontroller.h" />
     <ClInclude Include="devices\Device\DeviceError\deviceerror.h" />
     <ClInclude Include="devices\IClippableDevice\iclippabledevice.h" />
+    <QtMoc Include="interfaces\irealtimeprocessor.h" />
     <ClInclude Include="presets\DevicePreset\devicepreset.h" />
     <ClInclude Include="presets\Preset\preset.h" />
     <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h" />
