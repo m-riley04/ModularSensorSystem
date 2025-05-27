@@ -1,4 +1,5 @@
 #include "devicelistwidget.h"
+#include <QMimeData>
 
 DeviceListWidget::DeviceListWidget(QWidget* parent)
 	: QWidget(parent)
@@ -33,6 +34,7 @@ void DeviceListWidget::initDeviceControllerSignals()
 
 	// Disconnect previous signals
 	disconnect(pDeviceController, &DeviceController::deviceAdded, this, nullptr);
+	disconnect(pDeviceController, &DeviceController::deviceRemoved, this, nullptr);
 
 	// Connect device controller signals
 	connect(pDeviceController, &DeviceController::deviceAdded, this, [this](Device* device) {
@@ -44,6 +46,19 @@ void DeviceListWidget::initDeviceControllerSignals()
 		QListWidgetItem* item = new QListWidgetItem(listItemName, ui.listDevices);
 		item->setData(Qt::UserRole, devicePtr);
 		ui.listDevices->addItem(item);
+		});
+	connect(pDeviceController, &DeviceController::deviceRemoved, this, [this](Device* device) {
+		if (device == nullptr) return;
+
+		// Find device in list widget
+		for (int i = 0; i < ui.listDevices->count(); ++i) {
+			QListWidgetItem* itm = ui.listDevices->item(i);
+			Device* stored = itm->data(Qt::UserRole).value<Device*>();
+			if (stored == device) {
+				delete ui.listDevices->takeItem(i); // returns the item; we delete it
+				// break; // CONSIDER: don't break so that it continues to remove that pointer (if in multiple times)
+			}
+		}
 		});
 }
 
@@ -58,9 +73,6 @@ void DeviceListWidget::openRemoveDeviceDialog()
 
 			// Remove device from the controller
 			pDeviceController->removeDevice(device);
-
-			// Cleanup memory of list item (as specified by docs)
-			delete selectedItem;
 		}
 	}
 }

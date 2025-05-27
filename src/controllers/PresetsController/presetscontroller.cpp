@@ -102,6 +102,9 @@ void PresetsController::loadPreset(const QString& path, DeviceController* device
 		return;
 	}
 
+	// Remove previously loaded devices/settings
+	deviceController->clearDevices();
+
 	QString name = obj["name"].toString();
 	QJsonArray devicesArray = obj["devices"].toArray();
 	QList<DevicePreset> devicePresets = jsonToDevicePresets(devicesArray);
@@ -141,6 +144,8 @@ void PresetsController::loadPreset(const QString& path, DeviceController* device
 			continue;
 		}
 	}
+
+	emit presetLoaded(path);
 }
 
 void PresetsController::removePreset(QString filePath)

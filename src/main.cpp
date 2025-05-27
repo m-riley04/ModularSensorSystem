@@ -1,8 +1,13 @@
 #include "Windows/MainWindow/MainWindow.h"
 #include <QtWidgets/QApplication>
+#include <devices/Device/DeviceError/deviceerror.h>
 
 int main(int argc, char *argv[])
 {
+	// Register metatypes
+	qRegisterMetaType<DeviceError>("DeviceError");
+
+	// Create application
     QApplication a(argc, argv);
     MainWindow w;
     w.show();

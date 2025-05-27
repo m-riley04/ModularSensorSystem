@@ -45,6 +45,13 @@ void MainWindow::initWidgets()
 void MainWindow::initSignals() {
 	DeviceController* pDeviceController = pController->deviceController();
 
+    // Error messages
+    connect(pController.get(), &MainController::errorOccurred, [this](const DeviceError& e) {
+        QString deviceInfo = "Device: " + (e.device != nullptr ? e.device->name() : "null");
+        QString errorMessage = "Error: " + e.msg + "\n" + deviceInfo;
+        QMessageBox::warning(this, "Error", errorMessage);
+        });
+
     // Pages
 	connect(ui.buttonHome, &QPushButton::clicked, [this]() {
 		ui.pagesStack->setCurrentIndex(0);

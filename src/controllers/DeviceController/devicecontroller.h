@@ -5,6 +5,7 @@
 #include <Controllers/RecordingSession/recordingsession.h>
 #include <qcameradevice.h>
 #include <controllers/PluginController/plugincontroller.h>
+#include <devices/Device/DeviceError/deviceerror.h>
 
 class DeviceController : public QObject
 {
@@ -68,4 +69,6 @@ signals:
 
 	void deviceAdded(Device* device);
 	void deviceRemoved(Device* device);
+
+	void errorOccurred(const DeviceError& e);
 };

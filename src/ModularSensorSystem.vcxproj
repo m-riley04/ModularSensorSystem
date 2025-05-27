@@ -161,6 +161,7 @@
     <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="devices\Device\DeviceError\deviceerror.h" />
     <ClInclude Include="devices\IClippableDevice\iclippabledevice.h" />
     <ClInclude Include="presets\DevicePreset\devicepreset.h" />
     <ClInclude Include="presets\Preset\preset.h" />

@@ -6,6 +6,7 @@
 #include "devices/Device/DevicePreview/devicepreview.h"
 #include <QPointer>
 #include "devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
+#include "DeviceError/deviceerror.h"
 
 class RecordingSession;
 class DevicePreview;
@@ -147,4 +148,6 @@ signals:
 	/// Emitted when the device's preview is available.
 	/// </summary>
 	void previewAvailable(Device* device, DevicePreview* preview);
+
+	void errorOccurred(const DeviceError& e);
 };

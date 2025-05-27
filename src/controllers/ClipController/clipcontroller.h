@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <devices/Device/DevicePropertiesWidget/devicepropertieswidget.h>
 #include <devices/IClippableDevice/IClippableDevice.h>
+#include <devices/Device/DeviceError/deviceerror.h>
 
 class ClipController : public QObject
 {
@@ -60,4 +61,6 @@ signals:
 	void clipBufferRemoved(ClipBufferBase* buffer);
 	void flushed(ClipBufferBase* buffer);
 	void clipSaved(const QString& fileName);
+
+	void errorOccurred(const DeviceError& e);
 };

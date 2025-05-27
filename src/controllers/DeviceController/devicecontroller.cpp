@@ -1,7 +1,7 @@
 #include "devicecontroller.h"
 
 DeviceController::DeviceController(PluginController* pluginController, QObject *parent)
-	: QObject(parent), pPluginController(pluginController)
+	: QObject(parent), pPluginController(pluginController), pRecordingSession(nullptr)
 {}
 
 DeviceController::~DeviceController()
@@ -68,6 +68,11 @@ void DeviceController::restartDevices()
 
 Device* DeviceController::addDevice(IDevicePlugin* plugin, DeviceInfo info) {
 	if (!plugin) {
+		emit errorOccurred({
+			"Cannot add device: plugin is null",
+			nullptr,
+			ErrorSeverity::CRITICAL
+			});
 		qWarning() << "Plugin for device is null";
 		return nullptr;
 	}
@@ -76,13 +81,24 @@ Device* DeviceController::addDevice(IDevicePlugin* plugin, DeviceInfo info) {
 
 	mDevices.append(device);
 
+	// Connect errors
+	connect(device, &Device::errorOccurred, this, &DeviceController::errorOccurred);
+
 	emit deviceAdded(device);
 	return device;
 }
 
 void DeviceController::removeDevice(Device* device)
 {
-	if (!device) return;
+	if (!device) {
+		emit errorOccurred({
+			"Cannot remove device: device is null",
+			nullptr,
+			ErrorSeverity::CRITICAL
+			});
+		qWarning() << "Cannot remove device: device is null";
+		return;
+	};
 
 	// Get device id before deleting
 	QByteArray deviceId = device->id();
@@ -109,6 +125,7 @@ void DeviceController::clearDevices()
 	for (Device* device : mDevices) {
 		if (device) {
 			device->deleteLater();
+			emit deviceRemoved(device);
 		}
 	}
 

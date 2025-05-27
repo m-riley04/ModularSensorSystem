@@ -29,4 +29,7 @@ private:
 	std::unique_ptr<ClipController> pClipController;
 	std::unique_ptr<PluginController> pPluginController;
 	std::unique_ptr<PresetsController> pPresetsController;
+
+signals:
+	void errorOccurred(const DeviceError& e);
 };
