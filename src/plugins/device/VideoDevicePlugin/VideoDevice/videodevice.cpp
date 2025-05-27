@@ -262,21 +262,36 @@ QJsonObject VideoDevice::saveSettings()
 
 void VideoDevice::clip(const QDir& dir)
 {
-    // Snapshot the buffer
-    auto* vbuf = static_cast<VideoClipBuffer*>(pClipBuffer.get());
-    auto frames = vbuf->data(); // thread-safe copy
+    // Cast the clip buffer 
+    auto videoClipBuffer = static_cast<VideoClipBuffer*>(pClipBuffer.get());
+    if (!videoClipBuffer) {
+        qWarning() << "Unable to clip: not a video buffer";
+        return;
+    }
 
-    if (frames.empty()) return;
+    // Grab buffer data
+    auto buf = videoClipBuffer->data();
+    if (buf.empty()) return;
 
-    // Prepare encoder
-    QString file = dir.filePath(mName + ".mp4"); // TODO: Better file naming AND changing file type/extension
-    VideoClipEncoder enc(file, frames.front().frame.size(), mCamera.cameraFormat().maxFrameRate());
-    for (auto& it : frames) {
+    // Init sizes
+    const QSize sz = buf.front().frame.size();
+    const double fps = camera()->cameraFormat().maxFrameRate();
+
+	// Create the encoder helper
+    VideoClipEncoder enc(dir.filePath(mName + ".mp4"), sz, fps);
+    if (!enc.isOk()) {
+        qWarning() << enc.errorString();
+        return;
+    }
+
+    // Iterate and add frames from buffer
+    for (auto& it : buf) {
         enc.addFrame(it.frame, it.timestamp);
     }
-    enc.finish();
 
-    qDebug() << "Video clip written to" << file;
+    // Finish encoding
+    enc.finish();
+    qDebug() << "Clip saved:" << dir.filePath(mName + ".mp4");
 }
 
 void VideoDevice::restart() {
