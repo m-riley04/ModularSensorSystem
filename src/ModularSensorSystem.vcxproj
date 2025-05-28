@@ -165,7 +165,7 @@
     <QtMoc Include="controllers\ProcessingController\processingcontroller.h" />
     <ClInclude Include="devices\Device\DeviceError\deviceerror.h" />
     <ClInclude Include="devices\IClippableDevice\iclippabledevice.h" />
-    <QtMoc Include="interfaces\irealtimeprocessor.h" />
+    <ClInclude Include="plugins\processors\iprocessorplugin.h" />
     <ClInclude Include="presets\DevicePreset\devicepreset.h" />
     <ClInclude Include="presets\Preset\preset.h" />
     <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h" />

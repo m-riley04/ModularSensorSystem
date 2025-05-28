@@ -189,9 +189,6 @@
     <QtMoc Include="controllers\ProcessingController\processingcontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="interfaces\irealtimeprocessor.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
@@ -242,6 +239,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="devices\Device\DeviceError\deviceerror.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plugins\processors\iprocessorplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
