@@ -21,5 +21,5 @@ public:
 	virtual Device* createDevice(const QByteArray& id, QObject* parent) = 0;
 };
 
-#define IDevicePlugin_iid "com.rileymeyerkorth.ModularSensorSystem.IDevicePlugin/1.0"
+#define IDevicePlugin_iid "com.modularsensorsystem.IDevicePlugin/1.0"
 Q_DECLARE_INTERFACE(IDevicePlugin, IDevicePlugin_iid)

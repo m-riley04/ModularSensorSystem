@@ -115,6 +115,9 @@
     <ClCompile Include="controllers\ProcessingController\processingcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="plugins\processors\YoloProcessor\yoloprocessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
@@ -189,6 +192,9 @@
     <QtMoc Include="controllers\ProcessingController\processingcontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="plugins\processors\YoloProcessor\yoloprocessor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
@@ -242,6 +248,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="plugins\processors\iprocessorplugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\capability\ivideoframesource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\capability\iaudiostreamsource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\capability\igpssentencesource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\capability\isensorvaluesource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\capability\idatasource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
