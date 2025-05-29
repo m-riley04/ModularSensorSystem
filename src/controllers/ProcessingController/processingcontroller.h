@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <devices/Device/device.h>
-#include <interfaces/irealtimeprocessor.h>
+#include <processing/ProcessorBase/processorbase.h>
 
 class ProcessingController  : public QObject
 {
@@ -12,7 +12,7 @@ public:
 	ProcessingController(QObject *parent);
 	~ProcessingController();
 
-    bool registerProcessor(Device* device, IRealTimeProcessor* proc);
+    bool registerProcessor(Device* device, ProcessorBase* proc);
 
     void unregisterAll(Device* device);
 
@@ -20,12 +20,10 @@ public:
     // e.g., ["YOLO Detector", "MotionDetector"] etc.
     QStringList availableProcessorTypes(); 
 private:
-    QMap<Device*, QList<IRealTimeProcessor*>> processors;
+    QMap<Device*, QList<ProcessorBase*>> mProcessors;
 
-    bool isCompatible(IRealTimeProcessor* proc, Device* dev) {
-        return proc->compatibleDeviceType() == dev->deviceType();
-    }
+    bool isCompatible(ProcessorBase* proc, Device* dev);
 
-    void connectSignalsForProcessor(IRealTimeProcessor* proc);
+    void connectSignalsForProcessor(ProcessorBase* proc);
 };
 

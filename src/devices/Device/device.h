@@ -17,8 +17,8 @@ class Device : public QObject
 
 public:
 	enum Type {
-		CAMERA,
-		MICROPHONE,
+		VIDEO,
+		AUDIO,
 		GPS,
 		OTHER
 	};
@@ -52,8 +52,8 @@ public:
 	static QString typeToString(Type type)
 	{
 		switch (type) {
-		case CAMERA: return "Camera";
-		case MICROPHONE: return "Microphone";
+		case VIDEO: return "Camera";
+		case AUDIO: return "Microphone";
 		case GPS: return "GPS";
 		case OTHER: return "Other";
 		default: return "Unknown";

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "plugins/device/ideviceplugin.h"
+#include "interfaces/plugins/ideviceplugin.h"
 #include "devices/Device/device.h"
 #include "VideoDevice/videodevice.h"
 #include <QtMultimedia>
@@ -16,5 +16,5 @@ public:
 	QList<DeviceInfo> availableDevices() const override;
 	Device* createDevice(const QByteArray& id, QObject* parent) override;
 	QString pluginName() const override { return "videodevice"; }
-	Device::Type deviceType() const override { return Device::Type::CAMERA; }
+	Device::Type deviceType() const override { return Device::Type::VIDEO; }
 };

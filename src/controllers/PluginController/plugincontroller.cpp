@@ -15,7 +15,7 @@ void PluginController::loadPlugins()
 	for (const QString& fileName : files) {
 		if (QLibrary::isLibrary(fileName)) {  // check extension .dll on Windows
 			QString fullPath = pluginsDir.absoluteFilePath(fileName);
-			loadPlugin(fullPath, fileName);
+			loadDevicePlugin(fullPath, fileName);
 		}
 	}
 }
@@ -31,7 +31,18 @@ IDevicePlugin* PluginController::getDevicePlugin(const QString& pluginId) const
 	return nullptr;  // Return nullptr if not found
 }
 
-void PluginController::loadPlugin(const QString& fullPath, const QString& fileName)
+IProcessorPlugin* PluginController::getProcessorPlugin(const QString& pluginId) const
+{
+	for (IProcessorPlugin* plugin : mProcessorPlugins) {
+		QString pluginName = plugin->name();
+		if (plugin->name() == pluginId) {
+			return plugin;
+		}
+	}
+	return nullptr;  // Return nullptr if not found
+}
+
+void PluginController::loadDevicePlugin(const QString& fullPath, const QString& fileName)
 {
 	QPluginLoader loader(fullPath);
 	QObject* pluginInstance = loader.instance();
@@ -47,4 +58,22 @@ void PluginController::loadPlugin(const QString& fullPath, const QString& fileNa
 	}
 
 	mDevicePlugins.append(devicePlugin);
+}
+
+void PluginController::loadProcessorPlugin(const QString& fullPath, const QString& fileName)
+{
+	QPluginLoader loader(fullPath);
+	QObject* pluginInstance = loader.instance();
+	if (!pluginInstance) {
+		qWarning() << "Failed to load plugin" << fileName << ":" << loader.errorString();
+		return;
+	}
+	IProcessorPlugin* processorPlugin = qobject_cast<IProcessorPlugin*>(pluginInstance);
+	if (!processorPlugin) {
+		qWarning() << "Loaded plugin" << fileName << "does not implement IProcessorPlugin interface. Unloading...";
+		loader.unload();  // Unload if not the correct plugin type
+		return;
+	}
+
+	mProcessorPlugins.append(processorPlugin);
 }

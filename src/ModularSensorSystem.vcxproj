@@ -171,8 +171,8 @@
     <ClInclude Include="interfaces\capability\idatasource.h" />
     <ClInclude Include="interfaces\capability\igpssentencesource.h" />
     <ClInclude Include="interfaces\capability\isensorvaluesource.h" />
-    <ClInclude Include="interfaces\capability\ivideoframesource.h" />
-    <ClInclude Include="plugins\processors\iprocessorplugin.h" />
+    <ClInclude Include="interfaces\capability\ivideosource.h" />
+    <ClInclude Include="interfaces\plugins\iprocessorplugin.h" />
     <ClInclude Include="presets\DevicePreset\devicepreset.h" />
     <ClInclude Include="presets\Preset\preset.h" />
     <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h" />
@@ -200,7 +200,7 @@
     <QtMoc Include="widgets\DevicePreviewWidget\devicepreviewwidget.h" />
     <QtMoc Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.h" />
     <ClInclude Include="devices\IConfigurableDevice\iconfigurabledevice.h" />
-    <ClInclude Include="plugins\device\ideviceplugin.h" />
+    <ClInclude Include="interfaces\plugins\ideviceplugin.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="models\yolo11n.onnx" />

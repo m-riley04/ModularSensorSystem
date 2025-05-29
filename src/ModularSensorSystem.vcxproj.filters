@@ -229,7 +229,7 @@
     <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="plugins\device\ideviceplugin.h">
+    <ClInclude Include="interfaces\plugins\ideviceplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="devices\IConfigurableDevice\iconfigurabledevice.h">
@@ -247,10 +247,10 @@
     <ClInclude Include="devices\Device\DeviceError\deviceerror.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="plugins\processors\iprocessorplugin.h">
+    <ClInclude Include="interfaces\plugins\iprocessorplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="interfaces\capability\ivideoframesource.h">
+    <ClInclude Include="interfaces\capability\ivideosource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="interfaces\capability\iaudiostreamsource.h">

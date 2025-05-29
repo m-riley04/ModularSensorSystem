@@ -16,12 +16,16 @@
 #include "devices/Device/DevicePropertiesWidget/devicepropertieswidget.h"
 #include "VideoDeviceRecordingPropertiesWidget/videodevicerecordingpropertieswidget.h"
 #include "devices/IClippableDevice/iclippabledevice.h"
+#include "interfaces/capability/ivideosource.h"
 #include <VideoClipEncoder/videoclipencoder.h>
 
-class VideoDevice : public Device, public IConfigurableDevice, public IClippableDevice
+class VideoDevice : public Device, 
+	public IConfigurableDevice, 
+	public IClippableDevice, 
+	public IVideoSource
 {
 	Q_OBJECT
-	Q_INTERFACES(IConfigurableDevice)
+	Q_INTERFACES(IConfigurableDevice, IVideoSource)
 
 public:
 	VideoDevice(QByteArray hardwareId, QObject* parent);
@@ -65,5 +69,6 @@ private slots:
 	void onNewFrame(const QVideoFrame& frame);
 
 signals:
+	void frameReady(const QVideoFrame& frame) override;
 	void mediaDirectoryChanged(QUrl directory);
 };

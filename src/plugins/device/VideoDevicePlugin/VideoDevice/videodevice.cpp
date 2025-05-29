@@ -11,7 +11,7 @@ VideoDevice::VideoDevice(QCameraDevice qVideoDevice, QObject* parent)
     mId = qVideoDevice.id();
 	mPluginId = "videodevice";
     mName = qVideoDevice.description();
-    mDeviceType = Device::Type::CAMERA;
+    mDeviceType = Device::Type::VIDEO;
     pPreview.reset(new VideoPreview(&mSession, this));
 
     // Initialize capture session
