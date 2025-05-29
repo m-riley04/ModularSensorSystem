@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QObject>
 #include "devices/Device/device.h"
 
 struct DeviceInfo {

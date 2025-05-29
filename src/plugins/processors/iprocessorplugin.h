@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include "devices/Device/device.h"
+#include "processing/ProcessorBase/processorbase.h"
 
 class IProcessorPlugin {
 public:

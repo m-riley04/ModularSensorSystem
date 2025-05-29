@@ -130,7 +130,6 @@
     <ClCompile Include="devices\Device\DevicePreview\devicepreview.cpp" />
     <ClCompile Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.cpp" />
     <ClCompile Include="pages\MainPage\mainpage.cpp" />
-    <ClCompile Include="plugins\processors\YoloProcessor\yoloprocessor.cpp" />
     <ClCompile Include="processing\FrameProcessor\frameprocessor.cpp" />
     <ClCompile Include="processing\ProcessorBase\processorbase.cpp" />
     <ClCompile Include="processing\YOLO\yolo.cpp" />
@@ -174,7 +173,6 @@
     <ClInclude Include="interfaces\capability\isensorvaluesource.h" />
     <ClInclude Include="interfaces\capability\ivideoframesource.h" />
     <ClInclude Include="plugins\processors\iprocessorplugin.h" />
-    <QtMoc Include="plugins\processors\YoloProcessor\yoloprocessor.h" />
     <ClInclude Include="presets\DevicePreset\devicepreset.h" />
     <ClInclude Include="presets\Preset\preset.h" />
     <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h" />

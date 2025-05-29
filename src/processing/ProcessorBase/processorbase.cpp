@@ -1,8 +1,5 @@
 #include "processorbase.h"
 
-ProcessorBase::ProcessorBase(QObject *parent)
+ProcessorBase::ProcessorBase(Device* device, QObject* parent = nullptr)
 	: QObject(parent)
-{}
-
-ProcessorBase::~ProcessorBase()
 {}
