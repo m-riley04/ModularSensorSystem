@@ -118,6 +118,9 @@
     <ClCompile Include="plugins\processors\YoloProcessor\yoloprocessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="processing\ProcessorBase\processorbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
@@ -193,6 +196,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="plugins\processors\YoloProcessor\yoloprocessor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="processing\ProcessorBase\processorbase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

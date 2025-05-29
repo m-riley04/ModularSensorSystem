@@ -1,19 +1,18 @@
 #pragma once
 
+#include <QObject>
 #include "devices/Device/device.h"
 
-class IProcessorPlugin
-{
-
+class IProcessorPlugin {
 public:
-	virtual ~IProcessorPlugin() = default;
-
-	virtual QString name() const = 0;                      // Name or type of the processor
-	virtual Device::Type compatibleDeviceType() const = 0; // e.g. "Video", "Audio" etc., for compatibility checking
-	virtual void attachDevice(Device* device) = 0;         // Attach to a device's data stream
-	virtual void startProcessing() = 0;
-	virtual void stopProcessing() = 0;
+    virtual ~IProcessorPlugin() = default;
+    /// Identify which device modality this processor supports (e.g. CAMERA, MICROPHONE)
+    virtual Device::Type deviceType() const = 0;
+    /// Human-readable name of the processor (for UI)
+    virtual QString pluginName() const = 0;
+    /// Create a new processor instance for the given device
+    virtual ProcessorBase* createProcessor(Device* device, QObject* parent = nullptr) = 0;
 };
 
-#define IProcessorPlugin_iid "com.rileymeyerkorth.ModularSensorSystem.IProcessorPlugin/1.0"
+#define IProcessorPlugin_iid "com.modularsensorsystem.IProcessorPlugin/1.0"
 Q_DECLARE_INTERFACE(IProcessorPlugin, IProcessorPlugin_iid)

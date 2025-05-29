@@ -132,6 +132,7 @@
     <ClCompile Include="pages\MainPage\mainpage.cpp" />
     <ClCompile Include="plugins\processors\YoloProcessor\yoloprocessor.cpp" />
     <ClCompile Include="processing\FrameProcessor\frameprocessor.cpp" />
+    <ClCompile Include="processing\ProcessorBase\processorbase.cpp" />
     <ClCompile Include="processing\YOLO\yolo.cpp" />
     <ClCompile Include="controllers\MainController\maincontroller.cpp" />
     <ClCompile Include="widgets\DeviceListWidget\devicelistwidget.cpp" />
@@ -163,6 +164,7 @@
     <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="processing\ProcessorBase\processorbase.h" />
     <QtMoc Include="controllers\ProcessingController\processingcontroller.h" />
     <ClInclude Include="devices\Device\DeviceError\deviceerror.h" />
     <ClInclude Include="devices\IClippableDevice\iclippabledevice.h" />
