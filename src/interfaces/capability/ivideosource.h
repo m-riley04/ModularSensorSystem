@@ -8,8 +8,6 @@ class IVideoSource : public IDataSource
 
 public:
     virtual ~IVideoSource() = default;
-    
-    virtual QObject* asQObject() = 0;
 signals:
     void frameReady(const QVideoFrame&);
 };

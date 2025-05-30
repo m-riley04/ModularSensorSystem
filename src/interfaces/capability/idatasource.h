@@ -1,13 +1,11 @@
 #pragma once
 #include <QObject>
 
-class IDataSource: public QObject
+class IDataSource
 {
-    Q_OBJECT
 
 public:
     virtual ~IDataSource() = default;
-    virtual QObject* asQObject() = 0;        // helper for connect()
 
 };
 

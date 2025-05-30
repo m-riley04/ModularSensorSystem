@@ -45,9 +45,6 @@ public:
 	void clip(const QDir& dir) override;
 	ClipBufferBase* clipBuffer() override { return pClipBuffer.get(); }
 
-	// IVideoSource interface
-	QObject* asQObject() override { return this; }
-
 private:
 	QMediaCaptureSession mSession;
 	QCamera mCamera;

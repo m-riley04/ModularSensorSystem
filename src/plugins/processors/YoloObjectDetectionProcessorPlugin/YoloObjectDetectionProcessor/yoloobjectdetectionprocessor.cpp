@@ -7,3 +7,6 @@ YoloObjectDetectionProcessor::YoloObjectDetectionProcessor(Device* device, QObje
 YoloObjectDetectionProcessor::~YoloObjectDetectionProcessor()
 {}
 
+void YoloObjectDetectionProcessor::processFrame(const QVideoFrame& frame) {
+
+}

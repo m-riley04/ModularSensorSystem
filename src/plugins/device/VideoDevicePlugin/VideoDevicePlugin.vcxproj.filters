@@ -35,6 +35,9 @@
     <QtMoc Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="VideoDevice\videodevice.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VideoPreview\videopreview.cpp">
@@ -61,9 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="VideoPreview\videopreview.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="VideoDevice\videodevice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="VideoClipBuffer\videoclipbuffer.h">
