@@ -168,7 +168,7 @@
     <ClInclude Include="devices\Device\DeviceError\deviceerror.h" />
     <ClInclude Include="devices\IClippableDevice\iclippabledevice.h" />
     <ClInclude Include="interfaces\capability\iaudiostreamsource.h" />
-    <ClInclude Include="interfaces\capability\idatasource.h" />
+    <QtMoc Include="interfaces\capability\idatasource.h" />
     <ClInclude Include="interfaces\capability\igpssentencesource.h" />
     <ClInclude Include="interfaces\capability\isensorvaluesource.h" />
     <ClInclude Include="interfaces\capability\ivideosource.h" />

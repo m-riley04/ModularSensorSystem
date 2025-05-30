@@ -195,6 +195,9 @@
     <QtMoc Include="processing\ProcessorBase\processorbase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="interfaces\capability\idatasource.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
@@ -260,9 +263,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="interfaces\capability\isensorvaluesource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="interfaces\capability\idatasource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

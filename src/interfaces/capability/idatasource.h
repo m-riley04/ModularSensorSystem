@@ -1,8 +1,9 @@
 #pragma once
 #include <QObject>
 
-class IDataSource
+class IDataSource: public QObject
 {
+    Q_OBJECT
 
 public:
     virtual ~IDataSource() = default;
