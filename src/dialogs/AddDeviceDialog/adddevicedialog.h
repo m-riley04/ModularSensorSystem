@@ -2,7 +2,7 @@
 
 #include <QDialog>
 #include "ui_adddevicedialog.h"
-#include <plugins/device/ideviceplugin.h>
+#include <interfaces/plugins/ideviceplugin.h>
 #include <controllers/PluginController/plugincontroller.h>
 #include <QMessageBox>
 

@@ -13,7 +13,6 @@ public:
     virtual ~ProcessorBase() = default;
 
     Device* device() const { return pDevice; }
-	IProcessorPlugin* plugin() const { return; }
 
 	void setDevice(Device* device) { 
 		if (device == pDevice) return;
@@ -26,7 +25,6 @@ public:
 
 protected:
     Device* pDevice;
-	IProcessorPlugin* pPlugin = nullptr; // Pointer to the plugin that uses this processor
 
 signals:
 	void deviceChanged(Device* newDevice);

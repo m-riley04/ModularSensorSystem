@@ -11,7 +11,7 @@ public:
     
     virtual QObject* asQObject() = 0;
 signals:
-    virtual void frameReady(const QVideoFrame&);
+    void frameReady(const QVideoFrame&);
 };
 
 Q_DECLARE_INTERFACE(IVideoSource, "com.modularsensorsystem.IVideoSource/1.0")

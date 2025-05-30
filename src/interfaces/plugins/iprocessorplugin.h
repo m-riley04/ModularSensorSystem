@@ -9,11 +9,8 @@ class ProcessorBase;
 class IProcessorPlugin {
 public:
     virtual ~IProcessorPlugin() = default;
-    /// Identify which device modality this processor supports (e.g. VIDEO, AUDIO)
-    virtual Device::Type deviceType() const = 0;
-    /// Human-readable name of the processor (for UI)
+    virtual Device::Type supportedDeviceType() const = 0;
     virtual QString name() const = 0;
-    /// Create a new processor instance for the given device
     virtual ProcessorBase* createProcessor(Device* device, QObject* parent = nullptr) = 0;
 };
 

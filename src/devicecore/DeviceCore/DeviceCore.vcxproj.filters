@@ -41,6 +41,9 @@
     <ClCompile Include="..\..\devices\IClippableDevice\ClipBufferBase\clipbufferbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\processing\ProcessorBase\processorbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\..\devices\Device\device.h">
@@ -61,5 +64,13 @@
     <QtMoc Include="..\..\devices\IClippableDevice\ClipBufferBase\clipbufferbase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="..\..\processing\ProcessorBase\processorbase.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\interfaces\capability\iaudiostreamsource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

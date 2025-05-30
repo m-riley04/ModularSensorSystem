@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "plugins/device/ideviceplugin.h"
+#include "interfaces/plugins/ideviceplugin.h"
 #include "devices/Device/device.h"
 #include "TemplateDevice/templatedevice.h"
 

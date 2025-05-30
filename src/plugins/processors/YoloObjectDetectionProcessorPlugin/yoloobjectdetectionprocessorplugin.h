@@ -6,7 +6,7 @@
 #include "YoloObjectDetectionProcessor/yoloobjectdetectionprocessor.h"
 #include <interfaces/capability/ivideosource.h>
 
-class YoloObjectDetectionProcessor;  // the actual processor logic class for video
+class YoloObjectDetectionProcessor;
 
 class YoloObjectDetectionProcessorPlugin : public QObject, public IProcessorPlugin {
     Q_OBJECT
@@ -14,10 +14,10 @@ class YoloObjectDetectionProcessorPlugin : public QObject, public IProcessorPlug
     Q_INTERFACES(IProcessorPlugin)
 
 public:
-    Device::Type deviceType() const override { return Device::Type::VIDEO; }
+    Device::Type supportedDeviceType() const override { return Device::Type::VIDEO; }
     QString name() const override { return "yoloobjectdetectionprocessor"; }
-    ProcessorBase* createProcessor(Device* device, QObject* parent = nullptr) override {
-        // create and return a new VideoProcessor instance attached to the given device
+    ProcessorBase* createProcessor(Device* device, QObject* parent = nullptr) override
+    {
         return new YoloObjectDetectionProcessor(device, parent);
     }
 };

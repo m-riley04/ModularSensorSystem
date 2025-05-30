@@ -13,17 +13,12 @@ public:
 	~ProcessingController();
 
     bool registerProcessor(Device* device, ProcessorBase* proc);
-
     void unregisterAll(Device* device);
-
-    // Possibly functions to load plugins, list available processor types, etc.
-    // e.g., ["YOLO Detector", "MotionDetector"] etc.
     QStringList availableProcessorTypes(); 
 private:
-    QMap<Device*, QList<ProcessorBase*>> mProcessors;
+    QMap<Device*, QList<ProcessorBase*>> mDevicesProcessorsMap;
+
 
     bool isCompatible(ProcessorBase* proc, Device* dev);
-
-    void connectSignalsForProcessor(ProcessorBase* proc);
 };
 

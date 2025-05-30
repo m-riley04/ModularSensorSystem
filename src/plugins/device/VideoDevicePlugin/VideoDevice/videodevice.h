@@ -19,13 +19,10 @@
 #include "interfaces/capability/ivideosource.h"
 #include <VideoClipEncoder/videoclipencoder.h>
 
-class VideoDevice : public Device, 
-	public IConfigurableDevice, 
-	public IClippableDevice, 
-	public IVideoSource
+class VideoDevice : public Device, public IConfigurableDevice, public IClippableDevice, public IVideoSource
 {
 	Q_OBJECT
-	Q_INTERFACES(IConfigurableDevice, IVideoSource)
+	Q_INTERFACES(IConfigurableDevice IClippableDevice IVideoSource)
 
 public:
 	VideoDevice(QByteArray hardwareId, QObject* parent);
@@ -48,6 +45,9 @@ public:
 	void clip(const QDir& dir) override;
 	ClipBufferBase* clipBuffer() override { return pClipBuffer.get(); }
 
+	// IVideoSource interface
+	QObject* asQObject() override { return this; }
+
 private:
 	QMediaCaptureSession mSession;
 	QCamera mCamera;
@@ -69,6 +69,5 @@ private slots:
 	void onNewFrame(const QVideoFrame& frame);
 
 signals:
-	void frameReady(const QVideoFrame& frame) override;
 	void mediaDirectoryChanged(QUrl directory);
 };

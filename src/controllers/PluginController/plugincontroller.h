@@ -2,18 +2,27 @@
 
 #include <QObject>
 #include <QDir>
-#include <plugins/device/ideviceplugin.h>
 #include <QPluginLoader>
 #include <QCoreApplication>
-#include <plugins/processors/iprocessorplugin.h>
+#include <interfaces/plugins/ideviceplugin.h>
+#include <interfaces/plugins/iprocessorplugin.h>
 
 class PluginController : public QObject
 {
     Q_OBJECT
+
+public:
+	enum PluginType {
+		DevicePlugin,
+		ProcessorPlugin
+	};
+
 public:
     explicit PluginController(const QString& pluginRoot, QObject* parent = nullptr);
 
-    void loadPlugins();
+    void loadPlugins(QList<PluginType> pluginType);
+    void loadPlugin(const QString& fullPath, const QString& fileName, PluginType pluginType);
+
     IDevicePlugin* getDevicePlugin(const QString& pluginId) const;
     IProcessorPlugin* getProcessorPlugin(const QString& pluginId) const;
 
@@ -25,6 +34,6 @@ private:
     QList<IProcessorPlugin*> mProcessorPlugins;
 	QString mPluginRoot;
 
-    void loadDevicePlugin(const QString& fullPath, const QString& fileName);
-    void loadProcessorPlugin(const QString& fullPath, const QString& fileName);
+    void loadDevicePlugin(QPluginLoader& loader, QString file);
+    void loadProcessorPlugin(QPluginLoader& loader, QString file);
 };

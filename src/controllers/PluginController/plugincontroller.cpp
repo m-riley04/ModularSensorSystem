@@ -4,19 +4,55 @@ PluginController::PluginController(const QString& root, QObject* parent)
 	: QObject(parent), mPluginRoot(root)
 {
 	// Scan for plugins on initialization
-	loadPlugins();
+	loadPlugins(QList<PluginType>({
+		PluginType::DevicePlugin,
+		PluginType::ProcessorPlugin
+	}));
 }
 
-void PluginController::loadPlugins()
+void PluginController::loadPlugins(QList<PluginType> pluginTypes)
 {
-	QString pluginPath = QCoreApplication::applicationDirPath() + "/plugins/devices";
-	QDir pluginsDir(pluginPath);
-	QStringList files = pluginsDir.entryList(QDir::Files | QDir::NoDotAndDotDot);
-	for (const QString& fileName : files) {
-		if (QLibrary::isLibrary(fileName)) {  // check extension .dll on Windows
-			QString fullPath = pluginsDir.absoluteFilePath(fileName);
-			loadDevicePlugin(fullPath, fileName);
+	// Iterate through plugin types
+	QString pluginDirName;
+	for (PluginType pluginType : pluginTypes) {
+		switch (pluginType) {
+		case PluginType::DevicePlugin:
+			pluginDirName = "devices";
+			break;
+		case PluginType::ProcessorPlugin:
+			pluginDirName = "processors";
+			break;
 		}
+
+		QString pluginPath = QCoreApplication::applicationDirPath() + "/plugins/" + pluginDirName;
+		QDir pluginsDir(pluginPath);
+		QStringList files = pluginsDir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+		for (const QString& fileName : files) {
+			if (QLibrary::isLibrary(fileName)) {  // check extension .dll on Windows
+				QString fullPath = pluginsDir.absoluteFilePath(fileName);
+				loadPlugin(fullPath, fileName, pluginType);
+			}
+		}
+	}
+}
+
+void PluginController::loadPlugin(const QString& fullPath, const QString& fileName, PluginType pluginType)
+{
+	QPluginLoader loader(fullPath);
+	QObject* pluginInstance = loader.instance();
+	if (!pluginInstance) {
+		qWarning() << "Failed to load plugin" << fileName << ":" << loader.errorString();
+		return;
+	}
+
+	// Decide which plugin type to load based on the provided pluginType
+	switch (pluginType) {
+	case PluginType::DevicePlugin:
+		loadDevicePlugin(loader, fileName);
+		break;
+	case PluginType::ProcessorPlugin:
+		loadProcessorPlugin(loader, fileName);
+		break;
 	}
 }
 
@@ -42,17 +78,11 @@ IProcessorPlugin* PluginController::getProcessorPlugin(const QString& pluginId) 
 	return nullptr;  // Return nullptr if not found
 }
 
-void PluginController::loadDevicePlugin(const QString& fullPath, const QString& fileName)
+void PluginController::loadDevicePlugin(QPluginLoader& loader, QString file)
 {
-	QPluginLoader loader(fullPath);
-	QObject* pluginInstance = loader.instance();
-	if (!pluginInstance) {
-		qWarning() << "Failed to load plugin" << fileName << ":" << loader.errorString();
-		return;
-	}
-	IDevicePlugin* devicePlugin = qobject_cast<IDevicePlugin*>(pluginInstance);
+	IDevicePlugin* devicePlugin = qobject_cast<IDevicePlugin*>(loader.instance());
 	if (!devicePlugin) {
-		qWarning() << "Loaded plugin" << fileName << "does not implement IDevicePlugin interface. Unloading...";
+		qWarning() << "Loaded plugin" << file << "does not implement IDevicePlugin interface. Unloading...";
 		loader.unload();  // Unload if not the correct plugin type
 		return;
 	}
@@ -60,17 +90,11 @@ void PluginController::loadDevicePlugin(const QString& fullPath, const QString& 
 	mDevicePlugins.append(devicePlugin);
 }
 
-void PluginController::loadProcessorPlugin(const QString& fullPath, const QString& fileName)
+void PluginController::loadProcessorPlugin(QPluginLoader& loader, QString file)
 {
-	QPluginLoader loader(fullPath);
-	QObject* pluginInstance = loader.instance();
-	if (!pluginInstance) {
-		qWarning() << "Failed to load plugin" << fileName << ":" << loader.errorString();
-		return;
-	}
-	IProcessorPlugin* processorPlugin = qobject_cast<IProcessorPlugin*>(pluginInstance);
+	IProcessorPlugin* processorPlugin = qobject_cast<IProcessorPlugin*>(loader.instance());
 	if (!processorPlugin) {
-		qWarning() << "Loaded plugin" << fileName << "does not implement IProcessorPlugin interface. Unloading...";
+		qWarning() << "Loaded plugin" << file << "does not implement IProcessorPlugin interface. Unloading...";
 		loader.unload();  // Unload if not the correct plugin type
 		return;
 	}

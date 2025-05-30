@@ -5,6 +5,8 @@
 #include <QVideoFrame>
 #include "processing/ProcessorBase/processorbase.h"
 
+class ProcessorBase;
+
 class YoloObjectDetectionProcessor : public ProcessorBase
 {
 	Q_OBJECT
@@ -17,17 +19,12 @@ public:
     void startProcessing() override { mEnabled = true; }
     void stopProcessing() override { mEnabled = false; }
 
-    // Settings
-    void setThreshold(int t) { mThreshold = t; }
-    int  threshold()   const { return mThreshold; }
-
 private:
     bool mEnabled = true;
-    int  mThreshold = 25;        // simplistic pixel diff threshold
     QImage mPreview;
 
 public slots:
-	void processFrame(const QVideoFrame& frame) override;
+	void processFrame(const QVideoFrame& frame);
 
 signals:
     void objectDetected(Device* device);

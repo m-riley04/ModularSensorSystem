@@ -110,6 +110,7 @@
     <ClCompile Include="..\..\devices\Device\DevicePreview\devicepreview.cpp" />
     <ClCompile Include="..\..\devices\Device\DevicePropertiesWidget\devicepropertieswidget.cpp" />
     <ClCompile Include="..\..\devices\IClippableDevice\ClipBufferBase\clipbufferbase.cpp" />
+    <ClCompile Include="..\..\processing\ProcessorBase\processorbase.cpp" />
     <QtMoc Include="..\..\devices\Device\device.h" />
     <QtMoc Include="..\..\devices\Device\DevicePreview\devicepreview.h" />
     <QtMoc Include="..\..\devices\Device\DeviceMetadata\devicemetadata.h" />
@@ -120,6 +121,12 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\..\devices\IClippableDevice\ClipBufferBase\clipbufferbase.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="..\..\processing\ProcessorBase\processorbase.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\interfaces\capability\iaudiostreamsource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
