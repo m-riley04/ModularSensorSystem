@@ -6,6 +6,7 @@ class IDataSource
 
 public:
     virtual ~IDataSource() = default;
+    virtual QObject* asQObject() = 0;
 
 };
 

@@ -8,8 +8,9 @@ class IVideoSource : public IDataSource
 
 public:
     virtual ~IVideoSource() = default;
+    virtual QObject* asQObject() = 0;
 signals:
-    void frameReady(const QVideoFrame&);
+    virtual void frameReady(const QVideoFrame&) = 0;
 };
 
 Q_DECLARE_INTERFACE(IVideoSource, "com.modularsensorsystem.IVideoSource/1.0")

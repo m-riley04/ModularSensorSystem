@@ -94,6 +94,9 @@ void VideoDevice::onNewFrame(const QVideoFrame& frame) {
     
     // Add the frame to the buffer
 	pVideoBuffer->push(frame, timestamp);
+
+	// Emit signal with the frame
+	emit frameReady(frame);
 }
 
 void VideoDevice::setMediaDirectory(QUrl directory)
@@ -113,10 +116,6 @@ QCameraDevice VideoDevice::getCameraDevice(const QByteArray& id)
     
 	// If not found, return an empty camera device
     return QCameraDevice();
-}
-
-bool VideoDevice::checkCameraAvailability() {
-    return QMediaDevices::videoInputs().count() > 0;
 }
 
 QWidget* VideoDevice::createConfigWidget(QWidget* parent)
