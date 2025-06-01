@@ -167,10 +167,10 @@
     <QtMoc Include="controllers\ProcessingController\processingcontroller.h" />
     <ClInclude Include="devices\Device\DeviceError\deviceerror.h" />
     <ClInclude Include="devices\IClippableDevice\iclippabledevice.h" />
-    <ClInclude Include="interfaces\capability\iaudiostreamsource.h" />
+    <ClInclude Include="interfaces\capability\iaudiosource.h" />
     <QtMoc Include="interfaces\capability\idatasource.h" />
-    <ClInclude Include="interfaces\capability\igpssentencesource.h" />
-    <ClInclude Include="interfaces\capability\isensorvaluesource.h" />
+    <ClInclude Include="interfaces\capability\igpssource.h" />
+    <ClInclude Include="interfaces\capability\ianalogsource.h" />
     <ClInclude Include="interfaces\capability\ivideosource.h" />
     <ClInclude Include="interfaces\plugins\iprocessorplugin.h" />
     <ClInclude Include="presets\DevicePreset\devicepreset.h" />

@@ -256,13 +256,13 @@
     <ClInclude Include="interfaces\capability\ivideosource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="interfaces\capability\iaudiostreamsource.h">
+    <ClInclude Include="interfaces\capability\iaudiosource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="interfaces\capability\igpssentencesource.h">
+    <ClInclude Include="interfaces\capability\igpssource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="interfaces\capability\isensorvaluesource.h">
+    <ClInclude Include="interfaces\capability\ianalogsource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
