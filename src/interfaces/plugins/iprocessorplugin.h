@@ -6,6 +6,11 @@
 
 class ProcessorBase;
 
+struct ProcessorInfo {
+    QString name;
+    Device::Type supportedDeviceType;
+};
+
 class IProcessorPlugin {
 public:
     virtual ~IProcessorPlugin() = default;

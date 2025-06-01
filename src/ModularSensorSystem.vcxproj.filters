@@ -118,6 +118,12 @@
     <ClCompile Include="processing\ProcessorBase\processorbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\ProcessorsWidget\processorswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
@@ -198,6 +204,12 @@
     <QtMoc Include="interfaces\capability\idatasource.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="dialogs\AddProcessorDialog\addprocessordialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\ProcessorsWidget\processorswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
@@ -225,6 +237,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogs\AddDeviceDialog\adddevicedialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogs\AddProcessorDialog\addprocessordialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="widgets\ProcessorsWidget\processorswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

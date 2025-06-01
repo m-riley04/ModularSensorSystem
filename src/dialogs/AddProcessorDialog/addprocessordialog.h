@@ -28,7 +28,7 @@ private slots:
 	void onCancelButtonClicked();
 
 signals:
-	void processorSelected(IProcessorPlugin* plugin, ProcessorInfo deviceInfo);
-	void processorConfirmed(IProcessorPlugin* plugin, ProcessorInfo deviceInfo);
+	void processorSelected(IProcessorPlugin* plugin);
+	void processorConfirmed(IProcessorPlugin* plugin);
 };
 

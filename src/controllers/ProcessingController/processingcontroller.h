@@ -12,13 +12,26 @@ public:
 	ProcessingController(QObject *parent);
 	~ProcessingController();
 
-    bool registerProcessor(Device* device, ProcessorBase* proc);
-    void unregisterAll(Device* device);
-    QStringList availableProcessorTypes(); 
-private:
-    QMap<Device*, QList<ProcessorBase*>> mDevicesProcessorsMap;
+    void setActive(bool active) {
+		if (active == mActive) return;
+		mActive = active;
+		active ? emit processingStarted() : emit processingStopped();
+    }
 
+	void addProcessor(IProcessorPlugin* plugin);
+	void removeProcessor(ProcessorBase* processor);
+
+private:
+	QList<ProcessorBase*> mProcessors;
+    QMap<Device*, QList<ProcessorBase*>> mDevicesProcessorsMap;
+    bool mActive = false;
 
     bool isCompatible(ProcessorBase* proc, Device* dev);
+
+signals:
+	void processorAdded(ProcessorBase* proc);
+	void processorRemoved(ProcessorBase* proc);
+    void processingStarted();
+    void processingStopped();
 };
 

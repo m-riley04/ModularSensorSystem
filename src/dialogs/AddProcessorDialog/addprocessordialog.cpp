@@ -23,7 +23,7 @@ void AddProcessorDialog::onProcessorSelected(int index) {
 
 	ProcessorInfo processorInfo = ui.dropdownProcessor->itemData(index).value<ProcessorInfo>();
 	mSelectedProcessor = processorInfo;
-	emit processorSelected(pSelectedProcessorPlugin, mSelectedProcessor);
+	emit processorSelected(pSelectedProcessorPlugin);
 }
 
 void AddProcessorDialog::populateProcessorsDropdown()
@@ -54,18 +54,8 @@ void AddProcessorDialog::populateProcessorsDropdown()
 }
 
 void AddProcessorDialog::onConfirmButtonClicked() {
-	// Get current index
-	int processorIndex = ui.dropdownProcessor->currentIndex();
-
-	// Check if a processor is selected
-	if (processorIndex < 0 || processorIndex >= ui.dropdownProcessor->count()) {
-		QMessageBox::warning(this, "No Processor Selected", "Please select a processor before confirming.");
-		return;
-	}
-
 	// Get the selected processor plugin and info
-	ProcessorInfo processorInfo = ui.dropdownProcessor->itemData(processorIndex).value<ProcessorInfo>();
-	emit processorConfirmed(pSelectedProcessorPlugin, processorInfo);
+	emit processorConfirmed(pSelectedProcessorPlugin);
 	this->accept(); // TODO: Maybe do more here?
 }
 

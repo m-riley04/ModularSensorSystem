@@ -7,33 +7,19 @@ ProcessingController::ProcessingController(QObject *parent)
 ProcessingController::~ProcessingController()
 {}
 
-bool ProcessingController::registerProcessor(Device * device, ProcessorBase * proc)
+void ProcessingController::addProcessor(IProcessorPlugin* plugin)
 {
-    // Check compatibility
-    if (!proc || !device) return false;
-    if (!isCompatible(proc, device)) return false;
-    proc->setDevice(device);         // set up signal-slot connections inside
-    proc->startProcessing();
-    mDevicesProcessorsMap[device].append(proc);
-
-    // TODO: Connect signals?
-
-    return true;
+	if (!plugin) return; // Ensure valid pointers
+	auto processor = plugin->createProcessor(nullptr, this); // TODO/CONSIDER: Pass a valid Device pointer if needed?
+	if (!processor) return; // Failed to create processor
+	mProcessors.append(processor);
+	emit processorAdded(processor);
 }
 
-void ProcessingController::unregisterAll(Device* device)
+void ProcessingController::removeProcessor(ProcessorBase* processor)
 {
-    // Stop and remove all processors on this device
-    for (ProcessorBase* proc : mDevicesProcessorsMap[device]) {
-        proc->stopProcessing();
-        // Optionally disconnect signals and delete proc if owned
-    }
-    mDevicesProcessorsMap.remove(device);
-}
 
-QStringList ProcessingController::availableProcessorTypes()
-{
-	return QStringList();
+	emit processorRemoved(processor);
 }
 
 bool ProcessingController::isCompatible(ProcessorBase* proc, Device* dev) {

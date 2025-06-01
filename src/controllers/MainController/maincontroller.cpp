@@ -7,7 +7,7 @@ MainController::MainController(QObject *parent)
 	pDeviceController = std::make_unique<DeviceController>(pPluginController.get(), this);
 	pRecordingController = std::make_unique<RecordingController>(pDeviceController.get(), this);
 	pPresetsController = std::make_unique<PresetsController>(QCoreApplication::applicationDirPath() + "/presets", this);
-	
+	pProcessingController = std::make_unique<ProcessingController>(this);
 }
 
 MainController::~MainController()

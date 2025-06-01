@@ -14,14 +14,17 @@ MainPage::~MainPage()
 
 void MainPage::initWidgets()
 {
-	// Init device list widget
-	ui.deviceListWidget->setDeviceController(pController->deviceController());
-
 	// Init session controls widget
 	ui.sessionControls->setController(pController);
 
 	// Init preview container widget
 	ui.devicePreviewWidget->setController(pController);
+
+	// Init device list widget
+	ui.deviceListWidget->setDeviceController(pController->deviceController());
+
+	// Init processors widget
+	ui.processorsWidget->setController(pController);
 
 	// Init presets widget
 	ui.presetsWidget->setController(pController);
