@@ -52,7 +52,7 @@
     <ClCompile Include="controllers\ClipController\clipcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="devices\Device\device.cpp">
+    <ClCompile Include="sources\devices\Device\device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp">
@@ -64,10 +64,10 @@
     <ClCompile Include="controllers\DeviceController\devicecontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="devices\Device\DeviceMetadata\devicemetadata.cpp">
+    <ClCompile Include="sources\devices\Device\DeviceMetadata\devicemetadata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="devices\IClippableDevice\ClipBufferBase\clipbufferbase.cpp">
+    <ClCompile Include="sources\devices\IClippableDevice\ClipBufferBase\clipbufferbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="processing\FrameProcessor\frameprocessor.cpp">
@@ -88,7 +88,7 @@
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="devices\Device\DevicePreview\devicepreview.cpp">
+    <ClCompile Include="sources\devices\Device\DevicePreview\devicepreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="widgets\DevicePreviewWidget\devicepreviewwidget.cpp">
@@ -97,7 +97,7 @@
     <ClCompile Include="controllers\RecordingController\recordingcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="devices\Device\DeviceHelpers\DeviceHelpers.cpp">
+    <ClCompile Include="sources\devices\Device\DeviceHelpers\DeviceHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="controllers\PluginController\plugincontroller.cpp">
@@ -106,7 +106,7 @@
     <ClCompile Include="dialogs\AddDeviceDialog\adddevicedialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.cpp">
+    <ClCompile Include="sources\devices\Device\DevicePropertiesWidget\devicepropertieswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="controllers\PresetsController\presetscontroller.cpp">
@@ -124,6 +124,9 @@
     <ClCompile Include="widgets\ProcessorsWidget\processorswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
@@ -138,7 +141,7 @@
     <QtMoc Include="controllers\ClipController\clipcontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="devices\Device\device.h">
+    <QtMoc Include="sources\devices\Device\device.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h">
@@ -150,10 +153,10 @@
     <QtMoc Include="controllers\DeviceController\devicecontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="devices\Device\DeviceMetadata\devicemetadata.h">
+    <QtMoc Include="sources\devices\Device\DeviceMetadata\devicemetadata.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="devices\IClippableDevice\ClipBufferBase\clipbufferbase.h">
+    <QtMoc Include="sources\devices\IClippableDevice\ClipBufferBase\clipbufferbase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="processing\FrameProcessor\frameprocessor.h">
@@ -174,7 +177,7 @@
     <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="devices\Device\DevicePreview\devicepreview.h">
+    <QtMoc Include="sources\devices\Device\DevicePreview\devicepreview.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\DevicePreviewWidget\devicepreviewwidget.h">
@@ -189,7 +192,7 @@
     <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="devices\Device\DevicePropertiesWidget\devicepropertieswidget.h">
+    <QtMoc Include="sources\devices\Device\DevicePropertiesWidget\devicepropertieswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="controllers\PresetsController\presetscontroller.h">
@@ -208,6 +211,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\ProcessorsWidget\processorswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="sources\source.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -247,13 +253,13 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="devices\Device\DeviceHelpers\DeviceHelpers.h">
+    <ClInclude Include="sources\devices\Device\DeviceHelpers\DeviceHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="interfaces\plugins\ideviceplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="devices\IConfigurableDevice\iconfigurabledevice.h">
+    <ClInclude Include="sources\devices\IConfigurableDevice\iconfigurabledevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="presets\Preset\preset.h">
@@ -262,10 +268,10 @@
     <ClInclude Include="presets\DevicePreset\devicepreset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="devices\IClippableDevice\iclippabledevice.h">
+    <ClInclude Include="sources\devices\IClippableDevice\iclippabledevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="devices\Device\DeviceError\deviceerror.h">
+    <ClInclude Include="sources\devices\Device\DeviceError\deviceerror.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="interfaces\plugins\iprocessorplugin.h">

@@ -3,9 +3,9 @@
 #include <QObject>
 #include "controllers/RecordingSession/recordingsession.h"
 #include <quuid.h>
-#include "devices/Device/DevicePreview/devicepreview.h"
+#include "DevicePreview/devicepreview.h"
 #include <QPointer>
-#include "devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
+#include "sources/devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
 #include "DeviceError/deviceerror.h"
 
 class RecordingSession;
