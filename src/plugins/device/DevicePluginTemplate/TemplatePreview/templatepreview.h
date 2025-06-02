@@ -3,7 +3,7 @@
 #include "devices/Device/DevicePreview/devicepreview.h"
 #include <QObject>
 
-class TemplatePreview : public DevicePreview
+class TemplatePreview : public SourcePreview
 {
 	Q_OBJECT
 

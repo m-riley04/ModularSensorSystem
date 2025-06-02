@@ -1,7 +1,7 @@
-#include "devicepropertieswidget.h"
+#include "sourcepropertieswidget.h"
 
-DevicePropertiesWidget::DevicePropertiesWidget(Device* device, QWidget *parent)
-	: QWidget(parent), pDevice(device)
+SourcePropertiesWidget::SourcePropertiesWidget(Source* source, QWidget *parent)
+	: QWidget(parent), pSource(source)
 {
 	// Init button frame
 	pFrameButtons = new QFrame(this);
@@ -23,10 +23,10 @@ DevicePropertiesWidget::DevicePropertiesWidget(Device* device, QWidget *parent)
 	mainLayout->addWidget(pStackPages, 1);
 }
 
-DevicePropertiesWidget::~DevicePropertiesWidget()
+SourcePropertiesWidget::~SourcePropertiesWidget()
 {}
 
-void DevicePropertiesWidget::addPage(const QString& title, QWidget* page)
+void SourcePropertiesWidget::addPage(const QString& title, QWidget* page)
 {
 	auto* button = new QPushButton(title);
 	button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);

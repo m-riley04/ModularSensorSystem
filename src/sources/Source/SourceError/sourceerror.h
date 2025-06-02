@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QString>
-#include <devices/Device/device.h>
+#include <sources/Source/source.h>
 #include <QMetaType>
 
 enum class ErrorSeverity {
@@ -11,10 +11,10 @@ enum class ErrorSeverity {
 	CRITICAL
 };
 
-struct DeviceError {
+struct SourceError {
 	QString msg;
-	Device* device = nullptr;
+	Source* source = nullptr;
 	ErrorSeverity severity = ErrorSeverity::INFO;
 };
 
-Q_DECLARE_METATYPE(DeviceError);
+Q_DECLARE_METATYPE(SourceError);

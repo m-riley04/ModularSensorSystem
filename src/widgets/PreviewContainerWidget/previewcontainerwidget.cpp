@@ -16,15 +16,15 @@ void PreviewContainerWidget::initSignals()
 		return;
 	}
 
-	DeviceController* deviceController = pController->deviceController();
-	if (deviceController == nullptr) {
+	SourceController* sourceController = pController->sourceController();
+	if (sourceController == nullptr) {
 		qDebug() << "Cannot initialize signals: device controller is null";
 		return;
 	}
 
 	// Device added ui updates
-	connect(deviceController, &DeviceController::deviceAdded, this, &PreviewContainerWidget::addDeviceWidget);
-	connect(deviceController, &DeviceController::deviceRemoved, this, &PreviewContainerWidget::removeDeviceWidget);
+	connect(sourceController, &SourceController::sourceAdded, this, &PreviewContainerWidget::addDeviceWidget);
+	connect(sourceController, &SourceController::sourceRemoved, this, &PreviewContainerWidget::removeDeviceWidget);
 }
 
 

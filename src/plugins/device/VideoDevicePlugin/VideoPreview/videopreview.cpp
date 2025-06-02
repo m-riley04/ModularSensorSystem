@@ -1,7 +1,7 @@
 #include "videopreview.h"
 
 VideoPreview::VideoPreview(QMediaCaptureSession* session, QObject*parent)
-	: DevicePreview(parent), mSink(QVideoSink(this))
+	: SourcePreview(parent), mSink(QVideoSink(this))
 {
 	// Connect the video sink to the session
 	session->setVideoSink(&mSink);

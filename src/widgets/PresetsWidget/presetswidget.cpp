@@ -65,7 +65,7 @@ void PresetsWidget::onSaveClicked()
 		}
 
 		PresetsController* pPresetsController = pController->presetsController();
-		pPresetsController->savePreset(presetName, pController->deviceController()->devices());
+		pPresetsController->savePreset(presetName, pController->sourceController()->sources());
 	}
 	else if (ok) {
 		QMessageBox::warning(this, tr("Invalid Name"), tr("Preset name cannot be empty."));
@@ -88,7 +88,7 @@ void PresetsWidget::onLoadClicked()
 		});
 	if (it != presets.end()) {
 		// Load the preset
-		pPresetsController->loadPreset(it->path, pController->deviceController(), pController->pluginController());
+		pPresetsController->loadPreset(it->path, pController->sourceController(), pController->pluginController());
 	}
 }
 

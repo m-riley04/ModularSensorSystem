@@ -21,7 +21,7 @@ public:
 	QString presetsDir() const { return mPresetsDir; }
 
 	void savePreset(QString name, QList<Device*> activeDevices = QList<Device*>(), QString dirPath = QString());
-	void loadPreset(const QString& path, DeviceController* deviceController, PluginController* pluginController);
+	void loadPreset(const QString& path, SourceController* sourceController, PluginController* pluginController);
 	void removePreset(QString filePath);
 
 	void scanForPresets(QString presetDir = QString());

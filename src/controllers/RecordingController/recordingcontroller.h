@@ -19,7 +19,7 @@ public:
 	};
 
 public:
-	RecordingController(DeviceController* deviceController, QObject *parent);
+	RecordingController(SourceController* sourceController, QObject *parent);
 	~RecordingController();
 
 	RecordingController::State state() const { return mState; }
@@ -27,7 +27,7 @@ public:
 	bool isStopped() const { return mState == STOPPED; }
 
 private:
-	QPointer<DeviceController> pDeviceController;
+	QPointer<SourceController> pDeviceController;
 	std::unique_ptr<RecordingSession> pSession;
 
 	RecordingController::State mState = STOPPED;

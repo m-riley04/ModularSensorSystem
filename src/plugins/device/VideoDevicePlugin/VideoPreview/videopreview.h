@@ -5,7 +5,7 @@
 #include <QtMultimedia>
 #include <QObject>
 
-class VideoPreview : public DevicePreview
+class VideoPreview : public SourcePreview
 {
 	Q_OBJECT
 

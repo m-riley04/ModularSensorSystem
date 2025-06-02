@@ -1,11 +1,11 @@
 #pragma once
 
 #include <QObject>
-#include "devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
 #include <QDebug>
-#include <devices/Device/DevicePropertiesWidget/devicepropertieswidget.h>
-#include <devices/IClippableDevice/IClippableDevice.h>
-#include <devices/Device/DeviceError/deviceerror.h>
+#include "sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
+#include <sources/Source/SourcePropertiesWidget/sourcepropertieswidget.h>
+#include <sources/IClippableSource/IClippableSource.h>
+#include <sources/Source/SourceError/sourceerror.h>
 
 class ClipController : public QObject
 {
@@ -25,28 +25,28 @@ public:
 
 public slots:
 	/// <summary>
-	/// Clips MULTIPLE devices and saves the clips to the specified directory.
+	/// Clips MULTIPLE sources and saves the clips to the specified directory.
 	/// </summary>
-	/// <param name="devices"></param>
+	/// <param name="sources"></param>
 	/// <param name="dirPath"></param>
-	void clip(QList<Device*> devices, QString dirPath = QString());
+	void clip(QList<Source*> sources, QString dirPath = QString());
 
 	/// <summary>
-	/// Clips SINGLE device and saves the clip to the specified directory.
+	/// Clips SINGLE source and saves the clip to the specified directory.
 	/// </summary>
-	/// <param name="device"></param>
+	/// <param name="source"></param>
 	/// <param name="dirPath"></param>
-	void clip(Device* device, QString dirPath = QString());
+	void clip(Source* source, QString dirPath = QString());
 
 	/// <summary>
-	/// Flushes the clip buffers of ALL passed devices
+	/// Flushes the clip buffers of ALL passed sources
 	/// </summary>
-	void flush(QList<Device*> devices);
+	void flush(QList<Source*> sources);
 
 	/// <summary>
-	/// Flushes the clip buffer of the SINGLE device
+	/// Flushes the clip buffer of the SINGLE source
 	/// </summary>
-	void flush(Device* device);
+	void flush(Source* source);
 
 	void addClipBuffer(ClipBufferBase* buffer);
 	void removeClipBuffer(ClipBufferBase* buffer);
@@ -62,5 +62,5 @@ signals:
 	void flushed(ClipBufferBase* buffer);
 	void clipSaved(const QString& fileName);
 
-	void errorOccurred(const DeviceError& e);
+	void errorOccurred(const SourceError& e);
 };

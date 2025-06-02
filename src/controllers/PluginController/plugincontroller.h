@@ -13,7 +13,7 @@ class PluginController : public QObject
 
 public:
 	enum PluginType {
-		DevicePlugin,
+		SourcePlugin,
 		ProcessorPlugin
 	};
 
@@ -23,17 +23,17 @@ public:
     void loadPlugins(QList<PluginType> pluginType);
     void loadPlugin(const QString& fullPath, const QString& fileName, PluginType pluginType);
 
-    IDevicePlugin* getDevicePlugin(const QString& pluginId) const;
+    ISourcePlugin* getSourcePlugin(const QString& pluginId) const;
     IProcessorPlugin* getProcessorPlugin(const QString& pluginId) const;
 
-    QList<IDevicePlugin*> devicePlugins() const { return mDevicePlugins; }
+    QList<ISourcePlugin*> sourcePlugins() const { return mSourcePlugins; }
     QList<IProcessorPlugin*> processorPlugins() const { return mProcessorPlugins; }
 
 private:
-    QList<IDevicePlugin*> mDevicePlugins;
+    QList<ISourcePlugin*> mSourcePlugins;
     QList<IProcessorPlugin*> mProcessorPlugins;
 	QString mPluginRoot;
 
-    void loadDevicePlugin(QPluginLoader& loader, QString file);
+    void loadSourcePlugin(QPluginLoader& loader, QString file);
     void loadProcessorPlugin(QPluginLoader& loader, QString file);
 };

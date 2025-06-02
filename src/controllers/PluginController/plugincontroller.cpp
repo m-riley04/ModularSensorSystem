@@ -5,7 +5,7 @@ PluginController::PluginController(const QString& root, QObject* parent)
 {
 	// Scan for plugins on initialization
 	loadPlugins(QList<PluginType>({
-		PluginType::DevicePlugin,
+		PluginType::SourcePlugin,
 		PluginType::ProcessorPlugin
 	}));
 }
@@ -16,8 +16,8 @@ void PluginController::loadPlugins(QList<PluginType> pluginTypes)
 	QString pluginDirName;
 	for (PluginType pluginType : pluginTypes) {
 		switch (pluginType) {
-		case PluginType::DevicePlugin:
-			pluginDirName = "devices";
+		case PluginType::SourcePlugin:
+			pluginDirName = "sources";
 			break;
 		case PluginType::ProcessorPlugin:
 			pluginDirName = "processors";
@@ -47,8 +47,8 @@ void PluginController::loadPlugin(const QString& fullPath, const QString& fileNa
 
 	// Decide which plugin type to load based on the provided pluginType
 	switch (pluginType) {
-	case PluginType::DevicePlugin:
-		loadDevicePlugin(loader, fileName);
+	case PluginType::SourcePlugin:
+		loadSourcePlugin(loader, fileName);
 		break;
 	case PluginType::ProcessorPlugin:
 		loadProcessorPlugin(loader, fileName);
@@ -56,9 +56,9 @@ void PluginController::loadPlugin(const QString& fullPath, const QString& fileNa
 	}
 }
 
-IDevicePlugin* PluginController::getDevicePlugin(const QString& pluginId) const
+ISourcePlugin* PluginController::getSourcePlugin(const QString& pluginId) const
 {
-	for (IDevicePlugin* plugin : mDevicePlugins) {
+	for (ISourcePlugin* plugin : mSourcePlugins) {
 		QString pluginName = plugin->pluginName();
 		if (plugin->pluginName() == pluginId) {
 			return plugin;
@@ -78,16 +78,16 @@ IProcessorPlugin* PluginController::getProcessorPlugin(const QString& pluginId) 
 	return nullptr;  // Return nullptr if not found
 }
 
-void PluginController::loadDevicePlugin(QPluginLoader& loader, QString file)
+void PluginController::loadSourcePlugin(QPluginLoader& loader, QString file)
 {
-	IDevicePlugin* devicePlugin = qobject_cast<IDevicePlugin*>(loader.instance());
-	if (!devicePlugin) {
-		qWarning() << "Loaded plugin" << file << "does not implement IDevicePlugin interface. Unloading...";
+	ISourcePlugin* sourcePlugin = qobject_cast<ISourcePlugin*>(loader.instance());
+	if (!sourcePlugin) {
+		qWarning() << "Loaded plugin" << file << "does not implement ISourcePlugin interface. Unloading...";
 		loader.unload();  // Unload if not the correct plugin type
 		return;
 	}
 
-	mDevicePlugins.append(devicePlugin);
+	mSourcePlugins.append(sourcePlugin);
 }
 
 void PluginController::loadProcessorPlugin(QPluginLoader& loader, QString file)

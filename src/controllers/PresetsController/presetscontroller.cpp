@@ -41,7 +41,7 @@ void PresetsController::savePreset(QString name, QList<Device*> activeDevices, Q
 			device->id(),
 			device->name(),
 			device->pluginId(),
-			device->deviceType(),
+			device->sourceType(),
 			config
 		};
 
@@ -64,7 +64,7 @@ void PresetsController::savePreset(QString name, QList<Device*> activeDevices, Q
 	QJsonDocument doc;
 	QJsonObject obj;
 	obj.insert("name", preset.name);
-	obj.insert("devices", devicePresetsToJson(devicePresets));
+	obj.insert("sources", devicePresetsToJson(devicePresets));
 	doc.setObject(obj);
 
 	file.write(doc.toJson());
@@ -75,7 +75,7 @@ void PresetsController::savePreset(QString name, QList<Device*> activeDevices, Q
 	emit presetSaved(fullPath);
 }
 
-void PresetsController::loadPreset(const QString& path, DeviceController* deviceController, PluginController* pluginController)
+void PresetsController::loadPreset(const QString& path, SourceController* sourceController, PluginController* pluginController)
 {
 	// Check if the file exists
 	if (!QFile::exists(path)) {
@@ -97,39 +97,39 @@ void PresetsController::loadPreset(const QString& path, DeviceController* device
 		return;
 	}
 	QJsonObject obj = doc.object();
-	if (!obj.contains("name") || !obj.contains("devices")) {
+	if (!obj.contains("name") || !obj.contains("sources")) {
 		qWarning() << "Invalid preset format:" << path;
 		return;
 	}
 
 	// Remove previously loaded devices/settings
-	deviceController->clearDevices();
+	sourceController->clearSources();
 
 	QString name = obj["name"].toString();
-	QJsonArray devicesArray = obj["devices"].toArray();
+	QJsonArray devicesArray = obj["sources"].toArray();
 	QList<DevicePreset> devicePresets = jsonToDevicePresets(devicesArray);
 
 	// Iterate each device preset and load it into the device controller
 	for (const DevicePreset& devicePreset : devicePresets)
 	{
 		// Clear the current device list
-		deviceController->clearDevices();
+		sourceController->clearSources();
 
 		// Get the plugin for the device
-		IDevicePlugin* plugin = pluginController->getDevicePlugin(devicePreset.pluginId);
+		ISourcePlugin* plugin = pluginController->getSourcePlugin(devicePreset.pluginId);
 		if (!plugin) {
 			qWarning() << "Plugin is null: aborting device load";
 			return;
 		}
 
-		// Create DeviceInfo object for the device
-		DeviceInfo deviceInfo;
+		// Create SourceInfo object for the device
+		SourceInfo deviceInfo;
 		deviceInfo.id = devicePreset.deviceId;
 		deviceInfo.displayName = devicePreset.deviceName;
-		deviceInfo.type = devicePreset.deviceType;
+		deviceInfo.type = devicePreset.sourceType;
 
 		// Create the device
-		Device* device = deviceController->addDevice(plugin, deviceInfo);
+		Device* device = sourceController->addSource(plugin, deviceInfo);
 		if (!device) {
 			qWarning() << "Device is null: aborting device load";
 			return;
@@ -199,12 +199,12 @@ void PresetsController::scanForPresets(QString presetDir)
 			continue;
 		}
 		QJsonObject obj = doc.object();
-		if (!obj.contains("name") || !obj.contains("devices")) {
+		if (!obj.contains("name") || !obj.contains("sources")) {
 			qWarning() << "Invalid preset format:" << filePath;
 			continue;
 		}
 		QString name = obj["name"].toString();
-		QJsonArray devicesArray = obj["devices"].toArray();
+		QJsonArray devicesArray = obj["sources"].toArray();
 		QList<DevicePreset> devicePresets;
 		for (const QJsonValue& value : devicesArray)
 		{
@@ -216,13 +216,13 @@ void PresetsController::scanForPresets(QString presetDir)
 				QByteArray deviceId = QByteArray(deviceObj["id"].toString().toStdString());
 				QString deviceName = deviceObj["device_name"].toString();
 				QString pluginId = deviceObj["plugin_id"].toString();
-				Device::Type deviceType = static_cast<Device::Type>(deviceObj["type"].toInt());
+				Device::Type sourceType = static_cast<Device::Type>(deviceObj["type"].toInt());
 				QJsonObject config = deviceObj["config"].toObject();
 				DevicePreset preset{
 					deviceId,
 					deviceName,
 					pluginId,
-					deviceType,
+					sourceType,
 					config
 				};
 				devicePresets.append(preset);
@@ -249,7 +249,7 @@ QJsonArray PresetsController::devicePresetsToJson(const QList<DevicePreset>& dev
 		obj["id"] = QString::fromStdString(devicePreset.deviceId.toStdString());
 		obj["name"] = devicePreset.deviceName;
 		obj["plugin_id"] = devicePreset.pluginId;
-		obj["type"] = devicePreset.deviceType;
+		obj["type"] = devicePreset.sourceType;
 		obj["config"] = devicePreset.settings;
 		array.append(obj);
 	}
@@ -269,13 +269,13 @@ QList<DevicePreset> PresetsController::jsonToDevicePresets(const QJsonArray& jso
 		QByteArray deviceId = QByteArray(deviceObj["id"].toString().toStdString());
 		QString deviceName = QByteArray(deviceObj["name"].toString().toStdString());
 		QString pluginId = deviceObj["plugin_id"].toString();
-		Device::Type deviceType = static_cast<Device::Type>(deviceObj["type"].toInt());
+		Device::Type sourceType = static_cast<Device::Type>(deviceObj["type"].toInt());
 		QJsonObject config = deviceObj["config"].toObject();
 		DevicePreset preset{
 			deviceId,
 			deviceName,
 			pluginId,
-			deviceType,
+			sourceType,
 			config
 		};
 		devicePresets.append(preset);

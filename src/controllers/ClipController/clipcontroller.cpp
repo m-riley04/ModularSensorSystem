@@ -8,11 +8,11 @@ ClipController::ClipController(QString clippingDir, QObject *parent)
 ClipController::~ClipController()
 {}
 
-void ClipController::clip(QList<Device*> devices, QString dirPath)
+void ClipController::clip(QList<Source*> sources, QString dirPath)
 {
-	// Check devices
-	if (devices.isEmpty()) {
-		qDebug() << "ClipController::clip: no devices provided";
+	// Check sources
+	if (sources.isEmpty()) {
+		qDebug() << "ClipController::clip: no sources provided";
 		return;
 	}
 
@@ -21,22 +21,22 @@ void ClipController::clip(QList<Device*> devices, QString dirPath)
 		dirPath = mClippingDir;
 	}
 
-	// Iterate through devices and clip each one
-	for (Device* device : devices) {
-		if (!device) {
-			qDebug() << "ClipController::clip: device is null";
+	// Iterate through sources and clip each one
+	for (Source* source : sources) {
+		if (!source) {
+			qDebug() << "ClipController::clip: source is null";
 			continue;
 		}
-		clip(device, dirPath);
+		clip(source, dirPath);
 	}
 }
 
-void ClipController::clip(Device* device, QString dirPath)
+void ClipController::clip(Source* source, QString dirPath)
 {
-	// Check device
-	auto clippableDevice = qobject_cast<IClippableDevice*>(device);
-	if (!clippableDevice) {
-		qWarning() << "Device is not clippable: aborting clip";
+	// Check source
+	auto clippableSource = qobject_cast<IClippableSource*>(source);
+	if (!clippableSource) {
+		qWarning() << "Source is not clippable: aborting clip";
 		return;
 	}
 
@@ -51,43 +51,43 @@ void ClipController::clip(Device* device, QString dirPath)
 	clipDir.mkpath(stamp);
 	clipDir.cd(stamp);
 
-	// Clip the device and save to the directory
-	clippableDevice->clip(clipDir);
+	// Clip the source and save to the directory
+	clippableSource->clip(clipDir);
 	emit clipSaved(clipDir.absolutePath());
 }
 
-void ClipController::flush(QList<Device*> devices)
+void ClipController::flush(QList<Source*> sources)
 {
-	// Check devices
-	if (devices.isEmpty()) {
-		qDebug() << "Cannot flush buffers: no devices provided";
+	// Check sources
+	if (sources.isEmpty()) {
+		qDebug() << "Cannot flush buffers: no sources provided";
 		return;
 	}
 
-	// Iterate through devices and flush each one
-	for (Device* device : devices) {
-		flush(device);
+	// Iterate through sources and flush each one
+	for (Source* source : sources) {
+		flush(source);
 	}
 }
 
-void ClipController::flush(Device* device)
+void ClipController::flush(Source* source)
 {
-	// Check device
-	if (!device) {
-		qDebug() << "Cannot flush buffer: device is null";
+	// Check source
+	if (!source) {
+		qDebug() << "Cannot flush buffer: source is null";
 		return;
 	}
 
-	// Cast device to IClippableDevice
-	auto clippableDevice = qobject_cast<IClippableDevice*>(device);
-	if (!clippableDevice) {
-		qDebug() << "Cannot flush buffer: device is not clippable";
+	// Cast source to IClippableSource
+	auto clippableSource = qobject_cast<IClippableSource*>(source);
+	if (!clippableSource) {
+		qDebug() << "Cannot flush buffer: source is not clippable";
 		return;
 	}
 
-	// Flush the device's buffer
-	clippableDevice->clipBuffer()->flush();
-	emit flushed(clippableDevice->clipBuffer());
+	// Flush the source's buffer
+	clippableSource->clipBuffer()->flush();
+	emit flushed(clippableSource->clipBuffer());
 }
 
 void ClipController::addClipBuffer(ClipBufferBase* buffer)

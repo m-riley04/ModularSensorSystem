@@ -1,16 +1,16 @@
 #include "videodeviceplugin.h"
 
-QList<DeviceInfo> VideoDevicePlugin::availableDevices() const
+QList<SourceInfo> VideoDevicePlugin::availableSources() const
 {
-    QList<DeviceInfo> list;
+    QList<SourceInfo> list;
     for (const QCameraDevice& cam : QMediaDevices::videoInputs()) {
-        DeviceInfo info{ cam.id(), cam.description() };
+        SourceInfo info{ cam.id(), cam.description() };
         list.append(info);
     }
     return list;
 }
 
-Device* VideoDevicePlugin::createDevice(const QByteArray& id, QObject* parent)
+Device* VideoDevicePlugin::createSource(const QByteArray& id, QObject* parent)
 {
     // Find the QCameraDevice by id from QMediaDevices
     QCameraDevice selected;

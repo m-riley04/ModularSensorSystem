@@ -25,5 +25,5 @@ void ProcessingController::removeProcessor(ProcessorBase* processor)
 bool ProcessingController::isCompatible(ProcessorBase* proc, Device* dev) {
     auto processorDevice = proc->device();
 	if (!processorDevice) return false; // No device set in processor
-    return processorDevice->deviceType() == dev->deviceType();
+    return processorDevice->sourceType() == dev->sourceType();
 }

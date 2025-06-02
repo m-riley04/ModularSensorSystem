@@ -19,26 +19,26 @@ void SessionControlsWidget::initSignals()
 		return;
 	}
 
-	DeviceController* pDeviceController = pController->deviceController();
+	SourceController* pDeviceController = pController->sourceController();
 	RecordingController* pRecordingController = pController->recordingController();
 
 	// Init open/close button
 	connect(ui.buttonOpenCloseDevices, &QPushButton::clicked, [this, pDeviceController]() {
 		if (pDeviceController->isOpen() || pDeviceController->isStopped()) {
-			pDeviceController->closeDevices();
+			pDeviceController->closeSources();
 		}
 		else if (pDeviceController->isClosed()) {
-			pDeviceController->openDevices();
+			pDeviceController->openSources();
 		}
 		});
 
 	// Init start/stop button
 	connect(ui.buttonStartStopDevices, &QPushButton::clicked, [this, pDeviceController]() {
 		if (pDeviceController->isStopped() || pDeviceController->isOpen()) { // CONSIDER: check recording state too?
-			pDeviceController->startDevices();
+			pDeviceController->startSources();
 		}
 		else if (pDeviceController->isStarted()) {
-			pDeviceController->stopDevices();
+			pDeviceController->stopSources();
 		}
 		});
 
@@ -68,17 +68,17 @@ void SessionControlsWidget::initSignals()
 	// Init restart button
 	connect(ui.buttonRestartDevices, &QPushButton::clicked, [this]() {
 		ui.buttonRestartDevices->setEnabled(false);
-		pController->deviceController()->restartDevices();
+		pController->sourceController()->restartSources();
 		});
 
-	connect(pController->deviceController(), &DeviceController::devicesRestarted, [this]() {
+	connect(pController->sourceController(), &SourceController::sourcesRestarted, [this]() {
 		ui.buttonRestartDevices->setEnabled(true);
 		});
 
 	// External UI updates
-	connect(pDeviceController, &DeviceController::deviceRemoved, this, &SessionControlsWidget::updateUi);
-	connect(pDeviceController, &DeviceController::deviceAdded, this, &SessionControlsWidget::updateUi);
-	connect(pDeviceController, &DeviceController::stateChanged, this, &SessionControlsWidget::updateUi);
+	connect(pDeviceController, &SourceController::sourceRemoved, this, &SessionControlsWidget::updateUi);
+	connect(pDeviceController, &SourceController::sourceAdded, this, &SessionControlsWidget::updateUi);
+	connect(pDeviceController, &SourceController::stateChanged, this, &SessionControlsWidget::updateUi);
 	connect(pRecordingController, &RecordingController::started, this, &SessionControlsWidget::updateUi);
 	connect(pRecordingController, &RecordingController::stopped, this, &SessionControlsWidget::updateUi);
 	
@@ -90,7 +90,7 @@ void SessionControlsWidget::updateUi()
 	if (!pController) return;
 
 	// Check if there are any devices
-	bool isEmpty = pController->deviceController()->isEmpty();
+	bool isEmpty = pController->sourceController()->isEmpty();
 	this->setEnabled(!isEmpty);
 	ui.buttonOpenCloseDevices->setEnabled(!isEmpty);
 	ui.buttonStartStopDevices->setEnabled(!isEmpty);
@@ -98,33 +98,33 @@ void SessionControlsWidget::updateUi()
 	if (isEmpty) return;
 
 	// Device controller updates
-	DeviceController::State deviceState = pController->deviceController()->state();
+	SourceController::State deviceState = pController->sourceController()->state();
 	switch (deviceState) {
-	case DeviceController::OPENED:
+	case SourceController::OPENED:
 		ui.buttonOpenCloseDevices->setText("Close Devices");
 		ui.buttonStartStopDevices->setEnabled(true);
 		ui.buttonRecord->setEnabled(false);
 		ui.buttonClip->setEnabled(false);
 		break;
-	case DeviceController::CLOSED:
+	case SourceController::CLOSED:
 		ui.buttonOpenCloseDevices->setText("Open Devices");
 		ui.buttonStartStopDevices->setEnabled(false);
 		ui.buttonRecord->setEnabled(false);
 		ui.buttonClip->setEnabled(false);
 		break;
-	case DeviceController::STARTED:
+	case SourceController::STARTED:
 		ui.buttonStartStopDevices->setText("Stop Devices");
 		ui.buttonOpenCloseDevices->setEnabled(false);
 		ui.buttonRecord->setEnabled(true);
 		ui.buttonClip->setEnabled(true);
 		break;
-	case DeviceController::STOPPED:
+	case SourceController::STOPPED:
 		ui.buttonStartStopDevices->setText("Start Devices");
 		ui.buttonOpenCloseDevices->setEnabled(true);
 		ui.buttonRecord->setEnabled(false);
 		ui.buttonClip->setEnabled(false);
 		break;
-	case DeviceController::ERROR:
+	case SourceController::ERROR:
 		ui.buttonOpenCloseDevices->setText("Open Devices");
 		ui.buttonStartStopDevices->setText("Start Devices");
 		ui.buttonOpenCloseDevices->setEnabled(true);
@@ -142,7 +142,7 @@ void SessionControlsWidget::updateUi()
 		//ui.buttonOpenCloseDevices->setEnabled(false);
 		//ui.buttonStartStopDevices->setEnabled(false);
 		break;
-	case DeviceController::STOPPED:
+	case SourceController::STOPPED:
 		ui.buttonRecord->setText("Start Recording");
 		//ui.buttonOpenCloseDevices->setEnabled(true);
 		//ui.buttonStartStopDevices->setEnabled(true);

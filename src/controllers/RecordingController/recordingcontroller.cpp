@@ -1,10 +1,10 @@
 #include "recordingcontroller.h"
 
-RecordingController::RecordingController(DeviceController* deviceController, QObject *parent)
-	: QObject(parent), pDeviceController(deviceController)
+RecordingController::RecordingController(SourceController* sourceController, QObject *parent)
+	: QObject(parent), pDeviceController(sourceController)
 {
-	connect(deviceController, &DeviceController::deviceAdded, this, &RecordingController::onDeviceAdded);
-	connect(deviceController, &DeviceController::deviceRemoved, this, &RecordingController::onDeviceRemoved);
+	connect(sourceController, &SourceController::sourceAdded, this, &RecordingController::onDeviceAdded);
+	connect(sourceController, &SourceController::sourceRemoved, this, &RecordingController::onDeviceRemoved);
 }
 
 RecordingController::~RecordingController()
@@ -17,7 +17,7 @@ void RecordingController::start()
 	auto dirName = QDateTime::currentDateTime().toString("'Session_'yyyyMMdd_hhmmss");
 	pSession.reset(new RecordingSession(QDir::currentPath() + "/" + rootOutputDirName + "/" + dirName, this));
 
-	for (Device* d : pDeviceController->devices()) {
+	for (Device* d : pDeviceController->sources()) {
 		d->beginRecording(pSession.get());
 	}
 
@@ -28,11 +28,11 @@ void RecordingController::start()
 
 void RecordingController::stop()
 {
-	//for (auto d : mDevices)  d->stop(); // Probably do not need (starting/stopping is performed by DeviceController)
+	//for (auto d : mSources)  d->stop(); // Probably do not need (starting/stopping is performed by SourceController)
 	QDir outputSessionDir = pSession->outputDir();
 
 	// Stop all devices
-	for (Device* d : pDeviceController->devices()) {
+	for (Device* d : pDeviceController->sources()) {
 		d->endRecording();
 	}
 	

@@ -14,12 +14,12 @@ class DeviceListWidget : public QWidget
 
 public:
 	DeviceListWidget(QWidget* parent = nullptr);
-	DeviceListWidget(DeviceController* deviceController, QWidget *parent = nullptr);
+	DeviceListWidget(SourceController* sourceController, QWidget *parent = nullptr);
 	~DeviceListWidget();
 
 private:
 	Ui::DeviceListWidgetClass ui;
-	DeviceController* pDeviceController;
+	SourceController* pDeviceController;
 
 	void initSignals();
 	void initDeviceControllerSignals();
@@ -28,8 +28,8 @@ public slots:
 	void openAddDeviceDialog();
 	void openRemoveDeviceDialog();
 	void openProperties();
-	void setDeviceController(DeviceController* deviceController);
+	void setDeviceController(SourceController* sourceController);
 
 signals:
-	void deviceControllerChanged(DeviceController* deviceController);
+	void deviceControllerChanged(SourceController* sourceController);
 };

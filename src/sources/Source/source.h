@@ -3,15 +3,15 @@
 #include <QObject>
 #include "controllers/RecordingSession/recordingsession.h"
 #include <quuid.h>
-#include "DevicePreview/devicepreview.h"
+#include "SourcePreview/sourcepreview.h"
 #include <QPointer>
-#include "sources/devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
-#include "DeviceError/deviceerror.h"
+#include "sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
+#include "SourceError/deviceerror.h"
 
 class RecordingSession;
-class DevicePreview;
+class SourcePreview;
 
-class Device : public QObject
+class Source : public QObject
 {
 	Q_OBJECT
 
@@ -81,20 +81,20 @@ protected:
 
 	QString mPluginId = "Unknown Plugin";
 
-	QString mName = "New Device";
-	Device::Type mDeviceType = Device::Type::OTHER;
-	Device::State mState = Device::State::CLOSED;
+	QString mName = "New Source";
+	Source::Type mSourceType = Source::Type::OTHER;
+	Source::State mState = Source::State::CLOSED;
 	qint64 mStartTime = 0;
-	Device::ErrorState mErrorState = ErrorState::NO_ERROR;
+	Source::ErrorState mErrorState = ErrorState::NO_ERROR;
 
 	QPointer<RecordingSession> pRecordingSession;
-	std::unique_ptr<DevicePreview> pPreview = nullptr;
+	std::unique_ptr<SourcePreview> pPreview = nullptr;
 	std::unique_ptr<ClipBufferBase> pClipBuffer = nullptr;
 
 public:
-	Device(QByteArray hardwareId, QObject *parent);
-	Device(QObject *parent);
-	~Device();
+	Source(QByteArray hardwareId, QObject* parent);
+	Source(QObject* parent);
+	~Source();
 
 	virtual void open() = 0;
 	virtual void start() = 0;
@@ -120,18 +120,18 @@ public:
 	/// <summary>
 	/// The type of device
 	/// </summary>
-	Device::Type deviceType() const { return mDeviceType; }
+	Source::Type type() const { return mSourceType; }
 
 	/// <summary>
 	/// The current state of the device
 	/// </summary>
-	Device::State state() const { return mState; }
+	Source::State state() const { return mState; }
 
 	/// <summary>
-	/// The DevicePreview object for the device.
+	/// The SourcePreview object for the device.
 	/// Used for previewing the device's output.
 	/// </summary>
-	DevicePreview* preview() const { return pPreview.get(); }
+	SourcePreview* preview() const { return pPreview.get(); }
 
 	void setSession(RecordingSession* session)
 	{
@@ -145,9 +145,9 @@ signals:
 	void closed();
 
 	/// <summary>
-	/// Emitted when the device's preview is available.
+	/// Emitted when the source's preview is available.
 	/// </summary>
-	void previewAvailable(Device* device, DevicePreview* preview);
+	void previewAvailable(Source* src, SourcePreview* preview);
 
-	void errorOccurred(const DeviceError& e);
+	void errorOccurred(const SourceError& e);
 };

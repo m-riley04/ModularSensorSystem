@@ -5,15 +5,15 @@
 #include "devices/Device/device.h"
 #include "TemplateDevice/templatedevice.h"
 
-class TemplateDevicePlugin : public QObject, public IDevicePlugin
+class TemplateDevicePlugin : public QObject, public ISourcePlugin
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID IDevicePlugin_iid FILE "templatedeviceplugin.json")
-	Q_INTERFACES(IDevicePlugin)
+	Q_INTERFACES(ISourcePlugin)
 
 public:
-	QList<DeviceInfo> availableDevices() const override;
-	Device* createDevice(const QByteArray& id, QObject* parent) override;
+	QList<SourceInfo> availableSources() const override;
+	Device* createSource(const QByteArray& id, QObject* parent) override;
 	QString pluginName() const override { return "TemplateDevice"; }
-	Device::Type deviceType() const override { return Device::Type::OTHER; }
+	Device::Type sourceType() const override { return Device::Type::OTHER; }
 };

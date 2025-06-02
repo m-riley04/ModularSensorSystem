@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <Controllers/DeviceController/devicecontroller.h>
 #include <Controllers/ClipController/clipcontroller.h>
 #include <controllers/RecordingController/recordingcontroller.h>
 #include <controllers/PluginController/plugincontroller.h>
@@ -9,6 +8,7 @@
 #include <QtMultimedia>
 #include <controllers/PresetsController/presetscontroller.h>
 #include <controllers/ProcessingController/processingcontroller.h>
+#include <controllers/SourceController/sourcecontroller.h>
 
 class MainController  : public QObject
 {
@@ -19,14 +19,14 @@ public:
 	~MainController();
 
 	RecordingController* recordingController() const { return pRecordingController.get(); }
-	DeviceController* deviceController() const { return pDeviceController.get(); }
+	SourceController* sourceController() const { return pSourceController.get(); }
 	ClipController* clipController() const { return pClipController.get(); }
 	PluginController* pluginController() const { return pPluginController.get(); }
 	PresetsController* presetsController() const { return pPresetsController.get(); }
 	ProcessingController* processingController() const { return pProcessingController.get(); }
 
 private:
-	std::unique_ptr<DeviceController> pDeviceController;
+	std::unique_ptr<SourceController> pSourceController;
 	std::unique_ptr<RecordingController> pRecordingController;
 	std::unique_ptr<ClipController> pClipController;
 	std::unique_ptr<PluginController> pPluginController;

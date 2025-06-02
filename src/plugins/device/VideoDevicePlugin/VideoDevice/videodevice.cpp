@@ -120,7 +120,7 @@ QCameraDevice VideoDevice::getCameraDevice(const QByteArray& id)
 
 QWidget* VideoDevice::createConfigWidget(QWidget* parent)
 {
-	DevicePropertiesWidget* devicePropertiesWidget = new DevicePropertiesWidget(this, parent);
+	SourcePropertiesWidget* devicePropertiesWidget = new SourcePropertiesWidget(this, parent);
 	devicePropertiesWidget->addPage("Device", new VideoDevicePropertiesWidget(this, devicePropertiesWidget));
     devicePropertiesWidget->addPage("Recording", new VideoDeviceRecordingPropertiesWidget(devicePropertiesWidget, &mRecorder));
     return devicePropertiesWidget;//new VideoDevicePropertiesWidget(this, parent);

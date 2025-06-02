@@ -4,13 +4,13 @@
 #include <QVector3d>
 #include <qquaternion.h>
 
-class DeviceMetadata  : public QObject
+class SourceMetadata  : public QObject
 {
 	Q_OBJECT
 
 public:
-	DeviceMetadata(QObject *parent);
-	~DeviceMetadata();
+	SourceMetadata(QObject *parent);
+	~SourceMetadata();
 
 private:
 	QVector3D mPosition;

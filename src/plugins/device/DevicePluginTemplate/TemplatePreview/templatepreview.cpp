@@ -1,7 +1,7 @@
 #include "templatepreview.h"
 
 TemplatePreview::TemplatePreview(QObject*parent)
-	: DevicePreview(parent)
+	: SourcePreview(parent)
 {}
 
 TemplatePreview::~TemplatePreview()

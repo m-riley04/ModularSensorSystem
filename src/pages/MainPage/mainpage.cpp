@@ -21,7 +21,7 @@ void MainPage::initWidgets()
 	ui.devicePreviewWidget->setController(pController);
 
 	// Init device list widget
-	ui.deviceListWidget->setDeviceController(pController->deviceController());
+	ui.deviceListWidget->setDeviceController(pController->sourceController());
 
 	// Init processors widget
 	ui.processorsWidget->setController(pController);

@@ -21,11 +21,11 @@
 
 class VideoDevice : public Device, 
 	public IConfigurableDevice, 
-	public IClippableDevice, 
+	public IClippableSource, 
 	public IVideoSource
 {
 	Q_OBJECT
-	Q_INTERFACES(IConfigurableDevice IClippableDevice IVideoSource)
+	Q_INTERFACES(IConfigurableDevice IClippableSource IVideoSource)
 
 public:
 	VideoDevice(QByteArray hardwareId, QObject* parent);
@@ -43,7 +43,7 @@ public:
 	void loadSettings(const QJsonObject& obj) override;
 	QJsonObject saveSettings() override;
 
-	// IClippableDevice interface
+	// IClippableSource interface
 	void clip(const QDir& dir) override;
 	ClipBufferBase* clipBuffer() override { return pClipBuffer.get(); }
 

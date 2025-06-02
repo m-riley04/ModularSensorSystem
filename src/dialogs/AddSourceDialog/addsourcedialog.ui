@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AddDeviceDialogClass</class>
- <widget class="QDialog" name="AddDeviceDialogClass">
+ <class>AddSourceDialogClass</class>
+ <widget class="QDialog" name="AddSourceDialogClass">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>AddDeviceDialog</string>
+   <string>AddSourceDialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="2">
@@ -22,12 +22,12 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QComboBox" name="dropdownDevice"/>
+    <widget class="QComboBox" name="dropdownSource"/>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Device</string>
+      <string>Source</string>
      </property>
     </widget>
    </item>
@@ -46,7 +46,7 @@
     </widget>
    </item>
    <item row="0" column="1" colspan="2">
-    <widget class="QComboBox" name="dropdownDeviceType"/>
+    <widget class="QComboBox" name="dropdownSourceType"/>
    </item>
   </layout>
  </widget>

@@ -1,9 +1,9 @@
 #pragma once
 #include <QWidget>
 
-class IConfigurableDevice {
+class IConfigurableSource {
 public:
-    virtual ~IConfigurableDevice() = default;
+    virtual ~IConfigurableSource() = default;
 
     virtual QWidget* createConfigWidget(QWidget* parent = nullptr) = 0;
     
@@ -20,5 +20,5 @@ public:
     virtual QJsonObject saveSettings() = 0;
 };
 
-#define IConfigurableDevice_iid "com.rileymeyerkorth.IConfigurableDevice/1.0"
-Q_DECLARE_INTERFACE(IConfigurableDevice, IConfigurableDevice_iid)
+#define IConfigurableSource_iid "com.rileymeyerkorth.IConfigurableSource/1.0"
+Q_DECLARE_INTERFACE(IConfigurableSource, IConfigurableSource_iid)

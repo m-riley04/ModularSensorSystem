@@ -1,15 +1,15 @@
-#include "devicecontroller.h"
+#include "sourcecontroller.h"
 
-DeviceController::DeviceController(PluginController* pluginController, QObject *parent)
+SourceController::SourceController(PluginController* pluginController, QObject *parent)
 	: QObject(parent), pPluginController(pluginController), pRecordingSession(nullptr)
 {}
 
-DeviceController::~DeviceController()
+SourceController::~SourceController()
 {}
 
-void DeviceController::openDevices()
+void SourceController::openSources()
 {
-	for (Device* device : mDevices) {
+	for (Source* device : mSources) {
 		if (device) {
 			device->open();
 		}
@@ -19,9 +19,9 @@ void DeviceController::openDevices()
 	emit stateChanged(OPENED);
 }
 
-void DeviceController::startDevices()
+void SourceController::startSources()
 {
-	for (Device* device : mDevices) {
+	for (Source* device : mSources) {
 		if (device) {
 			device->start();
 		}
@@ -31,9 +31,9 @@ void DeviceController::startDevices()
 	emit stateChanged(STARTED);
 }
 
-void DeviceController::stopDevices()
+void SourceController::stopSources()
 {
-	for (Device* device : mDevices) {
+	for (Source* device : mSources) {
 		if (device) {
 			device->stop();
 		}
@@ -43,9 +43,9 @@ void DeviceController::stopDevices()
 	emit stateChanged(STOPPED);
 }
 
-void DeviceController::closeDevices()
+void SourceController::closeSources()
 {
-	for (Device* device : mDevices) {
+	for (Source* device : mSources) {
 		if (device) {
 			device->close();
 		}
@@ -55,18 +55,18 @@ void DeviceController::closeDevices()
 	emit stateChanged(CLOSED);
 }
 
-void DeviceController::restartDevices()
+void SourceController::restartSources()
 {
-	for (Device* device : mDevices) {
+	for (Source* device : mSources) {
 		if (device) {
 			device->restart();
 		}
 	}
 
-	emit devicesRestarted();
+	emit sourcesRestarted();
 }
 
-Device* DeviceController::addDevice(IDevicePlugin* plugin, DeviceInfo info) {
+Source* SourceController::addSource(ISourcePlugin* plugin, SourceInfo info) {
 	if (!plugin) {
 		emit errorOccurred({
 			"Cannot add device: plugin is null",
@@ -77,18 +77,18 @@ Device* DeviceController::addDevice(IDevicePlugin* plugin, DeviceInfo info) {
 		return nullptr;
 	}
 	
-	auto device = plugin->createDevice(info.id, this);
+	auto device = plugin->createSource(info.id, this);
 
-	mDevices.append(device);
+	mSources.append(device);
 
 	// Connect errors
-	connect(device, &Device::errorOccurred, this, &DeviceController::errorOccurred);
+	connect(device, &Source::errorOccurred, this, &SourceController::errorOccurred);
 
-	emit deviceAdded(device);
+	emit sourceAdded(device);
 	return device;
 }
 
-void DeviceController::removeDevice(Device* device)
+void SourceController::removeSource(Source* device)
 {
 	if (!device) {
 		emit errorOccurred({
@@ -104,14 +104,14 @@ void DeviceController::removeDevice(Device* device)
 	QByteArray deviceId = device->id();
 
 	// Remove device from the list
-	mDevices.removeAll(device);
+	mSources.removeAll(device);
 
-	emit deviceRemoved(device); // TODO: Emit the device's ID instead of the device itself
+	emit sourceRemoved(device); // TODO: Emit the device's ID instead of the device itself
 }
 
-Device* DeviceController::getDevice(QByteArray id) const
+Source* SourceController::getSource(QByteArray id) const
 {
-	for (Device* device : mDevices) {
+	for (Source* device : mSources) {
 		if (device && device->id() == id) {
 			return device;
 		}
@@ -120,16 +120,16 @@ Device* DeviceController::getDevice(QByteArray id) const
 	return nullptr;
 }
 
-void DeviceController::clearDevices()
+void SourceController::clearSources()
 {
-	for (Device* device : mDevices) {
+	for (Source* device : mSources) {
 		if (device) {
 			device->deleteLater();
-			emit deviceRemoved(device);
+			emit sourceRemoved(device);
 		}
 	}
 
-	mDevices.clear();
+	mSources.clear();
 	mState = CLOSED;
 	emit stateChanged(CLOSED);
 }

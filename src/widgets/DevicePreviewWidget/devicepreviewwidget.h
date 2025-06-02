@@ -14,16 +14,16 @@ protected:
 	void paintEvent(QPaintEvent* event);
 
 public:
-	DevicePreviewWidget(DevicePreview* preview, QWidget *parent = nullptr);
+	DevicePreviewWidget(SourcePreview* preview, QWidget *parent = nullptr);
 	~DevicePreviewWidget();
 
-	const DevicePreview* preview() const { return pPreview; }
+	const SourcePreview* preview() const { return pPreview; }
 
 private:
 	Ui::DevicePreviewWidgetClass ui;
 	QImage mFrame;
 
-	const DevicePreview* pPreview = nullptr;
+	const SourcePreview* pPreview = nullptr;
 
 private slots:
 	void setFrame(const QImage&);

@@ -1,10 +1,10 @@
 #include "devicepreviewwidget.h"
 
-DevicePreviewWidget::DevicePreviewWidget(DevicePreview* preview, QWidget *parent)
+DevicePreviewWidget::DevicePreviewWidget(SourcePreview* preview, QWidget *parent)
 	: QWidget(parent), pPreview(preview)
 {
 	ui.setupUi(this);
-	bool ok = connect(preview, &DevicePreview::frameReady, this, &DevicePreviewWidget::setFrame);
+	bool ok = connect(preview, &SourcePreview::frameReady, this, &DevicePreviewWidget::setFrame);
 
 	qDebug() << "connect ok:" << ok
              << "widget uses preview:" << preview;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "devices/Device/device.h"
+#include "sources/Source/source.h"
 #include "interfaces/plugins/iprocessorplugin.h"
 
 class ProcessorBase : public QObject 
@@ -9,28 +9,28 @@ class ProcessorBase : public QObject
     Q_OBJECT
 
 public:
-    ProcessorBase(Device* device, QObject* parent = nullptr);
+    ProcessorBase(Source* source, QObject* parent = nullptr);
     virtual ~ProcessorBase() = default;
 
-    Device* device() const { return pDevice; }
+    Source* source() const { return pSource; }
 
-	void setDevice(Device* device) { 
-		if (device == pDevice) return;
-        pDevice = device;
-		emit deviceChanged(pDevice);
+	void setSource(Source* source) { 
+		if (source == pSource) return;
+        pSource = source;
+		emit deviceChanged(pSource);
     }
 
     virtual void startProcessing() {}
     virtual void stopProcessing() {}
 
 protected:
-    Device* pDevice;
+    Source* pSource;
 
 signals:
-	void deviceChanged(Device* newDevice);
+	void deviceChanged(Source* newDevice);
 
     // Common signals for detection events (can be extended or specialized per plugin)
-    void motionDetected(Device* sourceDevice);
-    void personDetected(Device* sourceDevice);
-	void objectDetected(Device* sourceDevice, const QString& objectType); // TODO: Use a struct or class for object details
+    void motionDetected(Source* sourceDevice);
+    void personDetected(Source* sourceDevice);
+	void objectDetected(Source* sourceDevice, const QString& objectType); // TODO: Use a struct or class for object details
 };

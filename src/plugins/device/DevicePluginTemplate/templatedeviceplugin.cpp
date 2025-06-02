@@ -1,12 +1,12 @@
 #include "templatedeviceplugin.h"
 
-QList<DeviceInfo> TemplateDevicePlugin::availableDevices() const
+QList<SourceInfo> TemplateDevicePlugin::availableSources() const
 {
-    QList<DeviceInfo> list;
+    QList<SourceInfo> list;
     return list;
 }
 
-Device* TemplateDevicePlugin::createDevice(const QByteArray& id, QObject* parent)
+Device* TemplateDevicePlugin::createSource(const QByteArray& id, QObject* parent)
 {
     return nullptr;
 }
