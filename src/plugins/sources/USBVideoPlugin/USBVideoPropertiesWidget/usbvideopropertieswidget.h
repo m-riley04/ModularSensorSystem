@@ -1,23 +1,23 @@
 #pragma once
 
 #include <QDialog>
-#include "ui_videodevicepropertieswidget.h"
-#include "QtCameraFormatTableWidgetItem/qtcameraformatablewidgetitem.h"
-#include <algorithm>
+#include "ui_usbvideopropertieswidget.h"
 #include <QListWidget>
 #include <QtMultimedia>
 #include <QMessageBox>
-#include <VideoDevice/videodevice.h>
+#include <algorithm>
+#include <USBVideoSource/usbvideosource.h>
+#include "QtCameraFormatTableWidgetItem/qtcameraformatablewidgetitem.h"
 
-class VideoDevice;
+class USBVideoSource;
 
-class VideoDevicePropertiesWidget : public QWidget
+class USBVideoPropertiesWidget : public QWidget
 {
 	Q_OBJECT
 
 public:
-	VideoDevicePropertiesWidget(VideoDevice* videoDevice, QWidget* parent = nullptr);
-	~VideoDevicePropertiesWidget();
+	USBVideoPropertiesWidget(USBVideoSource* usbVideoSource, QWidget* parent = nullptr);
+	~USBVideoPropertiesWidget();
 
 	/// <summary>
 	/// Converts a QSize to a formatted string.
@@ -34,8 +34,8 @@ public:
 	static QSize stringToSize(const QString& str);
 
 private:
-	Ui::VideoDevicePropertiesWidgetClass ui;
-	VideoDevice* pVideoDevice;
+	Ui::USBVideoPropertiesWidgetClass ui;
+	USBVideoSource* pVideoDevice;
 	QList<QCameraFormat> mFormats;
 	QCameraFormat defaultFormat;
 	QCameraFormat selectedFormat;

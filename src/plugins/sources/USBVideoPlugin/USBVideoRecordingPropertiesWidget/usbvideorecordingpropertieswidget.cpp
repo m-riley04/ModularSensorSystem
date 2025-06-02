@@ -1,4 +1,4 @@
-#include "videodevicerecordingpropertieswidget.h"
+#include "usbvideorecordingpropertieswidget.h"
 
 QList<QMediaFormat::VideoCodec> videoCodecs = {
 	QMediaFormat::VideoCodec::VP8,
@@ -47,7 +47,7 @@ QList<QMediaFormat::FileFormat> fileFormats = {
 	QMediaFormat::UnspecifiedFormat
 };
 
-VideoDeviceRecordingPropertiesWidget::VideoDeviceRecordingPropertiesWidget(QWidget* parent, QMediaRecorder* recorder)
+USBVideoRecordingPropertiesWidget::USBVideoRecordingPropertiesWidget(QWidget* parent, QMediaRecorder* recorder)
 	: QDialog(parent), pRecorder(recorder)
 {
 	ui.setupUi(this);
@@ -74,18 +74,18 @@ VideoDeviceRecordingPropertiesWidget::VideoDeviceRecordingPropertiesWidget(QWidg
 
 	// Input check
 	if (!pCamera && !pAudioInput) { /// CONSIDER: Move this into widget inits?
-		QMessageBox::warning(this, "Error", "No input device found.");
+		QMessageBox::warning(this, "Error", "No input source found.");
 	}
 
 	initWidgets();
 	initSignals();
 }
 
-VideoDeviceRecordingPropertiesWidget::~VideoDeviceRecordingPropertiesWidget()
+USBVideoRecordingPropertiesWidget::~USBVideoRecordingPropertiesWidget()
 {
 }
 
-QString VideoDeviceRecordingPropertiesWidget::recorderStateDescription(QMediaRecorder::RecorderState state)
+QString USBVideoRecordingPropertiesWidget::recorderStateDescription(QMediaRecorder::RecorderState state)
 {
 	switch (state) {
 	case QMediaRecorder::RecorderState::PausedState:
@@ -99,7 +99,7 @@ QString VideoDeviceRecordingPropertiesWidget::recorderStateDescription(QMediaRec
 	return QString();
 }
 
-void VideoDeviceRecordingPropertiesWidget::initWidgets()
+void USBVideoRecordingPropertiesWidget::initWidgets()
 {
 	// Default set all tabs to disabled (except general)
 	ui.tabs->tabBar()->setTabEnabled(RecordingControlsTab::GENERAL, true);
@@ -116,7 +116,7 @@ void VideoDeviceRecordingPropertiesWidget::initWidgets()
 	if (pAudioInput) initAudioWidgets();
 }
 
-void VideoDeviceRecordingPropertiesWidget::initSignals()
+void USBVideoRecordingPropertiesWidget::initSignals()
 {
 	connect(pRecorder, &QMediaRecorder::errorOccurred, [this](QMediaRecorder::Error error, QString errorString) {
 		QMessageBox::warning(this, "Error #" + QString::number(error), errorString);
@@ -127,7 +127,7 @@ void VideoDeviceRecordingPropertiesWidget::initSignals()
 	initAudioSignals();
 }
 
-void VideoDeviceRecordingPropertiesWidget::initGeneralWidgets()
+void USBVideoRecordingPropertiesWidget::initGeneralWidgets()
 {
 	/// FIELDS
 	ui.labelRecordingStatus->setText(recorderStateDescription(pRecorder->recorderState()));
@@ -143,7 +143,7 @@ void VideoDeviceRecordingPropertiesWidget::initGeneralWidgets()
 	ui.dropdownFileFormat->setCurrentIndex(i);
 }
 
-void VideoDeviceRecordingPropertiesWidget::initVideoWidgets()
+void USBVideoRecordingPropertiesWidget::initVideoWidgets()
 {
 	/// TAB
 	ui.tabs->tabBar()->setTabEnabled(RecordingControlsTab::VIDEO, true);
@@ -163,7 +163,7 @@ void VideoDeviceRecordingPropertiesWidget::initVideoWidgets()
 	ui.spinboxHeight->setValue(pRecorder->videoResolution().height());
 }
 
-void VideoDeviceRecordingPropertiesWidget::initAudioWidgets()
+void USBVideoRecordingPropertiesWidget::initAudioWidgets()
 {
 	/// TAB
 	ui.tabs->tabBar()->setTabEnabled(RecordingControlsTab::AUDIO, true);
@@ -182,7 +182,7 @@ void VideoDeviceRecordingPropertiesWidget::initAudioWidgets()
 	ui.spinboxChannels->setValue(pRecorder->audioChannelCount());
 }
 
-void VideoDeviceRecordingPropertiesWidget::initGeneralSignals()
+void USBVideoRecordingPropertiesWidget::initGeneralSignals()
 {
 	connect(pRecorder, &QMediaRecorder::recorderStateChanged, [this](QMediaRecorder::RecorderState state) {
 		ui.labelRecordingStatus->setText(recorderStateDescription(state));
@@ -225,7 +225,7 @@ void VideoDeviceRecordingPropertiesWidget::initGeneralSignals()
 		});
 }
 
-void VideoDeviceRecordingPropertiesWidget::initVideoSignals()
+void USBVideoRecordingPropertiesWidget::initVideoSignals()
 {
 	connect(ui.dropdownVideoCodec, &QComboBox::currentIndexChanged, [this](int index) {
 		auto codec = ui.dropdownVideoCodec->itemData(index).value<QMediaFormat::VideoCodec>();
@@ -249,7 +249,7 @@ void VideoDeviceRecordingPropertiesWidget::initVideoSignals()
 		});
 }
 
-void VideoDeviceRecordingPropertiesWidget::initAudioSignals()
+void USBVideoRecordingPropertiesWidget::initAudioSignals()
 {
 	connect(ui.dropdownAudioCodec, &QComboBox::currentIndexChanged, [this](int index) {
 		auto codec = ui.dropdownAudioCodec->itemData(index).value<QMediaFormat::AudioCodec>();
@@ -269,7 +269,7 @@ void VideoDeviceRecordingPropertiesWidget::initAudioSignals()
 		});
 }
 
-void VideoDeviceRecordingPropertiesWidget::initDefaultValues()
+void USBVideoRecordingPropertiesWidget::initDefaultValues()
 {
 
 }

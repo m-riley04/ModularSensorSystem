@@ -9,9 +9,9 @@ SourceController::~SourceController()
 
 void SourceController::openSources()
 {
-	for (Source* device : mSources) {
-		if (device) {
-			device->open();
+	for (Source* source : mSources) {
+		if (source) {
+			source->open();
 		}
 	}
 
@@ -21,9 +21,9 @@ void SourceController::openSources()
 
 void SourceController::startSources()
 {
-	for (Source* device : mSources) {
-		if (device) {
-			device->start();
+	for (Source* source : mSources) {
+		if (source) {
+			source->start();
 		}
 	}
 
@@ -33,9 +33,9 @@ void SourceController::startSources()
 
 void SourceController::stopSources()
 {
-	for (Source* device : mSources) {
-		if (device) {
-			device->stop();
+	for (Source* source : mSources) {
+		if (source) {
+			source->stop();
 		}
 	}
 
@@ -45,9 +45,9 @@ void SourceController::stopSources()
 
 void SourceController::closeSources()
 {
-	for (Source* device : mSources) {
-		if (device) {
-			device->close();
+	for (Source* source : mSources) {
+		if (source) {
+			source->close();
 		}
 	}
 
@@ -57,9 +57,9 @@ void SourceController::closeSources()
 
 void SourceController::restartSources()
 {
-	for (Source* device : mSources) {
-		if (device) {
-			device->restart();
+	for (Source* source : mSources) {
+		if (source) {
+			source->restart();
 		}
 	}
 
@@ -69,51 +69,51 @@ void SourceController::restartSources()
 Source* SourceController::addSource(ISourcePlugin* plugin, SourceInfo info) {
 	if (!plugin) {
 		emit errorOccurred({
-			"Cannot add device: plugin is null",
+			"Cannot add source: plugin is null",
 			nullptr,
 			ErrorSeverity::CRITICAL
 			});
-		qWarning() << "Plugin for device is null";
+		qWarning() << "Plugin for source is null";
 		return nullptr;
 	}
 	
-	auto device = plugin->createSource(info.id, this);
+	auto source = plugin->createSource(info.id, this);
 
-	mSources.append(device);
+	mSources.append(source);
 
 	// Connect errors
-	connect(device, &Source::errorOccurred, this, &SourceController::errorOccurred);
+	connect(source, &Source::errorOccurred, this, &SourceController::errorOccurred);
 
-	emit sourceAdded(device);
-	return device;
+	emit sourceAdded(source);
+	return source;
 }
 
-void SourceController::removeSource(Source* device)
+void SourceController::removeSource(Source* source)
 {
-	if (!device) {
+	if (!source) {
 		emit errorOccurred({
-			"Cannot remove device: device is null",
+			"Cannot remove source: source is null",
 			nullptr,
 			ErrorSeverity::CRITICAL
 			});
-		qWarning() << "Cannot remove device: device is null";
+		qWarning() << "Cannot remove source: source is null";
 		return;
 	};
 
-	// Get device id before deleting
-	QByteArray sourceId = device->id();
+	// Get source id before deleting
+	QByteArray sourceId = source->id();
 
-	// Remove device from the list
-	mSources.removeAll(device);
+	// Remove source from the list
+	mSources.removeAll(source);
 
-	emit sourceRemoved(device); // TODO: Emit the device's ID instead of the device itself
+	emit sourceRemoved(source); // TODO: Emit the source's ID instead of the source itself
 }
 
 Source* SourceController::getSource(QByteArray id) const
 {
-	for (Source* device : mSources) {
-		if (device && device->id() == id) {
-			return device;
+	for (Source* source : mSources) {
+		if (source && source->id() == id) {
+			return source;
 		}
 	}
 
@@ -122,10 +122,10 @@ Source* SourceController::getSource(QByteArray id) const
 
 void SourceController::clearSources()
 {
-	for (Source* device : mSources) {
-		if (device) {
-			device->deleteLater();
-			emit sourceRemoved(device);
+	for (Source* source : mSources) {
+		if (source) {
+			source->deleteLater();
+			emit sourceRemoved(source);
 		}
 	}
 

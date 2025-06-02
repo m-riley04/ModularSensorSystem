@@ -8,18 +8,18 @@
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
-#include "sources/Source/source.h"
-#include "VideoClipBuffer/videoclipbuffer.h"
-#include "VideoPreview/videopreview.h"
-#include "sources/IConfigurableSource/iconfigurablesource.h"
-#include "sources/Source/SourcePropertiesWidget/sourcepropertieswidget.h"
-#include "sources/IClippableSource/iclippablesource.h"
-#include "interfaces/capability/ivideosource.h"
-#include "VideoSourcePropertiesWidget/videosourcepropertieswidget.h"
-#include "VideoSourceRecordingPropertiesWidget/videosourcerecordingpropertieswidget.h"
-#include <VideoClipEncoder/videoclipencoder.h>
+#include "core/sources/Source/source.h"
+#include "core/sources/IConfigurableSource/iconfigurablesource.h"
+#include "core/sources/Source/SourcePropertiesWidget/sourcepropertieswidget.h"
+#include "core/sources/IClippableSource/iclippablesource.h"
+#include "core/interfaces/capability/ivideosource.h"
+#include "USBVideoClipBuffer/usbvideoclipbuffer.h"
+#include "USBVideoPreview/usbvideopreview.h"
+#include "USBVideoPropertiesWidget/usbvideopropertieswidget.h"
+#include "USBVideoRecordingPropertiesWidget/usbvideorecordingpropertieswidget.h"
+#include <USBVideoClipEncoder/usbvideoclipencoder.h>
 
-class VideoDevice : public Source, 
+class USBVideoSource : public Source, 
 	public IConfigurableSource, 
 	public IClippableSource, 
 	public IVideoSource
@@ -28,9 +28,9 @@ class VideoDevice : public Source,
 	Q_INTERFACES(IConfigurableSource IClippableSource IVideoSource)
 
 public:
-	VideoDevice(QByteArray hardwareId, QObject* parent);
-    VideoDevice(QCameraDevice qVideoDevice, QObject *parent);
-	~VideoDevice();
+	USBVideoSource(QByteArray hardwareId, QObject* parent);
+    USBVideoSource(QCameraDevice qVideoDevice, QObject *parent);
+	~USBVideoSource();
 
 	static QCameraDevice getCameraDevice(const QByteArray& id);
 

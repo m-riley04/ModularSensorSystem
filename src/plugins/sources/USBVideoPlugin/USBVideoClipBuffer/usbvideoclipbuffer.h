@@ -1,9 +1,9 @@
 #pragma once
-#include "devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
+#include "core/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
 #include <QVideoFrame>
 #include <deque>
 
-class VideoClipBuffer : public ClipBufferBase
+class USBVideoClipBuffer : public ClipBufferBase
 {
     Q_OBJECT
 public:

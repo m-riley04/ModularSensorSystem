@@ -1,4 +1,4 @@
-#include "videodevicepropertieswidget.h"
+#include "usbvideopropertieswidget.h"
 
 /// <summary>
 /// A map of pixel formats to their string representations.
@@ -107,7 +107,7 @@ QMap<QString, QCamera::FocusMode> focusModeMap{
 	{ "Manual",      QCamera::FocusMode::FocusModeManual }
 };
 
-VideoDevicePropertiesWidget::VideoDevicePropertiesWidget(VideoDevice* videoDevice, QWidget* parent)
+USBVideoPropertiesWidget::USBVideoPropertiesWidget(USBVideoSource* videoDevice, QWidget* parent)
 	: QWidget(parent), pVideoDevice(videoDevice)
 {
 	ui.setupUi(this);
@@ -125,16 +125,16 @@ VideoDevicePropertiesWidget::VideoDevicePropertiesWidget(VideoDevice* videoDevic
 	initializeSettingsGroup();
 }
 
-VideoDevicePropertiesWidget::~VideoDevicePropertiesWidget()
+USBVideoPropertiesWidget::~USBVideoPropertiesWidget()
 {
 }
 
-QString VideoDevicePropertiesWidget::sizeToString(QSize size)
+QString USBVideoPropertiesWidget::sizeToString(QSize size)
 {
 	return QString::number(size.width()) + "x" + QString::number(size.height());
 }
 
-QSize VideoDevicePropertiesWidget::stringToSize(const QString& str)
+QSize USBVideoPropertiesWidget::stringToSize(const QString& str)
 {
 	QStringList parts = str.split('x');
 	if (parts.size() == 2)
@@ -142,7 +142,7 @@ QSize VideoDevicePropertiesWidget::stringToSize(const QString& str)
 	return QSize(); // invalid if parsing failed
 }
 
-void VideoDevicePropertiesWidget::populateFilterDropdowns()
+void USBVideoPropertiesWidget::populateFilterDropdowns()
 {
 	// Clear existing items
 	ui.dropdownFps->clear();
@@ -196,7 +196,7 @@ void VideoDevicePropertiesWidget::populateFilterDropdowns()
 	}
 }
 
-void VideoDevicePropertiesWidget::populateExposureModes()
+void USBVideoPropertiesWidget::populateExposureModes()
 {
 	ui.dropdownExposureMode->blockSignals(true);
 	ui.dropdownExposureMode->clear();
@@ -211,7 +211,7 @@ void VideoDevicePropertiesWidget::populateExposureModes()
 	ui.dropdownExposureMode->blockSignals(false);
 }
 
-void VideoDevicePropertiesWidget::populateFlashModes()
+void USBVideoPropertiesWidget::populateFlashModes()
 {
 	ui.dropdownFlashMode->blockSignals(true);
 	ui.dropdownFlashMode->clear();
@@ -226,7 +226,7 @@ void VideoDevicePropertiesWidget::populateFlashModes()
 	ui.dropdownFlashMode->blockSignals(false);
 }
 
-void VideoDevicePropertiesWidget::populateFocusModes()
+void USBVideoPropertiesWidget::populateFocusModes()
 {
 	ui.dropdownFocusMode->blockSignals(true);
 	ui.dropdownFocusMode->clear();
@@ -241,7 +241,7 @@ void VideoDevicePropertiesWidget::populateFocusModes()
 	ui.dropdownFocusMode->blockSignals(false);
 }
 
-void VideoDevicePropertiesWidget::populateTorchModes()
+void USBVideoPropertiesWidget::populateTorchModes()
 {
 	ui.dropdownTorchMode->blockSignals(true);
 	ui.dropdownTorchMode->clear();
@@ -256,7 +256,7 @@ void VideoDevicePropertiesWidget::populateTorchModes()
 	ui.dropdownTorchMode->blockSignals(false);
 }
 
-void VideoDevicePropertiesWidget::populateWhiteBalanceModes()
+void USBVideoPropertiesWidget::populateWhiteBalanceModes()
 {
 	ui.dropdownWhiteBalanceMode->blockSignals(true);
 	ui.dropdownWhiteBalanceMode->clear();
@@ -271,7 +271,7 @@ void VideoDevicePropertiesWidget::populateWhiteBalanceModes()
 	ui.dropdownWhiteBalanceMode->blockSignals(false);
 }
 
-void VideoDevicePropertiesWidget::initializeSupportedFeatures()
+void USBVideoPropertiesWidget::initializeSupportedFeatures()
 {
 	QCamera::Features features = pVideoDevice->camera()->supportedFeatures();
 
@@ -316,7 +316,7 @@ void VideoDevicePropertiesWidget::initializeSupportedFeatures()
 
 }
 
-void VideoDevicePropertiesWidget::initializeFormatGroup()
+void USBVideoPropertiesWidget::initializeFormatGroup()
 {
 	// Initialize format list
 	mFormats = pVideoDevice->camera()->cameraDevice().videoFormats();
@@ -354,7 +354,7 @@ void VideoDevicePropertiesWidget::initializeFormatGroup()
 	connectFormatControls();
 }
 
-void VideoDevicePropertiesWidget::initializeZoomFocusGroup()
+void USBVideoPropertiesWidget::initializeZoomFocusGroup()
 {
 	QCamera* pCamera = pVideoDevice->camera();
 
@@ -373,7 +373,7 @@ void VideoDevicePropertiesWidget::initializeZoomFocusGroup()
 	connectZoomFocusControls();
 }
 
-void VideoDevicePropertiesWidget::initializeSettingsGroup()
+void USBVideoPropertiesWidget::initializeSettingsGroup()
 {
 	QCamera* pCamera = pVideoDevice->camera();
 
@@ -410,24 +410,24 @@ void VideoDevicePropertiesWidget::initializeSettingsGroup()
 	connectSettingsControls();
 }
 
-void VideoDevicePropertiesWidget::connectFormatControls()
+void USBVideoPropertiesWidget::connectFormatControls()
 {
 	// Initialize filters
-	connect(ui.dropdownFps, &QComboBox::currentIndexChanged, this, &VideoDevicePropertiesWidget::updateFormatTable);
-	connect(ui.dropdownResolution, &QComboBox::currentIndexChanged, this, &VideoDevicePropertiesWidget::updateFormatTable);
-	connect(ui.dropdownPixelFormat, &QComboBox::currentIndexChanged, this, &VideoDevicePropertiesWidget::updateFormatTable);
+	connect(ui.dropdownFps, &QComboBox::currentIndexChanged, this, &USBVideoPropertiesWidget::updateFormatTable);
+	connect(ui.dropdownResolution, &QComboBox::currentIndexChanged, this, &USBVideoPropertiesWidget::updateFormatTable);
+	connect(ui.dropdownPixelFormat, &QComboBox::currentIndexChanged, this, &USBVideoPropertiesWidget::updateFormatTable);
 
 	// Initialize reset button
-	connect(ui.buttonResetFilters, &QPushButton::clicked, this, &VideoDevicePropertiesWidget::resetFilters);
+	connect(ui.buttonResetFilters, &QPushButton::clicked, this, &USBVideoPropertiesWidget::resetFilters);
 
 	// Initialize select button
-	connect(ui.buttonSelect, &QPushButton::clicked, this, &VideoDevicePropertiesWidget::onSelectClicked);
+	connect(ui.buttonSelect, &QPushButton::clicked, this, &USBVideoPropertiesWidget::onSelectClicked);
 
 	// Initialize format table
-	connect(ui.tableFormats, &QTableWidget::cellClicked, this, &VideoDevicePropertiesWidget::onFormatClicked);
+	connect(ui.tableFormats, &QTableWidget::cellClicked, this, &USBVideoPropertiesWidget::onFormatClicked);
 }
 
-void VideoDevicePropertiesWidget::connectZoomFocusControls()
+void USBVideoPropertiesWidget::connectZoomFocusControls()
 {
 	QCamera* pCamera = pVideoDevice->camera();
 
@@ -449,7 +449,7 @@ void VideoDevicePropertiesWidget::connectZoomFocusControls()
 		});
 }
 
-void VideoDevicePropertiesWidget::connectSettingsControls()
+void USBVideoPropertiesWidget::connectSettingsControls()
 {
 	QCamera* pCamera = pVideoDevice->camera();
 
@@ -485,10 +485,10 @@ void VideoDevicePropertiesWidget::connectSettingsControls()
 		});
 
 	// Connect ffmpeg settings button
-	connect(ui.buttonFFMPEG, &QPushButton::clicked, this, &VideoDevicePropertiesWidget::openFFMPEGSettings);
+	connect(ui.buttonFFMPEG, &QPushButton::clicked, this, &USBVideoPropertiesWidget::openFFMPEGSettings);
 }
 
-void VideoDevicePropertiesWidget::resetFilters()
+void USBVideoPropertiesWidget::resetFilters()
 {
 	// Block signals to prevent infinite loops
 	ui.dropdownFps->blockSignals(true);
@@ -507,7 +507,7 @@ void VideoDevicePropertiesWidget::resetFilters()
 	ui.dropdownPixelFormat->blockSignals(false);
 }
 
-void VideoDevicePropertiesWidget::onFormatClicked(int row, int column)
+void USBVideoPropertiesWidget::onFormatClicked(int row, int column)
 {
 	// Find format that matches row
 	auto itr = std::find_if(mFormats.begin(), mFormats.end(), [this, row](const QCameraFormat& format) {
@@ -528,7 +528,7 @@ void VideoDevicePropertiesWidget::onFormatClicked(int row, int column)
 	ui.buttonSelect->setEnabled(true);
 }
 
-void VideoDevicePropertiesWidget::onSelectClicked()
+void USBVideoPropertiesWidget::onSelectClicked()
 {
 	QCamera* pCamera = pVideoDevice->camera();
 
@@ -554,7 +554,7 @@ void VideoDevicePropertiesWidget::onSelectClicked()
 	ui.buttonSelect->setEnabled(false);
 }
 
-void VideoDevicePropertiesWidget::updateFormatTable()
+void USBVideoPropertiesWidget::updateFormatTable()
 {
 	// Clear existing entries
 	ui.tableFormats->clearContents();
@@ -626,7 +626,7 @@ void VideoDevicePropertiesWidget::updateFormatTable()
 	}
 }
 
-void VideoDevicePropertiesWidget::openFFMPEGSettings()
+void USBVideoPropertiesWidget::openFFMPEGSettings()
 {
 	// Check OS for compatibility
 #ifdef Q_OS_WIN

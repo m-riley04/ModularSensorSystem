@@ -1,18 +1,18 @@
-#include "videodevice.h"
+#include "usbvideosource.h"
 
 
-VideoDevice::VideoDevice(QByteArray hardwareId, QObject* parent)
-	: VideoDevice(getCameraDevice(hardwareId), parent)
+USBVideoSource::USBVideoSource(QByteArray hardwareId, QObject* parent)
+	: USBVideoSource(getCameraDevice(hardwareId), parent)
 {}
 
-VideoDevice::VideoDevice(QCameraDevice qVideoDevice, QObject* parent)
-	: Device(parent), mCamera(qVideoDevice)
+USBVideoSource::USBVideoSource(QCameraDevice qVideoDevice, QObject* parent)
+	: Source(parent), mCamera(qVideoDevice)
 {
     mId = qVideoDevice.id();
-	mPluginId = "videodevice";
+	mPluginId = "usb_video";
     mName = qVideoDevice.description();
-    mDeviceType = Device::Type::VIDEO;
-    pPreview.reset(new VideoPreview(&mSession, this));
+    mSourceType = Source::Type::VIDEO;
+    pPreview.reset(new USBVideoPreview(&mSession, this));
 
     // Initialize capture session
     mSession.setCamera(&mCamera);
@@ -22,7 +22,7 @@ VideoDevice::VideoDevice(QCameraDevice qVideoDevice, QObject* parent)
     mRecorder.setOutputLocation(QDir::currentPath() + "/output");
 }
 
-VideoDevice::~VideoDevice()
+USBVideoSource::~USBVideoSource()
 {
     // Release the camera
     if (mCamera.isActive()) {
@@ -30,7 +30,7 @@ VideoDevice::~VideoDevice()
     }
 }
 
-void VideoDevice::open() {
+void USBVideoSource::open() {
 	if (mState == OPENED || mState == STARTED) return; // Already opened or started
 
     // TODO: Move checks up/somewhere else?
@@ -45,15 +45,15 @@ void VideoDevice::open() {
     }
 
     // Init preview
-	if (!pPreview) pPreview.reset(new VideoPreview(&mSession, this));
+	if (!pPreview) pPreview.reset(new USBVideoPreview(&mSession, this));
 
     // Init buffer
-    if (!pClipBuffer) pClipBuffer.reset(new VideoClipBuffer(2, this));
+    if (!pClipBuffer) pClipBuffer.reset(new USBVideoClipBuffer(2, this));
 
     emit previewAvailable(this, pPreview.get());
 }
 
-void VideoDevice::start() {
+void USBVideoSource::start() {
     if (mState == STARTED) return;
 
     // Check if the camera is available/is idle
@@ -66,7 +66,7 @@ void VideoDevice::start() {
     emit started();
 }
 
-void VideoDevice::stop() {
+void USBVideoSource::stop() {
     if (mState == STOPPED) return;
 
     // Check if camera is good to go/is active
@@ -79,18 +79,18 @@ void VideoDevice::stop() {
     emit stopped();
 }
 
-void VideoDevice::close()
+void USBVideoSource::close()
 {
     if (mState == CLOSED || mState == STOPPED) return;
 	// TODO: Implement close
 }
 
-void VideoDevice::onNewFrame(const QVideoFrame& frame) {
+void USBVideoSource::onNewFrame(const QVideoFrame& frame) {
 	// Get the timestamp
 	ClipBufferBase::time timestamp = 0; // TODO: Get the timestamp from the frame
 
-	// Cast buffer to VideoClipBuffer
-	VideoClipBuffer* pVideoBuffer = static_cast<VideoClipBuffer*>(pClipBuffer.get()); // CONSIDER: Do this differently/no casting?
+	// Cast buffer to USBVideoClipBuffer
+	USBVideoClipBuffer* pVideoBuffer = static_cast<USBVideoClipBuffer*>(pClipBuffer.get()); // CONSIDER: Do this differently/no casting?
     
     // Add the frame to the buffer
 	pVideoBuffer->push(frame, timestamp);
@@ -99,44 +99,44 @@ void VideoDevice::onNewFrame(const QVideoFrame& frame) {
 	emit frameReady(frame);
 }
 
-void VideoDevice::setMediaDirectory(QUrl directory)
+void USBVideoSource::setMediaDirectory(QUrl directory)
 {
 	mRecorder.setOutputLocation(directory);
 	emit mediaDirectoryChanged(directory);
 }
 
-QCameraDevice VideoDevice::getCameraDevice(const QByteArray& id)
+QCameraDevice USBVideoSource::getCameraDevice(const QByteArray& id)
 {
-	// Get the camera device from the id
+	// Get the camera source from the id
 	for (auto videoDevice : QMediaDevices::videoInputs()) {
 		if (videoDevice.id() == id) {
 			return videoDevice;
 		}
 	}
     
-	// If not found, return an empty camera device
+	// If not found, return an empty camera source
     return QCameraDevice();
 }
 
-QWidget* VideoDevice::createConfigWidget(QWidget* parent)
+QWidget* USBVideoSource::createConfigWidget(QWidget* parent)
 {
 	SourcePropertiesWidget* devicePropertiesWidget = new SourcePropertiesWidget(this, parent);
-	devicePropertiesWidget->addPage("Device", new VideoDevicePropertiesWidget(this, devicePropertiesWidget));
-    devicePropertiesWidget->addPage("Recording", new VideoDeviceRecordingPropertiesWidget(devicePropertiesWidget, &mRecorder));
-    return devicePropertiesWidget;//new VideoDevicePropertiesWidget(this, parent);
+	devicePropertiesWidget->addPage("Source", new USBVideoPropertiesWidget(this, devicePropertiesWidget));
+    devicePropertiesWidget->addPage("Recording", new USBVideoRecordingPropertiesWidget(devicePropertiesWidget, &mRecorder));
+    return devicePropertiesWidget;//new USBVideoPropertiesWidget(this, parent);
 }
 
-void VideoDevice::loadSettings(const QJsonObject& obj)
+void USBVideoSource::loadSettings(const QJsonObject& obj)
 {
-	QJsonObject device = obj["device"].toObject();
+	QJsonObject source = obj["source"].toObject();
 	QJsonObject recording = obj["recording"].toObject();
 
-    // Load device categories
-	QJsonObject deviceFormat = device["format"].toObject();
-	QJsonObject deviceZoomAndFocus = device["zoom_and_focus"].toObject();
-	QJsonObject deviceOther = device["other"].toObject();
+    // Load source categories
+	QJsonObject deviceFormat = source["format"].toObject();
+	QJsonObject deviceZoomAndFocus = source["zoom_and_focus"].toObject();
+	QJsonObject deviceOther = source["other"].toObject();
 
-	// Load device format
+	// Load source format
 	QCameraFormat format;
     auto availableFormats = mCamera.cameraDevice().videoFormats();
 	for (const auto& availableFormat : availableFormats) {
@@ -192,9 +192,9 @@ void VideoDevice::loadSettings(const QJsonObject& obj)
 
 }
 
-QJsonObject VideoDevice::saveSettings()
+QJsonObject USBVideoSource::saveSettings()
 {
-    // Save device format
+    // Save source format
     QJsonObject deviceFormat;
     deviceFormat["max_fps"] = mCamera.cameraFormat().maxFrameRate();
     deviceFormat["min_fps"] = mCamera.cameraFormat().minFrameRate();
@@ -224,11 +224,11 @@ QJsonObject VideoDevice::saveSettings()
     deviceOther["torch_mode"] = mCamera.torchMode();
     deviceOther["white_balance_mode"] = mCamera.whiteBalanceMode();
 
-    // Save device properties
-    QJsonObject device;
-    device["format"] = deviceFormat;
-    device["zoom_and_focus"] = deviceZoomAndFocus;
-    device["other"] = deviceOther;
+    // Save source properties
+    QJsonObject source;
+    source["format"] = deviceFormat;
+    source["zoom_and_focus"] = deviceZoomAndFocus;
+    source["other"] = deviceOther;
 
     // General recording properties
     QJsonObject recordingGeneral;
@@ -253,16 +253,16 @@ QJsonObject VideoDevice::saveSettings()
 
 	// Save all properties
     QJsonObject obj;
-	obj["device"] = device;
+	obj["source"] = source;
 	obj["recording"] = recording;
 
     return obj;
 }
 
-void VideoDevice::clip(const QDir& dir)
+void USBVideoSource::clip(const QDir& dir)
 {
     // Cast the clip buffer 
-    auto videoClipBuffer = static_cast<VideoClipBuffer*>(pClipBuffer.get());
+    auto videoClipBuffer = static_cast<USBVideoClipBuffer*>(pClipBuffer.get());
     if (!videoClipBuffer) {
         qWarning() << "Unable to clip: not a video buffer";
         return;
@@ -277,7 +277,7 @@ void VideoDevice::clip(const QDir& dir)
     const double fps = camera()->cameraFormat().maxFrameRate();
 
 	// Create the encoder helper
-    VideoClipEncoder enc(dir.filePath(mName + ".mp4"), sz, fps);
+    USBVideoClipEncoder enc(dir.filePath(mName + ".mp4"), sz, fps);
     if (!enc.isOk()) {
         qWarning() << enc.errorString();
         return;
@@ -293,12 +293,12 @@ void VideoDevice::clip(const QDir& dir)
     qDebug() << "Clip saved:" << dir.filePath(mName + ".mp4");
 }
 
-void VideoDevice::restart() {
+void USBVideoSource::restart() {
     stop();
     start();
 }
 
-void VideoDevice::beginRecording(RecordingSession* s)
+void USBVideoSource::beginRecording(RecordingSession* s)
 {
 	// Update recording session
 	pRecordingSession = s;
@@ -308,7 +308,7 @@ void VideoDevice::beginRecording(RecordingSession* s)
     mRecorder.record();
 }
 
-void VideoDevice::endRecording()
+void USBVideoSource::endRecording()
 {
     mRecorder.stop();
 }

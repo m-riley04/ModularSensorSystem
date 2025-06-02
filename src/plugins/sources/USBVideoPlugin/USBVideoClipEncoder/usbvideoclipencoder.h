@@ -3,7 +3,7 @@
 #include <QObject>
 #include <qsize.h>
 #include <QtMultimedia>
-#include "devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
+#include "core/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
 
 extern "C" {
 	#include <libavformat/avformat.h>
@@ -16,18 +16,18 @@ extern "C" {
 /// <summary>
 /// Helper that encodes raw BGRA/ARGB/RGB32 Qt frames into H.264/MP4.
 /// Usage:
-///		VideoClipEncoder enc(path, QSize(1920, 1080), 30.0);
+///		USBVideoClipEncoder enc(path, QSize(1920, 1080), 30.0);
 ///		for (auto& it : frames)
 ///			enc.addFrame(it.frame, it.timestamp);   // timestamp in ns is optional
 ///		enc.finish();   // or rely on destructor
 /// </summary>
-class VideoClipEncoder
+class USBVideoClipEncoder
 {
-	Q_DISABLE_COPY_MOVE(VideoClipEncoder)
+	Q_DISABLE_COPY_MOVE(USBVideoClipEncoder)
 
 public:
-	VideoClipEncoder(QString filePath, QSize frameSize, float frameRate, AVPixelFormat srcPixelFormat = AV_PIX_FMT_BGRA);
-	~VideoClipEncoder();
+	USBVideoClipEncoder(QString filePath, QSize frameSize, float frameRate, AVPixelFormat srcPixelFormat = AV_PIX_FMT_BGRA);
+	~USBVideoClipEncoder();
 
 	bool isOk() const { return mOk; }
 

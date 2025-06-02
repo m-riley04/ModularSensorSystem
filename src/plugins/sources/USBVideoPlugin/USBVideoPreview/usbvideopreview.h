@@ -1,17 +1,17 @@
 #pragma once
 
-#include "devices/Device/DevicePreview/devicepreview.h"
+#include "core/sources/Source/SourcePreview/sourcepreview.h"
 #include <qmediacapturesession.h>
 #include <QtMultimedia>
 #include <QObject>
 
-class VideoPreview : public SourcePreview
+class USBVideoPreview : public SourcePreview
 {
 	Q_OBJECT
 
 public:
-	VideoPreview(QMediaCaptureSession* session, QObject *parent);
-	~VideoPreview();
+	USBVideoPreview(QMediaCaptureSession* session, QObject *parent);
+	~USBVideoPreview();
 
 private:
 	QVideoSink mSink;

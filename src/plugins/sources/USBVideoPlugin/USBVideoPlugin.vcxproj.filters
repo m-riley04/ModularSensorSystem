@@ -23,69 +23,69 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="videodeviceplugin.h">
+    <QtMoc Include="usbvideoplugin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClCompile Include="videodeviceplugin.cpp">
+    <ClCompile Include="usbvideoplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <QtMoc Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.h">
+    <QtMoc Include="USBVideoPropertiesWidget\usbvideopropertieswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.h">
+    <QtMoc Include="USBVideoRecordingPropertiesWidget\usbvideorecordingpropertieswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="VideoDevice\videodevice.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="VideoPreview\videopreview.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VideoDevice\videodevice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VideoClipBuffer\videoclipbuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VideoClipEncoder\videoclipencoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="VideoPreview\videopreview.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="VideoClipBuffer\videoclipbuffer.h">
+    <QtMoc Include="USBVideoSource\usbvideosource.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <None Include="videodeviceplugin.json" />
+    <ClCompile Include="USBVideoPreview\usbvideopreview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="USBVideoSource\usbvideosource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="USBVideoClipBuffer\usbvideoclipbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="USBVideoPropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="USBVideoPropertiesWidget\usbvideopropertieswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="USBVideoRecordingPropertiesWidget\usbvideorecordingpropertieswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="USBVideoClipEncoder\usbvideoclipencoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
+    <QtMoc Include="USBVideoPreview\usbvideopreview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="USBVideoClipBuffer\usbvideoclipbuffer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="usbvideoplugin.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="USBVideoPropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VideoClipEncoder\videoclipencoder.h">
+    <ClInclude Include="USBVideoClipEncoder\usbvideoclipencoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.ui">
+    <QtUic Include="USBVideoPropertiesWidget\usbvideopropertieswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.ui">
+    <QtUic Include="USBVideoRecordingPropertiesWidget\usbvideorecordingpropertieswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -17,7 +17,7 @@ public:
 	void setSource(Source* source) { 
 		if (source == pSource) return;
         pSource = source;
-		emit deviceChanged(pSource);
+		emit sourceChanged(pSource);
     }
 
     virtual void startProcessing() {}
@@ -27,7 +27,7 @@ protected:
     Source* pSource;
 
 signals:
-	void deviceChanged(Source* newDevice);
+	void sourceChanged(Source*);
 
     // Common signals for detection events (can be extended or specialized per plugin)
     void motionDetected(Source* sourceDevice);

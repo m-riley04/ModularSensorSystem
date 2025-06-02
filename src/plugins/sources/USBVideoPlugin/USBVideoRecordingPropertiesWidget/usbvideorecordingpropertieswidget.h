@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QDialog>
-#include "ui_videodevicerecordingpropertieswidget.h"
+#include "ui_usbvideorecordingpropertieswidget.h"
 #include <QtMultimedia>
 #include <qfiledialog.h>
 #include <QMessageBox>
@@ -12,18 +12,18 @@ enum RecordingControlsTab {
 	AUDIO
 };
 
-class VideoDeviceRecordingPropertiesWidget : public QDialog
+class USBVideoRecordingPropertiesWidget : public QDialog
 {
 	Q_OBJECT
 
 public:
-	VideoDeviceRecordingPropertiesWidget(QWidget* parent = nullptr, QMediaRecorder* recorder = nullptr);
-	~VideoDeviceRecordingPropertiesWidget();
+	USBVideoRecordingPropertiesWidget(QWidget* parent = nullptr, QMediaRecorder* recorder = nullptr);
+	~USBVideoRecordingPropertiesWidget();
 
 	static QString recorderStateDescription(QMediaRecorder::RecorderState state);
 
 private:
-	Ui::VideoDeviceRecordingPropertiesWidgetClass ui;
+	Ui::USBVideoRecordingPropertiesWidgetClass ui;
 	QMediaRecorder* pRecorder = nullptr;
 	QMediaCaptureSession* pCaptureSession = nullptr;
 	QAudioInput* pAudioInput = nullptr;
@@ -48,7 +48,7 @@ private:
 };
 
 template<typename Enum>
-inline void VideoDeviceRecordingPropertiesWidget::populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList,
+inline void USBVideoRecordingPropertiesWidget::populateEnumDropdown(QComboBox* dropdown, QList<Enum> enumList,
 	std::function<QString(Enum)> enumTextFunction, bool clearDropdown, QList<Enum> allowedEnums)
 {
 	if (clearDropdown) dropdown->clear();

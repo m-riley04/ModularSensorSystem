@@ -1,6 +1,6 @@
-#include "videodeviceplugin.h"
+#include "usbvideoplugin.h"
 
-QList<SourceInfo> VideoDevicePlugin::availableSources() const
+QList<SourceInfo> USBVideoPlugin::availableSources() const
 {
     QList<SourceInfo> list;
     for (const QCameraDevice& cam : QMediaDevices::videoInputs()) {
@@ -10,7 +10,7 @@ QList<SourceInfo> VideoDevicePlugin::availableSources() const
     return list;
 }
 
-Device* VideoDevicePlugin::createSource(const QByteArray& id, QObject* parent)
+Source* USBVideoPlugin::createSource(const QByteArray& id, QObject* parent)
 {
     // Find the QCameraDevice by id from QMediaDevices
     QCameraDevice selected;
@@ -18,7 +18,7 @@ Device* VideoDevicePlugin::createSource(const QByteArray& id, QObject* parent)
         if (cam.id() == id) { selected = cam; break; }
     }
     if (!selected.isNull()) {
-        return new VideoDevice(selected, parent);  // create the concrete device
+        return new USBVideoSource(selected, parent);  // create the concrete source
     }
     return nullptr;
 }

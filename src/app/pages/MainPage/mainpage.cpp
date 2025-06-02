@@ -20,7 +20,7 @@ void MainPage::initWidgets()
 	// Init preview container widget
 	ui.devicePreviewWidget->setController(pController);
 
-	// Init device list widget
+	// Init source list widget
 	ui.deviceListWidget->setSourceController(pController->sourceController());
 
 	// Init processors widget

@@ -7,5 +7,5 @@
 struct Preset {
     QString                name;
 	QString                path;
-    QList<SourcePreset>    devices;
+    QList<SourcePreset>    sources;
 };

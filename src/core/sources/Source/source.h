@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "controllers/RecordingSession/recordingsession.h"
+#include "core/controllers/RecordingSession/recordingsession.h"
 #include <quuid.h>
 #include "SourcePreview/sourcepreview.h"
 #include <QPointer>
@@ -32,9 +32,9 @@ public:
 
 	enum ErrorState {
 		NO_ERROR,
-		DEVICE_NOT_FOUND,
-		DEVICE_BUSY,
-		DEVICE_DISCONNECTED,
+		SOURCE_NOT_FOUND,
+		SOURCE_BUSY,
+		SOURCE_DISCONNECTED,
 		UNKNOWN_ERROR
 	};
 
@@ -64,9 +64,9 @@ public:
 	{
 		switch (errorState) {
 		case NO_ERROR: return "No Error";
-		case DEVICE_NOT_FOUND: return "Device Not Found";
-		case DEVICE_BUSY: return "Device Busy";
-		case DEVICE_DISCONNECTED: return "Device Disconnected";
+		case SOURCE_NOT_FOUND: return "Device Not Found";
+		case SOURCE_BUSY: return "Device Busy";
+		case SOURCE_DISCONNECTED: return "Device Disconnected";
 		case UNKNOWN_ERROR: return "Unknown Error";
 		default: return "Unknown";
 		}

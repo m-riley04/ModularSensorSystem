@@ -1,6 +1,6 @@
-#include "videoclipbuffer.h"
+#include "usbvideoclipbuffer.h"
 
-void VideoClipBuffer::push(const QVideoFrame& f, time ts)
+void USBVideoClipBuffer::push(const QVideoFrame& f, time ts)
 {
     if (!isBuffering()) return;
 
@@ -12,13 +12,13 @@ void VideoClipBuffer::push(const QVideoFrame& f, time ts)
     emit frameAdded(f);
 }
 
-std::deque<VideoClipBuffer::Item> VideoClipBuffer::data() const
+std::deque<USBVideoClipBuffer::Item> USBVideoClipBuffer::data() const
 {
     QMutexLocker L(&mLocalMx);
     return mBuf; // shallow copies QVideoFrame handles
 }
 
-void VideoClipBuffer::flush()
+void USBVideoClipBuffer::flush()
 {
     QMutexLocker L(&mLocalMx);
     mBuf.clear();
@@ -26,7 +26,7 @@ void VideoClipBuffer::flush()
     emit flushed();
 }
 
-int VideoClipBuffer::size() const
+int USBVideoClipBuffer::size() const
 {
     QMutexLocker L(&mLocalMx);
     return static_cast<int>(mBuf.size());

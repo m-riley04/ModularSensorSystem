@@ -31,7 +31,7 @@ void AddProcessorDialog::populateProcessorsDropdown()
 	// Clear the existing items in the dropdown
 	ui.dropdownProcessor->clear();
 
-	// Populate the device type dropdown with available device types
+	// Populate the source type dropdown with available source types
 	for (const auto& plugin : pPluginController->processorPlugins()) {
 		if (plugin) {
 			ui.dropdownProcessor->addItem(plugin->name(), QVariant::fromValue(plugin));

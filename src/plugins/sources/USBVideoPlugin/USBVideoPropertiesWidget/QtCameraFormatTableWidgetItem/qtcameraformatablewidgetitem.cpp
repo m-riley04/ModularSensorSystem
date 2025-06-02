@@ -1,5 +1,5 @@
 #include "qtcameraformatablewidgetitem.h"
-#include "VideoDevicePropertiesWidget/videodevicepropertieswidget.h"
+#include "USBVideoPropertiesWidget/usbvideopropertieswidget.h"
 
 QtCameraFormatTableWidgetItem::QtCameraFormatTableWidgetItem(QString text, int type) : QTableWidgetItem(text, type)
 {}
@@ -17,7 +17,7 @@ bool QtCameraFormatTableWidgetItem::operator<(const QTableWidgetItem& other) con
 
 		case RESOLUTION:
 			// Sort by the first number (width)
-			return VideoDevicePropertiesWidget::stringToSize(this->text()).width() < VideoDevicePropertiesWidget::stringToSize(other.text()).width();
+			return USBVideoPropertiesWidget::stringToSize(this->text()).width() < USBVideoPropertiesWidget::stringToSize(other.text()).width();
 
 		case PIXEL_FORMAT:
 			// Sort by the pixel format name

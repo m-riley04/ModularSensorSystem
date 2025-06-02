@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSCore", "src\core\MSSCore
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSFrontend", "src\app\MSSFrontend.vcxproj", "{D96CA417-4943-49CD-A99D-41D70972493B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "USBVideoPlugin", "src\plugins\sources\USBVideoPlugin\USBVideoPlugin.vcxproj", "{6C30785C-86DE-4623-A382-E178F73D3E4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -30,6 +32,10 @@ Global
 		{D96CA417-4943-49CD-A99D-41D70972493B}.Debug|x64.Build.0 = Debug|x64
 		{D96CA417-4943-49CD-A99D-41D70972493B}.Release|x64.ActiveCfg = Release|x64
 		{D96CA417-4943-49CD-A99D-41D70972493B}.Release|x64.Build.0 = Release|x64
+		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Debug|x64.ActiveCfg = Debug|x64
+		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Debug|x64.Build.0 = Debug|x64
+		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Release|x64.ActiveCfg = Release|x64
+		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -44,7 +44,7 @@ void SessionControlsWidget::initSignals()
 
 	// Recording button
 	connect(ui.buttonRecord, &QPushButton::clicked, [this, pRecordingController]() {
-		if (pRecordingController->isRecording()) { // CONSIDER: check device state too?
+		if (pRecordingController->isRecording()) { // CONSIDER: check source state too?
 			pRecordingController->stop();
 		}
 		else if (pRecordingController->isStopped()) {
@@ -89,7 +89,7 @@ void SessionControlsWidget::updateUi()
 	this->setEnabled(!pController);
 	if (!pController) return;
 
-	// Check if there are any devices
+	// Check if there are any sources
 	bool isEmpty = pController->sourceController()->isEmpty();
 	this->setEnabled(!isEmpty);
 	ui.buttonOpenCloseDevices->setEnabled(!isEmpty);

@@ -1,4 +1,4 @@
-#include "videoclipencoder.h"
+#include "usbvideoclipencoder.h"
 
 static QString avErr(int err)
 {
@@ -7,7 +7,7 @@ static QString avErr(int err)
     return QString::fromLocal8Bit(buf);
 }
 
-VideoClipEncoder::VideoClipEncoder(QString filePath, QSize frameSize, float frameRate, AVPixelFormat srcPixelFormat)
+USBVideoClipEncoder::USBVideoClipEncoder(QString filePath, QSize frameSize, float frameRate, AVPixelFormat srcPixelFormat)
 	:   mPixelFormat(srcPixelFormat), mWidth(frameSize.width()), mHeight(frameSize.height()), 
         mTimeBase{ 1, int(std::round(frameRate * 1000)) }, mNextPts(0), mOk(false)
 {
@@ -74,13 +74,13 @@ VideoClipEncoder::VideoClipEncoder(QString filePath, QSize frameSize, float fram
 
 }
 
-VideoClipEncoder::~VideoClipEncoder()
+USBVideoClipEncoder::~USBVideoClipEncoder()
 {
     if (mOk) finish();
     freeAll();
 }
 
-bool VideoClipEncoder::addFrame(const QVideoFrame& frame, qint64 ptsNs)
+bool USBVideoClipEncoder::addFrame(const QVideoFrame& frame, qint64 ptsNs)
 {
     if (!mOk) return false;
 	QVideoFrame qFrame(frame); // copy (unsure if needed, but safer)
@@ -116,14 +116,14 @@ bool VideoClipEncoder::addFrame(const QVideoFrame& frame, qint64 ptsNs)
     return encodeAndWrite(pFrame);
 }
 
-void VideoClipEncoder::finish() {
+void USBVideoClipEncoder::finish() {
     if (!mOk) return;
     encodeAndWrite(nullptr); // flush encoder
     av_write_trailer(pFormatContext);
     mOk = false;
 }
 
-AVFrame* VideoClipEncoder::allocateFrame()
+AVFrame* USBVideoClipEncoder::allocateFrame()
 {
     AVFrame* f = av_frame_alloc();
     f->format = AV_PIX_FMT_YUV420P;
@@ -133,7 +133,7 @@ AVFrame* VideoClipEncoder::allocateFrame()
     return f;
 }
 
-void VideoClipEncoder::freeAll()
+void USBVideoClipEncoder::freeAll()
 {
     if (pFrame) av_frame_free(&pFrame);
     if (pSwsContext) sws_freeContext(pSwsContext);
@@ -145,7 +145,7 @@ void VideoClipEncoder::freeAll()
     }
 }
 
-bool VideoClipEncoder::encodeAndWrite(AVFrame* frm)
+bool USBVideoClipEncoder::encodeAndWrite(AVFrame* frm)
 {
     int ret = avcodec_send_frame(pCodecContext, frm);
     if (ret < 0) { mError = avErr(ret); return false; }

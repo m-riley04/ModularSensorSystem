@@ -45,7 +45,7 @@ private:
 
 public slots:
 	Source* addSource(ISourcePlugin* plugin, SourceInfo info);
-	void removeSource(Source* device);
+	void removeSource(Source*);
 	Source* getSource(QByteArray id) const;
 
 	void clearSources();
@@ -67,8 +67,8 @@ signals:
 
 	void stateChanged(SourceController::State state);
 
-	void sourceAdded(Source* device);
-	void sourceRemoved(Source* device);
+	void sourceAdded(Source*);
+	void sourceRemoved(Source*);
 
 	void errorOccurred(const SourceError& e);
 };
