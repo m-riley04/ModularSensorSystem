@@ -55,7 +55,7 @@
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\DeviceListWidget\devicelistwidget.cpp">
+    <ClCompile Include="widgets\SourceListWidget\sourcelistwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="controllers\SourceController\sourcecontroller.cpp">
@@ -138,7 +138,7 @@
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\DeviceListWidget\devicelistwidget.h">
+    <QtMoc Include="widgets\SourceListWidget\sourcelistwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="controllers\SourceController\sourcecontroller.h">
@@ -215,7 +215,7 @@
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="widgets\DeviceListWidget\devicelistwidget.ui">
+    <QtUic Include="widgets\SourceListWidget\sourcelistwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
@@ -253,7 +253,7 @@
     <ClInclude Include="presets\Preset\preset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="presets\DevicePreset\devicepreset.h">
+    <ClInclude Include="presets\sourcePreset\sourcepreset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\IClippableSource\iclippablesource.h">
@@ -279,11 +279,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="models\yolo11n.onnx" />
-    <None Include="models\yolov5n.onnx" />
-    <None Include="models\yolov5su.onnx" />
-    <None Include="models\yolov8n.onnx" />
-    <None Include="models\yolov10n.onnx" />
-    <None Include="models\yolov10s.onnx" />
+    <None Include="yolo_models\yolo11n.onnx" />
+    <None Include="yolo_models\yolov5n.onnx" />
+    <None Include="yolo_models\yolov5su.onnx" />
+    <None Include="yolo_models\yolov8n.onnx" />
+    <None Include="yolo_models\yolov10n.onnx" />
+    <None Include="yolo_models\yolov10s.onnx" />
   </ItemGroup>
 </Project>

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QObject>
-#include "interfaces/plugins/ideviceplugin.h"
-#include "devices/Device/device.h"
+#include "interfaces/plugins/isourceplugin.h"
+#include "sources/Source/source.h"
 #include "TemplateDevice/templatedevice.h"
 
 class TemplateDevicePlugin : public QObject, public ISourcePlugin

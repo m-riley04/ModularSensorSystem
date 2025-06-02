@@ -101,7 +101,7 @@ void SourceController::removeSource(Source* device)
 	};
 
 	// Get device id before deleting
-	QByteArray deviceId = device->id();
+	QByteArray sourceId = device->id();
 
 	// Remove device from the list
 	mSources.removeAll(device);

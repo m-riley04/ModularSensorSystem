@@ -1,22 +1,22 @@
 #pragma once
 
 #include <QObject>
-#include "devices/Device/device.h"
+#include "sources/Source/source.h"
 #include "processing/ProcessorBase/processorbase.h"
 
 class ProcessorBase;
 
 struct ProcessorInfo {
     QString name;
-    Device::Type supportedDeviceType;
+    Source::Type supportedSourceType;
 };
 
 class IProcessorPlugin {
 public:
     virtual ~IProcessorPlugin() = default;
-    virtual Device::Type supportedDeviceType() const = 0;
+    virtual Source::Type supportedSourceType() const = 0;
     virtual QString name() const = 0;
-    virtual ProcessorBase* createProcessor(Device* device, QObject* parent = nullptr) = 0;
+    virtual ProcessorBase* createProcessor(Source* source, QObject* parent = nullptr) = 0;
 };
 
 #define IProcessorPlugin_iid "com.modularsensorsystem.IProcessorPlugin/1.0"

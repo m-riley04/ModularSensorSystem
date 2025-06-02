@@ -9,7 +9,7 @@ DeviceListWidget::DeviceListWidget(QWidget* parent)
 }
 
 DeviceListWidget::DeviceListWidget(SourceController* sourceController, QWidget* parent)
-	: QWidget(parent), pDeviceController(sourceController)
+	: QWidget(parent), pSourceController(sourceController)
 {
 	ui.setupUi(this);
 	initSignals();
@@ -30,14 +30,14 @@ void DeviceListWidget::initSignals()
 
 void DeviceListWidget::initDeviceControllerSignals()
 {
-	if (pDeviceController == nullptr) return;
+	if (pSourceController == nullptr) return;
 
 	// Disconnect previous signals
-	disconnect(pDeviceController, &SourceController::sourceAdded, this, nullptr);
-	disconnect(pDeviceController, &SourceController::sourceRemoved, this, nullptr);
+	disconnect(pSourceController, &SourceController::sourceAdded, this, nullptr);
+	disconnect(pSourceController, &SourceController::sourceRemoved, this, nullptr);
 
 	// Connect device controller signals
-	connect(pDeviceController, &SourceController::sourceAdded, this, [this](Device* device) {
+	connect(pSourceController, &SourceController::sourceAdded, this, [this](Device* device) {
 		if (device == nullptr) return;
 
 		// Add the device to the list
@@ -47,7 +47,7 @@ void DeviceListWidget::initDeviceControllerSignals()
 		item->setData(Qt::UserRole, devicePtr);
 		ui.listDevices->addItem(item);
 		});
-	connect(pDeviceController, &SourceController::sourceRemoved, this, [this](Device* device) {
+	connect(pSourceController, &SourceController::sourceRemoved, this, [this](Device* device) {
 		if (device == nullptr) return;
 
 		// Find device in list widget
@@ -72,7 +72,7 @@ void DeviceListWidget::openRemoveDeviceDialog()
 			Device* device = selectedItem->data(Qt::UserRole).value<Device*>();
 
 			// Remove device from the controller
-			pDeviceController->removeSource(device);
+			pSourceController->removeSource(device);
 		}
 	}
 }
@@ -104,7 +104,7 @@ void DeviceListWidget::openProperties()
 void DeviceListWidget::setDeviceController(SourceController* sourceController)
 {
 	if (sourceController == nullptr) return;
-	pDeviceController = sourceController;
+	pSourceController = sourceController;
 
 	// Connect signals
 	initDeviceControllerSignals();
@@ -114,10 +114,10 @@ void DeviceListWidget::setDeviceController(SourceController* sourceController)
 
 void DeviceListWidget::openAddDeviceDialog()
 {
-	AddSourceDialog* addDeviceDialog = new AddSourceDialog(pDeviceController->pluginController(), this);
+	AddSourceDialog* addDeviceDialog = new AddSourceDialog(pSourceController->pluginController(), this);
 	addDeviceDialog->setWindowModality(Qt::WindowModal);
 
-	connect(addDeviceDialog, &AddSourceDialog::sourceConfirmed, pDeviceController, &SourceController::addSource);
+	connect(addDeviceDialog, &AddSourceDialog::sourceConfirmed, pSourceController, &SourceController::addSource);
 
 	addDeviceDialog->show();
 }

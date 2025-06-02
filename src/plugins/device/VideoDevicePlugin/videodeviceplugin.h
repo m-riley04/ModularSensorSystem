@@ -1,20 +1,20 @@
 #pragma once
 
 #include <QObject>
-#include "interfaces/plugins/ideviceplugin.h"
-#include "devices/Device/device.h"
+#include "interfaces/plugins/isourceplugin.h"
+#include "sources/Source/source.h"
 #include "VideoDevice/videodevice.h"
 #include <QtMultimedia>
 
 class VideoDevicePlugin : public QObject, public ISourcePlugin
 {
 	Q_OBJECT
-	Q_PLUGIN_METADATA(IID IDevicePlugin_iid FILE "videodeviceplugin.json")
+	Q_PLUGIN_METADATA(IID ISourcePlugin_iid FILE "videodeviceplugin.json")
 	Q_INTERFACES(ISourcePlugin)
 
 public:
 	QList<SourceInfo> availableSources() const override;
-	Device* createSource(const QByteArray& id, QObject* parent) override;
+	Source* createSource(const QByteArray& id, QObject* parent) override;
 	QString pluginName() const override { return "videodevice"; }
-	Device::Type sourceType() const override { return Device::Type::VIDEO; }
+	Source::Type sourceType() const override { return Source::Type::VIDEO; }
 };

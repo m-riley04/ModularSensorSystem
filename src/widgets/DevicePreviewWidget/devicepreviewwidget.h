@@ -2,8 +2,8 @@
 
 #include <QWidget>
 #include "ui_devicepreviewwidget.h"
-#include <devices/Device/device.h>
-#include <devices/Device/DevicePreview/devicepreview.h>
+#include "sources/Source/source.h"
+#include <sources/Source/SourcePreview/sourcepreview.h>
 #include <QPainter>
 
 class DevicePreviewWidget : public QWidget

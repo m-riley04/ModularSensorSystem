@@ -134,7 +134,7 @@
     <ClCompile Include="processing\YOLO\yolo.cpp" />
     <ClCompile Include="controllers\MainController\maincontroller.cpp" />
     <ClCompile Include="sources\Source\source.cpp" />
-    <ClCompile Include="widgets\DeviceListWidget\devicelistwidget.cpp" />
+    <ClCompile Include="widgets\SourceListWidget\sourcelistwidget.cpp" />
     <ClCompile Include="widgets\DevicePreviewWidget\devicepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
@@ -146,7 +146,7 @@
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddProcessorDialog\addprocessordialog.ui" />
     <QtUic Include="pages\MainPage\mainpage.ui" />
-    <QtUic Include="widgets\DeviceListWidget\devicelistwidget.ui" />
+    <QtUic Include="widgets\SourceListWidget\sourcelistwidget.ui" />
     <QtUic Include="widgets\DevicePreviewWidget\devicepreviewwidget.ui" />
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
@@ -179,7 +179,7 @@
     <ClInclude Include="interfaces\capability\ianalogsource.h" />
     <ClInclude Include="interfaces\capability\ivideosource.h" />
     <ClInclude Include="interfaces\plugins\iprocessorplugin.h" />
-    <ClInclude Include="presets\DevicePreset\devicepreset.h" />
+    <ClInclude Include="presets\sourcePreset\sourcepreset.h" />
     <ClInclude Include="presets\Preset\preset.h" />
     <QtMoc Include="dialogs\AddSourceDialog\addsourcedialog.h" />
     <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h" />
@@ -197,7 +197,7 @@
     <QtMoc Include="controllers\PresetsController\presetscontroller.h" />
     <QtMoc Include="controllers\MainController\maincontroller.h" />
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />
-    <QtMoc Include="widgets\DeviceListWidget\devicelistwidget.h" />
+    <QtMoc Include="widgets\SourceListWidget\sourcelistwidget.h" />
     <QtMoc Include="processing\FrameProcessor\frameprocessor.h" />
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />
     <QtMoc Include="pages\MainPage\mainpage.h" />
@@ -207,12 +207,12 @@
     <ClInclude Include="interfaces\plugins\isourceplugin.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="models\yolo11n.onnx" />
-    <None Include="models\yolov10n.onnx" />
-    <None Include="models\yolov10s.onnx" />
-    <None Include="models\yolov5n.onnx" />
-    <None Include="models\yolov5su.onnx" />
-    <None Include="models\yolov8n.onnx" />
+    <None Include="yolo_models\yolo11n.onnx" />
+    <None Include="yolo_models\yolov10n.onnx" />
+    <None Include="yolo_models\yolov10s.onnx" />
+    <None Include="yolo_models\yolov5n.onnx" />
+    <None Include="yolo_models\yolov5su.onnx" />
+    <None Include="yolo_models\yolov8n.onnx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="devicecore\DeviceCore\DeviceCore.vcxproj">

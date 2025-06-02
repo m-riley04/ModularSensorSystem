@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <devices/Device/device.h>
+#include <sources/Source/source.h>
 #include <processing/ProcessorBase/processorbase.h>
 
 class ProcessingController  : public QObject
@@ -23,10 +23,10 @@ public:
 
 private:
 	QList<ProcessorBase*> mProcessors;
-    QMap<Device*, QList<ProcessorBase*>> mDevicesProcessorsMap;
+    QMap<Source*, QList<ProcessorBase*>> mSourcesProcessorsMap;
     bool mActive = false;
 
-    bool isCompatible(ProcessorBase* proc, Device* dev);
+    bool isCompatible(ProcessorBase* proc, Source* src);
 
 signals:
 	void processorAdded(ProcessorBase* proc);

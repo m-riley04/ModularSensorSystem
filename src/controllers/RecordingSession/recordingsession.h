@@ -1,13 +1,13 @@
 #pragma once
 
 #include <QObject>
-#include "devices/Device/device.h"
+#include "sources/Source/source.h"
 #include <qelapsedtimer.h>
-#include "devices/IClippableDevice/ClipBufferBase/clipbufferbase.h"
+#include "sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
 #include <qdir.h>
 #include <QtMultimedia/qmediarecorder.h>
 
-class Device;
+class Source;
 
 class RecordingSession : public QObject
 {

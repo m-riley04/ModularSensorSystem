@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DeviceListWidgetClass</class>
- <widget class="QWidget" name="DeviceListWidgetClass">
+ <class>SourceListWidgetClass</class>
+ <widget class="QWidget" name="SourceListWidgetClass">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>DeviceListWidget</string>
+   <string>SourceListWidget</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
@@ -61,7 +61,7 @@
     </widget>
    </item>
    <item row="0" column="0">
-    <widget class="QListWidget" name="listDevices">
+    <widget class="QListWidget" name="listSources">
      <property name="editTriggers">
       <set>QAbstractItemView::EditTrigger::CurrentChanged|QAbstractItemView::EditTrigger::DoubleClicked</set>
      </property>

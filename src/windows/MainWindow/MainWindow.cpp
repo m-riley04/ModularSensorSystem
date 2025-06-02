@@ -43,7 +43,7 @@ void MainWindow::initWidgets()
 }
 
 void MainWindow::initSignals() {
-	SourceController* pDeviceController = pController->sourceController();
+	SourceController* pSourceController = pController->sourceController();
 
     // Error messages
     connect(pController.get(), &MainController::errorOccurred, [this](const DeviceError& e) {

@@ -19,26 +19,26 @@ void SessionControlsWidget::initSignals()
 		return;
 	}
 
-	SourceController* pDeviceController = pController->sourceController();
+	SourceController* pSourceController = pController->sourceController();
 	RecordingController* pRecordingController = pController->recordingController();
 
 	// Init open/close button
-	connect(ui.buttonOpenCloseDevices, &QPushButton::clicked, [this, pDeviceController]() {
-		if (pDeviceController->isOpen() || pDeviceController->isStopped()) {
-			pDeviceController->closeSources();
+	connect(ui.buttonOpenCloseDevices, &QPushButton::clicked, [this, pSourceController]() {
+		if (pSourceController->isOpen() || pSourceController->isStopped()) {
+			pSourceController->closeSources();
 		}
-		else if (pDeviceController->isClosed()) {
-			pDeviceController->openSources();
+		else if (pSourceController->isClosed()) {
+			pSourceController->openSources();
 		}
 		});
 
 	// Init start/stop button
-	connect(ui.buttonStartStopDevices, &QPushButton::clicked, [this, pDeviceController]() {
-		if (pDeviceController->isStopped() || pDeviceController->isOpen()) { // CONSIDER: check recording state too?
-			pDeviceController->startSources();
+	connect(ui.buttonStartStopDevices, &QPushButton::clicked, [this, pSourceController]() {
+		if (pSourceController->isStopped() || pSourceController->isOpen()) { // CONSIDER: check recording state too?
+			pSourceController->startSources();
 		}
-		else if (pDeviceController->isStarted()) {
-			pDeviceController->stopSources();
+		else if (pSourceController->isStarted()) {
+			pSourceController->stopSources();
 		}
 		});
 
@@ -53,7 +53,7 @@ void SessionControlsWidget::initSignals()
 		});
 
 	// Clip button
-	connect(ui.buttonClip, &QPushButton::clicked, [this, pDeviceController]() {
+	connect(ui.buttonClip, &QPushButton::clicked, [this, pSourceController]() {
 		// TODO: Implement clip button
 		});
 
@@ -76,9 +76,9 @@ void SessionControlsWidget::initSignals()
 		});
 
 	// External UI updates
-	connect(pDeviceController, &SourceController::sourceRemoved, this, &SessionControlsWidget::updateUi);
-	connect(pDeviceController, &SourceController::sourceAdded, this, &SessionControlsWidget::updateUi);
-	connect(pDeviceController, &SourceController::stateChanged, this, &SessionControlsWidget::updateUi);
+	connect(pSourceController, &SourceController::sourceRemoved, this, &SessionControlsWidget::updateUi);
+	connect(pSourceController, &SourceController::sourceAdded, this, &SessionControlsWidget::updateUi);
+	connect(pSourceController, &SourceController::stateChanged, this, &SessionControlsWidget::updateUi);
 	connect(pRecordingController, &RecordingController::started, this, &SessionControlsWidget::updateUi);
 	connect(pRecordingController, &RecordingController::stopped, this, &SessionControlsWidget::updateUi);
 	

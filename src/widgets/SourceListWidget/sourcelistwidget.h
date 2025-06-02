@@ -19,7 +19,7 @@ public:
 
 private:
 	Ui::DeviceListWidgetClass ui;
-	SourceController* pDeviceController;
+	SourceController* pSourceController;
 
 	void initSignals();
 	void initDeviceControllerSignals();

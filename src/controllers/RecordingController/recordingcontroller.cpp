@@ -1,10 +1,10 @@
 #include "recordingcontroller.h"
 
 RecordingController::RecordingController(SourceController* sourceController, QObject *parent)
-	: QObject(parent), pDeviceController(sourceController)
+	: QObject(parent), pSourceController(sourceController)
 {
-	connect(sourceController, &SourceController::sourceAdded, this, &RecordingController::onDeviceAdded);
-	connect(sourceController, &SourceController::sourceRemoved, this, &RecordingController::onDeviceRemoved);
+	connect(sourceController, &SourceController::sourceAdded, this, &RecordingController::onSourceAdded);
+	connect(sourceController, &SourceController::sourceRemoved, this, &RecordingController::onSourceRemoved);
 }
 
 RecordingController::~RecordingController()
@@ -17,13 +17,13 @@ void RecordingController::start()
 	auto dirName = QDateTime::currentDateTime().toString("'Session_'yyyyMMdd_hhmmss");
 	pSession.reset(new RecordingSession(QDir::currentPath() + "/" + rootOutputDirName + "/" + dirName, this));
 
-	for (Device* d : pDeviceController->sources()) {
+	for (Source* d : pSourceController->sources()) {
 		d->beginRecording(pSession.get());
 	}
 
 	// Update state
 	mState = STARTED;
-	emit started(pSession.get()); // devices grab the pointer
+	emit started(pSession.get()); // sources grab the pointer
 }
 
 void RecordingController::stop()
@@ -31,8 +31,8 @@ void RecordingController::stop()
 	//for (auto d : mSources)  d->stop(); // Probably do not need (starting/stopping is performed by SourceController)
 	QDir outputSessionDir = pSession->outputDir();
 
-	// Stop all devices
-	for (Device* d : pDeviceController->sources()) {
+	// Stop all sources
+	for (Source* d : pSourceController->sources()) {
 		d->endRecording();
 	}
 	
@@ -44,11 +44,11 @@ void RecordingController::stop()
 	emit stopped(outputSessionDir);
 }
 
-void RecordingController::onDeviceAdded(Device* device)
+void RecordingController::onSourceAdded(Source* source)
 {
 }
 
-void RecordingController::onDeviceRemoved(Device* device)
+void RecordingController::onSourceRemoved(Source* source)
 {
 }
 

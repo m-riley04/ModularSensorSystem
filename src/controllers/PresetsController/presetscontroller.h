@@ -1,10 +1,10 @@
 #pragma once
 
 #include <QObject>
-#include <devices/Device/device.h>
-#include <controllers/DeviceController/devicecontroller.h>
+#include "sources/Source/source.h"
+#include <controllers/SourceController/sourcecontroller.h>
 #include <presets/Preset/preset.h>
-#include <devices/IConfigurableDevice/iconfigurabledevice.h>
+#include <sources/IConfigurableSource/iconfigurablesource.h>
 #include <qjsonarray.h>
 #include <QDir>
 #include <qdiriterator.h>
@@ -20,7 +20,7 @@ public:
 	QList<Preset> presets() const { return mPresets; }
 	QString presetsDir() const { return mPresetsDir; }
 
-	void savePreset(QString name, QList<Device*> activeDevices = QList<Device*>(), QString dirPath = QString());
+	void savePreset(QString name, QList<Source*> activeSources = QList<Source*>(), QString dirPath = QString());
 	void loadPreset(const QString& path, SourceController* sourceController, PluginController* pluginController);
 	void removePreset(QString filePath);
 
@@ -30,8 +30,8 @@ private:
 	QString mPresetsDir;
 	QList<Preset> mPresets;
 
-	QJsonArray devicePresetsToJson(const QList<DevicePreset>& devicePresets);
-	QList<DevicePreset> jsonToDevicePresets(const QJsonArray& jsonArray);
+	QJsonArray sourcePresetsToJson(const QList<SourcePreset>& sourcePresets);
+	QList<SourcePreset> jsonToSourcePresets(const QJsonArray& jsonArray);
 
 signals:
 	void presetSaved(const QString& path);

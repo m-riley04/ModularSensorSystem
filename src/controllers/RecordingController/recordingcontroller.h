@@ -3,10 +3,10 @@
 #include <QObject>
 #include <qelapsedtimer.h>
 #include <qdir.h>
-#include <devices/Device/device.h>
+#include <sources/Source/source.h>
 #include <QDateTime>
 #include "controllers/RecordingSession/recordingsession.h"
-#include <controllers/DeviceController/devicecontroller.h>
+#include <controllers/SourceController/sourcecontroller.h>
 
 class RecordingController  : public QObject
 {
@@ -27,7 +27,7 @@ public:
 	bool isStopped() const { return mState == STOPPED; }
 
 private:
-	QPointer<SourceController> pDeviceController;
+	QPointer<SourceController> pSourceController;
 	std::unique_ptr<RecordingSession> pSession;
 
 	RecordingController::State mState = STOPPED;
@@ -37,8 +37,8 @@ public slots:
 	void stop();
 
 private slots:
-	void onDeviceAdded(Device* device);
-	void onDeviceRemoved(Device* device);
+	void onSourceAdded(Source* source);
+	void onSourceRemoved(Source* source);
 
 signals:
 	void started(RecordingSession* session);

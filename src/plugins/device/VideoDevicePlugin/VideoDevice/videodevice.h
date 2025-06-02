@@ -8,24 +8,24 @@
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
-#include "devices/Device/device.h"
+#include "sources/Source/source.h"
 #include "VideoClipBuffer/videoclipbuffer.h"
 #include "VideoPreview/videopreview.h"
-#include "devices/IConfigurableDevice/iconfigurabledevice.h"
-#include "VideoDevicePropertiesWidget/videodevicepropertieswidget.h"
-#include "devices/Device/DevicePropertiesWidget/devicepropertieswidget.h"
-#include "VideoDeviceRecordingPropertiesWidget/videodevicerecordingpropertieswidget.h"
-#include "devices/IClippableDevice/iclippabledevice.h"
+#include "sources/IConfigurableSource/iconfigurablesource.h"
+#include "sources/Source/SourcePropertiesWidget/sourcepropertieswidget.h"
+#include "sources/IClippableSource/iclippablesource.h"
 #include "interfaces/capability/ivideosource.h"
+#include "VideoSourcePropertiesWidget/videosourcepropertieswidget.h"
+#include "VideoSourceRecordingPropertiesWidget/videosourcerecordingpropertieswidget.h"
 #include <VideoClipEncoder/videoclipencoder.h>
 
-class VideoDevice : public Device, 
-	public IConfigurableDevice, 
+class VideoDevice : public Source, 
+	public IConfigurableSource, 
 	public IClippableSource, 
 	public IVideoSource
 {
 	Q_OBJECT
-	Q_INTERFACES(IConfigurableDevice IClippableSource IVideoSource)
+	Q_INTERFACES(IConfigurableSource IClippableSource IVideoSource)
 
 public:
 	VideoDevice(QByteArray hardwareId, QObject* parent);
