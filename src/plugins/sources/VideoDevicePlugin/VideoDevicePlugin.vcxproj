@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{24c440f3-b6a2-476e-beaa-8c172ccfed74}</ProjectGuid>
+    <ProjectGuid>{6C30785C-86DE-4623-A382-E178F73D3E4F}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
@@ -43,7 +43,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.8.0_msvc2022_64</QtInstall>
-    <QtModules>core;multimedia;multimediawidgets;widgets</QtModules>
+    <QtModules>core;multimedia;multimediawidgets;widgets;gui</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -62,7 +62,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <IncludePath>$(SolutionDir)src;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\plugins\processors\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\plugins\devices\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
@@ -115,15 +115,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.cpp" />
-    <QtMoc Include="yoloobjectdetectionprocessorplugin.h" />
-    <ClCompile Include="yoloobjectdetectionprocessorplugin.cpp" />
+    <ClCompile Include="VideoClipBuffer\videoclipbuffer.cpp" />
+    <ClCompile Include="VideoClipEncoder\videoclipencoder.cpp" />
+    <ClCompile Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
+    <ClCompile Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.cpp" />
+    <ClCompile Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.cpp" />
+    <ClCompile Include="VideoDevice\videodevice.cpp" />
+    <ClCompile Include="VideoPreview\videopreview.cpp" />
+    <QtMoc Include="VideoDevice\videodevice.h" />
+    <QtMoc Include="VideoClipBuffer\videoclipbuffer.h" />
+    <QtMoc Include="VideoPreview\videopreview.h" />
+    <QtMoc Include="videodeviceplugin.h" />
+    <ClCompile Include="videodeviceplugin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="yoloobjectdetectionprocessorplugin.json" />
+    <None Include="videodeviceplugin.json" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.h" />
+    <ProjectReference Include="..\..\..\ModularSensorSystem.vcxproj">
+      <Project>{3010c0c6-4a46-4f62-ae8e-eacfa6aad148}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="VideoClipEncoder\videoclipencoder.h" />
+    <ClInclude Include="VideoDevicePropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
+    <QtMoc Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.h" />
+    <QtMoc Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="VideoDevicePropertiesWidget\videodevicepropertieswidget.ui" />
+    <QtUic Include="VideoDeviceRecordingPropertiesWidget\videodevicerecordingpropertieswidget.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

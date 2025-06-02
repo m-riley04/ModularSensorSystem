@@ -12,7 +12,7 @@ class YoloObjectDetectionProcessor : public ProcessorBase
 	Q_OBJECT
 
 public:
-	YoloObjectDetectionProcessor(Device* device, QObject *parent);
+	YoloObjectDetectionProcessor(Source* src, QObject *parent);
 	~YoloObjectDetectionProcessor();
 
     // ProcessorBase API

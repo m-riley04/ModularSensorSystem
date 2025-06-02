@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{24c440f3-b6a2-476e-beaa-8c172ccfed74}</ProjectGuid>
+    <ProjectGuid>{D96CA417-4943-49CD-A99D-41D70972493B}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
@@ -19,13 +19,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -39,11 +39,10 @@
     <QtInstall>6.9.0_msvc2022_64</QtInstall>
     <QtModules>core;gui;testlib;widgets;concurrent;multimedia;multimediawidgets;sensors;serialbus;serialport;positioning</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
-    <QtPlugin>true</QtPlugin>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>6.8.0_msvc2022_64</QtInstall>
-    <QtModules>core;multimedia;multimediawidgets;widgets</QtModules>
+    <QtInstall>6.9.0_msvc2022_64</QtInstall>
+    <QtModules>concurrent;core;gui;multimedia;multimediawidgets;positioning;sensors;serialbus;serialport;testlib;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -61,8 +60,6 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <IncludePath>$(SolutionDir)src;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\plugins\processors\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
@@ -72,22 +69,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <QtMoc />
-    <QtMoc>
-      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\DeviceCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalIncludeDirectories>$(SolutionDir)/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </QtMoc>
-    <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DeviceCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>VIDEODEVICEPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
@@ -100,7 +86,6 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>VIDEODEVICEPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
@@ -115,15 +100,45 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.cpp" />
-    <QtMoc Include="yoloobjectdetectionprocessorplugin.h" />
-    <ClCompile Include="yoloobjectdetectionprocessorplugin.cpp" />
+    <ClCompile Include="pages\MainPage\mainpage.cpp" />
+    <ClCompile Include="widgets\DeviceListWidget\devicelistwidget.cpp" />
+    <ClCompile Include="widgets\DevicePreviewWidget\devicepreviewwidget.cpp" />
+    <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
+    <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
+    <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
+    <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
+    <ClCompile Include="dialogs\AddDeviceDialog\adddevicedialog.cpp" />
+    <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
+    <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="pages\MainPage\mainpage.ui" />
+    <QtUic Include="widgets\DeviceListWidget\devicelistwidget.ui" />
+    <QtUic Include="widgets\DevicePreviewWidget\devicepreviewwidget.ui" />
+    <QtUic Include="widgets\PresetsWidget\presetswidget.ui" />
+    <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
+    <QtUic Include="widgets\SessionControlsWidget\sessioncontrolswidget.ui" />
+    <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
+    <QtUic Include="dialogs\AddDeviceDialog\adddevicedialog.ui" />
+    <QtUic Include="windows\MainWindow\MainWindow.ui" />
+    <QtMoc Include="windows\MainWindow\MainWindow.h" />
+    <ClCompile Include="windows\MainWindow\MainWindow.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="yoloobjectdetectionprocessorplugin.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.h" />
+    <QtMoc Include="dialogs\AddDeviceDialog\adddevicedialog.h" />
+    <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h" />
+    <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h" />
+    <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
+    <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />
+    <QtMoc Include="widgets\DeviceListWidget\devicelistwidget.h" />
+    <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />
+    <QtMoc Include="pages\MainPage\mainpage.h" />
+    <QtMoc Include="widgets\DevicePreviewWidget\devicepreviewwidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

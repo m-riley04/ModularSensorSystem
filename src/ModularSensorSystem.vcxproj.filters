@@ -55,7 +55,7 @@
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\SourceListWidget\sourcelistwidget.cpp">
+    <ClCompile Include="widgets\SourcesWidget\sourceswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="controllers\SourceController\sourcecontroller.cpp">
@@ -88,7 +88,7 @@
     <ClCompile Include="sources\Source\SourcePreview\sourcepreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\DevicePreviewWidget\devicepreviewwidget.cpp">
+    <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="controllers\RecordingController\recordingcontroller.cpp">
@@ -138,7 +138,7 @@
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\SourceListWidget\sourcelistwidget.h">
+    <QtMoc Include="widgets\SourcesWidget\sourceswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="controllers\SourceController\sourcecontroller.h">
@@ -171,7 +171,7 @@
     <QtMoc Include="sources\Source\SourcePreview\sourcepreview.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\DevicePreviewWidget\devicepreviewwidget.h">
+    <QtMoc Include="widgets\SourcePreviewWidget\sourcepreviewwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="controllers\RecordingController\recordingcontroller.h">
@@ -215,7 +215,7 @@
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="widgets\SourceListWidget\sourcelistwidget.ui">
+    <QtUic Include="widgets\SourcesWidget\sourceswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
@@ -230,7 +230,7 @@
     <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="widgets\DevicePreviewWidget\devicepreviewwidget.ui">
+    <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogs\AddSourceDialog\addsourcedialog.ui">
