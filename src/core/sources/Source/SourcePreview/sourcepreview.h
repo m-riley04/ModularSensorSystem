@@ -3,7 +3,7 @@
 #include <QObject>
 #include "sources/Source/source.h"
 
-class Device;
+class Source;
 
 class SourcePreview : public QObject
 {

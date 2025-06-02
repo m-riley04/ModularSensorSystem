@@ -85,7 +85,7 @@ void PresetsController::loadPreset(const QString& path, SourceController* source
 
 	// Load preset from file
 	QFile file(path);
-	if (!file.open(QIOSource::ReadOnly)) {
+	if (!file.open(QIODevice::ReadOnly)) {
 		qWarning() << "Failed to open file for reading:" << file.errorString();
 		return;
 	}
@@ -189,7 +189,7 @@ void PresetsController::scanForPresets(QString presetDir)
 
 		// Load preset into memory
 		QFile file(filePath);
-		if (!file.open(QIOSource::ReadOnly)) {
+		if (!file.open(QIODevice::ReadOnly)) {
 			qWarning() << "Failed to open file for reading:" << file.errorString();
 			continue;
 		}

@@ -1,4 +1,4 @@
-#include "devicepreviewwidget.h"
+#include "sourcepreviewwidget.h"
 
 SourcePreviewWidget::SourcePreviewWidget(SourcePreview* preview, QWidget *parent)
 	: QWidget(parent), pPreview(preview)

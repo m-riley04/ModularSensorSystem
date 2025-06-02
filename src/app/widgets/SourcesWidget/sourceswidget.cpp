@@ -36,25 +36,25 @@ void SourcesWidget::initDeviceControllerSignals()
 	disconnect(pSourceController, &SourceController::sourceRemoved, this, nullptr);
 
 	// Connect device controller signals
-	connect(pSourceController, &SourceController::sourceAdded, this, [this](Device* device) {
+	connect(pSourceController, &SourceController::sourceAdded, this, [this](Source* device) {
 		if (device == nullptr) return;
 
 		// Add the device to the list
-		QString listItemName = device->name() + " (" + Device::typeToString(device->sourceType()) + ")";
+		QString listItemName = device->name() + " (" + Source::typeToString(device->type()) + ")";
 		QVariant devicePtr = QVariant::fromValue(device);
-		QListWidgetItem* item = new QListWidgetItem(listItemName, ui.listDevices);
+		QListWidgetItem* item = new QListWidgetItem(listItemName, ui.listSources);
 		item->setData(Qt::UserRole, devicePtr);
-		ui.listDevices->addItem(item);
+		ui.listSources->addItem(item);
 		});
-	connect(pSourceController, &SourceController::sourceRemoved, this, [this](Device* device) {
+	connect(pSourceController, &SourceController::sourceRemoved, this, [this](Source* device) {
 		if (device == nullptr) return;
 
 		// Find device in list widget
-		for (int i = 0; i < ui.listDevices->count(); ++i) {
-			QListWidgetItem* itm = ui.listDevices->item(i);
-			Device* stored = itm->data(Qt::UserRole).value<Device*>();
+		for (int i = 0; i < ui.listSources->count(); ++i) {
+			QListWidgetItem* itm = ui.listSources->item(i);
+			Source* stored = itm->data(Qt::UserRole).value<Source*>();
 			if (stored == device) {
-				delete ui.listDevices->takeItem(i); // returns the item; we delete it
+				delete ui.listSources->takeItem(i); // returns the item; we delete it
 				// break; // CONSIDER: don't break so that it continues to remove that pointer (if in multiple times)
 			}
 		}
@@ -63,12 +63,12 @@ void SourcesWidget::initDeviceControllerSignals()
 
 void SourcesWidget::openRemoveSourceDialog()
 {
-	auto response = QMessageBox::question(this, "Remove Device", "Are you sure you want to remove the selected device?", QMessageBox::Yes | QMessageBox::No);
+	auto response = QMessageBox::question(this, "Remove Source", "Are you sure you want to remove the selected device?", QMessageBox::Yes | QMessageBox::No);
 
 	if (response == QMessageBox::Yes) {
-		auto selectedItem = ui.listDevices->currentItem();
+		auto selectedItem = ui.listSources->currentItem();
 		if (selectedItem) {
-			Device* device = selectedItem->data(Qt::UserRole).value<Device*>();
+			Source* device = selectedItem->data(Qt::UserRole).value<Source*>();
 
 			// Remove device from the controller
 			pSourceController->removeSource(device);
@@ -79,13 +79,13 @@ void SourcesWidget::openRemoveSourceDialog()
 void SourcesWidget::openProperties()
 {
 	// Get the selected device
-	auto selectedItem = ui.listDevices->currentItem();
+	auto selectedItem = ui.listSources->currentItem();
 
 	if (!selectedItem) return;
 
-	Device* device = selectedItem->data(Qt::UserRole).value<Device*>();
+	Source* device = selectedItem->data(Qt::UserRole).value<Source*>();
 
-	if (auto cfg = qobject_cast<IConfigurableDevice*>(device)) {
+	if (auto cfg = qobject_cast<IConfigurableSource*>(device)) {
 		QWidget* w = cfg->createConfigWidget(this);
 		QDialog dlg(this);
 		dlg.setWindowTitle(device->name() + " Properties");

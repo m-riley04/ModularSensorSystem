@@ -80,7 +80,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="DeviceListWidget" name="deviceListWidget" native="true"/>
+           <widget class="SourcesWidget" name="deviceListWidget" native="true"/>
           </item>
          </layout>
         </widget>
@@ -106,27 +106,27 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>DeviceListWidget</class>
+   <class>SourcesWidget</class>
    <extends>QWidget</extends>
-   <header>Widgets/DeviceListWidget/devicelistwidget.h</header>
+   <header>widgets/SourcesWidget/sourceswidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>PreviewContainerWidget</class>
    <extends>QWidget</extends>
-   <header>Widgets/PreviewContainerWidget/previewcontainerwidget.h</header>
+   <header>widgets/PreviewContainerWidget/previewcontainerwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>PresetsWidget</class>
    <extends>QWidget</extends>
-   <header>Widgets/PresetsWidget/presetswidget.h</header>
+   <header>widgets/PresetsWidget/presetswidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>SessionControlsWidget</class>
    <extends>QWidget</extends>
-   <header>Widgets/SessionControlsWidget/sessioncontrolswidget.h</header>
+   <header>widgets/SessionControlsWidget/sessioncontrolswidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

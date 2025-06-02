@@ -18,61 +18,61 @@ void PreviewContainerWidget::initSignals()
 
 	SourceController* sourceController = pController->sourceController();
 	if (sourceController == nullptr) {
-		qDebug() << "Cannot initialize signals: device controller is null";
+		qDebug() << "Cannot initialize signals: source controller is null";
 		return;
 	}
 
 	// Device added ui updates
-	connect(sourceController, &SourceController::sourceAdded, this, &PreviewContainerWidget::addDeviceWidget);
-	connect(sourceController, &SourceController::sourceRemoved, this, &PreviewContainerWidget::removeDeviceWidget);
+	connect(sourceController, &SourceController::sourceAdded, this, &PreviewContainerWidget::addSourceWidget);
+	connect(sourceController, &SourceController::sourceRemoved, this, &PreviewContainerWidget::removeSourceWidget);
 }
 
 
-void PreviewContainerWidget::addDeviceWidget(Device* device)
+void PreviewContainerWidget::addSourceWidget(Source* source)
 {
-	if (device == nullptr) {
-		qDebug() << "Cannot add device widget: device is null";
+	if (source == nullptr) {
+		qDebug() << "Cannot add source widget: source is null";
 		return;
 	}
 
-	auto* widget = new SourcePreviewWidget(device->preview(), ui.tabDevicePreviews);
+	auto* widget = new SourcePreviewWidget(source->preview(), ui.tabDevicePreviews);
 
 	// Null check
 	if (widget == nullptr) {
-		qDebug() << "Failed to create widget for device";
+		qDebug() << "Failed to create widget for source";
 		return;
 	}
 
 	// Add widget to list
-	mDevicePreviewWidgets.append(widget);
+	mSourcePreviewWidgets.append(widget);
 
 	// Add tab
-	QString tabName = device->name();
+	QString tabName = source->name();
 	ui.tabDevicePreviews->addTab(widget, tabName);
 
 	// Emit signal
-	emit deviceWidgetAdded(widget);
+	emit sourceWidgetAdded(widget);
 }
 
-void PreviewContainerWidget::removeDeviceWidget(Device* device)
+void PreviewContainerWidget::removeSourceWidget(Source* source)
 {
-	if (device == nullptr) {
-		qDebug() << "Cannot remove device widget: device is null";
+	if (source == nullptr) {
+		qDebug() << "Cannot remove source widget: source is null";
 		return;
 	}
 
-	// Find the video widget for the device
-	for (int i = 0; i < mDevicePreviewWidgets.size(); ++i) {
-		SourcePreviewWidget* widget = mDevicePreviewWidgets[i];
-		if (widget->preview()->device() == device) {
+	// Find the video widget for the source
+	for (int i = 0; i < mSourcePreviewWidgets.size(); ++i) {
+		SourcePreviewWidget* widget = mSourcePreviewWidgets[i];
+		if (widget->preview()->source() == source) {
 			// Remove the widget from the list and UI
 			ui.tabDevicePreviews->removeTab(i);
-			mDevicePreviewWidgets.removeAt(i);
+			mSourcePreviewWidgets.removeAt(i);
 
 			// TODO: Implement proper/more cleanup for the widget (if needed, READ QT DOCS ON QLIST/QTAB MEMORY)
 			widget->deleteLater();
 
-			emit deviceWidgetRemoved(widget); /// CONSIDER: Returning something OTHER than a pointer to the widget (since it's being deleted)
+			emit sourceWidgetRemoved(widget); /// CONSIDER: Returning something OTHER than a pointer to the widget (since it's being deleted)
 			break;
 		}
 	}

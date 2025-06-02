@@ -3,9 +3,9 @@
 #include <QWidget>
 #include "ui_previewcontainerwidget.h"
 #include <QList>
-#include <Controllers/MainController/maincontroller.h>
-#include "devices/Device/DevicePreview/devicepreview.h"
-#include "widgets/DevicePreviewWidget/devicepreviewwidget.h"
+#include <controllers/MainController/maincontroller.h>
+#include "sources/Source/SourcePreview/sourcepreview.h"
+#include "widgets/SourcePreviewWidget/sourcepreviewwidget.h"
 
 class PreviewContainerWidget : public QWidget
 {
@@ -23,18 +23,18 @@ public:
 
 private:
 	Ui::PreviewContainerWidgetClass ui;
-	QList<SourcePreviewWidget*> mDevicePreviewWidgets;
+	QList<SourcePreviewWidget*> mSourcePreviewWidgets;
 
 	MainController* pController = nullptr;
 
 	void initSignals();
 
 public slots:
-	void addDeviceWidget(Device* device);
-	void removeDeviceWidget(Device* device);
+	void addSourceWidget(Source*);
+	void removeSourceWidget(Source*);
 
 signals:
-	void deviceWidgetAdded(SourcePreviewWidget* widget);
-	void deviceWidgetRemoved(SourcePreviewWidget* widget);
+	void sourceWidgetAdded(SourcePreviewWidget* widget);
+	void sourceWidgetRemoved(SourcePreviewWidget* widget);
 
 };

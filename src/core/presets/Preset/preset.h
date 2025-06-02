@@ -2,7 +2,7 @@
 
 #include <qstring.h>
 #include <qlist.h>
-#include <presets/DevicePreset/devicepreset.h>
+#include <presets/SourcePreset/sourcepreset.h>
 
 struct Preset {
     QString                name;

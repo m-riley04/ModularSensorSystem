@@ -35,5 +35,5 @@ private:
 
 
 signals:
-	void errorOccurred(const DeviceError& e);
+	void errorOccurred(const SourceError& e);
 };

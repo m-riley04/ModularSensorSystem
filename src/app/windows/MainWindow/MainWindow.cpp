@@ -46,8 +46,8 @@ void MainWindow::initSignals() {
 	SourceController* pSourceController = pController->sourceController();
 
     // Error messages
-    connect(pController.get(), &MainController::errorOccurred, [this](const DeviceError& e) {
-        QString deviceInfo = "Device: " + (e.device != nullptr ? e.device->name() : "null");
+    connect(pController.get(), &MainController::errorOccurred, [this](const SourceError& e) {
+        QString deviceInfo = "Source: " + (e.source != nullptr ? e.source->name() : "null");
         QString errorMessage = "Error: " + e.msg + "\n" + deviceInfo;
         QMessageBox::warning(this, "Error", errorMessage);
         });

@@ -4,7 +4,7 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <QCoreApplication>
-#include <interfaces/plugins/ideviceplugin.h>
+#include <interfaces/plugins/isourceplugin.h>
 #include <interfaces/plugins/iprocessorplugin.h>
 
 class PluginController : public QObject

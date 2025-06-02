@@ -6,7 +6,7 @@
 #include "SourcePreview/sourcepreview.h"
 #include <QPointer>
 #include "sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
-#include "SourceError/deviceerror.h"
+#include "SourceError/sourceerror.h"
 
 class RecordingSession;
 class SourcePreview;
