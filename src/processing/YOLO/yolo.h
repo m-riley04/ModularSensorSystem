@@ -1,8 +1,8 @@
-// HEAVILY based on barleo01's "yoloobjectdetector" on GitHub.
-// Link: https://github.com/barleo01/yoloobjectdetector/blob/master/src/yolo.h
-
 #ifndef YOLO_H
 #define YOLO_H
+
+// HEAVILY based on barleo01's "yoloobjectdetector" on GitHub.
+// Link: https://github.com/barleo01/yoloobjectdetector/blob/master/src/yolo.h
 
 #include <opencv2/dnn.hpp>
 #include <opencv2/dnn/shape_utils.hpp>
@@ -17,6 +17,7 @@
 #include <onnxruntime_cxx_api.h>
 
 #include <QObject>
+#include <QtCore>
 #include <QImage>
 #include <QThread>
 #include <QMutex>

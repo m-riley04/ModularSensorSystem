@@ -1,6 +1,4 @@
-#include <iostream>
 #include "yolo.h"
-#include <QtCore>
 
 Yolo::Yolo(QObject* parent, double inputWidth, double inputHeight, double confidenceThreshold, double nmsThreshold, std::vector<std::string> classes)
 	: QObject(parent), 
@@ -18,7 +16,7 @@ Yolo::Yolo(QObject* parent, double inputWidth, double inputHeight, double confid
 Yolo::~Yolo() {
 }
 
-//---- Setup network
+// Setup network
 void Yolo::setup(void) {
     // Reset error flag
     mError = false;
@@ -122,7 +120,7 @@ std::vector<Yolo::Detection> Yolo::postProcess(Mat& frame, const std::vector<Mat
     }
 
     std::vector<int> indices;
-    // Use OpenCV’s NMS function (it is independent of the DNN module)
+    // Use OpenCV's NMS function (it is independent of the DNN module)
     cv::dnn::NMSBoxes(boxes, confidences, mConfidenceThreshold, mNmsThreshold, indices);
 
     std::vector<Detection> detections;
