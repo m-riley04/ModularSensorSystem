@@ -27,6 +27,6 @@ public slots:
 	void processFrame(const QVideoFrame& frame);
 
 signals:
-    void objectDetected(Device* device);
+    void objectDetected(Source* source);
 };
 

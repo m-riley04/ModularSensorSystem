@@ -18,6 +18,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSFrontend", "src\app\MSSF
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "USBVideoPlugin", "src\plugins\sources\USBVideoPlugin\USBVideoPlugin.vcxproj", "{6C30785C-86DE-4623-A382-E178F73D3E4F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YoloObjectDetectionProcessorPlugin", "src\plugins\processors\YoloObjectDetectionProcessorPlugin\YoloObjectDetectionProcessorPlugin.vcxproj", "{24C440F3-B6A2-476E-BEAA-8C172CCFED74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -36,6 +38,10 @@ Global
 		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Debug|x64.Build.0 = Debug|x64
 		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Release|x64.ActiveCfg = Release|x64
 		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Release|x64.Build.0 = Release|x64
+		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Debug|x64.ActiveCfg = Debug|x64
+		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Debug|x64.Build.0 = Debug|x64
+		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Release|x64.ActiveCfg = Release|x64
+		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
