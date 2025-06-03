@@ -137,5 +137,14 @@
     <QtUic Include="dialogs\AddSourceDialog\addsourcedialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="widgets\ProcessorsWidget\processorswidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogs\AddProcessorDialog\addprocessordialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="styles\styles.qss" />
   </ItemGroup>
 </Project>

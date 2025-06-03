@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
 
     // Initialize
+    initStyles();
 	initPages();
     initWidgets();
     initSignals();
@@ -23,6 +24,29 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {}
+
+void MainWindow::initStyles()
+{
+    // Configure application properties
+	QString stylePath = QDir::currentPath() + "/styles/styles.qss";
+    QFile f(stylePath);
+
+	// Check if the stylesheet file exists
+	if (!f.exists()) {
+		QMessageBox::warning(this, "Error", "Stylesheet file not found: " + stylePath);
+		return;
+	}
+
+	// Check if the stylesheet file can be opened
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox::warning(this, "Error", "Could not open stylesheet file.");
+        return;
+    }
+
+	// Read the stylesheet and apply it to the application
+    QString stylesheetString = f.readAll();
+    qApp->setStyleSheet(stylesheetString);
+}
 
 void MainWindow::initPages()
 {

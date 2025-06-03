@@ -31,7 +31,7 @@ For my own sanity and anyone else who might want to contribute, I am going to gi
 	- This could include filtering, transformation, or any other data manipulation.
 	- Primarily (for my use case), processors will be used for real-time object detection, motion detection, and tracking.
 
-## Supported Device Types
+## Supported Source Types
 - Analog Sensors
 - Video Input
 - Audio Input

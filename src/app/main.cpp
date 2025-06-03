@@ -11,6 +11,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
+	
+
+	// Get the stylesheet from the styles file
+	
+
 
 	// Execute the application and handle exceptions
     int ret;
