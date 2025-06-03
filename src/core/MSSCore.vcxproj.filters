@@ -47,7 +47,7 @@
     <ClInclude Include="presets\Preset\preset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="presets\sourcePreset\sourcepreset.h">
+    <ClInclude Include="presets\SourcePreset\sourcepreset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\IClippableSource\iclippablesource.h">
