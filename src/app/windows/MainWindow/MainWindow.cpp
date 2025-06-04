@@ -156,6 +156,10 @@ void MainWindow::initPages()
 void MainWindow::initWidgets()
 {
     // Init title bar
+    QString titleIconPath = QDir::currentPath() + "/media/mss_template_icon.png";
+    QIcon icon(titleIconPath);
+    ui.titleBar->setTitleIcon(icon);
+    ui.titleBar->setTitle(qApp->applicationDisplayName());
     ui.titleBar->setParentWindow(this);
 
 	// Set default page to home
