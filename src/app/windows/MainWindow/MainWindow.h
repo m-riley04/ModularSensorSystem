@@ -8,6 +8,11 @@
 #include "controllers/ClipController/clipcontroller.h"
 #include "widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "widgets/CustomTitleBar/customtitlebar.h"
+#include "pages/MainPage/mainpage.h"
+
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
 
 class MainWindow : public QMainWindow
 {
@@ -16,6 +21,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+protected:
+    bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override; // TODO: Make this cross-platform and implement other platforms
 
 private:
     Ui::MainWindowClass ui;

@@ -1,4 +1,5 @@
 #include "customtitlebar.h"
+#include <QWindow>
 
 CustomTitleBar::CustomTitleBar(QWidget *parent)
 	: QWidget(parent)
@@ -13,11 +14,15 @@ CustomTitleBar::CustomTitleBar(QWidget *parent)
 CustomTitleBar::~CustomTitleBar()
 {}
 
-void CustomTitleBar::mousePressEvent(QMouseEvent* event) {
-	mMousePressPosition = event->globalPosition();
-	mWindowPosition = pParentWindow->frameGeometry().topLeft();
-
-	event->accept();
+void CustomTitleBar::mousePressEvent(QMouseEvent* ev) {
+	if (ev->button() == Qt::LeftButton) {
+		// Use native window move (Qt 5.15+): 
+		// this asks the OS to start moving the window as if dragging the title bar.
+		QWindow* pParentWindow = window()->windowHandle();
+		if (pParentWindow) {
+			pParentWindow->startSystemMove();  // native move (snap/tiling will work):contentReference[oaicite:1]{index=1}.
+		}
+	}
 }
 
 void CustomTitleBar::mouseMoveEvent(QMouseEvent* event) {
