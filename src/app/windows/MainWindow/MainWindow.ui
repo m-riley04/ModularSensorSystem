@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QFrame" name="frameNav">
       <property name="frameShape">
        <enum>QFrame::Shape::StyledPanel</enum>
@@ -54,8 +54,11 @@
       </layout>
      </widget>
     </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <widget class="QStackedWidget" name="pagesStack"/>
+    </item>
+    <item row="0" column="0">
+     <widget class="CustomTitleBar" name="titleBar" native="true"/>
     </item>
    </layout>
   </widget>
@@ -162,6 +165,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>CustomTitleBar</class>
+   <extends>QWidget</extends>
+   <header>widgets/CustomTitleBar/customtitlebar.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../MainWindow.qrc"/>
  </resources>

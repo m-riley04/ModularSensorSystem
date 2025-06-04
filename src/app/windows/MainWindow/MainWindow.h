@@ -4,9 +4,10 @@
 #include "ui_MainWindow.h"
 #include <QVideoFrame>
 #include <QVideoWidget>
-#include "Widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
-#include "Controllers/MainController/maincontroller.h"
-#include <Controllers/ClipController/clipcontroller.h>
+#include "controllers/MainController/maincontroller.h"
+#include "controllers/ClipController/clipcontroller.h"
+#include "widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
+#include "widgets/CustomTitleBar/customtitlebar.h"
 
 class MainWindow : public QMainWindow
 {

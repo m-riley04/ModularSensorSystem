@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui.setupUi(this);
 
+    ui.titleBar->setParentWindow(this);
+
 	// Initialize the main controller
 	pController = std::make_unique<MainController>(this);
 
@@ -14,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     QCoreApplication::setApplicationVersion("1.0.0");
     QCoreApplication::setOrganizationName("Riley Meyerkorth");
     QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
+
+    setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
 
     // Initialize
     initStyles();
@@ -28,7 +32,7 @@ MainWindow::~MainWindow()
 void MainWindow::initStyles()
 {
     // Configure application properties
-	QString stylePath = QDir::currentPath() + "/styles/styles.qss";
+	const QString stylePath = QDir::currentPath() + "/styles/styles.qss";
     QFile f(stylePath);
 
 	// Check if the stylesheet file exists
@@ -44,7 +48,7 @@ void MainWindow::initStyles()
     }
 
 	// Read the stylesheet and apply it to the application
-    QString stylesheetString = f.readAll();
+    const QString stylesheetString = f.readAll();
     qApp->setStyleSheet(stylesheetString);
 }
 
