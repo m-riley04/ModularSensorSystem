@@ -155,6 +155,21 @@ void MainWindow::initPages()
 
 void MainWindow::initWidgets()
 {
+    // Init menu bar
+    ui.menuBar->setParent(this->centralWidget());
+
+    // Remove widgets from layout
+    QLayout* layout = this->centralWidget()->layout();
+    layout->removeWidget(ui.titleBar);
+    layout->removeWidget(ui.frameNav);
+    layout->removeWidget(ui.pagesStack);
+
+    // Init stack
+    layout->addWidget(ui.titleBar); // Add menu bar FIRST so it is ABOVE all
+    layout->addWidget(ui.menuBar); // Add menu bar SECOND so it is UNDER the title bar
+	layout->addWidget(ui.frameNav);
+    layout->addWidget(ui.pagesStack);
+    
     // Init title bar
     QString titleIconPath = QDir::currentPath() + "/media/mss_template_icon.png";
     QIcon icon(titleIconPath);
