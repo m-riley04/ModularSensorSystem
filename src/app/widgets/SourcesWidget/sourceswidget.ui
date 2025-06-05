@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>332</width>
+    <width>158</width>
     <height>400</height>
    </rect>
   </property>
@@ -38,22 +38,40 @@
       </item>
       <item>
        <widget class="QPushButton" name="buttonProperties">
+        <property name="toolTip">
+         <string>Opens the properties of the selected source</string>
+        </property>
         <property name="text">
-         <string>Properties</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="buttonAdd">
+        <property name="toolTip">
+         <string>Adds a new source</string>
+        </property>
         <property name="text">
-         <string>+</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::ListAdd"/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="buttonRemove">
+        <property name="toolTip">
+         <string>Removes the selected source</string>
+        </property>
         <property name="text">
-         <string>-</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::ListRemove"/>
         </property>
        </widget>
       </item>

@@ -6,6 +6,7 @@
 #include <QPoint>
 #include <qmainwindow.h>
 #include <QPointer>
+#include <qdir.h>
 
 class CustomTitleBar : public QWidget
 {
@@ -29,6 +30,8 @@ private:
     QPointer<QMainWindow> pParentWindow; // Pointer to the main window of the app (uses it's positioning and movement)
     QPointF mMousePressPosition;
     QPoint mWindowPosition;
+
+	void initIcons();
 
 private slots:
 	void onMinimizeClicked();

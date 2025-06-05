@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>316</width>
+    <width>231</width>
     <height>400</height>
    </rect>
   </property>
@@ -55,22 +55,40 @@
       </item>
       <item>
        <widget class="QPushButton" name="buttonProperties">
+        <property name="toolTip">
+         <string>Opens the properties for the currently selected processor</string>
+        </property>
         <property name="text">
-         <string>Properties</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="buttonAdd">
+        <property name="toolTip">
+         <string>Adds a new processor</string>
+        </property>
         <property name="text">
-         <string>+</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::ListAdd"/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="buttonRemove">
+        <property name="toolTip">
+         <string>Removes a processor from the config</string>
+        </property>
         <property name="text">
-         <string>-</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::ListRemove"/>
         </property>
        </widget>
       </item>

@@ -9,6 +9,12 @@ CustomTitleBar::CustomTitleBar(QWidget *parent)
 	connect(ui.buttonClose, &QPushButton::clicked, this, &CustomTitleBar::onCloseClicked);
 	connect(ui.buttonMaximize, &QPushButton::clicked, this, &CustomTitleBar::onMaximizeClicked);
 	connect(ui.buttonMinimize, &QPushButton::clicked, this, &CustomTitleBar::onMinimizeClicked);
+
+	// Init title
+	setTitle(qApp->applicationDisplayName());
+
+	// Init icons
+	initIcons();
 }
 
 CustomTitleBar::~CustomTitleBar()
@@ -62,6 +68,18 @@ void CustomTitleBar::onMinimizeClicked()
 	}
 
 	pParentWindow->showMinimized();
+}
+
+void CustomTitleBar::initIcons()
+{
+	// Attempt to load icons
+	QString iconPath = ":/icons/media/icons/";
+	QIcon appIcon(iconPath + "mss_template_icon.png");
+
+	// TODO/CONSIDER: check if icon is valid? 
+	
+	// Set the icons
+	setTitleIcon(appIcon);
 }
 
 void CustomTitleBar::onMaximizeClicked()

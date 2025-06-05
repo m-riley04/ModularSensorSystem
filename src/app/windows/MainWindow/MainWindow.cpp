@@ -169,12 +169,8 @@ void MainWindow::initWidgets()
     layout->addWidget(ui.menuBar); // Add menu bar SECOND so it is UNDER the title bar
 	layout->addWidget(ui.frameNav);
     layout->addWidget(ui.pagesStack);
-    
+
     // Init title bar
-    QString titleIconPath = QDir::currentPath() + "/media/mss_template_icon.png";
-    QIcon icon(titleIconPath);
-    ui.titleBar->setTitleIcon(icon);
-    ui.titleBar->setTitle(qApp->applicationDisplayName());
     ui.titleBar->setParentWindow(this);
 
 	// Set default page to home

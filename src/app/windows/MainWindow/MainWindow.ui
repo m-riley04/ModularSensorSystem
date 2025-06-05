@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>971</width>
-    <height>756</height>
+    <width>626</width>
+    <height>513</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,15 +41,27 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QPushButton" name="buttonHome">
+         <property name="toolTip">
+          <string>Navigates to the home page</string>
+         </property>
          <property name="text">
-          <string>Home</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset theme="QIcon::ThemeIcon::GoHome"/>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="buttonPlayback">
+         <property name="toolTip">
+          <string>Navigates to the playback page</string>
+         </property>
          <property name="text">
-          <string>Playback</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset theme="QIcon::ThemeIcon::Computer"/>
          </property>
         </widget>
        </item>
@@ -82,7 +94,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>971</width>
+     <width>626</width>
      <height>21</height>
     </rect>
    </property>
@@ -139,11 +151,17 @@
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::SystemShutdown"/>
+   </property>
    <property name="text">
     <string>Quit</string>
    </property>
   </action>
   <action name="actionRestart">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::SystemReboot"/>
+   </property>
    <property name="text">
     <string>Restart</string>
    </property>
@@ -159,6 +177,9 @@
    </property>
   </action>
   <action name="actionGitHub">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::InsertLink"/>
+   </property>
    <property name="text">
     <string>GitHub</string>
    </property>

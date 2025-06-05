@@ -160,5 +160,53 @@
     <Image Include="media\mss_template_icon.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="media\icons\airplane.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\bag.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\balloon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\bug.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\circuit.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\dove.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\drone.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\gps.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\linear.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\microphone.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\satellite.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\settings.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\star.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\thermometer.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\video.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="media\icons\maximize.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

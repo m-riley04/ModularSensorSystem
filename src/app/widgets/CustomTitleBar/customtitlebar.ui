@@ -44,21 +44,30 @@
    <item>
     <widget class="QPushButton" name="buttonMinimize">
      <property name="text">
-      <string>minimize</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="QIcon::ThemeIcon::ListRemove"/>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="buttonMaximize">
      <property name="text">
-      <string>maximize</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="QIcon::ThemeIcon::ViewFullscreen"/>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="buttonClose">
      <property name="text">
-      <string>close</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="QIcon::ThemeIcon::ApplicationExit"/>
      </property>
     </widget>
    </item>

@@ -167,6 +167,22 @@
     <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="media\icons\airplane.ico" />
+    <Image Include="media\icons\bag.ico" />
+    <Image Include="media\icons\balloon.ico" />
+    <Image Include="media\icons\bug.ico" />
+    <Image Include="media\icons\circuit.ico" />
+    <Image Include="media\icons\dove.ico" />
+    <Image Include="media\icons\drone.ico" />
+    <Image Include="media\icons\gps.ico" />
+    <Image Include="media\icons\linear.ico" />
+    <Image Include="media\icons\maximize.ico" />
+    <Image Include="media\icons\microphone.ico" />
+    <Image Include="media\icons\satellite.ico" />
+    <Image Include="media\icons\settings.ico" />
+    <Image Include="media\icons\star.ico" />
+    <Image Include="media\icons\thermometer.ico" />
+    <Image Include="media\icons\video.ico" />
     <Image Include="media\mss_template_icon.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

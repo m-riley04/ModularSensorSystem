@@ -7,11 +7,6 @@
 
 ### Buttons
 <a href="https://www.flaticon.com/free-icons/settings" title="settings icons">Settings icons created by Freepik - Flaticon</a>
-<a href="https://www.flaticon.com/free-icons/play-button" title="play button icons">Play button icons created by inkubators - Flaticon</a>
-<a href="https://www.flaticon.com/free-icons/pause" title="pause icons">Pause icons created by Slidicon - Flaticon</a>
-<a href="https://www.flaticon.com/free-icons/music-app" title="music app icons">Music app icons created by Subhan Abdul Aziz - Flaticon</a>
-<a href="https://www.flaticon.com/free-icons/dot" title="dot icons">Dot icons created by Google - Flaticon</a>
-<a href="https://www.flaticon.com/free-icons/folder" title="folder icons">Folder icons created by Smashicons - Flaticon</a>
 
 ### Source Type
 <a href="https://www.flaticon.com/free-icons/video-call" title="video call icons">Video call icons created by SeyfDesigner - Flaticon</a>
