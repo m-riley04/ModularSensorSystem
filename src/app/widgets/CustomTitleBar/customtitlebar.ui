@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>CustomTitleBar</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QLabel" name="labelIcon">

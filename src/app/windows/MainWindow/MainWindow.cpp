@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(Qt::FramelessWindowHint);
 
     // Initialize
-    initStyles();
+    //initStyles();
 	initPages();
     initWidgets();
     initSignals();
@@ -121,7 +121,7 @@ bool MainWindow::nativeEvent(const QByteArray& eventType, void* message, qintptr
 void MainWindow::initStyles()
 {
     // Configure application properties
-	const QString stylePath = QDir::currentPath() + "/styles/styles.qss";
+	const QString stylePath = ":/styles/styles/styles.qss";
     QFile f(stylePath);
 
 	// Check if the stylesheet file exists

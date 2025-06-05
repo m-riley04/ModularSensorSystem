@@ -12,6 +12,7 @@ CustomTitleBar::CustomTitleBar(QWidget *parent)
 
 	// Init title
 	setTitle(qApp->applicationDisplayName());
+	this->setAttribute(Qt::WA_StyledBackground, true);
 
 	// Init icons
 	initIcons();
