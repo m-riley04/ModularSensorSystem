@@ -157,7 +157,7 @@
     <None Include="styles\styles.qss" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="media\mss_template_icon.png">
+    <Image Include="media\icons\mss_template_icon.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="media\icons\airplane.ico">

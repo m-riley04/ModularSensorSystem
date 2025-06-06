@@ -399,7 +399,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
      </property>
      <addaction name="actionAddSource"/>
      <addaction name="actionRemoveSource"/>
-     <addaction name="actionOpenProperties"/>
+     <addaction name="actionConfigureSource"/>
     </widget>
     <widget class="QMenu" name="menuProcessors">
      <property name="title">
@@ -458,11 +458,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <addaction name="actionSavePreset"/>
    <addaction name="actionLoadPreset"/>
    <addaction name="actionRefreshPresets"/>
-   <addaction name="actionRemovePreset"/>
+   <addaction name="actionDeletePreset"/>
    <addaction name="separator"/>
    <addaction name="actionAddSource"/>
    <addaction name="actionRemoveSource"/>
-   <addaction name="actionOpenProperties"/>
+   <addaction name="actionConfigureSource"/>
    <addaction name="separator"/>
    <addaction name="actionAddProcessor"/>
    <addaction name="actionRemoveProcessor"/>
@@ -569,12 +569,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionRemovePreset">
+  <action name="actionDeletePreset">
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::EditDelete"/>
    </property>
    <property name="text">
-    <string>Remove Preset</string>
+    <string>Delete Preset</string>
    </property>
    <property name="toolTip">
     <string>Delete preset</string>
@@ -653,15 +653,15 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionOpenProperties">
+  <action name="actionConfigureSource">
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
    </property>
    <property name="text">
-    <string>Open Source Properties</string>
+    <string>Configure Source</string>
    </property>
    <property name="toolTip">
-    <string>Open source properties</string>
+    <string>Open source configuration menu</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

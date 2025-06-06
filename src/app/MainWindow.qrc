@@ -16,7 +16,7 @@
         <file>media/icons/star.ico</file>
         <file>media/icons/thermometer.ico</file>
         <file>media/icons/video.ico</file>
-        <file>media/mss_template_icon.png</file>
+        <file>media/icons/mss_template_icon.png</file>
     </qresource>
     <qresource prefix="/styles">
         <file>styles/styles.qss</file>

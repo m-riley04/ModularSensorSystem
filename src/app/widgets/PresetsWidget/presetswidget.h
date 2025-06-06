@@ -37,4 +37,7 @@ private:
 
 	void initWidgets();
 	void initSignals();
+
+signals:
+	void selectedPresetChanged(QListWidgetItem* current, QListWidgetItem* previous);
 };

@@ -18,11 +18,14 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(Qt::FramelessWindowHint);
 
     // Initialize
-    //initStyles();
+    /*
+        TODO: either remove initStyles() or implement/document properly.
+        Currently, we are loading the stylesheet directly in the UI file and UI editor.
+    */
+	//initStyles();
 	initPages();
     initWidgets();
     initSignals();
-    initActions();
 }
 
 MainWindow::~MainWindow()
@@ -149,9 +152,11 @@ void MainWindow::initPages()
 		return;
 	}
 
-	MainPage* mainPage = new MainPage(pController.get(), this);
-	ui.pagesStack->addWidget(mainPage);
-	mainPage->setLayout(ui.pagesStack->layout());
+    // Init main page
+    pMainPage = new MainPage(pController.get(), this);
+    pMainPage->setObjectName("mainPage");
+	ui.pagesStack->addWidget(pMainPage);
+    pMainPage->setLayout(ui.pagesStack->layout());
 }
 
 void MainWindow::initWidgets()
@@ -178,36 +183,50 @@ void MainWindow::initWidgets()
 
 	// Set default page to home
 	ui.pagesStack->setCurrentIndex(0);
+
+    // Init toolbar
+    updateToolbarButtonsState();
 }
 
-void MainWindow::initActions()
+void MainWindow::initActionSignals()
 {
-	if (!pController) {
-		qDebug() << "MainController is not initialized.";
-		return;
-	}
+    if (!checkIfControllersAreOk(pController.get())) return;
 
-	connect(ui.actionAddSource, &QAction::triggered, [this]() {
-        AddSourceDialog* addDeviceDialog = new AddSourceDialog(pController->pluginController(), this);
-        addDeviceDialog->setWindowModality(Qt::WindowModal);
+    // Presets
+	connect(ui.actionSavePreset, &QAction::triggered, this, &MainWindow::openSavePresetDialog);
+    connect(ui.actionLoadPreset, &QAction::triggered, this, &MainWindow::onLoadPresetClicked);
+	connect(ui.actionDeletePreset, &QAction::triggered, this, &MainWindow::openDeletePresetDialog);
+    connect(ui.actionToggleProcessing, &QAction::triggered, this, [this](bool checked) {
+        // TODO: implement this
+		});
 
-        connect(addDeviceDialog, &AddSourceDialog::sourceConfirmed, pController->sourceController(), &SourceController::addSource);
+    // Sources
+    connect(ui.actionAddSource, &QAction::triggered, this, &MainWindow::openAddSourceDialog);
+    connect(ui.actionRemoveSource, &QAction::triggered, this, &MainWindow::openRemoveSourceDialog);
+    connect(ui.actionConfigureSource, &QAction::triggered, this, &MainWindow::openConfigureSourceDialog);
 
-        addDeviceDialog->show();
-        });
+    // Processors
+	connect(ui.actionAddProcessor, &QAction::triggered, this, &MainWindow::openAddProcessorDialog);
+	connect(ui.actionRemoveProcessor, &QAction::triggered, this, &MainWindow::openRemoveProcessorDialog);
+    connect(ui.actionConfigureProcessor, &QAction::triggered, this, &MainWindow::openConfigureProcessorDialog);
+
+    // Quitting/restarting
+    connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
+    connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
 }
 
 void MainWindow::initSignals() {
+    if (!checkIfControllersAreOk(pController.get())) return;
 	SourceController* pSourceController = pController->sourceController();
 
-    // Error messages
+    // Init error message propagation
     connect(pController.get(), &MainController::errorOccurred, [this](const SourceError& e) {
         QString deviceInfo = "Source: " + (e.source != nullptr ? e.source->name() : "null");
         QString errorMessage = "Error: " + e.msg + "\n" + deviceInfo;
         QMessageBox::warning(this, "Error", errorMessage);
         });
 
-    // Pages
+    // Init pages
 	connect(ui.buttonHome, &QPushButton::clicked, [this]() {
 		ui.pagesStack->setCurrentIndex(0);
 		});
@@ -215,9 +234,289 @@ void MainWindow::initSignals() {
         ui.pagesStack->setCurrentIndex(1);
         });
 
-    // Menu Bar
-    connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
-    connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
+    /// Init child widget views (presets, sources, processors)
+    PresetsWidget* presetsWidget = pMainPage->findChild<PresetsWidget*>(Qt::FindChildOption::FindChildrenRecursively);
+    SourcesWidget* sourcesWidget = pMainPage->findChild<SourcesWidget*>(Qt::FindChildOption::FindChildrenRecursively);
+    ProcessorsWidget* processorsWidget = pMainPage->findChild<ProcessorsWidget*>(Qt::FindChildOption::FindChildrenRecursively);
+
+    // Check if widgets were found
+    if (!presetsWidget || !sourcesWidget || !processorsWidget) return;
+
+    // Connect signals to child widgets
+    connect(presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
+    connect(sourcesWidget, &SourcesWidget::selectedSourceChanged, this, &MainWindow::onSelectedSourceItemChanged);
+    connect(processorsWidget, &ProcessorsWidget::selectedProcessorChanged, this, &MainWindow::onSelectedProcessorItemChanged);
+
+    // Init toolbar and actions
+    initActionSignals();
+
+    
+}
+
+bool MainWindow::checkIfControllersAreOk(MainController* controller) const
+{
+    // Check the main controller first and foremost
+    if (!controller) {
+        qDebug() << "MainController is not initialized.";
+        return false;
+	}
+
+    // Check if they are all okay just to see if we can exit early
+    if (controller->sourceController() && 
+        controller->processingController() && 
+        controller->presetsController() && 
+        controller->pluginController() /*&& 
+        controller->settingsController()*/ && 
+        controller->clipController() && 
+        controller->recordingController()) {
+        return true;
+	}
+
+	// Otherwise, we can do more work to see which specific subcontroller(s) are not initialized
+    for (BackendControllerBase* subcontroller : controller->getAllSubcontrollers()) {
+        if (!subcontroller) {
+            qDebug() << "A subcontroller is not initialized:" << subcontroller->name();
+            // TODO/CONSIDER: Show a message box or some other UI feedback to the user
+			// TODO/CONSIDER: return early here, or continue checking all controllers? Probably easier for debugging this way.
+		}
+    }
+
+    return false;
+}
+
+void MainWindow::openSavePresetDialog()
+{
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+    // Get the preset name from the user
+    bool ok;
+    QString presetName = QInputDialog::getText(this, "Save Preset", "Preset name:", QLineEdit::Normal, QString(), &ok);
+    if (ok && !presetName.isEmpty()) {
+        // Check if the preset name already exists
+        // If so, ask to overwrite
+        // TODO: reimplement this overwrite check. For right now, I am just wanting to implement saving functionality.
+        /*auto existingItems = ui.listPresets->findItems(presetName, Qt::MatchExactly);
+        if (!existingItems.isEmpty()) {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, tr("Overwrite Preset"),
+                tr("Preset already exists. Do you want to overwrite it?"),
+                QMessageBox::Yes | QMessageBox::No);
+            if (reply == QMessageBox::No) {
+                return;
+            }
+        }*/
+
+        PresetsController* pPresetsController = pController->presetsController();
+        pPresetsController->savePreset(presetName, pController->sourceController()->sources());
+    }
+    else if (ok) {
+        QMessageBox::warning(this, tr("Invalid Name"), tr("Preset name cannot be empty."));
+        return;
+    }
+}
+
+void MainWindow::onLoadPresetClicked()
+{
+    // Check controllers
+    if (!checkIfControllersAreOk(pController.get())) return;
+    
+	// Check selected item
+    if (!pSelectedPresetItem) {
+        QMessageBox::warning(this, "No Preset Selected", "Please select a preset to load.");
+        return;
+    }
+
+    // Get the preset name from the item
+    QString presetName = pSelectedPresetItem->text();
+
+    // Find the preset in the controller
+    PresetsController* pPresetsController = pController->presetsController();
+    auto presets = pPresetsController->presets();
+    auto it = std::find_if(presets.begin(), presets.end(), [&presetName](const Preset& preset) {
+        return preset.name == presetName;
+        });
+    if (it != presets.end()) {
+        // Load the preset
+        pPresetsController->loadPreset(it->path, pController->sourceController(), pController->pluginController());
+    }
+}
+
+void MainWindow::openDeletePresetDialog()
+{
+	// Check controllers
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+	// Check selected item
+    if (!pSelectedPresetItem) {
+        QMessageBox::warning(this, "No Preset Selected", "Please select a preset to remove.");
+        return;
+	}
+
+    // Get the preset name from the item
+    QString presetName = pSelectedPresetItem->text();
+
+    // Confirm removal
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, tr("Remove Preset"),
+        tr("Are you sure you want to remove the preset: %1?").arg(presetName),
+        QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No) return;
+
+    // Find the preset in the controller
+    PresetsController* pPresetsController = pController->presetsController();
+    auto presets = pPresetsController->presets();
+    auto it = std::find_if(presets.begin(), presets.end(), [&presetName](const Preset& preset) {
+        return preset.name == presetName;
+        });
+    if (it != presets.end()) {
+        // Remove the preset
+        pPresetsController->removePreset(it->path);
+    }
+	//ui.listPresets->removeItemWidget(pSelectedItem); // TODO: check if I *need* to "take" the item from the list
+    delete pSelectedPresetItem;
+    pSelectedPresetItem = nullptr;
+}
+
+void MainWindow::openConfigurePresetDialog()
+{
+
+}
+
+void MainWindow::onRefreshPresetClicked()
+{
+    // Check controllers
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+    // Scan
+    pController->presetsController()->scanForPresets(); // CONSIDER: Pass specific path?
+}
+
+void MainWindow::openAddSourceDialog()
+{
+    // Check controllers
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+	// Create and show the AddSourceDialog
+    AddSourceDialog* addDeviceDialog = new AddSourceDialog(pController->pluginController(), this);
+    addDeviceDialog->setWindowModality(Qt::WindowModal);
+
+    connect(addDeviceDialog, &AddSourceDialog::sourceConfirmed, pController->sourceController(), &SourceController::addSource);
+
+    addDeviceDialog->show();
+}
+
+void MainWindow::openRemoveSourceDialog()
+{
+    // Check controllers
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+    // Check selected item
+    if (!pSelectedSourceItem) {
+        QMessageBox::warning(this, "No Source Selected", "Please select a source to remove.");
+        return;
+	}
+
+    auto response = QMessageBox::question(this, "Remove Source", "Are you sure you want to remove the selected source?", QMessageBox::Yes | QMessageBox::No);
+    if (response == QMessageBox::Yes) {
+        Source* source = pSelectedSourceItem->data(Qt::UserRole).value<Source*>();
+
+        // Remove source from the controller
+        pController->sourceController()->removeSource(source);
+    }
+}
+
+void MainWindow::openConfigureSourceDialog()
+{
+    // Check controllers
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+    // Check selected item
+    if (!pSelectedSourceItem) {
+        QMessageBox::warning(this, "No Source Selected", "Please select a source to configure.");
+        return;
+    }
+
+    Source* source = pSelectedSourceItem->data(Qt::UserRole).value<Source*>();
+    if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
+        QWidget* w = cfg->createConfigWidget(this);
+        QDialog dlg(this);
+        dlg.setWindowTitle(source->name() + " Properties");
+        QVBoxLayout lay(&dlg);
+        lay.addWidget(w);
+        dlg.exec();
+    }
+    else {
+        // fallback: show generic property inspector
+        //showGenericPropertyDialog(source);
+        QMessageBox::information(this, "Properties", "No properties available for this source.");
+    }
+}
+
+void MainWindow::openAddProcessorDialog()
+{
+	// Check controllers
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+    ProcessingController* pProcessingController = pController->processingController();
+    PluginController* pPluginController = pController->pluginController();
+    if (!pProcessingController || !pPluginController) return;
+
+    AddProcessorDialog* addProcessorDialog = new AddProcessorDialog(pPluginController, this);
+    addProcessorDialog->setWindowModality(Qt::WindowModal);
+
+    connect(addProcessorDialog, &AddProcessorDialog::processorConfirmed, pProcessingController, &ProcessingController::addProcessor);
+
+    addProcessorDialog->show();
+}
+
+void MainWindow::openRemoveProcessorDialog()
+{
+}
+
+void MainWindow::openConfigureProcessorDialog()
+{
+}
+
+void MainWindow::onSelectedSourceItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
+{
+	if (pSelectedSourceItem == current) return; // No change
+	pSelectedSourceItem = current;
+    updateToolbarButtonsState(); // CONSIDER: move this to it's own connection to this signal
+}
+
+void MainWindow::onSelectedPresetItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
+{
+    if (pSelectedPresetItem == current) return; // No change
+    pSelectedPresetItem = current;
+    updateToolbarButtonsState(); // CONSIDER: move this to it's own connection to this signal
+}
+
+void MainWindow::onSelectedProcessorItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
+{
+    if (pSelectedProcessorItem == current) return; // No change
+    pSelectedProcessorItem = current;
+    updateToolbarButtonsState(); // CONSIDER: move this to it's own connection to this signal
+}
+
+void MainWindow::updateToolbarButtonsState()
+{
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+    /// PRESETS
+    bool hasPresets = !pController->presetsController()->presets().isEmpty();
+    ui.actionLoadPreset->setEnabled(hasPresets && pSelectedPresetItem);
+    ui.actionDeletePreset->setEnabled(hasPresets && pSelectedPresetItem);
+
+    /// SOURCES
+    bool hasSources = !pController->sourceController()->sources().isEmpty();
+    ui.actionRemoveSource->setEnabled(hasSources && pSelectedSourceItem);
+    ui.actionConfigureSource->setEnabled(hasSources && pSelectedSourceItem); // TODO/CONSIDER: change this action to open a dialog for ALL sources
+
+    /// PROCESSING
+    bool hasProcessors = !pController->processingController()->processors().isEmpty();
+    ui.actionRemoveProcessor->setEnabled(hasProcessors && pSelectedSourceItem);
+	ui.actionConfigureProcessor->setEnabled(hasProcessors && pSelectedSourceItem);
+    ui.actionToggleProcessing->setEnabled(hasProcessors);
 }
 
 void MainWindow::quit() {

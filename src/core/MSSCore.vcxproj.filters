@@ -109,6 +109,9 @@
     <ClCompile Include="sources\Source\source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controllers\BackendControllerBase\backendcontrollerbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="controllers\ClipController\clipcontroller.h">
@@ -157,6 +160,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\Source\source.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controllers\BackendControllerBase\backendcontrollerbase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

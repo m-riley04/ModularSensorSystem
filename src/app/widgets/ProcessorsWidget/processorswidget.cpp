@@ -20,6 +20,8 @@ void ProcessorsWidget::initWidgets()
 
 void ProcessorsWidget::initSignals()
 {
+	connect(ui.listProcessors, &QListWidget::currentItemChanged, this, &ProcessorsWidget::selectedProcessorChanged);
+
 	if (!pController) return;
 
 	// Connect ui signals

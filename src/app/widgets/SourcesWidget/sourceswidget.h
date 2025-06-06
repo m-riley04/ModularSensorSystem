@@ -33,4 +33,5 @@ public slots:
 
 signals:
 	void sourceControllerChanged(SourceController* sourceController);
+	void selectedSourceChanged(QListWidgetItem* current, QListWidgetItem* previous);
 };

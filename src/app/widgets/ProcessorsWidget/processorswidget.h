@@ -42,5 +42,8 @@ private slots:
 	void onProcessingStarted();
 	void onProcessingStopped();
 	void onProcessingError(const QString& errorMessage);
+
+signals:
+	void selectedProcessorChanged(QListWidgetItem* current, QListWidgetItem* previous);
 };
 

@@ -27,6 +27,8 @@ void SourcesWidget::initWidgets()
 
 void SourcesWidget::initSignals()
 {
+	connect(ui.listSources, &QListWidget::currentItemChanged, this, &SourcesWidget::selectedSourceChanged);
+
 	initDeviceControllerSignals();
 }
 

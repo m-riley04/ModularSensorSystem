@@ -40,6 +40,8 @@ void PresetsWidget::initWidgets()
 
 void PresetsWidget::initSignals()
 {
+	connect(ui.listPresets, &QListWidget::currentItemChanged, this, &PresetsWidget::selectedPresetChanged);
+
 	if (!pController) {
 		qWarning() << "PresetsWidget: pController is null; cannot initialize signals";
 		return;

@@ -13,6 +13,8 @@ public:
 	ProcessingController(QObject *parent);
 	~ProcessingController();
 
+	QList<ProcessorBase*> processors() { return mProcessors; }
+
     void setActive(bool active) {
 		if (active == mActive) return;
 		mActive = active;

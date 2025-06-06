@@ -183,7 +183,7 @@
     <Image Include="media\icons\star.ico" />
     <Image Include="media\icons\thermometer.ico" />
     <Image Include="media\icons\video.ico" />
-    <Image Include="media\mss_template_icon.png" />
+    <Image Include="media\icons\mss_template_icon.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
