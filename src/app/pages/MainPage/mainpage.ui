@@ -80,9 +80,15 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QGroupBox" name="groupBox_2">
+        <widget class="QGroupBox" name="groupPresets">
          <property name="title">
           <string>Presets</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
           <property name="leftMargin">
@@ -107,7 +113,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox">
+        <widget class="QGroupBox" name="groupProcessors">
          <property name="title">
           <string>Processors</string>
          </property>
@@ -134,9 +140,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
+        <widget class="QGroupBox" name="groupSources">
          <property name="title">
-          <string>Devices</string>
+          <string>Sources</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="spacing">
@@ -155,13 +161,13 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="SourcesWidget" name="deviceListWidget" native="true"/>
+           <widget class="SourcesWidget" name="sourcesWidget" native="true"/>
           </item>
          </layout>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_4">
+        <widget class="QGroupBox" name="groupControls">
          <property name="title">
           <string>Controls</string>
          </property>

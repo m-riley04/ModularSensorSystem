@@ -13,6 +13,8 @@ public:
 	PresetsWidget(QWidget *parent = nullptr);
 	~PresetsWidget();
 
+	QListWidget* listWidget() const { return ui.listPresets; }
+
 	void setController(MainController* controller) {
 		if (pController == controller) return;
 		pController = controller;

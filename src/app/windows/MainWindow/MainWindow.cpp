@@ -184,6 +184,11 @@ void MainWindow::initWidgets()
 	// Set default page to home
 	ui.pagesStack->setCurrentIndex(0);
 
+    // Init menu bar
+    ui.actionViewPresetsList->setChecked(!pMainPage->presetsGroup()->isVisible()); // Not sure why I have to invert this to NOT, but it works.
+    ui.actionViewSourcesList->setChecked(!pMainPage->sourcesGroup()->isVisible());
+    ui.actionViewProcessorsList->setChecked(!pMainPage->processorsGroup()->isVisible());
+
     // Init toolbar
     updateToolbarButtonsState();
 }
@@ -210,6 +215,17 @@ void MainWindow::initActionSignals()
 	connect(ui.actionRemoveProcessor, &QAction::triggered, this, &MainWindow::openRemoveProcessorDialog);
     connect(ui.actionConfigureProcessor, &QAction::triggered, this, &MainWindow::openConfigureProcessorDialog);
 
+    // View
+    connect(ui.actionViewPresetsList, &QAction::triggered, [this](bool checked) {
+        pMainPage->presetsGroup()->setVisible(checked);
+        });
+    connect(ui.actionViewSourcesList, &QAction::triggered, [this](bool checked) {
+        pMainPage->sourcesGroup()->setVisible(checked);
+        });
+    connect(ui.actionViewProcessorsList, &QAction::triggered, [this](bool checked) {
+        pMainPage->processorsGroup()->setVisible(checked);
+        });
+
     // Quitting/restarting
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
@@ -234,23 +250,13 @@ void MainWindow::initSignals() {
         ui.pagesStack->setCurrentIndex(1);
         });
 
-    /// Init child widget views (presets, sources, processors)
-    PresetsWidget* presetsWidget = pMainPage->findChild<PresetsWidget*>(Qt::FindChildOption::FindChildrenRecursively);
-    SourcesWidget* sourcesWidget = pMainPage->findChild<SourcesWidget*>(Qt::FindChildOption::FindChildrenRecursively);
-    ProcessorsWidget* processorsWidget = pMainPage->findChild<ProcessorsWidget*>(Qt::FindChildOption::FindChildrenRecursively);
-
-    // Check if widgets were found
-    if (!presetsWidget || !sourcesWidget || !processorsWidget) return;
-
     // Connect signals to child widgets
-    connect(presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
-    connect(sourcesWidget, &SourcesWidget::selectedSourceChanged, this, &MainWindow::onSelectedSourceItemChanged);
-    connect(processorsWidget, &ProcessorsWidget::selectedProcessorChanged, this, &MainWindow::onSelectedProcessorItemChanged);
+    connect(pMainPage->presetsWidget(), &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
+    connect(pMainPage->sourcesWidget(), &SourcesWidget::selectedSourceChanged, this, &MainWindow::onSelectedSourceItemChanged);
+    connect(pMainPage->processorsWidget(), &ProcessorsWidget::selectedProcessorChanged, this, &MainWindow::onSelectedProcessorItemChanged);
 
     // Init toolbar and actions
     initActionSignals();
-
-    
 }
 
 bool MainWindow::checkIfControllersAreOk(MainController* controller) const
@@ -294,8 +300,7 @@ void MainWindow::openSavePresetDialog()
     if (ok && !presetName.isEmpty()) {
         // Check if the preset name already exists
         // If so, ask to overwrite
-        // TODO: reimplement this overwrite check. For right now, I am just wanting to implement saving functionality.
-        /*auto existingItems = ui.listPresets->findItems(presetName, Qt::MatchExactly);
+        auto existingItems = pMainPage->presetsWidget()->listWidget()->findItems(presetName, Qt::MatchExactly);
         if (!existingItems.isEmpty()) {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(this, tr("Overwrite Preset"),
@@ -304,7 +309,7 @@ void MainWindow::openSavePresetDialog()
             if (reply == QMessageBox::No) {
                 return;
             }
-        }*/
+        }
 
         PresetsController* pPresetsController = pController->presetsController();
         pPresetsController->savePreset(presetName, pController->sourceController()->sources());
@@ -471,10 +476,27 @@ void MainWindow::openAddProcessorDialog()
 
 void MainWindow::openRemoveProcessorDialog()
 {
+    // Check controllers
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+    // Check selected item
+    if (!pSelectedProcessorItem) {
+        QMessageBox::warning(this, "No Processor Selected", "Please select a processor to remove.");
+        return;
+    }
+
+    auto response = QMessageBox::question(this, "Remove Processor", "Are you sure you want to remove the selected processor?", QMessageBox::Yes | QMessageBox::No);
+    if (response == QMessageBox::Yes) {
+        ProcessorBase* processor = pSelectedProcessorItem->data(Qt::UserRole).value<ProcessorBase*>();
+
+        // Remove source from the controller
+        pController->processingController()->removeProcessor(processor);
+    }
 }
 
 void MainWindow::openConfigureProcessorDialog()
 {
+    QMessageBox::warning(this, "Feature Not Implemted", "This feature has not been implemented yet.");
 }
 
 void MainWindow::onSelectedSourceItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
