@@ -13,39 +13,36 @@
   <property name="windowTitle">
    <string>SourcesWidget</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
-    <widget class="QFrame" name="frame">
+  <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <item>
+    <widget class="QListWidget" name="listSources">
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditTrigger::CurrentChanged|QAbstractItemView::EditTrigger::DoubleClicked</set>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frameControls">
      <property name="frameShape">
       <enum>QFrame::Shape::StyledPanel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Shadow::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="buttonProperties">
+       <widget class="QPushButton" name="buttonRemove">
         <property name="toolTip">
-         <string>Opens the properties of the selected source</string>
+         <string>Removes the selected source</string>
         </property>
         <property name="text">
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+         <iconset theme="QIcon::ThemeIcon::ListRemove"/>
         </property>
        </widget>
       </item>
@@ -63,29 +60,32 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="buttonRemove">
+       <widget class="QPushButton" name="buttonProperties">
         <property name="toolTip">
-         <string>Removes the selected source</string>
+         <string>Opens the properties of the selected source</string>
         </property>
         <property name="text">
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="QIcon::ThemeIcon::ListRemove"/>
+         <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
         </property>
        </widget>
       </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QListWidget" name="listSources">
-     <property name="editTriggers">
-      <set>QAbstractItemView::EditTrigger::CurrentChanged|QAbstractItemView::EditTrigger::DoubleClicked</set>
-     </property>
-     <property name="alternatingRowColors">
-      <bool>true</bool>
-     </property>
     </widget>
    </item>
   </layout>

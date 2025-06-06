@@ -33,6 +33,7 @@ private:
 	Ui::PresetsWidgetClass ui;
 	MainController* pController = nullptr;
 	QListWidgetItem* pSelectedItem = nullptr;
+	bool mControlsVisible = false;
 
 	void initWidgets();
 	void initSignals();

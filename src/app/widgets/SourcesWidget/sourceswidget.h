@@ -22,13 +22,13 @@ private:
 	Ui::SourcesWidgetClass ui;
 	SourceController* pSourceController;
 
+	bool mControlsVisible = false;
+
+	void initWidgets();
 	void initSignals();
 	void initDeviceControllerSignals();
 
 public slots:
-	void openAddSourceDialog();
-	void openRemoveSourceDialog();
-	void openProperties();
 	void setSourceController(SourceController* sourceController);
 
 signals:

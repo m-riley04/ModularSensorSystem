@@ -25,6 +25,9 @@ private:
 	Ui::ProcessorsWidgetClass ui;
 	MainController* pController = nullptr;
 
+	bool mControlsVisible = false;
+
+	void initWidgets();
 	void initSignals();
 
 public slots:

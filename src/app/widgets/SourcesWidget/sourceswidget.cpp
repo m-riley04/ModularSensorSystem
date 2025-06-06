@@ -4,6 +4,7 @@ SourcesWidget::SourcesWidget(QWidget* parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
+	initWidgets();
 	initSignals();
 }
 
@@ -11,19 +12,21 @@ SourcesWidget::SourcesWidget(SourceController* sourceController, QWidget* parent
 	: QWidget(parent), pSourceController(sourceController)
 {
 	ui.setupUi(this);
+	initWidgets();
 	initSignals();
 }
 
 SourcesWidget::~SourcesWidget()
 {}
 
+void SourcesWidget::initWidgets()
+{
+	// Turn off controls frame visibility by default
+	ui.frameControls->setVisible(mControlsVisible);
+}
+
 void SourcesWidget::initSignals()
 {
-	// UI button signals
-	connect(ui.buttonAdd, &QPushButton::clicked, this, &SourcesWidget::openAddSourceDialog);
-	connect(ui.buttonRemove, &QPushButton::clicked, this, &SourcesWidget::openRemoveSourceDialog);
-	connect(ui.buttonProperties, &QPushButton::clicked, this, &SourcesWidget::openProperties);
-
 	initDeviceControllerSignals();
 }
 
@@ -61,45 +64,6 @@ void SourcesWidget::initDeviceControllerSignals()
 		});
 }
 
-void SourcesWidget::openRemoveSourceDialog()
-{
-	auto response = QMessageBox::question(this, "Remove Source", "Are you sure you want to remove the selected source?", QMessageBox::Yes | QMessageBox::No);
-
-	if (response == QMessageBox::Yes) {
-		auto selectedItem = ui.listSources->currentItem();
-		if (selectedItem) {
-			Source* source = selectedItem->data(Qt::UserRole).value<Source*>();
-
-			// Remove source from the controller
-			pSourceController->removeSource(source);
-		}
-	}
-}
-
-void SourcesWidget::openProperties()
-{
-	// Get the selected source
-	auto selectedItem = ui.listSources->currentItem();
-
-	if (!selectedItem) return;
-
-	Source* source = selectedItem->data(Qt::UserRole).value<Source*>();
-
-	if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
-		QWidget* w = cfg->createConfigWidget(this);
-		QDialog dlg(this);
-		dlg.setWindowTitle(source->name() + " Properties");
-		QVBoxLayout lay(&dlg);
-		lay.addWidget(w);
-		dlg.exec();
-	}
-	else {
-		// fallback: show generic property inspector
-		//showGenericPropertyDialog(source);
-		QMessageBox::information(this, "Properties", "No properties available for this source.");
-	}
-}
-
 void SourcesWidget::setSourceController(SourceController* sourceController)
 {
 	if (sourceController == nullptr) return;
@@ -109,14 +73,4 @@ void SourcesWidget::setSourceController(SourceController* sourceController)
 	initDeviceControllerSignals();
 
 	emit sourceControllerChanged(sourceController);
-}
-
-void SourcesWidget::openAddSourceDialog()
-{
-	AddSourceDialog* addDeviceDialog = new AddSourceDialog(pSourceController->pluginController(), this);
-	addDeviceDialog->setWindowModality(Qt::WindowModal);
-
-	connect(addDeviceDialog, &AddSourceDialog::sourceConfirmed, pSourceController, &SourceController::addSource);
-
-	addDeviceDialog->show();
 }

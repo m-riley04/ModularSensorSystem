@@ -5,11 +5,18 @@ ProcessorsWidget::ProcessorsWidget(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	initWidgets();
 	initSignals();
 }
 
 ProcessorsWidget::~ProcessorsWidget()
 {}
+
+void ProcessorsWidget::initWidgets()
+{
+	// Turn off controls frame visibility by default
+	ui.frameControls->setVisible(mControlsVisible);
+}
 
 void ProcessorsWidget::initSignals()
 {
@@ -66,16 +73,7 @@ void ProcessorsWidget::onEnabledChanged(bool enabled)
 
 void ProcessorsWidget::onAddProcessorClicked()
 {
-	ProcessingController* pProcessingController = pController->processingController();
-	PluginController* pPluginController = pController->pluginController();
-	if (!pProcessingController || !pPluginController) return;
-
-	AddProcessorDialog* addProcessorDialog = new AddProcessorDialog(pPluginController, this);
-	addProcessorDialog->setWindowModality(Qt::WindowModal);
-
-	connect(addProcessorDialog, &AddProcessorDialog::processorConfirmed, pProcessingController, &ProcessingController::addProcessor);
-
-	addProcessorDialog->show();
+	
 }
 
 void ProcessorsWidget::onRemoveProcessorClicked()
