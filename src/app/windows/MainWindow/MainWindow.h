@@ -32,6 +32,7 @@ private:
     void initStyles();
     void initPages();
     void initWidgets();
+    void initActions();
     void initSignals();
 
 public slots:

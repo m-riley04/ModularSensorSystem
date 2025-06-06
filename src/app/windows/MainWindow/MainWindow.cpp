@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
 	initPages();
     initWidgets();
     initSignals();
+    initActions();
 }
 
 MainWindow::~MainWindow()
@@ -162,12 +163,14 @@ void MainWindow::initWidgets()
     QLayout* layout = this->centralWidget()->layout();
     layout->removeWidget(ui.titleBar);
     layout->removeWidget(ui.frameNav);
+	layout->removeWidget(ui.toolBar);
     layout->removeWidget(ui.pagesStack);
 
     // Init stack
     layout->addWidget(ui.titleBar); // Add menu bar FIRST so it is ABOVE all
     layout->addWidget(ui.menuBar); // Add menu bar SECOND so it is UNDER the title bar
-	layout->addWidget(ui.frameNav);
+    layout->addWidget(ui.toolBar);
+    layout->addWidget(ui.frameNav);
     layout->addWidget(ui.pagesStack);
 
     // Init title bar
@@ -175,6 +178,23 @@ void MainWindow::initWidgets()
 
 	// Set default page to home
 	ui.pagesStack->setCurrentIndex(0);
+}
+
+void MainWindow::initActions()
+{
+	if (!pController) {
+		qDebug() << "MainController is not initialized.";
+		return;
+	}
+
+	connect(ui.actionAddSource, &QAction::triggered, [this]() {
+        AddSourceDialog* addDeviceDialog = new AddSourceDialog(pController->pluginController(), this);
+        addDeviceDialog->setWindowModality(Qt::WindowModal);
+
+        connect(addDeviceDialog, &AddSourceDialog::sourceConfirmed, pController->sourceController(), &SourceController::addSource);
+
+        addDeviceDialog->show();
+        });
 }
 
 void MainWindow::initSignals() {
