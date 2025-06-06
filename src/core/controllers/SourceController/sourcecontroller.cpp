@@ -1,7 +1,7 @@
 #include "sourcecontroller.h"
 
 SourceController::SourceController(PluginController* pluginController, QObject *parent)
-	: QObject(parent), pPluginController(pluginController), pRecordingSession(nullptr)
+	: BackendControllerBase("SourceController", parent), pPluginController(pluginController), pRecordingSession(nullptr)
 {}
 
 SourceController::~SourceController()

@@ -6,8 +6,9 @@
 #include <qcameradevice.h>
 #include <controllers/PluginController/plugincontroller.h>
 #include <sources/Source/SourceError/sourceerror.h>
+#include "controllers/BackendControllerBase/backendcontrollerbase.h"
 
-class SourceController : public QObject
+class SourceController : public BackendControllerBase
 {
 	Q_OBJECT
 

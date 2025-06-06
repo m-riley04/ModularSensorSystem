@@ -2,7 +2,7 @@
 
 
 ClipController::ClipController(QString clippingDir, QObject *parent)
-	: QObject(parent), mClippingDir(clippingDir)
+	: BackendControllerBase("ClipController", parent), mClippingDir(clippingDir)
 {}
 
 ClipController::~ClipController()

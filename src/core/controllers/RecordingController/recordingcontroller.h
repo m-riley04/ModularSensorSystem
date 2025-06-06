@@ -7,8 +7,9 @@
 #include <QDateTime>
 #include "controllers/RecordingSession/recordingsession.h"
 #include <controllers/SourceController/sourcecontroller.h>
+#include "controllers/BackendControllerBase/backendcontrollerbase.h"
 
-class RecordingController  : public QObject
+class RecordingController  : public BackendControllerBase
 {
 	Q_OBJECT
 

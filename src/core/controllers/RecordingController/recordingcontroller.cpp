@@ -1,7 +1,7 @@
 #include "recordingcontroller.h"
 
 RecordingController::RecordingController(SourceController* sourceController, QObject *parent)
-	: QObject(parent), pSourceController(sourceController)
+	: BackendControllerBase("RecordingController", parent), pSourceController(sourceController)
 {
 	connect(sourceController, &SourceController::sourceAdded, this, &RecordingController::onSourceAdded);
 	connect(sourceController, &SourceController::sourceRemoved, this, &RecordingController::onSourceRemoved);

@@ -3,8 +3,9 @@
 #include <QObject>
 #include <sources/Source/source.h>
 #include <processing/ProcessorBase/processorbase.h>
+#include "controllers/BackendControllerBase/backendcontrollerbase.h"
 
-class ProcessingController  : public QObject
+class ProcessingController  : public BackendControllerBase
 {
 	Q_OBJECT
 

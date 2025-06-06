@@ -1,7 +1,7 @@
 #include "presetscontroller.h"
 
 PresetsController::PresetsController(const QString& dir, QObject *parent)
-	: QObject(parent), mPresetsDir(dir)
+	: BackendControllerBase("PresetsController", parent), mPresetsDir(dir)
 {
 	// Check if directory exists
 	QDir presetsDir(mPresetsDir);
@@ -238,6 +238,8 @@ void PresetsController::scanForPresets(QString presetDir)
 		// Finally, add the preset to the list
 		mPresets.append(preset);
 	}
+
+	emit presetsScanned(mPresets);
 }
 
 QJsonArray PresetsController::sourcePresetsToJson(const QList<SourcePreset>& sourcePresets)

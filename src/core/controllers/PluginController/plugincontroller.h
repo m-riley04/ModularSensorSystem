@@ -6,8 +6,9 @@
 #include <QCoreApplication>
 #include <interfaces/plugins/isourceplugin.h>
 #include <interfaces/plugins/iprocessorplugin.h>
+#include "controllers/BackendControllerBase/backendcontrollerbase.h"
 
-class PluginController : public QObject
+class PluginController : public BackendControllerBase
 {
     Q_OBJECT
 

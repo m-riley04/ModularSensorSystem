@@ -8,8 +8,9 @@
 #include <qjsonarray.h>
 #include <QDir>
 #include <qdiriterator.h>
+#include "controllers/BackendControllerBase/backendcontrollerbase.h"
 
-class PresetsController : public QObject
+class PresetsController : public BackendControllerBase
 {
 	Q_OBJECT
 
@@ -37,5 +38,5 @@ signals:
 	void presetSaved(const QString& path);
 	void presetLoaded(const QString& path);
 	void presetRemoved(const QString& path);
-
+	void presetsScanned(const QList<Preset>& presets);
 };

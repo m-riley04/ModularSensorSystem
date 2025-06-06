@@ -1,7 +1,7 @@
 #include "plugincontroller.h"
 
 PluginController::PluginController(const QString& root, QObject* parent)
-	: QObject(parent), mPluginRoot(root)
+	: BackendControllerBase("PluginController", parent), mPluginRoot(root)
 {
 	// Scan for plugins on initialization
 	loadPlugins(QList<PluginType>({
