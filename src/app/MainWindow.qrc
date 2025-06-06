@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/MainWindow"/>
+    <qresource prefix="/icons">
+        <file>media/icons/airplane.ico</file>
+        <file>media/icons/bag.ico</file>
+        <file>media/icons/balloon.ico</file>
+        <file>media/icons/bug.ico</file>
+        <file>media/icons/circuit.ico</file>
+        <file>media/icons/dove.ico</file>
+        <file>media/icons/drone.ico</file>
+        <file>media/icons/gps.ico</file>
+        <file>media/icons/linear.ico</file>
+        <file>media/icons/microphone.ico</file>
+        <file>media/icons/satellite.ico</file>
+        <file>media/icons/settings.ico</file>
+        <file>media/icons/star.ico</file>
+        <file>media/icons/thermometer.ico</file>
+        <file>media/icons/video.ico</file>
+        <file>media/mss_template_icon.png</file>
+    </qresource>
+    <qresource prefix="/styles">
+        <file>styles/styles.qss</file>
+    </qresource>
+</RCC>

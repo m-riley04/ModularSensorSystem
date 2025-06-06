@@ -12,7 +12,7 @@ class YoloObjectDetectionProcessor : public ProcessorBase
 	Q_OBJECT
 
 public:
-	YoloObjectDetectionProcessor(Device* device, QObject *parent);
+	YoloObjectDetectionProcessor(Source* src, QObject *parent);
 	~YoloObjectDetectionProcessor();
 
     // ProcessorBase API
@@ -27,6 +27,6 @@ public slots:
 	void processFrame(const QVideoFrame& frame);
 
 signals:
-    void objectDetected(Device* device);
+    void objectDetected(Source* source);
 };
 

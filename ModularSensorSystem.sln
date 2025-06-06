@@ -3,29 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModularSensorSystem", "src\ModularSensorSystem.vcxproj", "{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}"
-	ProjectSection(ProjectDependencies) = postProject
-		{40E5C193-67DF-4084-B1E6-D521D94AA232} = {40E5C193-67DF-4084-B1E6-D521D94AA232}
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{227DF51C-4F8C-4C96-AC7E-39617C0AEF82}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		ATTRIBUTIONS.md = ATTRIBUTIONS.md
 		README.md = README.md
 		vcpkg-configuration.json = vcpkg-configuration.json
 		vcpkg.json = vcpkg.json
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VideoDevicePlugin", "src\plugins\device\VideoDevicePlugin\VideoDevicePlugin.vcxproj", "{6C30785C-86DE-4623-A382-E178F73D3E4F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148} = {3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}
-		{40E5C193-67DF-4084-B1E6-D521D94AA232} = {40E5C193-67DF-4084-B1E6-D521D94AA232}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSCore", "src\core\MSSCore.vcxproj", "{90004517-CEA0-493D-BC67-B07F996C62B8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceCore", "src\devicecore\DeviceCore\DeviceCore.vcxproj", "{40E5C193-67DF-4084-B1E6-D521D94AA232}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSFrontend", "src\app\MSSFrontend.vcxproj", "{D96CA417-4943-49CD-A99D-41D70972493B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DevicePluginTemplate", "src\plugins\device\DevicePluginTemplate\DevicePluginTemplate.vcxproj", "{4CB41DDB-FD91-4D5E-8166-C7616A78D20D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "USBVideoPlugin", "src\plugins\sources\USBVideoPlugin\USBVideoPlugin.vcxproj", "{6C30785C-86DE-4623-A382-E178F73D3E4F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YoloObjectDetectionProcessorPlugin", "src\plugins\processors\YoloObjectDetectionProcessorPlugin\YoloObjectDetectionProcessorPlugin.vcxproj", "{24C440F3-B6A2-476E-BEAA-8C172CCFED74}"
 EndProject
@@ -35,22 +27,18 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}.Debug|x64.ActiveCfg = Debug|x64
-		{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}.Debug|x64.Build.0 = Debug|x64
-		{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}.Release|x64.ActiveCfg = Release|x64
-		{3010C0C6-4A46-4F62-AE8E-EACFA6AAD148}.Release|x64.Build.0 = Release|x64
+		{90004517-CEA0-493D-BC67-B07F996C62B8}.Debug|x64.ActiveCfg = Debug|x64
+		{90004517-CEA0-493D-BC67-B07F996C62B8}.Debug|x64.Build.0 = Debug|x64
+		{90004517-CEA0-493D-BC67-B07F996C62B8}.Release|x64.ActiveCfg = Release|x64
+		{90004517-CEA0-493D-BC67-B07F996C62B8}.Release|x64.Build.0 = Release|x64
+		{D96CA417-4943-49CD-A99D-41D70972493B}.Debug|x64.ActiveCfg = Debug|x64
+		{D96CA417-4943-49CD-A99D-41D70972493B}.Debug|x64.Build.0 = Debug|x64
+		{D96CA417-4943-49CD-A99D-41D70972493B}.Release|x64.ActiveCfg = Release|x64
+		{D96CA417-4943-49CD-A99D-41D70972493B}.Release|x64.Build.0 = Release|x64
 		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Debug|x64.ActiveCfg = Debug|x64
 		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Debug|x64.Build.0 = Debug|x64
 		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Release|x64.ActiveCfg = Release|x64
 		{6C30785C-86DE-4623-A382-E178F73D3E4F}.Release|x64.Build.0 = Release|x64
-		{40E5C193-67DF-4084-B1E6-D521D94AA232}.Debug|x64.ActiveCfg = Debug|x64
-		{40E5C193-67DF-4084-B1E6-D521D94AA232}.Debug|x64.Build.0 = Debug|x64
-		{40E5C193-67DF-4084-B1E6-D521D94AA232}.Release|x64.ActiveCfg = Release|x64
-		{40E5C193-67DF-4084-B1E6-D521D94AA232}.Release|x64.Build.0 = Release|x64
-		{4CB41DDB-FD91-4D5E-8166-C7616A78D20D}.Debug|x64.ActiveCfg = Debug|x64
-		{4CB41DDB-FD91-4D5E-8166-C7616A78D20D}.Debug|x64.Build.0 = Debug|x64
-		{4CB41DDB-FD91-4D5E-8166-C7616A78D20D}.Release|x64.ActiveCfg = Release|x64
-		{4CB41DDB-FD91-4D5E-8166-C7616A78D20D}.Release|x64.Build.0 = Release|x64
 		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Debug|x64.ActiveCfg = Debug|x64
 		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Debug|x64.Build.0 = Debug|x64
 		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Release|x64.ActiveCfg = Release|x64

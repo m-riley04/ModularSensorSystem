@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include "interfaces/plugins/iprocessorplugin.h"
-#include "devices/Device/device.h"
+#include "sources/Source/source.h"
 #include "YoloObjectDetectionProcessor/yoloobjectdetectionprocessor.h"
 #include <interfaces/capability/ivideosource.h>
 
@@ -14,10 +14,10 @@ class YoloObjectDetectionProcessorPlugin : public QObject, public IProcessorPlug
     Q_INTERFACES(IProcessorPlugin)
 
 public:
-    Device::Type supportedDeviceType() const override { return Device::Type::VIDEO; }
+    Source::Type supportedSourceType() const override { return Source::Type::VIDEO; }
     QString name() const override { return "yoloobjectdetectionprocessor"; }
-    ProcessorBase* createProcessor(Device* device, QObject* parent = nullptr) override
+    ProcessorBase* createProcessor(Source* src, QObject* parent = nullptr) override
     {
-        return new YoloObjectDetectionProcessor(device, parent);
+        return new YoloObjectDetectionProcessor(src, parent);
     }
 };
