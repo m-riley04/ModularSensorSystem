@@ -31,96 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {}
 
-bool MainWindow::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)
-{
-    #ifdef Q_OS_WIN
-    MSG* msg = static_cast<MSG*>(message);
 
-    if (msg->message == WM_NCHITTEST)
-    {
-        if (isMaximized())
-        {
-            return false;
-        }
-
-        *result = 0;
-        const LONG borderWidth = 8;
-        RECT winrect;
-        GetWindowRect(reinterpret_cast<HWND>(winId()), &winrect);
-
-        // must be short to correctly work with multiple monitors (negative coordinates)
-        short x = msg->lParam & 0x0000FFFF;
-        short y = (msg->lParam & 0xFFFF0000) >> 16;
-
-        bool resizeWidth = minimumWidth() != maximumWidth();
-        bool resizeHeight = minimumHeight() != maximumHeight();
-        if (resizeWidth)
-        {
-            //left border
-            if (x >= winrect.left && x < winrect.left + borderWidth)
-            {
-                *result = HTLEFT;
-            }
-            //right border
-            if (x < winrect.right && x >= winrect.right - borderWidth)
-            {
-                *result = HTRIGHT;
-            }
-        }
-        if (resizeHeight)
-        {
-            //bottom border
-            if (y < winrect.bottom && y >= winrect.bottom - borderWidth)
-            {
-                *result = HTBOTTOM;
-            }
-            //top border
-            if (y >= winrect.top && y < winrect.top + borderWidth)
-            {
-                *result = HTTOP;
-            }
-        }
-        if (resizeWidth && resizeHeight)
-        {
-            //bottom left corner
-            if (x >= winrect.left && x < winrect.left + borderWidth &&
-                y < winrect.bottom && y >= winrect.bottom - borderWidth)
-            {
-                *result = HTBOTTOMLEFT;
-            }
-            //bottom right corner
-            if (x < winrect.right && x >= winrect.right - borderWidth &&
-                y < winrect.bottom && y >= winrect.bottom - borderWidth)
-            {
-                *result = HTBOTTOMRIGHT;
-            }
-            //top left corner
-            if (x >= winrect.left && x < winrect.left + borderWidth &&
-                y >= winrect.top && y < winrect.top + borderWidth)
-            {
-                *result = HTTOPLEFT;
-            }
-            //top right corner
-            if (x < winrect.right && x >= winrect.right - borderWidth &&
-                y >= winrect.top && y < winrect.top + borderWidth)
-            {
-                *result = HTTOPRIGHT;
-            }
-        }
-
-        if (*result != 0)
-            return true;
-
-        QWidget* action = QApplication::widgetAt(QCursor::pos());
-        if (action == this) {
-            *result = HTCAPTION;
-            return true;
-        }
-    }
-    #endif
-
-    return false;
-}
 
 void MainWindow::initStyles()
 {
@@ -188,6 +99,13 @@ void MainWindow::initWidgets()
     ui.actionViewPresetsList->setChecked(!pMainPage->presetsGroup()->isVisible()); // Not sure why I have to invert this to NOT, but it works.
     ui.actionViewSourcesList->setChecked(!pMainPage->sourcesGroup()->isVisible());
     ui.actionViewProcessorsList->setChecked(!pMainPage->processorsGroup()->isVisible());
+    ui.actionViewControls->setChecked(!pMainPage->controlsGroup()->isVisible());
+    ui.actionViewEntireRow->setChecked(!pMainPage->controlsFrame()->isVisible());
+
+    ui.actionViewMenuBar->setChecked(!ui.menuBar->isVisible());
+    ui.actionViewToolbar->setChecked(!ui.toolBar->isVisible());
+    ui.actionViewCustomWindowHandle->setChecked(!ui.titleBar->isVisible());
+    
 
     // Init toolbar
     updateToolbarButtonsState();
@@ -224,6 +142,27 @@ void MainWindow::initActionSignals()
         });
     connect(ui.actionViewProcessorsList, &QAction::triggered, [this](bool checked) {
         pMainPage->processorsGroup()->setVisible(checked);
+        });
+    connect(ui.actionViewControls, &QAction::triggered, [this](bool checked) {
+        pMainPage->controlsGroup()->setVisible(checked);
+        });
+    connect(ui.actionViewEntireRow, &QAction::triggered, [this](bool checked) {
+        pMainPage->controlsFrame()->setVisible(checked);
+        });
+
+    connect(ui.actionViewMenuBar, &QAction::triggered, [this](bool checked) {
+        ui.menuBar->setVisible(checked);
+        });
+    connect(ui.actionViewToolbar, &QAction::triggered, [this](bool checked) {
+        ui.toolBar->setVisible(checked);
+        });
+    connect(ui.actionViewCustomWindowHandle, &QAction::triggered, [this](bool checked) {
+        ui.titleBar->setVisible(checked);
+
+        Qt::WindowType flags = checked ? Qt::FramelessWindowHint : Qt::Window;
+        setWindowFlags(flags);
+
+		show(); // Refresh the window to apply the new flags
         });
 
     // Quitting/restarting
@@ -548,4 +487,95 @@ void MainWindow::quit() {
 void MainWindow::restart() {
     qApp->quit();
     QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
+}
+
+bool MainWindow::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)
+{
+#ifdef Q_OS_WIN
+    MSG* msg = static_cast<MSG*>(message);
+
+    if (msg->message == WM_NCHITTEST)
+    {
+        if (isMaximized())
+        {
+            return false;
+        }
+
+        *result = 0;
+        const LONG borderWidth = 8;
+        RECT winrect;
+        GetWindowRect(reinterpret_cast<HWND>(winId()), &winrect);
+
+        // must be short to correctly work with multiple monitors (negative coordinates)
+        short x = msg->lParam & 0x0000FFFF;
+        short y = (msg->lParam & 0xFFFF0000) >> 16;
+
+        bool resizeWidth = minimumWidth() != maximumWidth();
+        bool resizeHeight = minimumHeight() != maximumHeight();
+        if (resizeWidth)
+        {
+            //left border
+            if (x >= winrect.left && x < winrect.left + borderWidth)
+            {
+                *result = HTLEFT;
+            }
+            //right border
+            if (x < winrect.right && x >= winrect.right - borderWidth)
+            {
+                *result = HTRIGHT;
+            }
+        }
+        if (resizeHeight)
+        {
+            //bottom border
+            if (y < winrect.bottom && y >= winrect.bottom - borderWidth)
+            {
+                *result = HTBOTTOM;
+            }
+            //top border
+            if (y >= winrect.top && y < winrect.top + borderWidth)
+            {
+                *result = HTTOP;
+            }
+        }
+        if (resizeWidth && resizeHeight)
+        {
+            //bottom left corner
+            if (x >= winrect.left && x < winrect.left + borderWidth &&
+                y < winrect.bottom && y >= winrect.bottom - borderWidth)
+            {
+                *result = HTBOTTOMLEFT;
+            }
+            //bottom right corner
+            if (x < winrect.right && x >= winrect.right - borderWidth &&
+                y < winrect.bottom && y >= winrect.bottom - borderWidth)
+            {
+                *result = HTBOTTOMRIGHT;
+            }
+            //top left corner
+            if (x >= winrect.left && x < winrect.left + borderWidth &&
+                y >= winrect.top && y < winrect.top + borderWidth)
+            {
+                *result = HTTOPLEFT;
+            }
+            //top right corner
+            if (x < winrect.right && x >= winrect.right - borderWidth &&
+                y >= winrect.top && y < winrect.top + borderWidth)
+            {
+                *result = HTTOPRIGHT;
+            }
+        }
+
+        if (*result != 0)
+            return true;
+
+        QWidget* action = QApplication::widgetAt(QCursor::pos());
+        if (action == this) {
+            *result = HTCAPTION;
+            return true;
+        }
+    }
+#endif
+
+    return false;
 }
