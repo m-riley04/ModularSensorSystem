@@ -104,6 +104,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="controllers\BackendControllerBase\backendcontrollerbase.cpp" />
+    <ClCompile Include="mounts\Mount\mount.cpp" />
     <ClCompile Include="processing\FrameProcessor\frameprocessor.cpp" />
     <ClCompile Include="processing\ProcessorBase\processorbase.cpp" />
     <ClCompile Include="processing\YOLO\yolo.cpp" />
@@ -113,6 +114,8 @@
     <ClCompile Include="sources\Source\SourcePreview\sourcepreview.cpp" />
     <ClCompile Include="sources\Source\SourcePropertiesWidget\sourcepropertieswidget.cpp" />
     <QtMoc Include="controllers\BackendControllerBase\backendcontrollerbase.h" />
+    <QtMoc Include="mounts\Mount\mount.h" />
+    <ClInclude Include="interfaces\plugins\imountplugin.h" />
     <ClInclude Include="presets\Preset\preset.h" />
     <ClInclude Include="presets\SourcePreset\sourcepreset.h" />
     <ClInclude Include="sources\IClippableSource\iclippablesource.h" />
