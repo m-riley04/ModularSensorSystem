@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<UI version="4.0">
  <class>MainWindowClass</class>
  <widget class="QMainWindow" name="MainWindowClass">
   <property name="geometry">
@@ -810,4 +809,4 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <include location="../../MainWindow.qrc"/>
  </resources>
  <connections/>
-</ui>
+</UI>

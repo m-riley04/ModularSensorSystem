@@ -4,7 +4,7 @@
 #include "ui_mainpage.h"
 #include <Controllers/MainController/maincontroller.h>
 
-class MainPage : public QWidget
+class MainPage : public QMainWindow
 {
 	Q_OBJECT
 

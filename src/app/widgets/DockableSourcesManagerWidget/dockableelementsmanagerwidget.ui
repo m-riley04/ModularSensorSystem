@@ -16,7 +16,7 @@
   <widget class="QWidget" name="contents">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QTreeWidget" name="treeElements"/>
+     <widget class="QTreeView" name="treeElements"/>
     </item>
    </layout>
   </widget>

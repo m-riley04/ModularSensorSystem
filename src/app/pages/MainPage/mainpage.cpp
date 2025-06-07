@@ -1,7 +1,7 @@
 #include "mainpage.h"
 
 MainPage::MainPage(MainController* controller, QWidget *parent)
-	: QWidget(parent), pController(controller)
+	: QMainWindow(parent), pController(controller)
 {
 	ui.setupUi(this);
 
