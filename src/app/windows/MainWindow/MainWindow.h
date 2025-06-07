@@ -62,6 +62,8 @@ private slots:
 	void openRemoveProcessorDialog();
 	void openConfigureProcessorDialog();
 
+    void openGithubRepository();
+
 	void onSelectedSourceItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
 	void onSelectedPresetItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
 	void onSelectedProcessorItemChanged(QListWidgetItem* current, QListWidgetItem* previous);

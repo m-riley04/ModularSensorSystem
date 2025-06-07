@@ -165,6 +165,9 @@ void MainWindow::initActionSignals()
 		show(); // Refresh the window to apply the new flags
         });
 
+    // About
+    connect(ui.actionGitHub, &QAction::triggered, this, &MainWindow::openGithubRepository);
+
     // Quitting/restarting
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
@@ -436,6 +439,14 @@ void MainWindow::openRemoveProcessorDialog()
 void MainWindow::openConfigureProcessorDialog()
 {
     QMessageBox::warning(this, "Feature Not Implemted", "This feature has not been implemented yet.");
+}
+
+void MainWindow::openGithubRepository()
+{
+    QString repoLink = "https://github.com/m-riley04/ModularSensorSystem"; // TODO: Make this configurable or in a top-level file
+    if (!QDesktopServices::openUrl(repoLink)) {
+        QMessageBox::warning(this, "Link Error", "Could not open the GitHub repository.");
+    }
 }
 
 void MainWindow::onSelectedSourceItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
