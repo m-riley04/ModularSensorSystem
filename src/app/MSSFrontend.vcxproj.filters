@@ -70,6 +70,9 @@
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\DockableSourcesManagerWidget\dockableelementsmanagerwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -111,6 +114,9 @@
     <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="widgets\DockableSourcesManagerWidget\dockableelementsmanagerwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="pages\MainPage\mainpage.ui">
@@ -150,6 +156,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="widgets\DockableSourcesManagerWidget\dockableelementsmanagerwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
