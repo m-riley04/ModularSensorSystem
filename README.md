@@ -4,6 +4,7 @@
 - Plugin-based architecture
 	- Sources
 	- Data Processors
+	- Physical Mounts
 - Simultaneous data recording
 - Data visualization
 - "Clipping" feature
@@ -31,3 +32,6 @@ External documentation is found in the [docs](docs/) directory. The following sh
 # Dependencies
 - Qt 6.9.0 (can be installed and linked using the official installer and Visual Studio extension)
 - All other dependencies are managed through a VCPKG manifest file
+
+# Planned Features
+[ ] 
