@@ -245,7 +245,7 @@
   <customwidget>
    <class>DockableElementsManagerWidget</class>
    <extends>QDockWidget</extends>
-   <header>widgets/DockableSourcesManagerWidget/dockableelementsmanagerwidget.h</header>
+   <header>widgets/DockableElementsManagerWidget/dockableelementsmanagerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

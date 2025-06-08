@@ -111,7 +111,7 @@
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
     <ClCompile Include="pages\MainPage\mainpage.cpp" />
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
-    <ClCompile Include="widgets\DockableSourcesManagerWidget\dockableelementsmanagerwidget.cpp" />
+    <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
     <ClCompile Include="widgets\SourcesWidget\sourceswidget.cpp" />
     <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
@@ -123,7 +123,7 @@
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="pages\MainPage\mainpage.ui" />
     <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui" />
-    <QtUic Include="widgets\DockableSourcesManagerWidget\dockableelementsmanagerwidget.ui" />
+    <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
     <QtUic Include="widgets\SourcesWidget\sourceswidget.ui" />
     <QtUic Include="widgets\ProcessorsWidget\processorswidget.ui" />
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui" />
@@ -188,7 +188,7 @@
     <Image Include="media\icons\mss_template_icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="widgets\DockableSourcesManagerWidget\dockableelementsmanagerwidget.h" />
+    <QtMoc Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

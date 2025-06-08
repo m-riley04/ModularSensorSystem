@@ -70,7 +70,7 @@
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\DockableSourcesManagerWidget\dockableelementsmanagerwidget.cpp">
+    <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -114,7 +114,7 @@
     <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\DockableSourcesManagerWidget\dockableelementsmanagerwidget.h">
+    <QtMoc Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -158,7 +158,7 @@
     <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="widgets\DockableSourcesManagerWidget\dockableelementsmanagerwidget.ui">
+    <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

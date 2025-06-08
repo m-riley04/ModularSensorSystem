@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QDockWidget>
-#include "ui_dockablesourcesmanagerwidget.h"
+#include "ui_dockableelementsmanagerwidget.h"
 #include <controllers/MainController/maincontroller.h>
 
 class DockableElementsManagerWidget : public QDockWidget
@@ -18,7 +18,7 @@ public:
 	}
 
 private:
-	Ui::DockableSourcesManagerWidgetClass ui;
+	Ui::DockableElementsManagerWidgetClass ui;
 	QPointer<MainController> pMainController;
 
 	void initWidgets();
