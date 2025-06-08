@@ -26,6 +26,7 @@
 # Documentation and Development Resources
 External documentation is found in the [docs](docs/) directory. The following should help you get started:
 - [Architecture Overview](docs/architecture_overview.md)
+- [Naming Conventions](docs/naming_conventions.md)
 
 # Dependencies
 - Qt 6.9.0 (can be installed and linked using the official installer and Visual Studio extension)
