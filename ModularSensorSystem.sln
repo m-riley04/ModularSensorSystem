@@ -21,6 +21,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "USBVideoPlugin", "src\plugi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YoloObjectDetectionProcessorPlugin", "src\plugins\processors\YoloObjectDetectionProcessorPlugin\YoloObjectDetectionProcessorPlugin.vcxproj", "{24C440F3-B6A2-476E-BEAA-8C172CCFED74}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		architecture_overview.md = architecture_overview.md
+		naming_conventions.md = naming_conventions.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
