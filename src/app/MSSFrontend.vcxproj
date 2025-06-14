@@ -109,6 +109,7 @@
   <ItemGroup>
     <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp" />
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
+    <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
     <ClCompile Include="pages\MainPage\mainpage.cpp" />
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
@@ -189,6 +190,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="models\ElementTreeModel\elementtreemodel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

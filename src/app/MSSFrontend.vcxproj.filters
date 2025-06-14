@@ -73,6 +73,9 @@
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -115,6 +118,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="models\ElementTreeModel\elementtreemodel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
