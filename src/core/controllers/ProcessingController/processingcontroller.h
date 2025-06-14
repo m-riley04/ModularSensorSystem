@@ -29,6 +29,8 @@ private:
     QMap<Source*, QList<ProcessorBase*>> mSourcesProcessorsMap;
     bool mActive = false;
 
+	QHash<QUuid, QList<ProcessorBase*>> mProcessorsBySourceId;
+
     bool isCompatible(ProcessorBase* proc, Source* src);
 
 signals:

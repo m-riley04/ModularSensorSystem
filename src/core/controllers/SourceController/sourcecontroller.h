@@ -41,6 +41,8 @@ private:
 	QList<Source*> mSources;
 	SourceController::State mState = CLOSED;
 
+	QHash<QUuid, QList<ProcessorBase*>> mProcessorsBySourceId;
+
 	QPointer<PluginController> pPluginController;
 	RecordingSession* pRecordingSession;
 
