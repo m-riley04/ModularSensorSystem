@@ -118,6 +118,9 @@
     <ClCompile Include="mounts\Mount\mount.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controllers\MountController\mountcontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="controllers\ClipController\clipcontroller.h">
@@ -172,6 +175,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="mounts\Mount\mount.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controllers\MountController\mountcontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
