@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QString>
-#include <sources/Source/source.h>
+#include <features/sources/Source/source.h>
 #include <QMetaType>
 
 enum class ErrorSeverity {

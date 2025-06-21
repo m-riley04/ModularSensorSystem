@@ -2,7 +2,7 @@
 #include <qstring.h>
 #include <qbytearray.h>
 #include <qjsonobject.h>
-#include "sources/Source/source.h"
+#include "features/sources/Source/source.h"
 
 struct SourcePreset {
     QByteArray   sourceId;     // Device::id()

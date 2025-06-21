@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "sources/Source/source.h"
+#include "features/sources/Source/source.h"
 #include "interfaces/plugins/iprocessorplugin.h"
 
 class ProcessorBase : public QObject 

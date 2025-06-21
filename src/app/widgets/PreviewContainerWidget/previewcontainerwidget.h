@@ -4,7 +4,7 @@
 #include "ui_previewcontainerwidget.h"
 #include <QList>
 #include <controllers/MainController/maincontroller.h>
-#include "sources/Source/SourcePreview/sourcepreview.h"
+#include "features/sources/Source/SourcePreview/sourcepreview.h"
 #include "widgets/SourcePreviewWidget/sourcepreviewwidget.h"
 
 class PreviewContainerWidget : public QWidget

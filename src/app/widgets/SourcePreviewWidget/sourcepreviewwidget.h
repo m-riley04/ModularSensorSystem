@@ -2,8 +2,8 @@
 
 #include <QWidget>
 #include "ui_sourcepreviewwidget.h"
-#include "sources/Source/source.h"
-#include <sources/Source/SourcePreview/sourcepreview.h>
+#include "features/sources/Source/source.h"
+#include <features/sources/Source/SourcePreview/sourcepreview.h>
 #include <QPainter>
 
 class SourcePreviewWidget : public QWidget

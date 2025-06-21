@@ -4,7 +4,7 @@
 #include <controllers/MountController/mountcontroller.h>
 #include <controllers/SourceController/sourcecontroller.h>
 #include <controllers/ProcessingController/processingcontroller.h>
-#include <mounts/Mount/mount.h>
+#include <features/mounts/Mount/mount.h>
 
 struct Node {
     enum class Kind { Mount, Source, Processor };
@@ -28,13 +28,11 @@ public:
     int columnCount(const QModelIndex&)   const override { return 2; }
     QVariant data(const QModelIndex&, int role) const override;
 
-    // --- helper API for controllers ---
 public slots:
     void rebuild();                          // quick & dirty first
-    void onMountAdded(Mount*);
-    void onSourceAdded(Source*);
-    void onProcessorAdded(ProcessorBase*);
-    // the same for removed / updated
+    //void onMountAdded(Mount*);
+    //void onSourceAdded(Source*);
+    //void onProcessorAdded(ProcessorBase*);
 
 private:
     QVector<Node> mNodes;
@@ -42,7 +40,6 @@ private:
     SourceController* mSourceController;
     ProcessingController* mProcessingController;
 
-    // convenience
-    static QVariant iconFor(Node::Kind k);
+    //static QVariant iconFor(Node::Kind k);
 };
 
