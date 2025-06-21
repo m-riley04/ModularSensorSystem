@@ -3,7 +3,7 @@
 #include <QObject>
 #include <qsize.h>
 #include <QtMultimedia>
-#include "core/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
+#include "core/features/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
 
 extern "C" {
 	#include <libavformat/avformat.h>

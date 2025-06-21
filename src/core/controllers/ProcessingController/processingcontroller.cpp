@@ -7,6 +7,10 @@ ProcessingController::ProcessingController(QObject *parent)
 ProcessingController::~ProcessingController()
 {}
 
+const ProcessorBase* ProcessingController::byId(const QUuid& id) const {
+	return mProcessorsById.value(id);
+}
+
 void ProcessingController::addProcessor(IProcessorPlugin* plugin)
 {
 	if (!plugin) return; // Ensure valid pointers

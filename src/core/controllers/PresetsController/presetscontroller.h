@@ -1,10 +1,10 @@
 #pragma once
 
 #include <QObject>
-#include "sources/Source/source.h"
+#include "features/sources/Source/source.h"
 #include <controllers/SourceController/sourcecontroller.h>
 #include <presets/Preset/preset.h>
-#include <sources/IConfigurableSource/iconfigurablesource.h>
+#include <features/sources/IConfigurableSource/iconfigurablesource.h>
 #include <qjsonarray.h>
 #include <QDir>
 #include <qdiriterator.h>

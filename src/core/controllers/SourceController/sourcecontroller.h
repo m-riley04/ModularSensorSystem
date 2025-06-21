@@ -1,11 +1,11 @@
 #pragma once
 
 #include <QObject>
-#include <sources/Source/source.h>
+#include <features/sources/Source/source.h>
 #include <Controllers/RecordingSession/recordingsession.h>
 #include <qcameradevice.h>
 #include <controllers/PluginController/plugincontroller.h>
-#include <sources/Source/SourceError/sourceerror.h>
+#include <features/sources/Source/SourceError/sourceerror.h>
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
 
 class SourceController : public BackendControllerBase
@@ -37,11 +37,14 @@ public:
 	bool isClosed() const { return mState == CLOSED; }
 	bool isError() const { return mState == ERROR; }
 
+	const Source* byId(const QUuid& id) const;
+
 private:
 	QList<Source*> mSources;
 	SourceController::State mState = CLOSED;
 
 	QHash<QUuid, QList<ProcessorBase*>> mProcessorsBySourceId;
+	QHash<QUuid, Source*> mSourcesById;
 
 	QPointer<PluginController> pPluginController;
 	RecordingSession* pRecordingSession;

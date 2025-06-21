@@ -5,7 +5,7 @@
 #include <qmessagebox.h>
 #include "dialogs/AddSourceDialog/addsourcedialog.h"
 #include <Controllers/SourceController/sourcecontroller.h>
-#include <sources/IConfigurableSource/iconfigurablesource.h>
+#include <features/sources/IConfigurableSource/iconfigurablesource.h>
 #include <qobject.h>
 #include <QMimeData>
 

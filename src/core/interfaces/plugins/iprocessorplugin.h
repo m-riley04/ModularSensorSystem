@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QObject>
-#include "sources/Source/source.h"
-#include "processing/ProcessorBase/processorbase.h"
+#include "features/sources/Source/source.h"
+#include "features/processors/ProcessorBase/processorbase.h"
 
 class ProcessorBase;
 

@@ -8,10 +8,10 @@
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
-#include "core/sources/Source/source.h"
-#include "core/sources/IConfigurableSource/iconfigurablesource.h"
-#include "core/sources/Source/SourcePropertiesWidget/sourcepropertieswidget.h"
-#include "core/sources/IClippableSource/iclippablesource.h"
+#include "core/features/sources/Source/source.h"
+#include "core/features/sources/IConfigurableSource/iconfigurablesource.h"
+#include "core/features/sources/Source/SourcePropertiesWidget/sourcepropertieswidget.h"
+#include "core/features/sources/IClippableSource/iclippablesource.h"
 #include "core/interfaces/capability/ivideosource.h"
 #include "USBVideoClipBuffer/usbvideoclipbuffer.h"
 #include "USBVideoPreview/usbvideopreview.h"

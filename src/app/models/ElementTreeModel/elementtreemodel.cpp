@@ -53,18 +53,18 @@ QVariant ElementTreeModel::data(const QModelIndex& idx, int role) const
     if (!idx.isValid()) return {};
     const Node& n = mNodes[int(idx.internalId())];
 
-    if (role == TreeRoles::TypeRole) return int(n.kind);
-    if (role == TreeRoles::IdRole)   return n.id;
+    /*if (role == TreeRoles::TypeRole) return int(n.kind);
+    if (role == TreeRoles::IdRole)   return n.id;*/
 
-    if (role == Qt::DecorationRole && idx.column() == 0)
-        return iconFor(n.kind);
+    /*if (role == Qt::DecorationRole && idx.column() == 0)
+        return iconFor(n.kind);*/
 
     if (role == Qt::DisplayRole) {
         if (idx.column() == 0) {
             switch (n.kind) {
             case Node::Kind::Mount: return mMountController->byId(n.id)->name();
             case Node::Kind::Source: return mSourceController->byId(n.id)->name();
-            case Node::Kind::Processor: return mProcessingController->byId(n.id)->name();
+            //case Node::Kind::Processor: return mProcessingController->byId(n.id)->name();
             }
         }
         if (idx.column() == 1) { /* status text */ }
@@ -82,14 +82,14 @@ void ElementTreeModel::rebuild()
         int mRow = mNodes.size();
         mNodes << Node{ Node::Kind::Mount, QUuid(m->id()), -1};
 
-        for (auto sId : mMountController->sourcesOf(m->id())) {
+        /*for (auto sId : mMountController->sourcesOf(m->id())) {
             int sRow = mNodes.size();
             mNodes << Node{ Node::Kind::Source, sId, mRow };
 
             for (auto pId : mProcessingController->processorsForSource(sId)) {
                 mNodes << Node{ Node::Kind::Processor, pId, sRow };
             }
-        }
+        }*/
     }
     endResetModel();
 }

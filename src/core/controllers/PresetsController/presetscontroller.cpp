@@ -38,7 +38,7 @@ void PresetsController::savePreset(QString name, QList<Source*> activeSources, Q
 		}
 
 		SourcePreset preset {
-			source->id(),
+			source->id().toRfc4122(),
 			source->name(),
 			source->pluginId(),
 			source->type(),

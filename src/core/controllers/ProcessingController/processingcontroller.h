@@ -1,9 +1,10 @@
 #pragma once
 
 #include <QObject>
-#include <sources/Source/source.h>
-#include <processing/ProcessorBase/processorbase.h>
+#include <features/sources/Source/source.h>
+#include <features/processors/ProcessorBase/processorbase.h>
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
+#include <qhash.h>
 
 class ProcessingController  : public BackendControllerBase
 {
@@ -24,12 +25,13 @@ public:
 	void addProcessor(IProcessorPlugin* plugin);
 	void removeProcessor(ProcessorBase* processor);
 
+	const ProcessorBase* byId(const QUuid& id) const;
+
 private:
 	QList<ProcessorBase*> mProcessors;
-    QMap<Source*, QList<ProcessorBase*>> mSourcesProcessorsMap;
+    QHash<QUuid, QList<ProcessorBase*>> mSourcesProcessorsMap;
+	QHash<QUuid, ProcessorBase*> mProcessorsById;
     bool mActive = false;
-
-	QHash<QUuid, QList<ProcessorBase*>> mProcessorsBySourceId;
 
     bool isCompatible(ProcessorBase* proc, Source* src);
 

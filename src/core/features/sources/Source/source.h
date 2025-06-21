@@ -5,8 +5,9 @@
 #include <quuid.h>
 #include "SourcePreview/sourcepreview.h"
 #include <QPointer>
-#include "sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
+#include "features/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
 #include "SourceError/sourceerror.h"
+#include <QUuid>
 
 class RecordingSession;
 class SourcePreview;
@@ -77,7 +78,7 @@ protected:
 	/// The unique hardware ID if possible.
 	/// Should be set in each child's initializer.
 	/// </summary>
-	QByteArray mId;
+	QUuid mId;
 
 	QString mPluginId = "Unknown Plugin";
 
@@ -108,7 +109,7 @@ public:
 	/// <summary>
 	/// The unique ID for the device
 	/// </summary>
-	QByteArray id() const { return mId; }
+	QUuid id() const { return mId; }
 
 	QString pluginId() const { return mPluginId; }
 
