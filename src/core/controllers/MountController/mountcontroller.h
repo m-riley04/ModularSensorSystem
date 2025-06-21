@@ -1,7 +1,9 @@
 #pragma once
 
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
-#include <mounts/Mount/mount.h>
+#include <features/mounts/Mount/mount.h>
+#include <QHash>
+#include <QUuid>
 
 class MountController : public BackendControllerBase
 {
@@ -16,7 +18,6 @@ public:
 
 	QList<Mount*> mounts() const { return mMounts; }
 
-	Mount* byId(const QUuid& id);
 	const Mount* byId(const QUuid& id) const;
 
 private:

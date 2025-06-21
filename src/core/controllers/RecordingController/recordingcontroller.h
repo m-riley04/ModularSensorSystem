@@ -3,7 +3,7 @@
 #include <QObject>
 #include <qelapsedtimer.h>
 #include <qdir.h>
-#include <sources/Source/source.h>
+#include <features/sources/Source/source.h>
 #include <QDateTime>
 #include "controllers/RecordingSession/recordingsession.h"
 #include <controllers/SourceController/sourcecontroller.h>

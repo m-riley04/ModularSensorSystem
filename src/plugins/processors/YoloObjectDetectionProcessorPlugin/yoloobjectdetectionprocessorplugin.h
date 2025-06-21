@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include "interfaces/plugins/iprocessorplugin.h"
-#include "sources/Source/source.h"
+#include "features/sources/Source/source.h"
 #include "YoloObjectDetectionProcessor/yoloobjectdetectionprocessor.h"
 #include <interfaces/capability/ivideosource.h>
 

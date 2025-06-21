@@ -2,10 +2,10 @@
 
 #include <QObject>
 #include <QDebug>
-#include "sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
-#include <sources/Source/SourcePropertiesWidget/sourcepropertieswidget.h>
-#include <sources/IClippableSource/IClippableSource.h>
-#include <sources/Source/SourceError/sourceerror.h>
+#include "features/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
+#include <features/sources/Source/SourcePropertiesWidget/sourcepropertieswidget.h>
+#include <features/sources/IClippableSource/IClippableSource.h>
+#include <features/sources/Source/SourceError/sourceerror.h>
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
 
 class ClipController : public BackendControllerBase

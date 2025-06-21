@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "sources/Source/source.h"
+#include "features/sources/Source/source.h"
 
 struct SourceInfo {
 	QByteArray id;

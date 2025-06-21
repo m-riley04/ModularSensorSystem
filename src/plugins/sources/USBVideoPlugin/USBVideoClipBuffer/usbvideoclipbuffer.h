@@ -1,5 +1,5 @@
 #pragma once
-#include "core/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
+#include "core/features/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
 #include <QVideoFrame>
 #include <deque>
 

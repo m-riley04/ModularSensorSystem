@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include "core/interfaces/plugins/isourceplugin.h"
-#include "core/sources/Source/source.h"
+#include "core/features/sources/Source/source.h"
 #include "USBVideoSource/usbvideosource.h"
 #include <QtMultimedia>
 

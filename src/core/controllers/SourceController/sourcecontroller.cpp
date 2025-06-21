@@ -7,6 +7,11 @@ SourceController::SourceController(PluginController* pluginController, QObject *
 SourceController::~SourceController()
 {}
 
+const Source* SourceController::byId(const QUuid & id) const
+{
+	return mSourcesById.value(id);
+}
+
 void SourceController::openSources()
 {
 	for (Source* source : mSources) {
@@ -80,6 +85,7 @@ Source* SourceController::addSource(ISourcePlugin* plugin, SourceInfo info) {
 	auto source = plugin->createSource(info.id, this);
 
 	mSources.append(source);
+	mSourcesById[source->id()] = source;
 
 	// Connect errors
 	connect(source, &Source::errorOccurred, this, &SourceController::errorOccurred);
@@ -101,7 +107,7 @@ void SourceController::removeSource(Source* source)
 	};
 
 	// Get source id before deleting
-	QByteArray sourceId = source->id();
+	QByteArray sourceId = source->id().toRfc4122();
 
 	// Remove source from the list
 	mSources.removeAll(source);
@@ -112,7 +118,7 @@ void SourceController::removeSource(Source* source)
 Source* SourceController::getSource(QByteArray id) const
 {
 	for (Source* source : mSources) {
-		if (source && source->id() == id) {
+		if (source && source->id().toRfc4122() == id) {
 			return source;
 		}
 	}
