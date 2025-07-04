@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include <mounts/Mount/mount.h>
+#include <features/mounts/Mount/mount.h>
 
 class IMountPlugin
 {
