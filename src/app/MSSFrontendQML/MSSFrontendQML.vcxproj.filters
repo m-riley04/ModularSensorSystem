@@ -32,6 +32,11 @@
     <None Include="main.qml">
       <Filter>Source Files</Filter>
     </None>
-
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pages\MainPage.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="pages\qmldir" />
   </ItemGroup>
 </Project>

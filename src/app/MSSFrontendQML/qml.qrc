@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/qt/qml/mssfrontendqml">
         <file>main.qml</file>
+        <file>pages/MainPage.qml</file>
     </qresource>
 </RCC>
