@@ -7,10 +7,13 @@ import "components"
 import "logic/actions"
 
 Window {
+    id: window
     visible: true
     width: 900
     height: 600
     title: "ModularSensorSystem"
+    palette.window: 'gray'
+    flags: Qt.FramelessWindowHint
 
     GlobalActions { id: globalActions }
     SessionActions { id: sessionActions }
@@ -22,6 +25,7 @@ Window {
     // Custom Title Bar (placeholder, can be replaced with a custom QML component)
     CustomTitleBar {
         id: titleBar
+        title: window.title
     }
 
     // Menu Bar
@@ -96,52 +100,30 @@ Window {
         RowLayout {
             anchors.fill: parent
             spacing: 4
-            ToolButton { action: presetsActions.savePreset; }
-            ToolButton { action: presetsActions.loadPreset }
-            ToolButton { action: presetsActions.refreshPresets }
-            ToolButton { action: presetsActions.deletePreset }
+            ToolButton { action: presetsActions.savePreset; text: ""; }
+            ToolButton { action: presetsActions.loadPreset; text: ""; }
+            ToolButton { action: presetsActions.refreshPresets; text: ""; }
+            ToolButton { action: presetsActions.deletePreset; text: ""; }
             ToolSeparator {}
-            ToolButton { action: sourcesActions.addSource  }
-            ToolButton { action: sourcesActions.removeSource }
-            ToolButton { action: sourcesActions.configureSource }
+            ToolButton { action: sourcesActions.addSource; text: ""; }
+            ToolButton { action: sourcesActions.removeSource; text: ""; }
+            ToolButton { action: sourcesActions.configureSource; text: ""; }
             ToolSeparator {}
-            ToolButton { action: processorsActions.addProcessor }
-            ToolButton { action: processorsActions.removeProcessor }
-            ToolButton { action: processorsActions.configureProcessor }
-            ToolButton { action: processorsActions.toggleProcessing }
-        }
-    }
-
-    // Navigation Bar
-    RowLayout {
-        id: navBar
-        anchors.top: toolBar.bottom
-        width: parent.width
-        height: 40
-        spacing: 8
-        Rectangle {
-            color: "transparent"
-            Layout.fillWidth: true
-            Layout.preferredHeight: 40
-            RowLayout {
-                anchors.fill: parent
-                spacing: 8
-                Button { text: qsTr("Home") }
-                Button { text: qsTr("Playback") }
-                Item { Layout.fillWidth: true } // Spacer
-            }
+            ToolButton { action: processorsActions.addProcessor; text: ""; }
+            ToolButton { action: processorsActions.removeProcessor; text: ""; }
+            ToolButton { action: processorsActions.configureProcessor; text: ""; }
+            ToolButton { action: processorsActions.toggleProcessing; text: ""; }
         }
     }
 
     // Main Page Stack
     StackView {
         id: pagesStack
-        anchors.top: navBar.bottom
+        anchors.top: toolBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         MainPage {}
     }
 
-    
 }

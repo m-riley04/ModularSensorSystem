@@ -10,7 +10,6 @@ Item {
     signal addClicked()
     signal removeClicked()
     signal propertiesClicked()
-    signal enabledChanged(bool enabled)
     signal selectedProcessorChanged(int currentIndex, int previousIndex)
 
     RowLayout {
