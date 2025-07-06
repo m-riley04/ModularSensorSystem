@@ -2,6 +2,9 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
+import "pages"
+import "components"
+import "logic/actions"
 
 Window {
     visible: true
@@ -9,24 +12,16 @@ Window {
     height: 600
     title: "ModularSensorSystem"
 
+    GlobalActions { id: globalActions }
+    SessionActions { id: sessionActions }
+    SourcesActions { id: sourcesActions }
+    PluginsActions { id: pluginsActions }
+    ProcessorsActions { id: processorsActions }
+    PresetsActions { id: presetsActions }
+
     // Custom Title Bar (placeholder, can be replaced with a custom QML component)
-    Rectangle {
+    CustomTitleBar {
         id: titleBar
-        color: "#282828"
-        height: 32
-        width: parent.width
-        anchors.top: parent.top
-        RowLayout {
-            anchors.fill: parent
-            spacing: 8
-            Label {
-                text: "ModularSensorSystem"
-                color: "white"
-                font.bold: true
-                Layout.alignment: Qt.AlignVCenter
-            }
-            // Add window control buttons here if needed
-        }
     }
 
     // Menu Bar
@@ -36,8 +31,8 @@ Window {
         width: parent.width
         Menu {
             title: qsTr("File")
-            MenuItem { text: qsTr("Quit") }
-            MenuItem { text: qsTr("Restart") }
+            MenuItem { action: globalActions.quit }
+            MenuItem { action: globalActions.restart }
         }
         Menu {
             title: qsTr("Edit")
@@ -46,49 +41,50 @@ Window {
             title: qsTr("View")
             Menu {
                 title: qsTr("Control Row")
-                MenuItem { text: qsTr("Preset List") }
-                MenuItem { text: qsTr("Sources List") }
-                MenuItem { text: qsTr("Processors List") }
-                MenuItem { text: qsTr("Controls") }
+                MenuItem { action: globalActions.viewControlRowPresetList }
+                MenuItem { action: globalActions.viewControlRowSourcesList }
+                MenuItem { action: globalActions.viewControlRowProcessorsList }
+                MenuItem { action: globalActions.viewControlRowControls }
                 MenuSeparator {}
-                MenuItem { text: qsTr("Entire Row") }
+                MenuItem { action: globalActions.viewControlRowEntireRow }
             }
             MenuSeparator {}
-            MenuItem { text: qsTr("Menu Bar") }
-            MenuItem { text: qsTr("Toolbar") }
-            MenuItem { text: qsTr("Custom Window Handle") }
+            MenuItem { action: globalActions.viewMenuBar }
+            MenuItem { action: globalActions.viewToolbar }
+            MenuItem { action: globalActions.viewCustomWindowHandle }
         }
         Menu {
             title: qsTr("Session")
             Menu {
                 title: qsTr("Sources")
-                MenuItem { text: qsTr("Add Source") }
-                MenuItem { text: qsTr("Remove Source") }
-                MenuItem { text: qsTr("Configure Source") }
+                MenuItem { action: sourcesActions.addSource }
+                MenuItem { action: sourcesActions.removeSource }
+                MenuItem { action: sourcesActions.configureSource }
             }
             Menu {
                 title: qsTr("Processors")
-                MenuItem { text: qsTr("Add Processor") }
-                MenuItem { text: qsTr("Remove Processor") }
-                MenuItem { text: qsTr("Configure Processor") }
-                MenuItem { text: qsTr("Toggle Processing") }
+                MenuItem { action: processorsActions.addProcessor }
+                MenuItem { action: processorsActions.removeProcessor }
+                MenuItem { action: processorsActions.configureProcessor }
+                MenuItem { action: processorsActions.toggleProcessing }
             }
             Menu {
                 title: qsTr("Recording")
             }
-            MenuItem { text: qsTr("Clipping") }
-            MenuItem { text: qsTr("Options") }
+            MenuItem { action: sessionActions.clipping }
+            MenuItem { action: sessionActions.sessionOptions }
         }
         Menu {
             title: qsTr("Plugins")
         }
         Menu {
             title: qsTr("About")
-            MenuItem { text: qsTr("GitHub") }
-            MenuItem { text: qsTr("Credits") }
+            MenuItem { action: globalActions.aboutGitHub }
+            MenuItem { action: globalActions.aboutCredits }
         }
         Menu {
             title: qsTr("Help")
+            MenuItem { action: globalActions.help }
         }
     }
 
@@ -100,19 +96,19 @@ Window {
         RowLayout {
             anchors.fill: parent
             spacing: 4
-            ToolButton { text: qsTr("Save Preset") }
-            ToolButton { text: qsTr("Load Preset") }
-            ToolButton { text: qsTr("Refresh Presets") }
-            ToolButton { text: qsTr("Delete Preset") }
+            ToolButton { action: presetsActions.savePreset; }
+            ToolButton { action: presetsActions.loadPreset }
+            ToolButton { action: presetsActions.refreshPresets }
+            ToolButton { action: presetsActions.deletePreset }
             ToolSeparator {}
-            ToolButton { text: qsTr("Add Source") }
-            ToolButton { text: qsTr("Remove Source") }
-            ToolButton { text: qsTr("Configure Source") }
+            ToolButton { action: sourcesActions.addSource  }
+            ToolButton { action: sourcesActions.removeSource }
+            ToolButton { action: sourcesActions.configureSource }
             ToolSeparator {}
-            ToolButton { text: qsTr("Add Processor") }
-            ToolButton { text: qsTr("Remove Processor") }
-            ToolButton { text: qsTr("Configure Processor") }
-            ToolButton { text: qsTr("Toggle Processing") }
+            ToolButton { action: processorsActions.addProcessor }
+            ToolButton { action: processorsActions.removeProcessor }
+            ToolButton { action: processorsActions.configureProcessor }
+            ToolButton { action: processorsActions.toggleProcessing }
         }
     }
 
@@ -144,10 +140,8 @@ Window {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        initialItem: mainPageComponent
-        Component {
-            id: mainPageComponent
-            Loader { source: "qrc:/qt/qml/mssfrontendqml/pages/MainPage.qml" }
-        }
+        MainPage {}
     }
+
+    
 }

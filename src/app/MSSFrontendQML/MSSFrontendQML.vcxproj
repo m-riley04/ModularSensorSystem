@@ -100,7 +100,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <None Include="logic\actions\GlobalActions.qml" />
+    <None Include="components\qmldir" />
+    <None Include="dialogs\AddProcessorDialog.qml" />
+    <None Include="dialogs\AddSourceDialog.qml" />
+    <None Include="components\SessionControlsWidget.qml" />
+    <None Include="dialogs\qmldir" />
+    <None Include="dialogs\SessionPropertiesDialog.qml" />
+    <None Include="components\SourcePreviewWidget.qml" />
+    <None Include="components\SourcesWidget.qml" />
+    <None Include="components\CustomTitleBar.qml" />
+    <None Include="logic\actions\PluginsActions.qml" />
+    <None Include="logic\actions\PresetsActions.qml" />
+    <None Include="logic\actions\ProcessorsActions.qml" />
+    <None Include="logic\actions\SessionActions.qml" />
+    <None Include="logic\actions\SourcesActions.qml" />
+    <None Include="logic\actions\qmldir" />
     <None Include="pages\MainPage.qml" />
+    <None Include="components\PresetsWidget.qml" />
+    <None Include="components\ProcessorsWidget.qml" />
     <None Include="pages\qmldir" />
     <QtRcc Include="qml.qrc" />
     <None Include="main.qml" />

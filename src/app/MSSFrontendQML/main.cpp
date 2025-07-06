@@ -10,8 +10,6 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    engine.addImportPath("qrc:/qt/qml/mssfrontendqml/pages");
-    engine.load(QUrl(QStringLiteral("qrc:/qt/qml/mssfrontendqml/pages/MainPage.qml")));
     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/mssfrontendqml/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
