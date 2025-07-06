@@ -1,0 +1,7 @@
+module MSSFrontendQML.Components
+CustomTitleBar 1.0 CustomTitleBar.qml
+PresetsWidget 1.0 PresetsWidget.qml
+ProcessorsWidget 1.0 ProcessorsWidget.qml
+SessionControlsWidget 1.0 SessionControlsWidget.qml
+SourcesWidget 1.0 SourcesWidget.qml
+SourcePreviewWidget 1.0 SourcePreviewWidget.qml
