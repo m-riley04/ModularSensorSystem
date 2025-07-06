@@ -1,0 +1,7 @@
+﻿module MSSFrontendQML.Logic.Actions
+GlobalActions 1.0 GlobalActions.qml
+PluginsActions 1.0 PluginsActions.qml
+PresetsActions 1.0 PresetsActions.qml
+ProcessorsActions 1.0 ProcessorsActions.qml
+SessionActions 1.0 SessionActions.qml
+SourcesActions 1.0 SourcesActions.qml
