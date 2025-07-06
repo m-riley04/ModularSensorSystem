@@ -1,0 +1,4 @@
+module MSSFrontendQML.Dialogs
+AddProcessorDialog 1.0 AddProcessorDialog.qml
+AddSourceDialog 1.0 AddSourceDialog.qml
+SessionPropertiesDialog 1.0 SessionPropertiesDialog.qml
