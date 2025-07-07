@@ -13,7 +13,7 @@ Window {
     height: 600
     title: "ModularSensorSystem"
     palette.window: 'gray'
-    flags: Qt.FramelessWindowHint
+    flags: Qt.Window | Qt.FramelessWindowHint
 
     GlobalActions { id: globalActions }
     SessionActions { id: sessionActions }
