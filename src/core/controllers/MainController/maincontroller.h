@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <Controllers/ClipController/clipcontroller.h>
+#include <controllers/ClipController/clipcontroller.h>
 #include <controllers/RecordingController/recordingcontroller.h>
 #include <controllers/PluginController/plugincontroller.h>
 #include <qcoreapplication.h>
@@ -13,9 +13,17 @@
 class MainController  : public QObject
 {
 	Q_OBJECT
+	QML_ELEMENT
+	QML_SINGLETON
+	Q_PROPERTY(RecordingController* recordingController READ recordingController CONSTANT)
+	Q_PROPERTY(SourceController* sourceController READ sourceController CONSTANT)
+	Q_PROPERTY(ClipController* clipController READ clipController CONSTANT)
+	Q_PROPERTY(PluginController* pluginController READ pluginController CONSTANT)
+	Q_PROPERTY(PresetsController* presetsController READ presetsController CONSTANT)
+	Q_PROPERTY(ProcessingController* processingController READ processingController CONSTANT)
 
 public:
-	MainController(QObject *parent);
+	MainController(QObject *parent = nullptr);
 	~MainController();
 
 	/**

@@ -1,12 +1,11 @@
 #pragma once
 
 #include <QObject>
-#include "core/controllers/RecordingSession/recordingsession.h"
+#include "controllers/RecordingSession/recordingsession.h"
 #include <quuid.h>
 #include "SourcePreview/sourcepreview.h"
 #include <QPointer>
 #include "features/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
-#include "SourceError/sourceerror.h"
 #include <QUuid>
 
 class RecordingSession;
@@ -149,6 +148,4 @@ signals:
 	/// Emitted when the source's preview is available.
 	/// </summary>
 	void previewAvailable(Source* src, SourcePreview* preview);
-
-	void errorOccurred(const SourceError& e);
 };

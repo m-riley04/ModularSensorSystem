@@ -1,11 +1,8 @@
 #pragma once
-#include <QWidget>
 
 class IConfigurableSource {
 public:
     virtual ~IConfigurableSource() = default;
-
-    virtual QWidget* createConfigWidget(QWidget* parent = nullptr) = 0;
     
     /// <summary>
     /// Loads the settings from the given JSON object.

@@ -9,6 +9,7 @@
 class ProcessingController  : public BackendControllerBase
 {
 	Q_OBJECT
+		QML_ELEMENT
 
 public:
 	ProcessingController(QObject *parent);

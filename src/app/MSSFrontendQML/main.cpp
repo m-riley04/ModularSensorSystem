@@ -1,5 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <core/controllers/MainController/maincontroller.h>
+#include <qqmlcontext.h>
 
 int main(int argc, char *argv[])
 {
@@ -8,11 +10,18 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
-
     QQmlApplicationEngine engine;
+    auto pController = std::make_unique<MainController>();
+
+    qmlRegisterSingletonInstance("MSS.Controller", 1, 0, "MainController", pController.get());
+
     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/mssfrontendqml/main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
+    if (engine.rootObjects().isEmpty()) {
+		qWarning() << "Failed to load QML root object (is empty).";
+        return EXIT_FAILURE;
+    }
+
+	
 
     return app.exec();
 }

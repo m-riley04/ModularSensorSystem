@@ -13,6 +13,7 @@
 class PresetsController : public BackendControllerBase
 {
 	Q_OBJECT
+		QML_ELEMENT
 
 public:
 	PresetsController(const QString& dir, QObject *parent);

@@ -11,6 +11,7 @@
 class SourceController : public BackendControllerBase
 {
 	Q_OBJECT
+		QML_ELEMENT
 
 public:
 	enum State {
