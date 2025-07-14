@@ -5,6 +5,7 @@
 #include <features/processors/ProcessorBase/processorbase.h>
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
 #include <qhash.h>
+#include <QtQml>
 
 class ProcessingController  : public BackendControllerBase
 {

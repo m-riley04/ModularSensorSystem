@@ -9,6 +9,7 @@
 #include <controllers/PresetsController/presetscontroller.h>
 #include <controllers/ProcessingController/processingcontroller.h>
 #include <controllers/SourceController/sourcecontroller.h>
+#include <QtQml>
 
 class MainController  : public QObject
 {

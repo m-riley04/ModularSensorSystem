@@ -7,6 +7,7 @@
 #include <interfaces/plugins/isourceplugin.h>
 #include <interfaces/plugins/iprocessorplugin.h>
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
+#include <QtQml>
 
 class PluginController : public BackendControllerBase
 {

@@ -9,6 +9,7 @@
 #include <QDir>
 #include <qdiriterator.h>
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
+#include <QtQml>
 
 class PresetsController : public BackendControllerBase
 {

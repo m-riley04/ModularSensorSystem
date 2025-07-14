@@ -8,6 +8,7 @@
 #include "controllers/RecordingSession/recordingsession.h"
 #include <controllers/SourceController/sourcecontroller.h>
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
+#include <QtQml>
 
 class RecordingController  : public BackendControllerBase
 {

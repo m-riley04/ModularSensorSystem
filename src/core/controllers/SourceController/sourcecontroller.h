@@ -7,6 +7,7 @@
 #include <controllers/PluginController/plugincontroller.h>
 #include <features/sources/Source/SourceError/sourceerror.h>
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
+#include <QtQml>
 
 class SourceController : public BackendControllerBase
 {
