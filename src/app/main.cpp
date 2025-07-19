@@ -1,34 +1,21 @@
-#include "Windows/MainWindow/MainWindow.h"
-#include <QtWidgets/QApplication>
-#include <features/sources/Source/SourceError/sourceerror.h>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <qqmlcontext.h>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-	// Register metatypes
-	qRegisterMetaType<SourceError>("SourceError");
+#if defined(Q_OS_WIN) && QT_VERSION_CHECK(5, 6, 0) <= QT_VERSION && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
 
-	// Create application
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    QGuiApplication app(argc, argv);
+    QQmlApplicationEngine engine;
 
-	// Execute the application and handle exceptions
-    int ret;
-    try {
-        ret = a.exec();
-	}
-	catch (const std::bad_alloc&) {
-		// TODO: clean up here, saving, closing files, etc.
+    engine.load(QUrl(QStringLiteral("qrc:/qt/qml/App/main.qml")));
+    if (engine.rootObjects().isEmpty()) {
+        qWarning() << "Failed to load QML root object (is empty).";
+        return EXIT_FAILURE;
+    }
 
-		ret = EXIT_FAILURE;
-	}
-	catch (const std::exception& e) {
-		qDebug() << "Exception caught in main:" << e.what();
-		ret = EXIT_FAILURE;
-	}
-	catch (...) {
-		qDebug() << "Unknown error caught in main.";
-		ret = EXIT_FAILURE;
-	}
-    return ret;
+    return app.exec();
 }

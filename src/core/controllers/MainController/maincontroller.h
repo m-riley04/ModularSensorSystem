@@ -14,8 +14,7 @@
 class MainController  : public QObject
 {
 	Q_OBJECT
-	QML_ELEMENT
-	QML_SINGLETON
+	Q_PROPERTY(int numSubControllers READ numSubControllers CONSTANT)
 	Q_PROPERTY(RecordingController* recordingController READ recordingController CONSTANT)
 	Q_PROPERTY(SourceController* sourceController READ sourceController CONSTANT)
 	Q_PROPERTY(ClipController* clipController READ clipController CONSTANT)
@@ -26,6 +25,8 @@ class MainController  : public QObject
 public:
 	MainController(QObject *parent = nullptr);
 	~MainController();
+
+	int numSubControllers() const { return 6; }
 
 	/**
 	 * @brief Returns the list of backend controller pointers owned by the main controller.
