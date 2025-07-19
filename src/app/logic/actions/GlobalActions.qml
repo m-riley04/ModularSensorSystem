@@ -28,6 +28,8 @@ Item {
     property alias aboutCredits: actionAboutCredits;
     property alias help: actionHelp;
 
+    readonly property string githubUrl: "https://github.com/m-riley04/ModularSensorSystem";
+
     // Add actions
     ActionGroup {
         id: actionsFile
@@ -70,7 +72,10 @@ Item {
 
     ActionGroup {
         id: actionsAbout
-        Action { id: actionAboutGitHub; text: qsTr("GitHub") }
+        Action { id: actionAboutGitHub; text: qsTr("GitHub"); onTriggered: () => {
+                Qt.openUrlExternally(globalActions.githubUrl);
+            }
+        }
         Action { id: actionAboutCredits; text: qsTr("Credits") }
     }
 

@@ -37,6 +37,11 @@ qt_add_qml_module(${PROJECT_NAME}
     RESOURCE_PREFIX "/qt/qml"
     QML_FILES
         main.qml
+    DEPENDENCIES TARGET
+        AppComponents
+        AppDialogs
+        AppLogicActions
+        AppPages
 )
 
 set_target_properties(${PROJECT_NAME}
