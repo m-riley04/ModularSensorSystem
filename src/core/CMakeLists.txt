@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(core LANGUAGES CXX)
+project(Core LANGUAGES CXX)
 
 include(qt.cmake)
 
@@ -31,12 +31,22 @@ qt_add_library(
 
 # Make headers available to consumers
 target_include_directories(${PROJECT_NAME}
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        controllers
+        features
+        interfaces
+        presets
+        yolo_models
 )
 
 # Link against QtCore (and anything else backend needs)
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC Qt::Core Qt::Multimedia Qt::Qml Qt::Concurrent
+    PUBLIC 
+        Qt::Core
+        Qt::Multimedia
+        Qt::Qml
+        Qt::Concurrent
 )
 
 # Nice-to-have on Windows: export every symbol automatically

@@ -14,6 +14,8 @@
 class MainController  : public QObject
 {
 	Q_OBJECT
+	QML_SINGLETON
+	QML_ELEMENT
 	Q_PROPERTY(int numSubControllers READ numSubControllers CONSTANT)
 	Q_PROPERTY(RecordingController* recordingController READ recordingController CONSTANT)
 	Q_PROPERTY(SourceController* sourceController READ sourceController CONSTANT)
