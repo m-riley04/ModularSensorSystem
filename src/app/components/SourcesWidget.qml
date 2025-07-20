@@ -6,9 +6,9 @@ Item {
     id: sourcesWidget
     property alias model: sourcesList.model
     property int selectedIndex: sourcesList.currentIndex
-    signal addClicked()
-    signal removeClicked()
-    signal propertiesClicked()
+    signal addClicked
+    signal removeClicked
+    signal propertiesClicked
     signal selectedSourceChanged(int currentIndex, int previousIndex)
 
     RowLayout {
@@ -25,15 +25,16 @@ Item {
                 width: ListView.view.width
                 text: model.name
                 onClicked: {
-                    let prev = sourcesList.currentIndex;
-                    sourcesList.currentIndex = index;
-                    sourcesWidget.selectedSourceChanged(index, prev);
+                    let prev = sourcesList.currentIndex
+                    sourcesList.currentIndex = index
+                    sourcesWidget.selectedSourceChanged(index, prev)
                 }
                 highlighted: ListView.isCurrentItem
             }
             onCurrentIndexChanged: {
-                let prev = -1; // QML doesn't track previous, so -1
-                sourcesWidget.selectedSourceChanged(currentIndex, prev);
+                let prev = -1
+                // QML doesn't track previous, so -1
+                sourcesWidget.selectedSourceChanged(currentIndex, prev)
             }
         }
         // Controls
@@ -58,7 +59,9 @@ Item {
                 enabled: sourcesList.currentIndex >= 0
                 onClicked: sourcesWidget.propertiesClicked()
             }
-            Item { Layout.fillHeight: true } // Spacer
+            Item {
+                Layout.fillHeight: true
+            } // Spacer
         }
     }
 }

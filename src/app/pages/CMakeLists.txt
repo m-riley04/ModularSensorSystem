@@ -1,14 +1,13 @@
-add_library(AppPages STATIC)
-
-qt_add_qml_module(AppPages
-    URI App.Pages
+qt_add_qml_module(pages
+    URI app.pages
     VERSION 1.0
     QML_FILES
         MainPage.qml
     IMPORTS
         QtQuick
         QtQuick.Controls
-        QtQuick.Window
-    DEPENDENCIES TARGET 
-        AppComponents
+        QtQuick.Layouts
+        app.components
+    DEPENDENCIES TARGET
+        components
 )

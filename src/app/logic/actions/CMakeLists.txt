@@ -1,7 +1,5 @@
-add_library(AppLogicActions STATIC)
-
-qt_add_qml_module(AppLogicActions
-    URI App.Logic.Actions
+qt_add_qml_module(actions
+    URI app.logic.actions
     VERSION 1.0
     QML_FILES
         GlobalActions.qml

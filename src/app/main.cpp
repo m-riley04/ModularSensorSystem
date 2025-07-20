@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <qqmlcontext.h>
+#include <QDir>
+#include <QtQml>
 
 int main(int argc, char* argv[])
 {
@@ -11,9 +12,18 @@ int main(int argc, char* argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    engine.load(QUrl(QStringLiteral("qrc:/qt/qml/App/main.qml")));
+    // Add QML import paths
+    engine.addImportPath("qrc:/qt/qml/");
+    engine.addImportPath("qrc:/qt/qml/app/");
+    engine.addImportPath(QDir(app.applicationDirPath()).filePath("qml"));
+
+    engine.load(QUrl(QStringLiteral("qrc:/qt/qml/app/main.qml")));
     if (engine.rootObjects().isEmpty()) {
         qWarning() << "Failed to load QML root object (is empty).";
+        qWarning() << "Available import paths:";
+        for (const QString &path : engine.importPathList()) {
+            qWarning() << "  -" << path;
+        }
         return EXIT_FAILURE;
     }
 

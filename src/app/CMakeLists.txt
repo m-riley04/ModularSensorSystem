@@ -1,47 +1,40 @@
 cmake_minimum_required(VERSION 3.16)
 project(
-    App
+    app
     VERSION 0.0.1
     LANGUAGES CXX)
 
-include(qt.cmake)
-
-set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}")
-set(QT_QML_GENERATE_QMLLS_INI ON)
-
+set(AUTOMOC ON)
+set(AUTOUIC ON)
+set(AUTORCC ON)
+set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(
-    Qt6
-    COMPONENTS
-        Core
-        Quick
-        Qml
-    REQUIRED
-)
+set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml")
+set(QT_QML_GENERATE_QMLLS_INI ON)
 
-qt_standard_project_setup(REQUIRES 6.9)
+# Set CMakeCache qml import paths
+list(APPEND QML_DIRS "${CMAKE_BINARY_DIR}/qml")
+set(QML_IMPORT_PATH "${QML_DIRS}" CACHE STRING "Qt Creator 4.1 extra qml import paths")
 
-# Sub-modules
+# Sub-modules (App components)
+add_subdirectory(logic/actions)
 add_subdirectory(components)
 add_subdirectory(dialogs)
-add_subdirectory(logic/actions)
 add_subdirectory(pages)
 
+# Create the main executable
 qt_add_executable(${PROJECT_NAME} main.cpp)
 
+# Add QML module for the App itself
 qt_add_qml_module(${PROJECT_NAME}
     URI ${PROJECT_NAME}
     VERSION 1.0
     RESOURCE_PREFIX "/qt/qml"
+    OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}"
     QML_FILES
         main.qml
-    DEPENDENCIES TARGET
-        AppComponents
-        AppDialogs
-        AppLogicActions
-        AppPages
 )
 
 set_target_properties(${PROJECT_NAME}
@@ -49,15 +42,23 @@ set_target_properties(${PROJECT_NAME}
         WIN32_EXECUTABLE TRUE
 )
 
+# Link with all required libraries including Core
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-        Qt::Quick
-        AppComponents
-        AppDialogs
-        AppLogicActions
-        AppPages
+        Qt6::Quick
+        Qt6::Qml
+        Qt6::Core
+        components
+        dialogs
+        actions
+        pages
+        core # Link with the Core QML module
 )
 
-if(Qt6_FOUND)
-    qt_import_qml_plugins(${PROJECT_NAME})
-endif()
+# Critical: Import QML plugins to make Core module available at runtime
+qt_import_qml_plugins(${PROJECT_NAME})
+
+# Add the QML module output directory to import paths
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    QT_QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/qml"
+)

@@ -11,18 +11,13 @@
 #include <controllers/SourceController/sourcecontroller.h>
 #include <QtQml>
 
-class MainController  : public QObject
+class MainController : public QObject
 {
 	Q_OBJECT
-	QML_SINGLETON
 	QML_ELEMENT
-	Q_PROPERTY(int numSubControllers READ numSubControllers CONSTANT)
-	Q_PROPERTY(RecordingController* recordingController READ recordingController CONSTANT)
-	Q_PROPERTY(SourceController* sourceController READ sourceController CONSTANT)
-	Q_PROPERTY(ClipController* clipController READ clipController CONSTANT)
-	Q_PROPERTY(PluginController* pluginController READ pluginController CONSTANT)
-	Q_PROPERTY(PresetsController* presetsController READ presetsController CONSTANT)
-	Q_PROPERTY(ProcessingController* processingController READ processingController CONSTANT)
+	QML_SINGLETON
+    Q_PROPERTY(int numSubControllers READ numSubControllers CONSTANT)
+    Q_PROPERTY(SourceController sourceController READ sourceController CONSTANT)
 
 public:
 	MainController(QObject *parent = nullptr);
