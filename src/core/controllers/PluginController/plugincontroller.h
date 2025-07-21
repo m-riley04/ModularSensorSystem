@@ -21,7 +21,7 @@ public:
 	};
 
 public:
-    explicit PluginController(const QString& pluginRoot, QObject* parent = nullptr);
+    explicit PluginController(const QString& pluginRoot = "", QObject* parent = nullptr);
 
     void loadPlugins(QList<PluginType> pluginType);
     void loadPlugin(const QString& fullPath, const QString& fileName, PluginType pluginType);

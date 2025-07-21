@@ -20,7 +20,7 @@ public:
 	};
 
 public:
-	ClipController(QString clippingDir, QObject *parent = nullptr);
+    ClipController(QString clippingDir = "", QObject *parent = nullptr);
 	~ClipController();
 
 	State state() const { return mState; }

@@ -24,7 +24,7 @@ public:
 	};
 
 public:
-	SourceController(PluginController* pluginController, QObject *parent);
+    SourceController(PluginController* pluginController = nullptr, QObject *parent = nullptr);
 	~SourceController();
 
 	SourceController::State state() const { return mState; }

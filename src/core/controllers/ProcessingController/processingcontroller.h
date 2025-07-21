@@ -13,7 +13,7 @@ class ProcessingController  : public BackendControllerBase
 		QML_ELEMENT
 
 public:
-	ProcessingController(QObject *parent);
+    ProcessingController(QObject *parent = nullptr);
 	~ProcessingController();
 
 	QList<ProcessorBase*> processors() { return mProcessors; }

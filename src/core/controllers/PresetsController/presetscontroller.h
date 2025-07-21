@@ -17,7 +17,7 @@ class PresetsController : public BackendControllerBase
 		QML_ELEMENT
 
 public:
-	PresetsController(const QString& dir, QObject *parent);
+    PresetsController(const QString& dir = "", QObject *parent = nullptr);
 	~PresetsController();
 
 	QList<Preset> presets() const { return mPresets; }

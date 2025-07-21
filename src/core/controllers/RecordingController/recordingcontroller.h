@@ -22,7 +22,7 @@ public:
 	};
 
 public:
-	RecordingController(SourceController* sourceController, QObject *parent);
+    RecordingController(SourceController* sourceController = nullptr, QObject *parent = nullptr);
 	~RecordingController();
 
 	RecordingController::State state() const { return mState; }

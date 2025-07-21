@@ -3,14 +3,10 @@ import QtQuick.Window
 import QtQuick.Controls
 import app.components
 import app.pages
-import app.logic.actions
 import core
 
 Window {
     id: window
-
-    // Access MainController singleton directly
-    property MainController mainController: MainController
 
     visible: true
     width: 900
@@ -18,22 +14,21 @@ Window {
     title: "ModularSensorSystem"
     flags: Qt.Window | Qt.FramelessWindowHint
 
-    // Custom Title Bar (placeholder, can be replaced with a custom QML component)
     CustomTitleBar {
         id: titleBar
-        title: `Number of subcontrollers: ${window.mainController.numSubControllers}`
+        title: `Number of subcontrollers: ${MainController.numSubControllers}`
     }
 
-    // Menu Bar
     HomeMenuBar {
         id: homeMenuBar
         anchors.top: titleBar.bottom
+        width: window.width
     }
 
     HomeToolBar {
         id: homeToolBar
         anchors.top: homeMenuBar.bottom
-        width: parent.width
+        width: window.width
     }
 
     // Main Page Stack

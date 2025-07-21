@@ -3,67 +3,55 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import app.logic.actions
 
-// Toolbar
 ToolBar {
     id: homeToolBar
-
-    SourcesActions {
-        id: sourcesActions
-    }
-    ProcessorsActions {
-        id: processorsActions
-    }
-    PresetsActions {
-        id: presetsActions
-    }
-
     RowLayout {
         anchors.fill: parent
         spacing: 4
         ToolButton {
-            action: presetsActions.savePreset
+            action: PresetsActions.savePreset
             text: ""
         }
         ToolButton {
-            action: presetsActions.loadPreset
+            action: PresetsActions.loadPreset
             text: ""
         }
         ToolButton {
-            action: presetsActions.refreshPresets
+            action: PresetsActions.refreshPresets
             text: ""
         }
         ToolButton {
-            action: presetsActions.deletePreset
-            text: ""
-        }
-        ToolSeparator {}
-        ToolButton {
-            action: sourcesActions.addSource
-            text: ""
-        }
-        ToolButton {
-            action: sourcesActions.removeSource
-            text: ""
-        }
-        ToolButton {
-            action: sourcesActions.configureSource
+            action: PresetsActions.deletePreset
             text: ""
         }
         ToolSeparator {}
         ToolButton {
-            action: processorsActions.addProcessor
+            action: SourcesActions.addSource
             text: ""
         }
         ToolButton {
-            action: processorsActions.removeProcessor
+            action: SourcesActions.removeSource
             text: ""
         }
         ToolButton {
-            action: processorsActions.configureProcessor
+            action: SourcesActions.configureSource
+            text: ""
+        }
+        ToolSeparator {}
+        ToolButton {
+            action: ProcessorsActions.addProcessor
             text: ""
         }
         ToolButton {
-            action: processorsActions.toggleProcessing
+            action: ProcessorsActions.removeProcessor
+            text: ""
+        }
+        ToolButton {
+            action: ProcessorsActions.configureProcessor
+            text: ""
+        }
+        ToolButton {
+            action: ProcessorsActions.toggleProcessing
             text: ""
         }
     }

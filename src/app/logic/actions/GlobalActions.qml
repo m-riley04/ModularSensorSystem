@@ -1,4 +1,6 @@
-﻿import QtQuick
+﻿pragma Singleton
+
+import QtQuick
 import QtQuick.Controls
 
 Item {
@@ -104,8 +106,8 @@ Item {
             id: actionAboutGitHub
             text: qsTr("GitHub")
             onTriggered: () => {
-                             Qt.openUrlExternally(globalActions.githubUrl)
-                         }
+                Qt.openUrlExternally(globalActions.githubUrl)
+            }
         }
         Action {
             id: actionAboutCredits

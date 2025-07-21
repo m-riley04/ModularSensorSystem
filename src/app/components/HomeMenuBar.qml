@@ -4,35 +4,13 @@ import app.logic.actions
 
 MenuBar {
     id: menuBar
-
-    GlobalActions {
-        id: globalActions
-    }
-    SessionActions {
-        id: sessionActions
-    }
-    SourcesActions {
-        id: sourcesActions
-    }
-    PluginsActions {
-        id: pluginsActions
-    }
-    ProcessorsActions {
-        id: processorsActions
-    }
-    PresetsActions {
-        id: presetsActions
-    }
-
-    width: parent.width
-
     Menu {
         title: qsTr("File")
         MenuItem {
-            action: globalActions.quit
+            action: GlobalActions.quit
         }
         MenuItem {
-            action: globalActions.restart
+            action: GlobalActions.restart
         }
     }
     Menu {
@@ -43,31 +21,31 @@ MenuBar {
         Menu {
             title: qsTr("Control Row")
             MenuItem {
-                action: globalActions.viewControlRowPresetList
+                action: GlobalActions.viewControlRowPresetList
             }
             MenuItem {
-                action: globalActions.viewControlRowSourcesList
+                action: GlobalActions.viewControlRowSourcesList
             }
             MenuItem {
-                action: globalActions.viewControlRowProcessorsList
+                action: GlobalActions.viewControlRowProcessorsList
             }
             MenuItem {
-                action: globalActions.viewControlRowControls
+                action: GlobalActions.viewControlRowControls
             }
             MenuSeparator {}
             MenuItem {
-                action: globalActions.viewControlRowEntireRow
+                action: GlobalActions.viewControlRowEntireRow
             }
         }
         MenuSeparator {}
         MenuItem {
-            action: globalActions.viewMenuBar
+            action: GlobalActions.viewMenuBar
         }
         MenuItem {
-            action: globalActions.viewToolbar
+            action: GlobalActions.viewToolbar
         }
         MenuItem {
-            action: globalActions.viewCustomWindowHandle
+            action: GlobalActions.viewCustomWindowHandle
         }
     }
     Menu {
@@ -75,38 +53,38 @@ MenuBar {
         Menu {
             title: qsTr("Sources")
             MenuItem {
-                action: sourcesActions.addSource
+                action: SourcesActions.addSource
             }
             MenuItem {
-                action: sourcesActions.removeSource
+                action: SourcesActions.removeSource
             }
             MenuItem {
-                action: sourcesActions.configureSource
+                action: SourcesActions.configureSource
             }
         }
         Menu {
             title: qsTr("Processors")
             MenuItem {
-                action: processorsActions.addProcessor
+                action: ProcessorsActions.addProcessor
             }
             MenuItem {
-                action: processorsActions.removeProcessor
+                action: ProcessorsActions.removeProcessor
             }
             MenuItem {
-                action: processorsActions.configureProcessor
+                action: ProcessorsActions.configureProcessor
             }
             MenuItem {
-                action: processorsActions.toggleProcessing
+                action: ProcessorsActions.toggleProcessing
             }
         }
         Menu {
             title: qsTr("Recording")
         }
         MenuItem {
-            action: sessionActions.clipping
+            action: SessionActions.clipping
         }
         MenuItem {
-            action: sessionActions.sessionOptions
+            action: SessionActions.sessionOptions
         }
     }
     Menu {
@@ -115,16 +93,16 @@ MenuBar {
     Menu {
         title: qsTr("About")
         MenuItem {
-            action: globalActions.aboutGitHub
+            action: GlobalActions.aboutGitHub
         }
         MenuItem {
-            action: globalActions.aboutCredits
+            action: GlobalActions.aboutCredits
         }
     }
     Menu {
         title: qsTr("Help")
         MenuItem {
-            action: globalActions.help
+            action: GlobalActions.help
         }
     }
 }
