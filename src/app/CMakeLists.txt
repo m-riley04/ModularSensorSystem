@@ -12,10 +12,16 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml")
+set(APP_QT_QML_OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/${PROJECT_NAME}")
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
 # Set CMakeCache qml import paths
-list(APPEND QML_DIRS "${CMAKE_BINARY_DIR}/qml")
+list(APPEND QML_DIRS "${QT_QML_OUTPUT_DIRECTORY}")
+list(APPEND QML_DIRS "${APP_QT_QML_OUTPUT_DIRECTORY}")
+list(APPEND QML_DIRS "${APP_QT_QML_OUTPUT_DIRECTORY}/components")
+list(APPEND QML_DIRS "${APP_QT_QML_OUTPUT_DIRECTORY}/dialogs")
+list(APPEND QML_DIRS "${APP_QT_QML_OUTPUT_DIRECTORY}/pages")
+list(APPEND QML_DIRS "${APP_QT_QML_OUTPUT_DIRECTORY}/logic/actions")
 set(QML_IMPORT_PATH "${QML_DIRS}" CACHE STRING "Qt Creator 4.1 extra qml import paths")
 
 # Sub-modules (App components)
@@ -48,9 +54,9 @@ target_link_libraries(${PROJECT_NAME}
         Qt6::Quick
         Qt6::Qml
         Qt6::Core
+        actions
         components
         dialogs
-        actions
         pages
         core # Link with the Core QML module
 )
@@ -60,5 +66,5 @@ qt_import_qml_plugins(${PROJECT_NAME})
 
 # Add the QML module output directory to import paths
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    QT_QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/qml"
+    QT_QML_IMPORT_PATH "${QT_QML_OUTPUT_DIRECTORY}"
 )

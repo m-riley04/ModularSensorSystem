@@ -8,7 +8,7 @@ Dialog {
     property int selectedIndex: processorComboBox.currentIndex
     signal processorSelected(int index)
     signal processorConfirmed(int index)
-    signal refreshClicked()
+    signal refreshClicked
 
     title: qsTr("Add Processor")
     standardButtons: Dialog.Ok | Dialog.Cancel
@@ -29,7 +29,8 @@ Dialog {
                 Layout.fillWidth: true
                 model: ListModel {}
                 textRole: "name"
-                onCurrentIndexChanged: addProcessorDialog.processorSelected(currentIndex)
+                onCurrentIndexChanged: addProcessorDialog.processorSelected(
+                                           currentIndex)
             }
             ToolButton {
                 icon.name: "view-refresh"
@@ -38,5 +39,6 @@ Dialog {
             }
         }
     }
-    onAccepted: addProcessorDialog.processorConfirmed(processorComboBox.currentIndex)
+    onAccepted: addProcessorDialog.processorConfirmed(
+                    processorComboBox.currentIndex)
 }

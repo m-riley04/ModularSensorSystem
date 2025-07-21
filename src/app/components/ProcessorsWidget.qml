@@ -7,9 +7,9 @@ Item {
     property alias model: processorsList.model
     property int selectedIndex: processorsList.currentIndex
     property bool enabled: enableCheckBox.checked
-    signal addClicked()
-    signal removeClicked()
-    signal propertiesClicked()
+    signal addClicked
+    signal removeClicked
+    signal propertiesClicked
     signal selectedProcessorChanged(int currentIndex, int previousIndex)
 
     RowLayout {
@@ -24,17 +24,19 @@ Item {
             model: ListModel {}
             delegate: ItemDelegate {
                 width: ListView.view.width
-                text: model.name
+                text: qsTr("model.name") //model.name
                 onClicked: {
-                    let prev = processorsList.currentIndex;
-                    processorsList.currentIndex = index;
-                    processorsWidget.selectedProcessorChanged(index, prev);
+
+                    // let prev = processorsList.currentIndex;
+                    // processorsList.currentIndex = index;
+                    // processorsWidget.selectedProcessorChanged(index, prev);
                 }
                 highlighted: ListView.isCurrentItem
             }
             onCurrentIndexChanged: {
-                let prev = -1; // QML doesn't track previous, so -1
-                processorsWidget.selectedProcessorChanged(currentIndex, prev);
+                let prev = -1
+                // QML doesn't track previous, so -1
+                processorsWidget.selectedProcessorChanged(currentIndex, prev)
             }
         }
         // Controls
@@ -65,7 +67,9 @@ Item {
                 checked: true
                 onCheckedChanged: processorsWidget.enabledChanged(checked)
             }
-            Item { Layout.fillHeight: true } // Spacer
+            Item {
+                Layout.fillHeight: true
+            } // Spacer
         }
     }
 }

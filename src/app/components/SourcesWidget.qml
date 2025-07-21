@@ -23,11 +23,12 @@ Item {
             model: ListModel {}
             delegate: ItemDelegate {
                 width: ListView.view.width
-                text: model.name
+                text: qsTr("model.name") //model.name
                 onClicked: {
-                    let prev = sourcesList.currentIndex
-                    sourcesList.currentIndex = index
-                    sourcesWidget.selectedSourceChanged(index, prev)
+
+                    // let prev = sourcesList.currentIndex
+                    // sourcesList.currentIndex = index
+                    // sourcesWidget.selectedSourceChanged(index, prev)
                 }
                 highlighted: ListView.isCurrentItem
             }

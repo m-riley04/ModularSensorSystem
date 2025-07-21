@@ -1,7 +1,8 @@
 qt_add_qml_module(components
     URI app.components
     VERSION 1.0
-    OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/app/components"
+    OUTPUT_DIRECTORY "${APP_QT_QML_OUTPUT_DIRECTORY}/components"
+    RESOURCE_PREFIX "/qt/qml"
     QML_FILES
         CustomTitleBar.qml
         PresetsWidget.qml
@@ -9,8 +10,13 @@ qt_add_qml_module(components
         SessionControlsWidget.qml
         SourcePreviewWidget.qml
         SourcesWidget.qml
+        HomeToolBar.qml
+        HomeMenuBar.qml
     IMPORTS
         QtQuick
         QtQuick.Controls
         QtQuick.Layouts
+        app.logic.actions
+    DEPENDENCIES TARGET
+        actions
 )

@@ -11,7 +11,7 @@ Dialog {
     signal sourceTypeSelected(int index)
     signal sourceSelected(int index)
     signal sourceConfirmed(int sourceTypeIndex, int sourceIndex)
-    signal refreshClicked()
+    signal refreshClicked
 
     title: qsTr("Add Source")
     standardButtons: Dialog.Ok | Dialog.Cancel
@@ -24,24 +24,30 @@ Dialog {
         spacing: 10
         RowLayout {
             spacing: 8
-            Label { text: qsTr("Type") }
+            Label {
+                text: qsTr("Type")
+            }
             ComboBox {
                 id: sourceTypeComboBox
                 Layout.fillWidth: true
                 model: ListModel {}
                 textRole: "name"
-                onCurrentIndexChanged: addSourceDialog.sourceTypeSelected(currentIndex)
+                onCurrentIndexChanged: addSourceDialog.sourceTypeSelected(
+                                           currentIndex)
             }
         }
         RowLayout {
             spacing: 8
-            Label { text: qsTr("Source") }
+            Label {
+                text: qsTr("Source")
+            }
             ComboBox {
                 id: sourceComboBox
                 Layout.fillWidth: true
                 model: ListModel {}
                 textRole: "displayName"
-                onCurrentIndexChanged: addSourceDialog.sourceSelected(currentIndex)
+                onCurrentIndexChanged: addSourceDialog.sourceSelected(
+                                           currentIndex)
             }
             ToolButton {
                 icon.name: "view-refresh"
@@ -50,5 +56,7 @@ Dialog {
             }
         }
     }
-    onAccepted: addSourceDialog.sourceConfirmed(sourceTypeComboBox.currentIndex, sourceComboBox.currentIndex)
+    onAccepted: addSourceDialog.sourceConfirmed(
+                    sourceTypeComboBox.currentIndex,
+                    sourceComboBox.currentIndex)
 }

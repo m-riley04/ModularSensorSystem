@@ -6,10 +6,10 @@ Item {
     id: presetsWidget
     property alias model: presetsList.model
     property int selectedIndex: presetsList.currentIndex
-    signal saveClicked()
-    signal loadClicked()
-    signal removeClicked()
-    signal refreshClicked()
+    signal saveClicked
+    signal loadClicked
+    signal removeClicked
+    signal refreshClicked
     signal selectedPresetChanged(int currentIndex, int previousIndex)
 
     RowLayout {
@@ -24,17 +24,19 @@ Item {
             model: ListModel {}
             delegate: ItemDelegate {
                 width: ListView.view.width
-                text: model.name
+                text: qsTr("model.name") //model.name
                 onClicked: {
-                    let prev = presetsList.currentIndex;
-                    presetsList.currentIndex = index;
-                    presetsWidget.selectedPresetChanged(index, prev);
+
+                    // let prev = presetsList.currentIndex;
+                    // presetsList.currentIndex = index;
+                    // presetsWidget.selectedPresetChanged(index, prev);
                 }
                 highlighted: ListView.isCurrentItem
             }
             onCurrentIndexChanged: {
-                let prev = -1; // QML doesn't track previous, so -1
-                presetsWidget.selectedPresetChanged(currentIndex, prev);
+                let prev = -1
+                // QML doesn't track previous, so -1
+                presetsWidget.selectedPresetChanged(currentIndex, prev)
             }
         }
         // Controls
@@ -64,7 +66,9 @@ Item {
                 ToolTip.text: qsTr("Refresh the presets list")
                 onClicked: presetsWidget.refreshClicked()
             }
-            Item { Layout.fillHeight: true } // Spacer
+            Item {
+                Layout.fillHeight: true
+            } // Spacer
         }
     }
 }
