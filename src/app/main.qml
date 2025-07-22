@@ -16,6 +16,7 @@ Window {
 
     CustomTitleBar {
         id: titleBar
+        width: window.width
         title: `Number of subcontrollers: ${MainController.numSubControllers}`
     }
 
