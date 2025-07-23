@@ -2,17 +2,30 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import app.components
+import app.logic.actions
 import app.pages
 import core
 
 Window {
     id: window
 
+    property int newFlags: Qt.Window | Qt.FramelessWindowHint
+
     visible: true
     width: 900
     height: 600
     title: "ModularSensorSystem"
-    flags: Qt.Window | Qt.FramelessWindowHint
+    flags: window.newFlags
+
+    Connections {
+        target: GlobalActions.viewCustomWindowHandle
+        function onTriggered() {
+            GlobalActions.viewCustomWindowHandle.checked = !GlobalActions.viewCustomWindowHandle.checked;
+            console.log(GlobalActions.viewCustomWindowHandle.checked);
+            window.newFlags = GlobalActions.viewCustomWindowHandle.checked ? Qt.Window | Qt.FramelessWindowHint : Qt.Window;
+        }
+    }
+
 
     CustomTitleBar {
         id: titleBar
