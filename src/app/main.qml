@@ -10,6 +10,7 @@ Window {
     id: window
 
     property int newFlags: Qt.Window | Qt.FramelessWindowHint
+    property bool customWindow: true
 
     visible: true
     width: 900
@@ -17,20 +18,23 @@ Window {
     title: "ModularSensorSystem"
     flags: window.newFlags
 
+    // Connections for menubar
     Connections {
         target: GlobalActions.viewCustomWindowHandle
-        function onTriggered() {
-            GlobalActions.viewCustomWindowHandle.checked = !GlobalActions.viewCustomWindowHandle.checked;
-            console.log(GlobalActions.viewCustomWindowHandle.checked);
-            window.newFlags = GlobalActions.viewCustomWindowHandle.checked ? Qt.Window | Qt.FramelessWindowHint : Qt.Window;
+        function onTriggered(state) {
+            // For some reason, "onToggled" doesn't work. So instead, I'm manually storing the custom window state.
+            window.customWindow = !window.customWindow
+            GlobalActions.viewCustomWindowHandle.checked = window.customWindow
+            console.log(window.customWindow)
+            window.newFlags = window.customWindow ? Qt.Window | Qt.FramelessWindowHint : Qt.Window
         }
     }
-
 
     CustomTitleBar {
         id: titleBar
         width: window.width
         title: `Number of subcontrollers: ${MainController.numSubControllers}`
+        visible: window.customWindow
     }
 
     HomeMenuBar {
