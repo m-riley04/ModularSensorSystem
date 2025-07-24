@@ -32,6 +32,15 @@ qt_add_qml_module(${PROJECT_NAME}
     OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/${PROJECT_NAME}"
     QML_FILES
         main.qml
+    IMPORTS
+        QtQuick
+        QtQuick.Controls
+        QtQuick.Window
+        app.components
+        app.pages
+        app.logic.actions
+        app.styles.MSSDark
+        core
 )
 
 set_target_properties(${PROJECT_NAME}
