@@ -14,7 +14,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 set(QT_QML_DEBUG ON)
 
-# Sub-modules (App components)
+# Sub-modules
+add_subdirectory(styles)
 add_subdirectory(logic)
 add_subdirectory(components)
 add_subdirectory(dialogs)
@@ -27,7 +28,6 @@ qt_add_executable(${PROJECT_NAME} main.cpp)
 qt_add_qml_module(${PROJECT_NAME}
     URI ${PROJECT_NAME}
     VERSION 1.0
-    GENERATE_QMLTYPES
     RESOURCE_PREFIX "/qt/qml"
     OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/${PROJECT_NAME}"
     QML_FILES
@@ -45,6 +45,7 @@ target_link_libraries(${PROJECT_NAME}
         Qt6::Quick
         Qt6::Qml
         Qt6::Core
+        MSSDark
         actions
         components
         dialogs

@@ -17,6 +17,8 @@ qt_add_qml_module(components
         QtQuick.Controls
         QtQuick.Layouts
         app.logic.actions
+        app.styles.MSSDark
     DEPENDENCIES TARGET
         actions
+        MSSDark
 )

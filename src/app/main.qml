@@ -5,57 +5,58 @@ import app.components
 import app.logic.actions
 import app.pages
 import core
+import app.styles.MSSDark
 
 Window {
-    id: window
+  id: window
 
-    property int newFlags: Qt.Window | Qt.FramelessWindowHint
-    property bool customWindow: true
+  property int newFlags: Qt.Window | Qt.FramelessWindowHint
+  property bool customWindow: true
 
-    visible: true
-    width: 900
-    height: 600
-    title: "ModularSensorSystem"
-    flags: window.newFlags
+  visible: true
+  width: 900
+  height: 600
+  title: "ModularSensorSystem"
+  flags: window.newFlags
 
-    // Connections for menubar
-    Connections {
-        target: GlobalActions.viewCustomWindowHandle
-        function onTriggered(state) {
-            // For some reason, "onToggled" doesn't work. So instead, I'm manually storing the custom window state.
-            window.customWindow = !window.customWindow
-            GlobalActions.viewCustomWindowHandle.checked = window.customWindow
-            console.log(window.customWindow)
-            window.newFlags = window.customWindow ? Qt.Window | Qt.FramelessWindowHint : Qt.Window
-        }
+  // Connections for menubar
+  Connections {
+    target: GlobalActions.viewCustomWindowHandle
+    function onTriggered(state) {
+      // For some reason, "onToggled" doesn't work. So instead, I'm manually storing the custom window state.
+      window.customWindow = !window.customWindow
+      GlobalActions.viewCustomWindowHandle.checked = window.customWindow
+      console.log(window.customWindow)
+      window.newFlags = window.customWindow ? Qt.Window | Qt.FramelessWindowHint : Qt.Window
     }
+  }
 
-    CustomTitleBar {
-        id: titleBar
-        width: window.width
-        title: `Number of subcontrollers: ${MainController.numSubControllers}`
-        visible: window.customWindow
-    }
+  CustomTitleBar {
+    id: titleBar
+    width: window.width
+    title: `Number of subcontrollers: ${MainController.numSubControllers}`
+    visible: window.customWindow
+  }
 
-    HomeMenuBar {
-        id: homeMenuBar
-        anchors.top: titleBar.bottom
-        width: window.width
-    }
+  HomeMenuBar {
+    id: homeMenuBar
+    anchors.top: titleBar.bottom
+    width: window.width
+  }
 
-    HomeToolBar {
-        id: homeToolBar
-        anchors.top: homeMenuBar.bottom
-        width: window.width
-    }
+  HomeToolBar {
+    id: homeToolBar
+    anchors.top: homeMenuBar.bottom
+    width: window.width
+  }
 
-    // Main Page Stack
-    StackView {
-        id: pagesStack
-        anchors.top: homeToolBar.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        MainPage {}
-    }
+  // Main Page Stack
+  StackView {
+    id: pagesStack
+    anchors.top: homeToolBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    MainPage {}
+  }
 }

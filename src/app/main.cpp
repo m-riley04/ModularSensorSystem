@@ -12,9 +12,10 @@ int main(int argc, char* argv[])
     QQmlApplicationEngine engine;
 
     // Add QML import paths
-    engine.addImportPath("qrc:/qt/qml/");
-    engine.addImportPath("qrc:/qt/qml/app/");
+    engine.addImportPath(QStringLiteral("qrc:/qt/qml/"));
+    engine.addImportPath(QStringLiteral("qrc:/qt/qml/app/"));
     engine.addImportPath(QDir(app.applicationDirPath()).filePath("qml"));
+    engine.addImportPath(QDir(QCoreApplication::applicationDirPath()).filePath("qml"));
 
     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/app/main.qml")));
     if (engine.rootObjects().isEmpty()) {
