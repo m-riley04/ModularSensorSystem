@@ -12,12 +12,14 @@ int main(int argc, char* argv[])
     QQmlApplicationEngine engine;
 
     // Add QML import paths
-    engine.addImportPath(QStringLiteral("qrc:/qt/qml/"));
-    engine.addImportPath(QStringLiteral("qrc:/qt/qml/app/"));
-    engine.addImportPath(QDir(app.applicationDirPath()).filePath("qml"));
-    engine.addImportPath(QDir(QCoreApplication::applicationDirPath()).filePath("qml"));
+    engine.addImportPath("qrc:/qt/qml/app/");
+    engine.addImportPath("qrc:/qt/qml/app/app/");
+    engine.addImportPath("qrc:/qt/qml/core/");
+    engine.addImportPath("qrc:/qt/qml/src/");
+    engine.addImportPath("qrc:/qt/qml/src/app/");
+    engine.addImportPath("qrc:/qt/qml/src/app/app/");
 
-    engine.load(QUrl(QStringLiteral("qrc:/qt/qml/app/main.qml")));
+    engine.load(QUrl("qrc:/qt/qml/app/main.qml"));
     if (engine.rootObjects().isEmpty()) {
         qWarning() << "Failed to load QML root object (is empty).";
         qWarning() << "Available import paths:";

@@ -12,7 +12,6 @@ qt_add_executable(${TARGET_APP} main.cpp)
 qt_add_qml_module(${TARGET_APP}
     URI ${TARGET_APP}
     VERSION 1.0
-    OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/${TARGET_APP}"
     QML_FILES
         main.qml
     IMPORTS
@@ -20,9 +19,9 @@ qt_add_qml_module(${TARGET_APP}
         QtQuick.Controls
         QtQuick.Layouts
         QtQuick.Window
+        app.actions
         app.components
         app.dialogs
-        app.actions
         app.pages
     DEPENDENCIES
         TARGET core

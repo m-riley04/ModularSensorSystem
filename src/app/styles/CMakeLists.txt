@@ -1,7 +1,6 @@
 qt_add_qml_module(styles
     URI app.styles
     VERSION 1.0
-    OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/app/styles"
     QML_FILES
         Style.qml
     IMPORTS
