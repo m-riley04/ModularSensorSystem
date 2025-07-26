@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import app.logic.actions
+import app.actions
 
 ToolBar {
   id: homeToolBar

@@ -1,6 +1,6 @@
 # Sub-modules
 add_subdirectory(styles)
-add_subdirectory(logic)
+add_subdirectory(actions)
 add_subdirectory(components)
 add_subdirectory(dialogs)
 add_subdirectory(pages)
@@ -12,10 +12,26 @@ qt_add_executable(${TARGET_APP} main.cpp)
 qt_add_qml_module(${TARGET_APP}
     URI ${TARGET_APP}
     VERSION 1.0
-    RESOURCE_PREFIX "/qt/qml"
     OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/${TARGET_APP}"
     QML_FILES
         main.qml
+    IMPORTS
+        QtQuick
+        QtQuick.Controls
+        QtQuick.Layouts
+        QtQuick.Window
+        app.components
+        app.dialogs
+        app.actions
+        app.pages
+    DEPENDENCIES
+        TARGET core
+        TARGET MSSDark
+        TARGET styles
+        TARGET actions
+        TARGET components
+        TARGET dialogs
+        TARGET pages
 )
 
 # Set target props for main app

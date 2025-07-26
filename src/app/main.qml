@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import app.components
-import app.logic.actions
+import app.actions
 import app.pages
 import core
 import app.styles.MSSDark

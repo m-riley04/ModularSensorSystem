@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-import app.logic.actions
+import app.actions
 
 MenuBar {
   id: menuBar

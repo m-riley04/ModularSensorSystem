@@ -10,10 +10,9 @@ set_source_files_properties(${qml_singletons}
     PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(actions
-    URI app.logic.actions
+    URI app.actions
     VERSION 1.0
-    OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/app/logic/actions"
-    RESOURCE_PREFIX "/qt/qml"
+    OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/app/actions"
     QML_FILES
         ${qml_singletons}
     IMPORTS
