@@ -1,8 +1,3 @@
-project(
-    app
-    VERSION 1.0.0
-    LANGUAGES CXX)
-
 # Sub-modules
 add_subdirectory(styles)
 add_subdirectory(logic)
@@ -11,35 +6,26 @@ add_subdirectory(dialogs)
 add_subdirectory(pages)
 
 # Create the main executable
-qt_add_executable(${PROJECT_NAME} main.cpp)
+qt_add_executable(${TARGET_APP} main.cpp)
 
 # Add QML module for the app
-qt_add_qml_module(${PROJECT_NAME}
-    URI ${PROJECT_NAME}
+qt_add_qml_module(${TARGET_APP}
+    URI ${TARGET_APP}
     VERSION 1.0
     RESOURCE_PREFIX "/qt/qml"
-    OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/${PROJECT_NAME}"
+    OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/${TARGET_APP}"
     QML_FILES
         main.qml
-    IMPORTS
-        QtQuick
-        QtQuick.Controls
-        QtQuick.Window
-        app.components
-        app.pages
-        app.logic.actions
-        app.styles.MSSDark
-        core
 )
 
 # Set target props for main app
-set_target_properties(${PROJECT_NAME}
+set_target_properties(${TARGET_APP}
     PROPERTIES
         WIN32_EXECUTABLE TRUE
 )
 
 # Link with all required libraries including Core
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${TARGET_APP}
     PUBLIC
         Qt6::Quick
         Qt6::Qml
