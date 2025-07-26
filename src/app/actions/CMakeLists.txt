@@ -12,6 +12,7 @@ set_source_files_properties(${qml_singletons}
 qt_add_qml_module(AppActionsLib
     URI app.actions
     VERSION 1.0
+    DESIGNER_SUPPORTED
     QML_FILES
         ${qml_singletons}
     IMPORTS

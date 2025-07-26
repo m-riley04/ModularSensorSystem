@@ -55,6 +55,7 @@ set(PRESETS_FILES
 qt_add_qml_module(${TARGET_CORE}
     URI core
     VERSION 1.0
+    DESIGNER_SUPPORTED
     SHARED
     SOURCES
         ${CONTROLLERS_FILES}

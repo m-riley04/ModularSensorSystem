@@ -1,6 +1,7 @@
 qt_add_qml_module(AppComponentsLib
     URI app.components
     VERSION 1.0
+    DESIGNER_SUPPORTED
     QML_FILES
         CustomTitleBar.qml
         PresetsWidget.qml

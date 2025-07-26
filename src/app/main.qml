@@ -1,11 +1,11 @@
 import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
-import app.components
-import app.actions
-import app.pages
-import core
-import app.styles.MSSDark
+import app.components 1.0
+import app.actions 1.0
+import app.pages 1.0
+import core 1.0
+import app.styles.MSSDark 1.0
 
 Window {
   id: window

@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import app.components
+import app.components 1.0
 
 SplitView {
   id: mainPage
