@@ -1,4 +1,4 @@
-qt_add_qml_module(styles
+qt_add_qml_module(AppStylesLib
     URI app.styles
     VERSION 1.0
     QML_FILES

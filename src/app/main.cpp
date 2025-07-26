@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     engine.addImportPath("qrc:/qt/qml/src/app/");
     engine.addImportPath("qrc:/qt/qml/src/app/app/");
 
-    engine.load(QUrl("qrc:/qt/qml/app/main.qml"));
+	engine.loadFromModule("app", "Main");
     if (engine.rootObjects().isEmpty()) {
         qWarning() << "Failed to load QML root object (is empty).";
         qWarning() << "Available import paths:";

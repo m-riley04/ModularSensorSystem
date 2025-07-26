@@ -53,10 +53,9 @@ set(PRESETS_FILES
 
 # Create the Core QML module
 qt_add_qml_module(${TARGET_CORE}
-    URI ${TARGET_CORE}
+    URI core
     VERSION 1.0
     SHARED
-    OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/core"
     SOURCES
         ${CONTROLLERS_FILES}
         ${FEATURES_FILES}

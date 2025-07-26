@@ -1,4 +1,4 @@
-qt_add_qml_module(pages
+qt_add_qml_module(AppPagesLib
     URI app.pages
     VERSION 1.0
     QML_FILES
@@ -9,5 +9,5 @@ qt_add_qml_module(pages
         QtQuick.Layouts
         app.components
     DEPENDENCIES 
-        TARGET components
+        TARGET AppComponentsLib
 )

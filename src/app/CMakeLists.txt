@@ -10,10 +10,10 @@ qt_add_executable(${TARGET_APP} main.cpp)
 
 # Add QML module for the app
 qt_add_qml_module(${TARGET_APP}
-    URI ${TARGET_APP}
+    URI app
     VERSION 1.0
     QML_FILES
-        main.qml
+        Main.qml
     IMPORTS
         QtQuick
         QtQuick.Controls
@@ -24,13 +24,13 @@ qt_add_qml_module(${TARGET_APP}
         app.dialogs
         app.pages
     DEPENDENCIES
-        TARGET core
-        TARGET MSSDark
-        TARGET styles
-        TARGET actions
-        TARGET components
-        TARGET dialogs
-        TARGET pages
+        TARGET ${TARGET_CORE}
+        TARGET AppStylesMSSDarkLib
+        TARGET AppStylesLib
+        TARGET AppActionsLib
+        TARGET AppComponentsLib
+        TARGET AppDialogsLib
+        TARGET AppPagesLib
 )
 
 # Set target props for main app
@@ -45,12 +45,13 @@ target_link_libraries(${TARGET_APP}
         Qt6::Quick
         Qt6::Qml
         Qt6::Core
-        MSSDark
-        actions
-        components
-        dialogs
-        pages
-        core
+        ${TARGET_CORE}
+        AppStylesMSSDarkLib
+        AppStylesLib
+        AppActionsLib
+        AppComponentsLib
+        AppDialogsLib
+        AppPagesLib
 )
 
 

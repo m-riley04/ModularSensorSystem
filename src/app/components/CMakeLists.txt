@@ -1,4 +1,4 @@
-qt_add_qml_module(components
+qt_add_qml_module(AppComponentsLib
     URI app.components
     VERSION 1.0
     QML_FILES
@@ -17,6 +17,6 @@ qt_add_qml_module(components
         app.actions
         app.styles.MSSDark
     DEPENDENCIES
-        TARGET actions
-        TARGET MSSDark
+        TARGET AppActionsLib
+        TARGET AppStylesMSSDarkLib
 )

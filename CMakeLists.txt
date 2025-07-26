@@ -23,8 +23,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
 # Configure targets
-set(TARGET_APP app)
-set(TARGET_CORE core)
+set(TARGET_APP AppBin)
+set(TARGET_CORE CoreLib)
 
 # Build src
 add_subdirectory(src)
