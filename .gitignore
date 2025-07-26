@@ -368,10 +368,6 @@ vcpkg_installed/
 # other
 out/
 
-# qmlls
-.qmlls.ini
-
-# Adding this just in case some files aren't in here'
 # C++ objects and libs
 *.slo
 *.lo
@@ -426,3 +422,7 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+
+# Adding this just in case some files aren't in here
+# qmlls
+.qmlls.ini

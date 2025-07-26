@@ -1,12 +1,7 @@
-cmake_minimum_required(VERSION 3.16)
-project(core LANGUAGES CXX)
-
-set(AUTOMOC ON)
-set(AUTOUIC ON)
-set(AUTORCC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+project(
+    core
+    VERSION 1.0.0
+    LANGUAGES CXX)
 
 # Get all files
 set(CONTROLLERS_FILES

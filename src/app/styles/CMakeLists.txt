@@ -1,5 +1,5 @@
-qt_add_qml_module(Style
-    URI app.styles.Style
+qt_add_qml_module(styles
+    URI app.styles
     VERSION 1.0
     OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/app/styles"
     RESOURCE_PREFIX "/qt/qml"
