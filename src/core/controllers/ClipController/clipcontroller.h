@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QDebug>
 #include "features/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
-#include <features/sources/IClippableSource/IClippableSource.h>
+#include <features/sources/IClippableSource/iclippablesource.h>
 #include <features/sources/Source/SourceError/sourceerror.h>
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
 #include <QtQml>

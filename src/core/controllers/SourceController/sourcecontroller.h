@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <features/sources/Source/source.h>
-#include <Controllers/RecordingSession/recordingsession.h>
+#include <controllers/RecordingSession/recordingsession.h>
 #include <QtMultimedia/qcameradevice.h>
 #include <controllers/PluginController/plugincontroller.h>
 #include <features/sources/Source/SourceError/sourceerror.h>

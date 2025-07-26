@@ -1,12 +1,12 @@
 {
   "dependencies": [
     "libusb",
-    "onnx",
-    "opencv",
-    "onnxruntime-gpu",
-    {
-      "name": "ffmpeg",
-      "version>=": "7.1"
-    }
+    //"onnx",
+    //"opencv",
+   // "onnxruntime-gpu",
+    //{
+    //  "name": "ffmpeg",
+    //  "version>=": "7.1"
+    //}
   ]
 }
