@@ -1,0 +1,74 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+Item {
+  id: root
+  property var dockRoot
+  // expose a count (StackLayout has count, but we use children length since we parent panels directly)
+  readonly property int count: stack.children.length
+
+  // dynamic TabButton factory
+  Component {
+    id: tabButtonComp
+    TabButton {}
+  }
+
+  function indexOf(panel) {
+    return stack.children.indexOf(panel) // <- StackLayout manages its children
+  }
+
+  function addPanel(panel) {
+    panel.dockRoot = dockRoot
+
+    let idx = indexOf(panel)
+    if (idx === -1) {
+      // create + insert tab
+      const tab = tabButtonComp.createObject(tabs, {
+                                               "text": panel.title
+                                             })
+      tabs.addItem(tab) // TabBar is a Container
+      // parent panel into the stack so StackLayout manages it
+      panel.parent = stack
+      panel.Layout.fillWidth = true
+      panel.Layout.fillHeight = true
+      // keep tab text synced
+      if (panel.titleChanged)
+        panel.titleChanged.connect(() => tab.text = panel.title)
+      idx = indexOf(panel)
+    }
+    tabs.currentIndex = idx
+    stack.currentIndex = idx
+    panel.currentGroup = root
+  }
+
+  function removePanel(panel) {
+    const i = indexOf(panel)
+    if (i >= 0) {
+      const tab = tabs.takeItem(i)
+      // takeItem(index) → Item
+      if (tab)
+        tab.destroy() // optional; removeItem() would destroy too
+      panel.parent = null
+    }
+  }
+
+  ColumnLayout {
+    anchors.fill: parent
+    spacing: 0
+
+    TabBar {
+      id: tabs
+      Layout.fillWidth: true
+      contentHeight: 34
+      onCurrentIndexChanged: stack.currentIndex = currentIndex
+    }
+
+    StackLayout {
+      id: stack
+      Layout.fillWidth: true
+      Layout.fillHeight: true
+      // NOTE: StackLayout has count/currentIndex; children define the pages.
+    }
+  }
+}
