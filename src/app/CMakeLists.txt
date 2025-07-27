@@ -31,6 +31,8 @@ qt_add_qml_module(${TARGET_APP}
         TARGET AppComponentsLib
         TARGET AppDialogsLib
         TARGET AppPagesLib
+    RESOURCES
+        media/icons/app.png
 )
 
 # Set target props for main app
