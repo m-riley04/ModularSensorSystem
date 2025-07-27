@@ -40,3 +40,4 @@ set(QML_IMPORT_PATH
 
 # Build src
 add_subdirectory(src)
+add_subdirectory(tests/app_tests)

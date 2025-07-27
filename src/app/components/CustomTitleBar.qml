@@ -17,13 +17,15 @@ Rectangle {
     // Icon
     Image {
       id: iconLabel
+      objectName: "titleIcon"
       source: "" // Set icon source as needed
       fillMode: Image.PreserveAspectFit
-      visible: iconLabel.source !== ""
+      visible: source && source.toString().length > 0
     }
     // Title
     Label {
       id: titleLabel
+      objectName: "titleLabel"
       text: qsTr("Title")
       color: "white"
       font.bold: true
@@ -37,6 +39,7 @@ Rectangle {
       spacing: 0
       ToolButton {
         id: minimizeButton
+        objectName: "minimizeButton"
         icon.name: "list-remove"
         onClicked: customTitleBar.Window.window ? customTitleBar.Window.window.showMinimized(
                                                     ) : undefined
@@ -44,6 +47,7 @@ Rectangle {
       }
       ToolButton {
         id: maximizeButton
+        objectName: "maximizeButton"
         icon.name: customTitleBar.Window.window
                    && customTitleBar.Window.window.visibility
                    === Window.Maximized ? "view-fullscreen" : "view-fullscreen"
@@ -59,6 +63,7 @@ Rectangle {
       }
       ToolButton {
         id: closeButton
+        objectName: "closeButton"
         icon.name: "window-close"
         onClicked: customTitleBar.Window.window ? customTitleBar.Window.window.close(
                                                     ) : undefined
@@ -67,13 +72,10 @@ Rectangle {
     }
   }
   // Drag to move window
-  MouseArea {
-    anchors.fill: parent
-    hoverEnabled: true
-    propagateComposedEvents: true
-    acceptedButtons: Qt.LeftButton
-    onPressed: mouse => {
-                 customTitleBar.Window.window.startSystemMove()
-               }
+  DragHandler {
+    id: dragHandler
+    target: null
+    onActiveChanged: if (active && customTitleBar.Window.window)
+                       customTitleBar.Window.window.startSystemMove()
   }
 }

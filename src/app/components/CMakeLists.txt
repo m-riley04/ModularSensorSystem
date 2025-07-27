@@ -21,3 +21,5 @@ qt_add_qml_module(AppComponentsLib
         TARGET AppActionsLib
         TARGET AppStylesMSSDarkLib
 )
+
+add_subdirectory(docking)

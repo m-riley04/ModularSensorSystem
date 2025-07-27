@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import app.components 1.0
+import QtQuick.Window
+import app.components
+import app.components.docking
 
 SplitView {
   id: mainPage
@@ -9,49 +11,71 @@ SplitView {
   orientation: Qt.Vertical
 
   // Top section
-  SourcePreviewWidget {}
+  SourcePreviewWidget {
+    SplitView.preferredHeight: mainPage.height * 0.65
+  }
   // Bottom section
   RowLayout {
+    id: bottomRow
+    SplitView.preferredHeight: mainPage.height * 0.35
     spacing: 8
+
+    // Docking root
+    DockRoot {
+      id: dockRoot
+      extraDropTargets: [dock]
+    }
+
+    // Docking row
+    DockRow {
+      id: dock
+      Layout.alignment: Qt.AlignLeft
+      dockRoot: dockRoot
+    }
+
     // Presets group
-    GroupBox {
-      Layout.fillHeight: true
+    DockPanel {
+      id: panelPresets
       title: qsTr("Presets")
-      Layout.fillWidth: true
-      Layout.preferredHeight: 100
+      canUndock: false
       PresetsWidget {
         Layout.fillWidth: true
       }
     }
-    // Processors group
-    GroupBox {
+    // Processors
+    DockPanel {
+      id: panelProcessors
       title: qsTr("Processors")
-      Layout.fillHeight: true
-      Layout.fillWidth: true
-      Layout.preferredHeight: 100
+      canUndock: false
       ProcessorsWidget {
         Layout.fillWidth: true
       }
     }
-    // Sources group
-    GroupBox {
-      Layout.fillHeight: true
+    // Sources
+    DockPanel {
+      id: panelSources
       title: qsTr("Sources")
-      Layout.fillWidth: true
-      Layout.preferredHeight: 100
+      canUndock: false
       SourcesWidget {
         Layout.fillWidth: true
       }
     }
-    // Controls group
-    GroupBox {
-      Layout.fillHeight: true
-      title: qsTr("Controls")
-      Layout.fillWidth: true
-      Layout.preferredHeight: 100
+    // Session Controls
+    DockPanel {
+      id: panelSessionControls
+      title: qsTr("Session Controls")
+      canUndock: false
       SessionControlsWidget {
         Layout.fillWidth: true
       }
     }
+  }
+
+  Component.onCompleted: {
+    // Add all panels to the dock
+    dock.addPanel(panelPresets)
+    dock.addPanel(panelProcessors)
+    dock.addPanel(panelSources)
+    dock.addPanel(panelSessionControls)
   }
 }

@@ -23,6 +23,7 @@ qt_add_qml_module(${TARGET_APP}
         app.components
         app.dialogs
         app.pages
+        app.components.docking
     DEPENDENCIES
         TARGET ${TARGET_CORE}
         TARGET AppStylesMSSDarkLib
@@ -31,6 +32,7 @@ qt_add_qml_module(${TARGET_APP}
         TARGET AppComponentsLib
         TARGET AppDialogsLib
         TARGET AppPagesLib
+        TARGET AppComponentsDockingLib
     RESOURCES
         media/icons/app.png
 )
