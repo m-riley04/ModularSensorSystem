@@ -4,7 +4,6 @@ import QtQuick.Window
 
 Item {
   id: root
-  anchors.fill: parent
 
   property var extraDropTargets: [] // list any DockRow you create
 
@@ -102,6 +101,15 @@ Item {
     default:
       floatPanel(panel)
     }
+  }
+  function registerDropTarget(t) {
+    if (t && extraDropTargets.indexOf(t) < 0)
+      extraDropTargets.push(t)
+  }
+  function unregisterDropTarget(t) {
+    const i = extraDropTargets.indexOf(t)
+    if (i >= 0)
+      extraDropTargets.splice(i, 1)
   }
 
   Component {

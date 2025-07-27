@@ -4,8 +4,8 @@ import QtQuick.Layouts
 
 Item {
   id: root
-  width: 360
-  height: 240
+  implicitWidth: 360
+  implicitHeight: 240
 
   // Set by DockRoot when added
   property var dockRoot
@@ -15,6 +15,7 @@ Item {
   property string title: "Panel"
   property bool canUndock: true
   property bool canClose: true
+  property bool canDrag: true
   property alias contentItem: contentHost
 
   // Public API
@@ -88,6 +89,8 @@ Item {
         // Drag from header
         DragHandler {
           id: drag
+          enabled: root.canDrag
+          acceptedButtons: Qt.LeftButton
           target: null // we’re not moving this Item directly
           grabPermissions: PointerHandler.TakeOverForbidden
           onActiveChanged: {

@@ -1,20 +1,86 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQml.Models
 
+// <-- ObjectModel
 Item {
   id: rowDock
   property var dockRoot
-  // set by parent
-  readonly property int count: row.children.length
+  readonly property int count: panelModel.count
   property bool isUnderDrag: false
+  clip: true
+  property int panelMinWidth: 160
+  property int panelPrefWidth: 240
+  property int panelMaxWidth: 16777215 // effectively "infinite"
+  property bool equalStretch: true // share width evenly
 
-  // === internal drag bookkeeping ===
+  // Author DockPanel{} statically under DockRow:
+  // they go into the ObjectModel, not directly into RowLayout.
+  default property alias panels: panelModel.children
+
+  // Hold the panels in a model we can reorder
+  ObjectModel {
+    id: panelModel
+  }
+
+  RowLayout {
+    id: row
+    anchors.fill: parent
+    spacing: 6
+
+    // Present the model; Repeater inserts items as children of RowLayout
+    Repeater {
+      id: rep
+      model: panelModel
+
+      // When a panel appears, adopt it for layout + drag
+      onItemAdded: (index, item) => {
+                     if (item && item.hasOwnProperty("dockRoot")) {
+                       item.dockRoot = rowDock.dockRoot
+                       item.currentGroup = rowDock
+                       item.Layout.fillHeight = true
+                       item.Layout.fillWidth = equalStretch
+                       item.Layout.minimumWidth = panelMinWidth
+                       item.Layout.preferredWidth = panelPrefWidth
+                       item.Layout.maximumWidth = panelMaxWidth
+                     }
+                   }
+    }
+  }
+
+  // === Public API ===
+  function addPanel(panel, index) {
+    if (!panel)
+      return
+    panel.parent = panelModel
+    panel.dockRoot = dockRoot
+    panel.currentGroup = rowDock
+    panel.Layout.fillHeight = true
+    panel.Layout.fillWidth = equalStretch
+    panel.Layout.minimumWidth = panelMinWidth
+    panel.Layout.preferredWidth = panelPrefWidth
+    panel.Layout.maximumWidth = panelMaxWidth
+    const last = panelModel.count - 1
+    if (index !== undefined && index >= 0 && index < panelModel.count)
+      panelModel.move(last, index, 1)
+  }
+
+  function removePanel(panel) {
+    // find index of this panel in the ObjectModel
+    const kids = panelModel.children
+    for (var i = 0; i < kids.length; ++i) {
+      if (kids[i] === panel) {
+        panelModel.remove(i, 1)
+        break
+      }
+    }
+  }
+
+  // === drag bookkeeping ===
   property var dragPanel: null
-  property int dropIndex: -1 // where the blue bar shows
+  property int dropIndex: -1
 
-  signal panelAdded(DockPanel panel)
-
-  // visual drop indicator
+  // Blue insertion bar
   Rectangle {
     id: dropBar
     width: 4
@@ -24,56 +90,33 @@ Item {
     visible: rowDock.dropIndex >= 0
     z: 10
     x: {
-      // position bar just before the child at dropIndex
-      if (rowDock.dropIndex < 0 || rowDock.dropIndex > row.children.length)
+      if (rowDock.dropIndex < 0 || rowDock.dropIndex > panelModel.count)
         return 0
-      if (rowDock.dropIndex === row.children.length) {
-        const last = row.children.length ? row.children[row.children.length - 1] : null
-        return last ? last.x + last.width : 0
+      if (rowDock.dropIndex === panelModel.count) {
+        if (panelModel.count === 0)
+          return 0
+        const lastItem = row.children[row.children.length - 1]
+        return lastItem ? lastItem.x + lastItem.width : 0
       }
-      return row.children[rowDock.dropIndex].x
+      // map model index to the visual child at the same position
+      const child = row.children[rowDock.dropIndex]
+      return child ? child.x : 0
     }
   }
 
-  RowLayout {
-    id: row
-    anchors.fill: parent
-    spacing: 6
-  }
-
-  // === Public API ===
-  function addPanel(panel, index) {
-    if (!panel)
-      return
-    panel.dockRoot = dockRoot
-    panel.parent = row
-    panel.Layout.fillHeight = true
-    panel.Layout.preferredWidth = 240 // tweak to taste
-    panel.currentGroup = rowDock
-    if (index !== undefined && index >= 0 && index <= row.children.length - 1)
-      row.children.move(row.children.length - 1,
-                        index) // re-order newly appended
-    panelAdded(panel)
-  }
-
-  function removePanel(panel) {
-    const i = row.children.indexOf(panel)
-    if (i >= 0)
-      panel.parent = null
-  }
-
-  // === drag lifecycle from DockPanel ===
+  // === drag lifecycle from DockRoot ===
   function beginDrag(panel) {
     dragPanel = panel
     dropIndex = -1
   }
+
+  // pScene is in scene coords; convert to row coords
   function updateDrag(pScene) {
     if (!dragPanel) {
       isUnderDrag = false
       dropIndex = -1
       return
     }
-    // map point into row coordinates
     const local = row.mapFromItem(null, pScene)
     isUnderDrag = (local.x >= 0 && local.y >= 0 && local.x <= row.width
                    && local.y <= row.height)
@@ -81,19 +124,40 @@ Item {
       dropIndex = -1
       return
     }
-    // decide which gap it's over
+
+    // decide gap index against *visual* children produced by Repeater
+    const kids = row.children
     let idx = 0
-    for (; idx < row.children.length; ++idx) {
-      if (local.x < row.children[idx].x + row.children[idx].width / 2)
+    for (; idx < kids.length; ++idx) {
+      const it = kids[idx]
+      if (!it || !it.hasOwnProperty("dockRoot"))
+        continue
+      if (local.x < it.x + it.width / 2)
         break
     }
-    dropIndex = idx
+    // clamp to [0 .. panelModel.count]
+    dropIndex = Math.max(0, Math.min(idx, panelModel.count))
   }
-  function endDrag(panel, p/* overlay coords */ ) {
+
+  function endDrag(panel, pScene) {
     if (panel !== dragPanel)
       return
     if (isUnderDrag && dropIndex >= 0) {
-      addPanel(panel, dropIndex)
+      // find 'from' index of this panel in the model
+      let from = -1
+      const kids = panelModel.children
+      for (var i = 0; i < kids.length; ++i)
+        if (kids[i] === panel) {
+          from = i
+          break
+        }
+      if (from === -1) {
+        // not in model yet → append then move into place
+        addPanel(panel, dropIndex)
+      } else if (from !== dropIndex && dropIndex <= panelModel.count) {
+        // move within model
+        panelModel.move(from, dropIndex > from ? dropIndex - 1 : dropIndex, 1)
+      }
     } else {
       dockRoot.floatPanel(panel) // outside row → float
     }
