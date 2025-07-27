@@ -48,10 +48,10 @@ Item {
       tgt.beginDrag(panel)
     overlay.visible = true
   }
-  function updateDragPosition(pScene) {
+  function updateDragPosition(posGlobal) {
     let anyRowHover = false
     for (const tgt of extraDropTargets) {
-      tgt.updateDrag(pScene)
+      tgt.updateDrag(posGlobal)
       if (tgt.isUnderDrag)
         anyRowHover = true
     }
@@ -60,16 +60,17 @@ Item {
       overlay.targetZone = Docking.DockZone.NONE
     } else {
       overlay.visible = true
-      overlay.targetZone = overlay.hitTest(pScene)
+      const pOverlay = overlay.mapFromGlobal(posGlobal.x, posGlobal.y)
+      overlay.targetZone = overlay.hitTest(posGlobal)
     }
   }
-  function endDrag(panel, pScene) {
+  function endDrag(panel, posGlobal) {
     if (panel !== draggingPanel)
       return
     // If any row consumed it, stop here
     for (const tgt of extraDropTargets) {
       if (tgt.isUnderDrag) {
-        tgt.endDrag(panel, pScene)
+        tgt.endDrag(panel, posGlobal)
         overlay.visible = false
         draggingPanel = null
         return
@@ -77,8 +78,9 @@ Item {
     }
     // Row did not consume; proceed with zone overlay
     for (const tgt of extraDropTargets)
-      tgt.endDrag(panel, pScene)
-    const zone = overlay.hitTest(pScene)
+      tgt.endDrag(panel, posGlobal)
+    const pOverlay = overlay.mapFromGlobal(pGlobal.x, pGlobal.y)
+    const zone = overlay.hitTest(pOverlay)
     overlay.visible = false
     draggingPanel = null
 

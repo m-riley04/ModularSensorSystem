@@ -8,7 +8,6 @@ Item {
   property var dockRoot
   readonly property int count: panelModel.count
   property bool isUnderDrag: false
-  clip: true
   property int panelMinWidth: 160
   property int panelPrefWidth: 240
   property int panelMaxWidth: 16777215 // effectively "infinite"
@@ -52,7 +51,10 @@ Item {
   function addPanel(panel, index) {
     if (!panel)
       return
-    panel.parent = panelModel
+    if (index !== undefined && index >= 0 && index <= panelModel.count)
+      panelModel.insert(index, panel)
+    else
+      panelModel.append(panel)
     panel.dockRoot = dockRoot
     panel.currentGroup = rowDock
     panel.Layout.fillHeight = true
@@ -111,13 +113,13 @@ Item {
   }
 
   // pScene is in scene coords; convert to row coords
-  function updateDrag(pScene) {
+  function updateDrag(posGlobal) {
     if (!dragPanel) {
       isUnderDrag = false
       dropIndex = -1
       return
     }
-    const local = row.mapFromItem(null, pScene)
+    const local = row.mapFromGlobal(posGlobal.x, posGlobal.y)
     isUnderDrag = (local.x >= 0 && local.y >= 0 && local.x <= row.width
                    && local.y <= row.height)
     if (!isUnderDrag) {

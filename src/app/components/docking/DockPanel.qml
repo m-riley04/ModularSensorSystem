@@ -99,17 +99,17 @@ Item {
             if (active) {
               root.dockRoot.beginDrag(root)
             } else {
-              const pScene = header.mapToItem(null,
-                                              centroid.position) // scene coords
-              root.dockRoot.endDrag(root, pScene)
+              const pGlobal = header.mapToGlobal(centroid.position.x,
+                                                 centroid.position.y)
+              root.dockRoot.endDrag(root, pGlobal)
             }
           }
           onCentroidChanged: {
             if (!active || !root.dockRoot)
               return
-            const pScene = header.mapToItem(null,
-                                            centroid.position) // scene coords
-            root.dockRoot.updateDragPosition(pScene)
+            const pGlobal = header.mapToGlobal(centroid.position.x,
+                                               centroid.position.y)
+            root.dockRoot.updateDragPosition(pGlobal)
           }
         }
       }
