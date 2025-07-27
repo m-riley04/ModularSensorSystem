@@ -20,4 +20,6 @@ qt_add_qml_module(AppComponentsDockingLib
         FloatingDock.qml
         DockRow.qml
         Docking.qml
+        QML_FILES DockZoneOverlay.qml
+        QML_FILES DockRowInsertOverlay.qml
 )

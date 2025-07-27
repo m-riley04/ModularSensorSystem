@@ -7,17 +7,26 @@ Item {
   property var dockRoot
   // expose a count (StackLayout has count, but we use children length since we parent panels directly)
   readonly property int count: stack.children.length
+  property bool isFloating: false
 
-  // dynamic TabButton factory
+  // TabButton factory for each group
   Component {
     id: tabButtonComp
     TabButton {}
   }
 
+
+  /**
+    * Gets the index of a specific panel in the group.
+    */
   function indexOf(panel) {
     return stack.children.indexOf(panel) // <- StackLayout manages its children
   }
 
+
+  /**
+    * Adds a panel to the group.
+    */
   function addPanel(panel) {
     panel.dockRoot = dockRoot
 
@@ -42,15 +51,13 @@ Item {
     panel.currentGroup = root
   }
 
+
+  /**
+    * Removes a panel from the group.
+    */
   function removePanel(panel) {
-    const i = indexOf(panel)
-    if (i >= 0) {
-      const tab = tabs.takeItem(i)
-      // takeItem(index) → Item
-      if (tab)
-        tab.destroy() // optional; removeItem() would destroy too
-      panel.parent = null
-    }
+    tabs.removeItem(panel)
+    panel.parent = null
   }
 
   ColumnLayout {

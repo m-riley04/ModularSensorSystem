@@ -18,18 +18,22 @@ Item {
   property bool canDrag: true
   property alias contentItem: contentHost
 
-  // Public API
+  readonly property bool isFloating: !!(currentGroup && currentGroup.isFloating)
+  signal undockRequested
+
+
+  /**
+    * Docks this panel to a group.
+    */
   function dockTo(group) {
-    if (!canUndock)
+    if (!canUndock || !group || group === currentGroup)
       return
-    if (!group || group === currentGroup)
-      return
+
     if (currentGroup)
       currentGroup.removePanel(root)
     group.addPanel(root)
     currentGroup = group
   }
-  signal undockRequested
 
   Rectangle {
     id: frame
@@ -89,27 +93,48 @@ Item {
         // Drag from header
         DragHandler {
           id: drag
-          enabled: root.canDrag
+          target: null
           acceptedButtons: Qt.LeftButton
-          target: null // we’re not moving this Item directly
-          grabPermissions: PointerHandler.TakeOverForbidden
+
+          // use a permissive grab policy so drags starting on header text still work
+          // (omit this line to use Qt's default, which is already permissive)
+          // grabPermissions: PointerHandler.CanTakeOverFromItems
+          property point lastGlobal
+
           onActiveChanged: {
             if (!root.dockRoot)
               return
+            const g = header.mapToGlobal(centroid.position.x,
+                                         centroid.position.y)
+            lastGlobal = g
             if (active) {
+              // Always begin a docking drag (we may end up re-docking)
               root.dockRoot.beginDrag(root)
             } else {
-              const pGlobal = header.mapToGlobal(centroid.position.x,
-                                                 centroid.position.y)
-              root.dockRoot.endDrag(root, pGlobal)
+              // Always finish the docking drag (docked or floating)
+              root.dockRoot.endDrag(root, g)
             }
           }
+
           onCentroidChanged: {
             if (!active || !root.dockRoot)
               return
-            const pGlobal = header.mapToGlobal(centroid.position.x,
-                                               centroid.position.y)
-            root.dockRoot.updateDragPosition(pGlobal)
+
+            const g = header.mapToGlobal(centroid.position.x,
+                                         centroid.position.y)
+
+            if (root.isFloating) {
+              // While floating: manually move the whole floating window
+              const win = header.Window.window
+              if (win) {
+                win.x += (g.x - lastGlobal.x)
+                win.y += (g.y - lastGlobal.y)
+              }
+            }
+
+            // In both cases, feed global point to docking hit-tests
+            root.dockRoot.updateDragPosition(g)
+            lastGlobal = g
           }
         }
       }

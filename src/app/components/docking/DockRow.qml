@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQml.Models
 
-// <-- ObjectModel
 Item {
   id: rowDock
   property var dockRoot
@@ -31,23 +30,28 @@ Item {
     Repeater {
       id: rep
       model: panelModel
+    }
 
-      // When a panel appears, adopt it for layout + drag
-      onItemAdded: (index, item) => {
-                     if (item && item.hasOwnProperty("dockRoot")) {
-                       item.dockRoot = rowDock.dockRoot
-                       item.currentGroup = rowDock
-                       item.Layout.fillHeight = true
-                       item.Layout.fillWidth = equalStretch
-                       item.Layout.minimumWidth = panelMinWidth
-                       item.Layout.preferredWidth = panelPrefWidth
-                       item.Layout.maximumWidth = panelMaxWidth
-                     }
-                   }
+    Connections {
+      target: rep
+      function onItemAdded(index, item) {
+        if (item && item.hasOwnProperty("dockRoot")) {
+          item.dockRoot = rowDock.dockRoot
+          item.currentGroup = rowDock
+          item.Layout.fillHeight = true
+          item.Layout.fillWidth = equalStretch
+          item.Layout.minimumWidth = panelMinWidth
+          item.Layout.preferredWidth = panelPrefWidth
+          item.Layout.maximumWidth = panelMaxWidth
+        }
+      }
     }
   }
 
-  // === Public API ===
+
+  /**
+    * Adds a panel to the row at a given index.
+    */
   function addPanel(panel, index) {
     if (!panel)
       return
@@ -67,6 +71,10 @@ Item {
       panelModel.move(last, index, 1)
   }
 
+
+  /**
+    * Removes a panel from the row.
+    */
   function removePanel(panel) {
     // find index of this panel in the ObjectModel
     const kids = panelModel.children
@@ -82,37 +90,27 @@ Item {
   property var dragPanel: null
   property int dropIndex: -1
 
-  // Blue insertion bar
-  Rectangle {
+  DockRowInsertOverlay {
     id: dropBar
-    width: 4
-    radius: 2
-    color: rowDock.dropIndex >= 0 ? "#009dff" : "transparent"
+    row: row
+    dropIndex: rowDock.dropIndex
+    panelCount: panelModel.count
     height: parent.height
-    visible: rowDock.dropIndex >= 0
-    z: 10
-    x: {
-      if (rowDock.dropIndex < 0 || rowDock.dropIndex > panelModel.count)
-        return 0
-      if (rowDock.dropIndex === panelModel.count) {
-        if (panelModel.count === 0)
-          return 0
-        const lastItem = row.children[row.children.length - 1]
-        return lastItem ? lastItem.x + lastItem.width : 0
-      }
-      // map model index to the visual child at the same position
-      const child = row.children[rowDock.dropIndex]
-      return child ? child.x : 0
-    }
   }
 
-  // === drag lifecycle from DockRoot ===
+
+  /**
+    * Called when beginning to drag a panel.
+    */
   function beginDrag(panel) {
     dragPanel = panel
     dropIndex = -1
   }
 
-  // pScene is in scene coords; convert to row coords
+
+  /**
+    * A handler that is called when a drag event happens.
+    */
   function updateDrag(posGlobal) {
     if (!dragPanel) {
       isUnderDrag = false
@@ -141,7 +139,11 @@ Item {
     dropIndex = Math.max(0, Math.min(idx, panelModel.count))
   }
 
-  function endDrag(panel, pScene) {
+
+  /**
+    * Called when a drop event occurs (a.k.a. drag event ends)
+    */
+  function endDrag(panel, posScene) {
     if (panel !== dragPanel)
       return
     if (isUnderDrag && dropIndex >= 0) {

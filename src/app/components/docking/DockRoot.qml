@@ -7,19 +7,35 @@ Item {
 
   property var extraDropTargets: [] // list any DockRow you create
 
-  function floatPanel(panel, x, y) {
+
+  /**
+    * Makes a floating window for a panel at a specific global position.
+    */
+  function floatPanel(panel, posGlobal) {
+    // Only undock/float panels that are allowed to.
+    if (!panel || !panel.canUndock)
+      return
+
+    // map global to this root's coords so the new window appears under the cursor
+    const p = root.mapFromGlobal(posGlobal.x, posGlobal.y)
+    const offsetX = -60
+    const offsetY = -20
+    // Item.mapFromGlobal() is on Item. :contentReference[oaicite:0]{index=0}
     const f = floaterComponent.createObject(root, {
-                                              "dockRoot": root,
-                                              "x": x !== undefined ? x : panel.x + 60,
-                                              "y": y !== undefined ? y : panel.y + 60
+                                              "dockRoot": root
                                             })
     if (panel.currentGroup)
       panel.currentGroup.removePanel(panel)
-    f.group.addPanel(panel) // use the alias you exposed
-    f.visible = true // show after attaching content
+    f.group.addPanel(panel)
+    f.visible = true
   }
 
-  // Public API: add a panel to any zone (default center)
+
+  /**
+    * Adds a panel to a specific zone
+    * @param panel The panel to add
+    * @param zone The zone to add the panel to. Default is center.
+    */
   function addPanel(panel, zone) {
     panel.dockRoot = root
     switch (zone) {
@@ -40,14 +56,24 @@ Item {
     }
   }
 
-  // === Drag/drop lifecycle ===
+  // Reference to the panel being dragged
   property var draggingPanel: null
+
+
+  /**
+    * Called at the beginning of the drag event.
+    */
   function beginDrag(panel) {
     draggingPanel = panel
     for (const tgt of extraDropTargets)
       tgt.beginDrag(panel)
     overlay.visible = true
   }
+
+
+  /**
+    * Called during the drag event to update the position.
+    */
   function updateDragPosition(posGlobal) {
     let anyRowHover = false
     for (const tgt of extraDropTargets) {
@@ -64,6 +90,11 @@ Item {
       overlay.targetZone = overlay.hitTest(posGlobal)
     }
   }
+
+
+  /**
+    * Called at the end of the drag event (when it's dropped).
+    */
   function endDrag(panel, posGlobal) {
     if (panel !== draggingPanel)
       return
@@ -76,10 +107,8 @@ Item {
         return
       }
     }
-    // Row did not consume; proceed with zone overlay
-    for (const tgt of extraDropTargets)
-      tgt.endDrag(panel, posGlobal)
-    const pOverlay = overlay.mapFromGlobal(pGlobal.x, pGlobal.y)
+
+    const pOverlay = overlay.mapFromGlobal(posGlobal.x, posGlobal.y)
     const zone = overlay.hitTest(pOverlay)
     overlay.visible = false
     draggingPanel = null
@@ -101,13 +130,25 @@ Item {
       panel.dockTo(centerGroup)
       break
     default:
-      floatPanel(panel)
+      // Only float panel if it is not already floating
+      if (!panel.currentGroup || !panel.currentGroup.isFloating)
+        floatPanel(panel, posGlobal)
     }
   }
+
+
+  /**
+    * Registers a drop target (adds to the extra target array).
+    */
   function registerDropTarget(t) {
     if (t && extraDropTargets.indexOf(t) < 0)
       extraDropTargets.push(t)
   }
+
+
+  /**
+    * Unregisters a drop target (removes from the extra target array)
+    */
   function unregisterDropTarget(t) {
     const i = extraDropTargets.indexOf(t)
     if (i >= 0)
@@ -207,7 +248,7 @@ Item {
     }
   }
 
-  // Overlay shown during drags
+  // Overlay shown during drags that displays the various zones
   DockOverlay {
     id: overlay
   }
