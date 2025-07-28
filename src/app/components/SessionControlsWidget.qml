@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import app.styles.MSSDark
+import app.actions
 
 ColumnLayout {
   id: sessionControlsWidget
@@ -25,7 +26,7 @@ ColumnLayout {
     id: buttonStartStopDevices
     text: qsTr("Start Devices")
     ToolTip.text: qsTr("Starts or stops all sources in the session")
-    onClicked: sessionControlsWidget.startStopClicked()
+    onClicked: SourcesActions.startSources.trigger()
   }
   Button {
     id: buttonRestartDevices

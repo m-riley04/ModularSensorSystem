@@ -21,37 +21,49 @@ import QtMultimedia
 //     }
 //   }
 // }
-
 Rectangle {
   id: root
-  anchors.fill: parent
+
+  Connections {
+    target: SourcesActions.startSources
+    function onTriggered() {
+      camera.start()
+    }
+  }
+
+  Connections {
+    target: SourcesActions.stopSources
+    function onTriggered() {
+      camera.stop()
+    }
+  }
 
   RowLayout {
     z: 999
     anchors.fill: parent
     Button {
       text: qsTr("Start Camera")
-      onClicked: camera.start()
+      onClicked: SourcesActions.startSources.trigger()
     }
 
     Button {
       text: qsTr("Stop Camera")
-      onClicked: camera.stop()
+      onClicked: SourcesActions.stopSources.trigger()
     }
   }
 
   Camera {
-      id: camera
+    id: camera
   }
 
   VideoOutput {
-      id: videoOutput
-      anchors.fill: parent
+    id: videoOutput
+    anchors.fill: parent
   }
 
   CaptureSession {
-      id: captureSession
-      camera: camera
-      videoOutput: videoOutput
+    id: captureSession
+    camera: camera
+    videoOutput: videoOutput
   }
 }

@@ -7,6 +7,8 @@ ActionGroup {
   property alias addSource: actionAddSource
   property alias removeSource: actionRemoveSource
   property alias configureSource: actionConfigureSource
+  property alias startSources: actionStartSources
+  property alias stopSources: actionStopSources
   Action {
     id: actionAddSource
     text: qsTr("Add Source")
@@ -21,5 +23,15 @@ ActionGroup {
     id: actionConfigureSource
     text: qsTr("Configure Source")
     icon.name: "document-properties"
+  }
+  Action {
+    id: actionStartSources
+    text: qsTr("Start Sources")
+    onTriggered: console.log("Starting sources...")
+  }
+  Action {
+    id: actionStopSources
+    text: qsTr("Stop Sources")
+    onTriggered: console.log("Stopping sources...")
   }
 }
