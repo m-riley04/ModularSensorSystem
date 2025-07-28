@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 import app.components
 import app.components.docking
+import QtMultimedia
 
 SplitView {
   id: mainPage
@@ -12,6 +13,7 @@ SplitView {
 
   // Top section
   SourcePreviewWidget {
+    id: sourcePreview
     SplitView.preferredHeight: mainPage.height * 0.65
   }
   // Bottom section

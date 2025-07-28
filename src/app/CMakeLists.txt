@@ -49,6 +49,7 @@ target_link_libraries(${TARGET_APP}
         Qt6::Quick
         Qt6::Qml
         Qt6::Core
+        Qt6::Multimedia
         ${TARGET_CORE}
         AppStylesMSSDarkLib
         AppStylesLib
