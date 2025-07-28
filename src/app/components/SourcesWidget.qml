@@ -12,11 +12,13 @@ RowLayout {
   signal selectedSourceChanged(int currentIndex, int previousIndex)
 
   spacing: 6
+  Layout.fillWidth: true
+  Layout.fillHeight: true
   ListView {
     id: sourcesList
+    Layout.minimumWidth: 32
     Layout.fillWidth: true
     Layout.fillHeight: true
-    clip: true
     model: ListModel {}
     delegate: ItemDelegate {
       width: ListView.view.width

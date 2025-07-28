@@ -12,12 +12,14 @@ RowLayout {
   signal propertiesClicked
   signal selectedProcessorChanged(int currentIndex, int previousIndex)
   spacing: 6
+  Layout.fillWidth: true
+  Layout.fillHeight: true
   // Processors list
   ListView {
     id: processorsList
+    Layout.minimumWidth: 32
     Layout.fillWidth: true
     Layout.fillHeight: true
-    clip: true
     model: ListModel {}
     delegate: ItemDelegate {
       width: ListView.view.width

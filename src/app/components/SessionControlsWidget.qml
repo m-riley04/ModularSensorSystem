@@ -13,6 +13,8 @@ ColumnLayout {
   signal propertiesClicked
 
   spacing: 3
+  Layout.fillWidth: true
+  Layout.fillHeight: true
   Button {
     id: buttonOpenCloseDevices
     text: qsTr("Open Devices")

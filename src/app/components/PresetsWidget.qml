@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 RowLayout {
   id: presetsWidget
+
   property alias model: presetsList.model
   property int selectedIndex: presetsList.currentIndex
   signal saveClicked
@@ -12,16 +13,26 @@ RowLayout {
   signal refreshClicked
   signal selectedPresetChanged(int currentIndex, int previousIndex)
   spacing: 6
+  Layout.fillWidth: true
+  Layout.fillHeight: true
 
+  // Item list
   ListView {
     id: presetsList
+    Layout.minimumWidth: 100
     Layout.fillWidth: true
     Layout.fillHeight: true
-    clip: true
-    model: ListModel {}
+    model: ListModel {
+      ListElement {
+        name: qsTr("hi")
+      }
+    }
     delegate: ItemDelegate {
+      required property string name
+
+      id: delegate
       width: ListView.view.width
-      text: qsTr("model.name") //model.name
+      text: name
       onClicked: {
 
         // let prev = presetsList.currentIndex;
@@ -37,6 +48,7 @@ RowLayout {
     }
   }
 
+  // tool/control buttons
   ColumnLayout {
     id: controlsColumn
     spacing: 6

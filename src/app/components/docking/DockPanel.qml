@@ -17,6 +17,7 @@ Item {
   property bool canClose: true
   property bool canDrag: true
   property alias contentItem: contentHost
+  default property alias content: contentHost.data
 
   readonly property bool isFloating: !!(currentGroup && currentGroup.isFloating)
   signal undockRequested
@@ -51,6 +52,7 @@ Item {
         id: header
         Layout.fillWidth: true
         Layout.preferredHeight: 36
+        implicitHeight: 36
         radius: 6
         color: Qt.rgba(1, 1, 1, 0.05)
         border.color: Qt.rgba(1, 1, 1, 0.06)
@@ -144,8 +146,6 @@ Item {
         id: contentHost
         Layout.fillWidth: true
         Layout.fillHeight: true
-        clip: true
-        default property alias content: contentHost.data
       }
     }
   }
