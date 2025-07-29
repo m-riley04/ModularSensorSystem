@@ -7,16 +7,12 @@
 #include <QThread>
 #include <QVideoWidget>
 #include <QtConcurrent>
-#include <chrono>
 #include "core/features/sources/Source/source.h"
 #include "core/features/sources/IConfigurableSource/iconfigurablesource.h"
 #include "core/features/sources/Source/SourcePropertiesWidget/sourcepropertieswidget.h"
 #include "core/features/sources/IClippableSource/iclippablesource.h"
 #include "core/interfaces/capability/ivideosource.h"
-#include "USBVideoClipBuffer/usbvideoclipbuffer.h"
-#include "USBVideoPreview/usbvideopreview.h"
 #include "USBVideoPropertiesWidget/usbvideopropertieswidget.h"
-#include "USBVideoRecordingPropertiesWidget/usbvideorecordingpropertieswidget.h"
 #include <USBVideoClipEncoder/usbvideoclipencoder.h>
 
 class USBVideoSource : public Source, 
@@ -48,7 +44,7 @@ public:
 	ClipBufferBase* clipBuffer() override { return pClipBuffer.get(); }
 
 	// IVideoSource interface
-	QObject* asQObject() override { return this; }
+    QObject* asQObject()  { return this; }
 
 private:
 	QMediaCaptureSession mSession;

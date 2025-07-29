@@ -3,7 +3,6 @@
 #include <QObject>
 #include "core/interfaces/plugins/isourceplugin.h"
 #include "core/features/sources/Source/source.h"
-#include "USBVideoSource/usbvideosource.h"
 #include <QtMultimedia>
 
 class USBVideoPlugin : public QObject, public ISourcePlugin

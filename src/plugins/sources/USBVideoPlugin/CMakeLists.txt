@@ -19,15 +19,18 @@ set(SRC
     USBVideoSource/usbvideosource.h
 )
 
-add_library(USBVideoPlugin MODULE ${SRC})
-
-set_target_properties(USBVideoPlugin PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugins/sources"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugins/sources"
+qt_add_qml_module(USBVideoPluginLib
+    URI USBVideoPlugin
+    SHARED
+    SOURCES ${SRC}
 )
 
-#target_link_libraries(USBVideoPlugin PRIVATE core Qt6::Widgets Qt6::MultimediaWidgets)
 
-# add_custom_command(TARGET USBVideoPlugin POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:USBVideoPlugin> "${CMAKE_BINARY_DIR}/plugins/sources"
-# )
+target_link_libraries(USBVideoPluginLib
+    PRIVATE
+        Qt6::Core
+        Qt6::Quick
+        Qt6::Multimedia
+        Qt6::Qml
+        core
+)
