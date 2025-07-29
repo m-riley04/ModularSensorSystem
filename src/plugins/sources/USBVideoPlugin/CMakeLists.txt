@@ -26,8 +26,12 @@ set_target_properties(USBVideoPlugin PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugins/sources"
 )
 
-#target_link_libraries(USBVideoPlugin PRIVATE core Qt6::Widgets Qt6::MultimediaWidgets)
-
-# add_custom_command(TARGET USBVideoPlugin POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:USBVideoPlugin> "${CMAKE_BINARY_DIR}/plugins/sources"
-# )
+target_link_libraries(USBVideoPlugin
+    PRIVATE
+        Qt6::Core
+        Qt6::Widgets
+        Qt6::Multimedia
+        Qt6::MultimediaWidgets
+        Qt6::Concurrent
+        ${TARGET_CORE}
+)

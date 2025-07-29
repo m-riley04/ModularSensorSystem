@@ -13,8 +13,9 @@ set_target_properties(YoloObjectDetectionProcessorPlugin PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugins/processors"
 )
 
-# target_link_libraries(YoloObjectDetectionProcessorPlugin PRIVATE core)
-
-# add_custom_command(TARGET YoloObjectDetectionProcessorPlugin POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:YoloObjectDetectionProcessorPlugin> "${CMAKE_BINARY_DIR}/plugins/processors"
-# )
+target_link_libraries(YoloObjectDetectionProcessorPlugin
+    PRIVATE
+        Qt6::Core
+        Qt6::Multimedia
+        ${TARGET_CORE}
+)

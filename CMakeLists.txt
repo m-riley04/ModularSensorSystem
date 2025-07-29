@@ -10,6 +10,8 @@ find_package(Qt6 6.8 REQUIRED COMPONENTS
     Quick
     Qml
     Multimedia
+    MultimediaWidgets
+    Widgets
     Concurrent)
 
 # Set up Qt6 for the entire project
