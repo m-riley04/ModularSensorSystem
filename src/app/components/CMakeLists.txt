@@ -24,3 +24,4 @@ qt_add_qml_module(AppComponentsLib
 )
 
 add_subdirectory(docking)
+add_subdirectory(plugins)

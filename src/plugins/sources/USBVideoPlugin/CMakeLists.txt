@@ -25,7 +25,7 @@ qt_add_qml_module(USBVideoPluginLib
     SOURCES ${SRC}
 )
 
-target_link_libraries(USBVideoPlugin
+target_link_libraries(USBVideoPluginLib
     PRIVATE
         Qt6::Core
         Qt6::Widgets
