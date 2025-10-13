@@ -3,9 +3,10 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import app.styles.MSSDark
 import app.actions
+import app.components.plugins
 
 ColumnLayout {
-  id: sessionControlsWidget
+  id: root
   signal openCloseClicked
   signal startStopClicked
   signal restartClicked
@@ -18,41 +19,69 @@ ColumnLayout {
   Layout.fillHeight: true
   Button {
     id: buttonOpenCloseDevices
-    text: qsTr("Open Devices")
-    ToolTip.text: qsTr("Opens or closes all of the devices in the session")
-    onClicked: sessionControlsWidget.openCloseClicked()
+    text: checked ? qsTr("Close Sources") : qsTr("Open Sources")
+    ToolTip.text: qsTr("Opens or closes all of the sources in the session")
+    checkable: true
+    checked: false
+    onClicked: {
+      checked ? SourcesActions.openSources.trigger(
+                  ) : SourcesActions.closeSources.trigger()
+      root.openCloseClicked()
+    }
   }
   Button {
     id: buttonStartStopDevices
-    text: qsTr("Start Devices")
+    text: checked ? qsTr("Stop Sources") : qsTr("Start Sources")
     ToolTip.text: qsTr("Starts or stops all sources in the session")
-    onClicked: SourcesActions.startSources.trigger()
+    checkable: true
+    checked: false
+    onClicked: {
+      checked ? SourcesActions.startSources.trigger(
+                  ) : SourcesActions.stopSources.trigger()
+      root.startStopClicked()
+    }
   }
   Button {
     id: buttonRestartDevices
-    text: qsTr("Restart Devices")
+    text: qsTr("Restart Sources")
     icon.name: "system-reboot"
     ToolTip.text: qsTr("Restarts all sources in the session")
-    onClicked: sessionControlsWidget.restartClicked()
+    onClicked: {
+      root.restartClicked()
+    }
   }
   Button {
     id: buttonRecord
-    text: qsTr("Start Recording")
+    text: checked ? qsTr("Stop Recording") : qsTr("Start Recording")
     icon.name: "media-record"
     ToolTip.text: qsTr("Starts recording of all sources")
-    onClicked: sessionControlsWidget.recordClicked()
+    checkable: true
+    checked: false
+    onClicked: {
+      root.recordClicked()
+    }
   }
   Button {
     id: buttonClip
     text: qsTr("Capture Clip")
     ToolTip.text: qsTr("Captures a clip of the current sources")
-    onClicked: sessionControlsWidget.clipClicked()
+    onClicked: {
+      root.clipClicked()
+    }
   }
   Button {
     id: buttonProperties
     text: qsTr("Properties")
     icon.name: "document-properties"
     ToolTip.text: qsTr("Opens the session's properties")
-    onClicked: sessionControlsWidget.propertiesClicked()
+    onClicked: {
+      propertiesWindow.show()
+      root.propertiesClicked()
+    }
+  }
+
+  DialogWindow {
+    id: propertiesWindow
+    title: qsTr("Properties")
   }
 }

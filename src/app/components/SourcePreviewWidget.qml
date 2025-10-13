@@ -10,14 +10,13 @@ Rectangle {
 
   Item {
     id: testCamera
-    Layout.fillWidth: true
-    Layout.fillHeight: true
+    anchors.fill: root
 
     Connections {
       target: SourcesActions.startSources
       function onTriggered() {
         camera.start()
-        propertiesPopup.open();
+        propertiesPopup.show()
       }
     }
 
@@ -34,53 +33,57 @@ Rectangle {
       height: 300
     }
 
-    RowLayout {
-      z: 999
+    ColumnLayout {
       anchors.fill: parent
-      Button {
-        text: qsTr("Start Camera")
-        onClicked: SourcesActions.startSources.trigger()
+
+      VideoOutput {
+        id: videoOutput
+        Layout.fillWidth: true
+        Layout.fillHeight: true
       }
 
-      Button {
-        text: qsTr("Stop Camera")
-        onClicked: SourcesActions.stopSources.trigger()
+      Camera {
+        id: camera
       }
-    }
 
-    Camera {
-      id: camera
-    }
+      CaptureSession {
+        id: captureSession
+        camera: camera
+        videoOutput: videoOutput
+      }
 
-    VideoOutput {
-      id: videoOutput
-      anchors.fill: parent
-    }
+      RowLayout {
+        z: 999
+        Button {
+          text: qsTr("Start Camera")
+          onClicked: SourcesActions.startSources.trigger()
+        }
 
-    CaptureSession {
-      id: captureSession
-      camera: camera
-      videoOutput: videoOutput
+        Button {
+          text: qsTr("Stop Camera")
+          onClicked: SourcesActions.stopSources.trigger()
+        }
+      }
     }
   }
 
   // The image to display (set by the backend or a controller)
-  Image {
-    id: sourcePreviewWidget
-    Layout.fillWidth: true
-    Layout.fillHeight: true
+  // Image {
+  //   id: sourcePreviewWidget
+  //   Layout.fillWidth: true
+  //   Layout.fillHeight: true
 
-    property alias image: sourcePreviewWidget.source
-    property bool hasFrame: sourcePreviewWidget.status === Image.Ready
+  //   property alias image: sourcePreviewWidget.source
+  //   property bool hasFrame: sourcePreviewWidget.status === Image.Ready
 
-    signal frameChanged(url imageUrl)
+  //   signal frameChanged(url imageUrl)
 
-    fillMode: Image.PreserveAspectFit
-    source: "" // Set this to the frame URL or data
-    onStatusChanged: {
-      if (status === Image.Ready) {
-        sourcePreviewWidget.frameChanged(source)
-      }
-    }
-  }
+  //   fillMode: Image.PreserveAspectFit
+  //   source: "" // Set this to the frame URL or data
+  //   onStatusChanged: {
+  //     if (status === Image.Ready) {
+  //       sourcePreviewWidget.frameChanged(source)
+  //     }
+  //   }
+  // }
 }

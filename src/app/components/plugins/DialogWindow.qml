@@ -1,26 +1,47 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Window
 
 Window {
-    id: root
+  id: root
 
-    property alias title: root.title = qsTr("Dialog Window")
-    property alias buttons: dialog.standardButtons
-    property alias onAccepted: dialog.onAccepted
-    property alias onRejected: dialog.onRejected
-    default property alias content: contentHost.data
+  property alias buttons: buttonBox.standardButtons
+  default property alias content: contentRoot.data
 
-    Dialog {
-        id: dialog
-        width: root.width
-        height: root.height
-        standardButtons: Dialog.Ok | Dialog.Cancel
+  signal accepted
+  signal rejected
+  signal opened
+  signal closed
 
-        Item {
-            id: contentRoot
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
+  visible: false
+  width: 900
+  height: 600
+  title: qsTr("Dialog")
+  flags: Qt.Window
+
+  ColumnLayout {
+    width: root.width
+    height: root.height
+
+    Item {
+      id: contentRoot
+      Layout.fillWidth: true
+      Layout.fillHeight: true
     }
+
+    DialogButtonBox {
+      id: buttonBox
+      Layout.fillWidth: true
+      standardButtons: Dialog.Ok | Dialog.Cancel
+      onAccepted: {
+        root.accepted()
+        root.close()
+      }
+      onRejected: {
+        root.rejected()
+        root.close()
+      }
+    }
+  }
 }

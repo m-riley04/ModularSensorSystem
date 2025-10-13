@@ -10,5 +10,5 @@ qt_add_qml_module(AppComponentsPluginsLib
     DEPENDENCIES
         TARGET AppStylesLib
     QML_FILES
-    DialogWindow.qml
+        DialogWindow.qml
 )
