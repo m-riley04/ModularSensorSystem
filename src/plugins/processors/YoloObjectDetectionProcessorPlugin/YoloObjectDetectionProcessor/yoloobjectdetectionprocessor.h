@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QImage>
 #include <QVideoFrame>
-#include "features/processors/ProcessorBase/processorbase.h"
+#include "features/processors/processorbase.h"
 
 class ProcessorBase;
 
