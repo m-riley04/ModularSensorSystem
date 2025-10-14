@@ -5,14 +5,6 @@
 #include <QtMultimedia>
 #include "core/features/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
 
-extern "C" {
-	#include <libavformat/avformat.h>
-	#include <libavcodec/avcodec.h>
-	#include <libswscale/swscale.h>
-	#include <libavutil/imgutils.h>
-	#include <libavutil/opt.h>
-}
-
 /// <summary>
 /// Helper that encodes raw BGRA/ARGB/RGB32 Qt frames into H.264/MP4.
 /// Usage:
@@ -26,7 +18,7 @@ class USBVideoClipEncoder
 	Q_DISABLE_COPY_MOVE(USBVideoClipEncoder)
 
 public:
-	USBVideoClipEncoder(QString filePath, QSize frameSize, float frameRate, AVPixelFormat srcPixelFormat = AV_PIX_FMT_BGRA);
+	USBVideoClipEncoder(QString filePath, QSize frameSize, float frameRate);
 	~USBVideoClipEncoder();
 
 	bool isOk() const { return mOk; }
@@ -39,20 +31,4 @@ public:
 private:
 	bool mOk = false;
 	QString mError;
-
-	AVFormatContext* pFormatContext = nullptr;
-	AVCodecContext* pCodecContext = nullptr;
-	AVStream* pVideoStream = nullptr;
-	SwsContext* pSwsContext = nullptr;
-	AVFrame* pFrame = nullptr;
-
-	AVPixelFormat mPixelFormat = AV_PIX_FMT_YUV420P;
-	int mWidth, mHeight;
-	AVRational mTimeBase;
-	qint64 mNextPts = 0;
-
-	bool encodeAndWrite(AVFrame* frame);
-	AVFrame* allocateFrame();
-	void freeAll();
-
 };

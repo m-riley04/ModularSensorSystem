@@ -8,6 +8,7 @@
 #include <qjsonarray.h>
 #include <QDir>
 #include <qdiriterator.h>
+#include <QJsonDocument>
 #include "controllers/BackendControllerBase/backendcontrollerbase.h"
 
 class PresetsController : public BackendControllerBase
