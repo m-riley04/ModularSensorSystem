@@ -3,7 +3,7 @@
 #include <QWidget>
 #include "ui_processorswidget.h"
 #include <dialogs/AddProcessorDialog/addprocessordialog.h>
-#include <controllers/MainController/maincontroller.h>
+#include "controllers/maincontroller.h"
 
 class ProcessorsWidget : public QWidget
 {

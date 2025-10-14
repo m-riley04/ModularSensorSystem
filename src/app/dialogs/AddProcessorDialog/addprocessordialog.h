@@ -2,7 +2,7 @@
 
 #include <QDialog>
 #include "ui_addprocessordialog.h"
-#include <controllers/PluginController/plugincontroller.h>
+#include "controllers/plugincontroller.h"
 #include <qmessagebox.h>
 
 class AddProcessorDialog : public QDialog

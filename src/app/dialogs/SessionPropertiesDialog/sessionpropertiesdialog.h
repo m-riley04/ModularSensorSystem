@@ -2,7 +2,7 @@
 
 #include <QDialog>
 #include "ui_sessionpropertiesdialog.h"
-#include <Controllers/MainController/maincontroller.h>
+#include "controllers/maincontroller.h"
 
 class SessionPropertiesDialog : public QDialog
 {

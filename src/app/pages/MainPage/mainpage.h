@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "ui_mainpage.h"
-#include <Controllers/MainController/maincontroller.h>
+#include "controllers/maincontroller.h"
 
 class MainPage : public QMainWindow
 {

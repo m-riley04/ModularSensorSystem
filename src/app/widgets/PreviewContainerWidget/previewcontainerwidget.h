@@ -3,8 +3,8 @@
 #include <QWidget>
 #include "ui_previewcontainerwidget.h"
 #include <QList>
-#include <controllers/MainController/maincontroller.h>
-#include "features/sources/Source/SourcePreview/sourcepreview.h"
+#include "controllers/maincontroller.h"
+#include "features/sources/sourcepreview.h"
 #include "widgets/SourcePreviewWidget/sourcepreviewwidget.h"
 
 class PreviewContainerWidget : public QWidget

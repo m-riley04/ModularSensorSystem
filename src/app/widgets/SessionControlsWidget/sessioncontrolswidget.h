@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "ui_sessioncontrolswidget.h"
-#include <Controllers/MainController/maincontroller.h>
+#include "controllers/maincontroller.h"
 
 class SessionControlsWidget : public QWidget
 {

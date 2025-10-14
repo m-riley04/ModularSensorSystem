@@ -4,8 +4,8 @@
 #include "ui_sourceswidget.h"
 #include <qmessagebox.h>
 #include "dialogs/AddSourceDialog/addsourcedialog.h"
-#include <Controllers/SourceController/sourcecontroller.h>
-#include <features/sources/IConfigurableSource/iconfigurablesource.h>
+#include "controllers/sourcecontroller.h"
+#include "features/sources/iconfigurablesource.h"
 #include <qobject.h>
 #include <QMimeData>
 

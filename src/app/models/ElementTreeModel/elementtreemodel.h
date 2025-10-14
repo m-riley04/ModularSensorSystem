@@ -1,10 +1,10 @@
 #pragma once
 
 #include <QAbstractItemModel>
-#include <controllers/MountController/mountcontroller.h>
-#include <controllers/SourceController/sourcecontroller.h>
-#include <controllers/ProcessingController/processingcontroller.h>
-#include <features/mounts/Mount/mount.h>
+#include "controllers/mountcontroller.h"
+#include "controllers/sourcecontroller.h"
+#include "controllers/processingcontroller.h"
+#include "features/mounts/mount.h"
 
 struct Node {
     enum class Kind { Mount, Source, Processor };

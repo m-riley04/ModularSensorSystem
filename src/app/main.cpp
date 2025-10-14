@@ -1,6 +1,6 @@
 #include "Windows/MainWindow/MainWindow.h"
 #include <QtWidgets/QApplication>
-#include <features/sources/Source/SourceError/sourceerror.h>
+#include "features/sources/sourceerror.h"
 
 int main(int argc, char *argv[])
 {

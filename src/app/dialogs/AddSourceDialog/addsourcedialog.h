@@ -2,8 +2,8 @@
 
 #include <QDialog>
 #include "ui_addsourcedialog.h"
-#include <interfaces/plugins/isourceplugin.h>
-#include <controllers/PluginController/plugincontroller.h>
+#include "interfaces/plugins/isourceplugin.h"
+#include "controllers/plugincontroller.h"
 #include <QMessageBox>
 
 class AddSourceDialog : public QDialog

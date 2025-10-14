@@ -2,7 +2,7 @@
 
 #include <QDockWidget>
 #include "ui_dockableelementsmanagerwidget.h"
-#include <controllers/MainController/maincontroller.h>
+#include "controllers/maincontroller.h"
 
 class DockableElementsManagerWidget : public QDockWidget
 {

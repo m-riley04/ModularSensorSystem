@@ -4,8 +4,8 @@
 #include "ui_MainWindow.h"
 #include <QVideoFrame>
 #include <QVideoWidget>
-#include "controllers/MainController/maincontroller.h"
-#include "controllers/ClipController/clipcontroller.h"
+#include "controllers/maincontroller.h"
+#include "controllers/clipcontroller.h"
 #include "widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "widgets/CustomTitleBar/customtitlebar.h"
 #include "pages/MainPage/mainpage.h"

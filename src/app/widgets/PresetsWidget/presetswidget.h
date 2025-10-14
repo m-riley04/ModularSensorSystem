@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "ui_presetswidget.h"
-#include <controllers/MainController/maincontroller.h>
+#include "controllers/maincontroller.h"
 #include <QtWidgets>
 
 class PresetsWidget : public QWidget
