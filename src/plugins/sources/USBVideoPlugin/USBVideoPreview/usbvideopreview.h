@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/features/sources/Source/SourcePreview/sourcepreview.h"
+#include "features/sources/sourcepreview.h"
 #include <qmediacapturesession.h>
 #include <QtMultimedia>
 #include <QObject>

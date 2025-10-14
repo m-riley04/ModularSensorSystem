@@ -8,16 +8,16 @@
 #include <QVideoWidget>
 #include <QtConcurrent>
 #include <chrono>
-#include "core/features/sources/Source/source.h"
-#include "core/features/sources/IConfigurableSource/iconfigurablesource.h"
-#include "core/features/sources/Source/SourcePropertiesWidget/sourcepropertieswidget.h"
-#include "core/features/sources/IClippableSource/iclippablesource.h"
-#include "core/interfaces/capability/ivideosource.h"
+#include "features/sources/source.h"
+#include "features/sources/iconfigurablesource.h"
+#include "features/sources/sourcepropertieswidget.h"
+#include "features/sources/iclippablesource.h"
+#include "interfaces/capability/ivideosource.h"
 #include "USBVideoClipBuffer/usbvideoclipbuffer.h"
 #include "USBVideoPreview/usbvideopreview.h"
 #include "USBVideoPropertiesWidget/usbvideopropertieswidget.h"
 #include "USBVideoRecordingPropertiesWidget/usbvideorecordingpropertieswidget.h"
-#include <USBVideoClipEncoder/usbvideoclipencoder.h>
+#include "USBVideoClipEncoder/usbvideoclipencoder.h"
 
 class USBVideoSource : public Source, 
 	public IConfigurableSource, 

@@ -6,7 +6,7 @@
 #include <QtMultimedia>
 #include <QMessageBox>
 #include <algorithm>
-#include <USBVideoSource/usbvideosource.h>
+#include "USBVideoSource/usbvideosource.h"
 #include "QtCameraFormatTableWidgetItem/qtcameraformatablewidgetitem.h"
 
 class USBVideoSource;

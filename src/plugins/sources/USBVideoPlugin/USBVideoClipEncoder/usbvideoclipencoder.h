@@ -3,7 +3,7 @@
 #include <QObject>
 #include <qsize.h>
 #include <QtMultimedia>
-#include "core/features/sources/IClippableSource/ClipBufferBase/clipbufferbase.h"
+#include "features/sources/clipbufferbase.h"
 
 /// <summary>
 /// Helper that encodes raw BGRA/ARGB/RGB32 Qt frames into H.264/MP4.
