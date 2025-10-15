@@ -1,13 +1,7 @@
 {
   "dependencies": [
-    "libusb",
     "onnx",
-    "opencv",
     "onnxruntime-gpu",
-    {
-      "name": "ffmpeg",
-      "version>=": "7.1"
-    },
     {
       "name": "gstreamer",
       "version>=": "1.26.5#0"
