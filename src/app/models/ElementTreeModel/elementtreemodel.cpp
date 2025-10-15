@@ -62,9 +62,9 @@ QVariant ElementTreeModel::data(const QModelIndex& idx, int role) const
     if (role == Qt::DisplayRole) {
         if (idx.column() == 0) {
             switch (n.kind) {
-            case Node::Kind::Mount: return mMountController->byId(n.id)->name();
+            case Node::Kind::Mount: return QString::fromStdString(mMountController->byId(n.id)->name());
             case Node::Kind::Source: return mSourceController->byId(n.id)->name();
-            //case Node::Kind::Processor: return mProcessingController->byId(n.id)->name();
+            //case Node::Kind::Processor: return QString(mProcessingController->byId(n.id)->name());
             }
         }
         if (idx.column() == 1) { /* status text */ }

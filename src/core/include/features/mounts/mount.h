@@ -1,13 +1,13 @@
 #pragma once
 
-#include <QObject>
+#include <string>
+#include <optional>
 
 /**
  * @brief Mounts represent the physical "mount" that physical sources sit on. They provide data
  */
-class Mount : public QObject
+class Mount
 {
-	Q_OBJECT
 
 public:
 	enum Kind {
@@ -18,25 +18,26 @@ public:
 		MOBILE_BASE
 	};
 
-	struct MountPose { // TODO: think about if this is the best way to do this
+	struct Pose { // TODO: think about if this is the best way to do this
 		double x, y, z, yaw, pitch, roll;
 	};
 
 public:
-	Mount(QByteArray id, QString name, Kind kind, QObject* parent);
-	Mount(QObject *parent);
-	~Mount();
+	Mount() = default;
+	virtual ~Mount() = default;
 
-	QByteArray id() const { return mId; }
-	QString name() const { return mName; }
-	Kind kind() const { return mKind; }
-	MountPose pose() const { return mPose; }
-	virtual bool isMovable() const { return false; }
+	std::string id() const { return mId; }
+	std::string name() const { return mName; }
+	virtual Kind kind() const = 0;
+	virtual bool isMovable() const = 0;
+
+	virtual std::optional<Pose> pose() const = 0;
+	virtual bool setPose(const Pose& newPose) = 0;
 
 protected:
-	QByteArray mId;
-	QString mName = "New Mount";
-	Kind mKind = Kind::STATIC;
-	MountPose mPose = MountPose();
+	Mount(std::string id, std::string name) : mId(id), mName(name) {}
+
+	std::string mId;
+	std::string mName = "New Mount";
 };
 
