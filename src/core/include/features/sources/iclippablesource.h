@@ -1,7 +1,8 @@
 #pragma once
-#include <QWidget>
 #include <QDir>
 #include "clipbufferbase.h"
+
+class QWidget;
 
 class IClippableSource {
 public:
