@@ -2,8 +2,6 @@
 #include <QDir>
 #include "clipbufferbase.h"
 
-class QWidget;
-
 class IClippableSource {
 public:
     virtual ~IClippableSource() = default;
