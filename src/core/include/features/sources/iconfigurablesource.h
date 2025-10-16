@@ -1,5 +1,9 @@
 #pragma once
-#include <QWidget>
+#include <QJsonObject>
+
+// Forward declare QWidget to avoid QtWidgets dependency in core
+// TODO: actually remove QWidget entirely (later)
+class QWidget;
 
 class IConfigurableSource {
 public:

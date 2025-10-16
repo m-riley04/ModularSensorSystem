@@ -10,7 +10,7 @@
 #include <chrono>
 #include "features/sources/source.h"
 #include "features/sources/iconfigurablesource.h"
-#include "features/sources/sourcepropertieswidget.h"
+// Removed dependency on app-level SourcePropertiesWidget to avoid linker errors
 #include "features/sources/iclippablesource.h"
 #include "interfaces/capability/ivideosource.h"
 #include "USBVideoClipBuffer/usbvideoclipbuffer.h"

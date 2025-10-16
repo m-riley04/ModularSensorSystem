@@ -113,6 +113,7 @@
     <ClCompile Include="pages\MainPage\mainpage.cpp" />
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
+    <ClCompile Include="widgets\SourcePropertiesWidget\sourcepropertieswidget.cpp" />
     <ClCompile Include="widgets\SourcesWidget\sourceswidget.cpp" />
     <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
@@ -193,6 +194,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="models\ElementTreeModel\elementtreemodel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\SourcePropertiesWidget\sourcepropertieswidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

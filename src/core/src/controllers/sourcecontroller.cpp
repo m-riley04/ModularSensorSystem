@@ -88,7 +88,7 @@ Source* SourceController::addSource(ISourcePlugin* plugin, SourceInfo info) {
 	mSourcesById[source->id()] = source;
 
 	// Connect errors
-	connect(source, &Source::errorOccurred, this, &SourceController::errorOccurred);
+	//connect(source, &Source::errorOccurred, this, &SourceController::errorOccurred);
 
 	emit sourceAdded(source);
 	return source;

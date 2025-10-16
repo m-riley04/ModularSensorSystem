@@ -1,4 +1,6 @@
 #include "usbvideosource.h"
+#include <QTabWidget>
+#include <QVBoxLayout>
 
 
 USBVideoSource::USBVideoSource(QByteArray hardwareId, QObject* parent)
@@ -120,10 +122,17 @@ QCameraDevice USBVideoSource::getCameraDevice(const QByteArray& id)
 
 QWidget* USBVideoSource::createConfigWidget(QWidget* parent)
 {
-	SourcePropertiesWidget* devicePropertiesWidget = new SourcePropertiesWidget(this, parent);
-	devicePropertiesWidget->addPage("Source", new USBVideoPropertiesWidget(this, devicePropertiesWidget));
-    devicePropertiesWidget->addPage("Recording", new USBVideoRecordingPropertiesWidget(devicePropertiesWidget, &mRecorder));
-    return devicePropertiesWidget;//new USBVideoPropertiesWidget(this, parent);
+	// Avoid linking to app's SourcePropertiesWidget. Build a simple tabbed widget locally.
+	QWidget* container = new QWidget(parent);
+	auto* layout = new QVBoxLayout(container);
+	layout->setContentsMargins(0, 0, 0, 0);
+
+	auto* tabs = new QTabWidget(container);
+	tabs->addTab(new USBVideoPropertiesWidget(this, tabs), QStringLiteral("Source"));
+	tabs->addTab(new USBVideoRecordingPropertiesWidget(tabs, &mRecorder), QStringLiteral("Recording"));
+
+	layout->addWidget(tabs);
+	return container;
 }
 
 void USBVideoSource::loadSettings(const QJsonObject& obj)

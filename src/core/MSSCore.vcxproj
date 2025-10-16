@@ -110,7 +110,6 @@
     <ClCompile Include="src\features\sources\source.cpp" />
     <ClCompile Include="src\features\sources\sourcemetadata.cpp" />
     <ClCompile Include="src\features\sources\sourcepreview.cpp" />
-    <ClCompile Include="src\features\sources\sourcepropertieswidget.cpp" />
     <QtMoc Include="include\controllers\backendcontrollerbase.h" />
     <ClInclude Include="include\features\mounts\mount.h" />
     <QtMoc Include="include\controllers\mountcontroller.h" />
@@ -121,7 +120,6 @@
     <ClInclude Include="include\features\sources\iconfigurablesource.h" />
     <QtMoc Include="include\features\sources\source.h" />
     <ClInclude Include="include\features\sources\sourceerror.h" />
-    <QtMoc Include="include\features\sources\sourcepropertieswidget.h" />
     <QtMoc Include="include\features\sources\sourcepreview.h" />
     <QtMoc Include="include\features\sources\sourcemetadata.h" />
     <QtMoc Include="include\features\sources\clipbufferbase.h" />

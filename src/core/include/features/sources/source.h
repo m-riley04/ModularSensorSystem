@@ -150,5 +150,5 @@ signals:
 	/// </summary>
 	void previewAvailable(Source* src, SourcePreview* preview);
 
-	void errorOccurred(const SourceError& e);
+	//void errorOccurred(const SourceError& e);
 };
