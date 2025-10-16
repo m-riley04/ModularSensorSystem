@@ -1,10 +1,13 @@
 {
   "dependencies": [
-    "onnx",
-    "onnxruntime-gpu",
     {
       "name": "gstreamer",
-      "version>=": "1.26.5#0"
-    }
+      "version>=": "1.26.5"
+    },
+    "onnx",
+    "onnxruntime-gpu",
+    "boost-signals2",
+    "boost-uuid",
+    "boost-qvm"
   ]
 }
