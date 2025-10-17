@@ -104,18 +104,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\features\sources\sourcepreview.cpp" />
     <ClCompile Include="src\controllers\datapipelinecontroller.cpp" />
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
     <ClCompile Include="src\features\sources\clipbufferbase.cpp" />
-    <ClCompile Include="src\features\sources\source.cpp" />
-    <ClCompile Include="src\features\sources\sourcemetadata.cpp" />
     <ClCompile Include="src\features\sources\sourcepreview.cpp" />
-    <ClCompile Include="src\features\sources\sourcepropertieswidget.cpp" />
-    <ClCompile Include="src\features\sources\sourcepropertieswidget.cpp" />
-    <ClCompile Include="src\features\sources\sourcepropertieswidget.cpp" />
-    <ClCompile Include="src\features\sources\sourcepropertieswidget.cpp" />
-    <ClCompile Include="src\features\sources\sourcepropertieswidget.cpp" />
     <QtMoc Include="include\controllers\backendcontrollerbase.h" />
     <QtMoc Include="include\controllers\datapipelinecontroller.h" />
     <ClInclude Include="include\features\mounts\mount.h" />
