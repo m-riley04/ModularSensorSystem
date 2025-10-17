@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include <QtWidgets>
-#include "source.h"
+#include "features/sources/source.h"
 
 class Source;
 

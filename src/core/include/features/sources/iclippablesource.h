@@ -1,5 +1,4 @@
 #pragma once
-#include <QWidget>
 #include <QDir>
 #include "clipbufferbase.h"
 

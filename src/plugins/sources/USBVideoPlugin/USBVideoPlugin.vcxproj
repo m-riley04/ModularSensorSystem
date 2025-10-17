@@ -63,7 +63,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\plugins\sources\</OutDir>
-    <IncludePath>$(SolutionDir)src\core\include;$(SolutionDir)src;%(AdditionalIncludeDirectories)</IncludePath>
+    <IncludePath>$(SolutionDir)src\core\include;$(SolutionDir)src;$(SolutionDir)src\app;%(AdditionalIncludeDirectories)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
@@ -73,7 +73,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\core\include;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\core\include;$(SolutionDir)src;$(SolutionDir)src\app;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <QtMoc />
     <QtMoc>

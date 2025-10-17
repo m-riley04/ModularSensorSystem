@@ -11,6 +11,7 @@
 
 class RecordingSession;
 class SourcePreview;
+struct SourceError;
 
 class Source : public QObject
 {

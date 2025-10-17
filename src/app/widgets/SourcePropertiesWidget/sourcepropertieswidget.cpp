@@ -1,4 +1,4 @@
-#include "features/sources/sourcepropertieswidget.h"
+#include "sourcepropertieswidget.h"
 
 SourcePropertiesWidget::SourcePropertiesWidget(Source* source, QWidget *parent)
 	: QWidget(parent), pSource(source)

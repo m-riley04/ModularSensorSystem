@@ -24,6 +24,16 @@
 4. Open the [solution file](ModularSensorSystem.sln) in Visual Studio
 	- The project is set up to use C++20 and Qt 6.9.0, so make sure your Visual Studio installation supports these versions.
 
+## VCPKG and GStreamer
+For whatever reason since 2021 (from what I've found), there has been a bug with vcpkg and specifically with the `gstreamer` library on Windows. I've found a few issues on it ([2021](https://github.com/microsoft/vcpkg/issues/20483), [2022](https://github.com/microsoft/vcpkg/issues/26417), [2023](https://github.com/microsoft/vcpkg/issues/32239)).
+
+Because of this bug, the following paths need to be added to the `Additional Include Paths` of the project:
+
+- `$(_ZVcpkgCurrentInstalledDir)/include/glib-2.0`
+- `$(_ZVcpkgCurrentInstalledDir)/lib/glib-2.0/include`
+- `$(_ZVcpkgCurrentInstalledDir)/include/gstreamer-1.0`
+- `$(_ZVcpkgCurrentInstalledDir)/lib/gstreamer-1.0/include`
+
 # Documentation and Development Resources
 External documentation is found in the [docs](docs/) directory. The following should help you get started:
 - [Architecture Overview](docs/architecture_overview.md)

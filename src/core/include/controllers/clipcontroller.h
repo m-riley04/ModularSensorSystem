@@ -3,7 +3,6 @@
 #include <QObject>
 #include <QDebug>
 #include "features/sources/clipbufferbase.h"
-#include "features/sources/sourcepropertieswidget.h"
 #include "features/sources/iclippablesource.h"
 #include "features/sources/sourceerror.h"
 #include "controllers/backendcontrollerbase.h"
