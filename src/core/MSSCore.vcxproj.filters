@@ -97,9 +97,6 @@
     <ClCompile Include="src\features\sources\clipbufferbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\features\sources\sourcepropertieswidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\features\sources\sourcepreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

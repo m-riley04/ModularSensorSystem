@@ -28,10 +28,21 @@ void PluginController::loadPlugins(QList<PluginType> pluginTypes)
 		QDir pluginsDir(pluginPath);
 		QStringList files = pluginsDir.entryList(QDir::Files | QDir::NoDotAndDotDot);
 		for (const QString& fileName : files) {
-			if (QLibrary::isLibrary(fileName)) {  // check extension .dll on Windows
-				QString fullPath = pluginsDir.absoluteFilePath(fileName);
-				loadPlugin(fullPath, fileName, pluginType);
+			if (!QLibrary::isLibrary(fileName))
+				continue; // Only consider dynamic libraries
+
+			const QString fullPath = pluginsDir.absoluteFilePath(fileName);
+
+			// Fast pre-check: only attempt to load libraries that actually contain Qt plugin metadata
+			QPluginLoader metaProbe(fullPath);
+			const QJsonObject meta = metaProbe.metaData();
+			if (meta.isEmpty()) {
+				// Skip non-Qt plugin libraries (e.g., dependency DLLs like gstreamer, glib, etc.)
+				qDebug() << "Skipping non-Qt plugin library in" << pluginDirName << ":" << fileName;
+				continue;
 			}
+
+			loadPlugin(fullPath, fileName, pluginType);
 		}
 	}
 }
@@ -39,6 +50,13 @@ void PluginController::loadPlugins(QList<PluginType> pluginTypes)
 void PluginController::loadPlugin(const QString& fullPath, const QString& fileName, PluginType pluginType)
 {
 	QPluginLoader loader(fullPath);
+
+	// Guard: if this is not a Qt plugin, don't try to instantiate
+	if (loader.metaData().isEmpty()) {
+		qDebug() << "Not a Qt plugin (no metadata):" << fileName << "- skipping.";
+		return;
+	}
+
 	QObject* pluginInstance = loader.instance();
 	if (!pluginInstance) {
 		qWarning() << "Failed to load plugin" << fileName << ":" << loader.errorString();
