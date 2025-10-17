@@ -109,6 +109,9 @@
     <ClCompile Include="src\features\sources\sourcepreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\controllers\datapipelinecontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="include\controllers\clipcontroller.h">
@@ -154,6 +157,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\features\processors\processorbase.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\controllers\datapipelinecontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
