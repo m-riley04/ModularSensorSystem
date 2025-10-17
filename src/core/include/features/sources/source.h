@@ -93,9 +93,11 @@ protected:
 	std::unique_ptr<ClipBufferBase> pClipBuffer = nullptr;
 
 public:
-	Source(QByteArray hardwareId, QObject* parent);
-	Source(QObject* parent);
-	~Source();
+	Source(QByteArray hardwareId, QObject* parent) {
+		mId = QUuid::fromBytes(hardwareId); // Must be big endian to be reversible. TODO: make sure this works on all platforms
+	};
+	Source(QObject* parent) : QObject(parent) {}
+	~Source() = default;
 
 	virtual void open() = 0;
 	virtual void start() = 0;

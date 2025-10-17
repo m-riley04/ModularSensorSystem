@@ -9,8 +9,8 @@ class SourceMetadata  : public QObject
 	Q_OBJECT
 
 public:
-	SourceMetadata(QObject *parent);
-	~SourceMetadata();
+	SourceMetadata(QObject *parent): QObject(parent) {}
+	~SourceMetadata() = default;
 
 private:
 	QVector3D mPosition;

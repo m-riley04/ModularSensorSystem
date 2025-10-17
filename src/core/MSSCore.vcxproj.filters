@@ -94,22 +94,13 @@
     <ClCompile Include="src\controllers\mountcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\features\processors\processorbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\features\sources\clipbufferbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\features\sources\source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\features\sources\sourcemetadata.cpp">
+    <ClCompile Include="src\features\sources\sourcepropertieswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\features\sources\sourcepreview.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\features\sources\sourcepropertieswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

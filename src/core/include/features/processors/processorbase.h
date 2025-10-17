@@ -9,7 +9,7 @@ class ProcessorBase : public QObject
     Q_OBJECT
 
 public:
-    ProcessorBase(Source* source, QObject* parent = nullptr);
+    ProcessorBase(Source* source, QObject* parent = nullptr) : QObject(parent), pSource(source) {}
     virtual ~ProcessorBase() = default;
 
     Source* source() const { return pSource; }
