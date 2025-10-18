@@ -5,6 +5,8 @@
 #include <vector>
 #include <deque>
 #include <unordered_map>
+#include <string>
+#include <QDebug>
 #include "sdk/plugins/factory.h"
 #include "sdk/plugins/iplugin.h"
 
@@ -55,12 +57,42 @@ private:
         return it == m_byType.end() ? kEmpty : it->second;
     }
 
+    static bool isSharedLib(const std::filesystem::path& p) {
+#ifdef _WIN32
+        return p.extension() == ".dll";
+#elif __APPLE__
+        return p.extension() == ".dylib";
+#else
+        return p.extension() == ".so";
+#endif
+    }
+
+    static bool looksLikePlugin(const std::filesystem::path& p) {
+        // Heuristic: only try files that look like actual plugins to avoid probing dependencies
+        const std::string name = p.filename().string();
+#ifdef _WIN32
+        return name.size() > 10 && name.rfind("Plugin.dll") == name.size() - std::string("Plugin.dll").size();
+#elif __APPLE__
+        return name.find("Plugin") != std::string::npos && p.extension() == ".dylib";
+#else
+        return name.find("Plugin") != std::string::npos && p.extension() == ".so";
+#endif
+    }
+
     void scanDir(const std::filesystem::path& dir, uint32_t requiredApi) {
         for (auto& e : std::filesystem::directory_iterator(dir)) {
-            if (!e.is_regular_file() || !isSharedLib(e.path())) continue;
+            if (!e.is_regular_file() || !isSharedLib(e.path()) || !looksLikePlugin(e.path())) continue;
             try {
+                // On Windows ensure the DLL's directory is searched for its dependencies
+#ifdef _WIN32
+                boost::dll::shared_library lib(
+                    e.path().string(),
+                    boost::dll::load_mode::load_with_altered_search_path
+                );
+#else
                 boost::dll::shared_library lib(e.path().string());
-                if (lib.has("mss_api") == false) continue;
+#endif
+                if (!lib.has("mss_api")) continue;
                 auto api = lib.get<mss_av_t*>("mss_api")();
                 if (api != requiredApi) continue;
 
@@ -72,20 +104,14 @@ private:
                 m_all.push_back(LoadedPlugin{ std::move(lib), inst, destroy, e.path().string() });
                 m_byType[inst->type()].push_back(&m_all.back()); // copies, so push then keep ref
             }
+            catch (const std::exception& ex) {
+                qDebug() << "Failed to load plugin from " << QString::fromStdString(e.path().string())
+                         << ": " << ex.what();
+            }
             catch (...) {
-				qDebug() << "Failed to load plugin from " << QString::fromStdString(e.path().string());
+                qDebug() << "Failed to load plugin from " << QString::fromStdString(e.path().string());
             }
         }
-    }
-
-    static bool isSharedLib(const std::filesystem::path& p) {
-#ifdef _WIN32
-        return p.extension() == ".dll";
-#elif __APPLE__
-        return p.extension() == ".dylib";
-#else
-        return p.extension() == ".so";
-#endif
     }
 
     std::deque<LoadedPlugin> m_all;
