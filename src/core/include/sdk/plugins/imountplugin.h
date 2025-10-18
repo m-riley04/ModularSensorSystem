@@ -2,13 +2,14 @@
 
 #include <QObject>
 #include <vector>
-#include "sdk/plugins/ielementplugin.h"
+#include "sdk/plugins/iplugin.h"
 #include "features/mounts/mount.h"
 
-class IMountPlugin : public IElementPlugin
+class IMountPlugin : public IPlugin
 {
 public:
     virtual std::vector<Mount*> discover() = 0;
+    PluginType type() const override { return PluginType::Mount; }
 };
 
 Q_DECLARE_INTERFACE(IMountPlugin, "com.mss.IMountPlugin/1.0")

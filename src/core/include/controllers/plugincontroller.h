@@ -2,11 +2,11 @@
 
 #include <QObject>
 #include <QDir>
-#include <QPluginLoader>
 #include <QCoreApplication>
 #include "sdk/plugins/isourceplugin.h"
 #include "sdk/plugins/iprocessorplugin.h"
 #include "controllers/backendcontrollerbase.h"
+#include <sdk/plugins/pluginloader.h>
 
 class PluginController : public BackendControllerBase
 {
@@ -15,7 +15,8 @@ class PluginController : public BackendControllerBase
 public:
 	enum PluginType {
 		SourcePlugin,
-		ProcessorPlugin
+		ProcessorPlugin,
+        MountPlugin
 	};
 
 public:
@@ -34,7 +35,11 @@ private:
     QList<ISourcePlugin*> mSourcePlugins;
     QList<IProcessorPlugin*> mProcessorPlugins;
 	QString mPluginRoot;
+	PluginRegistry mPluginRegistry;
 
-    void loadSourcePlugin(QPluginLoader& loader, QString file);
-    void loadProcessorPlugin(QPluginLoader& loader, QString file);
+    void populateSourcePlugins();
+	void populateProcessorPlugins();
+
+	QString pluginTypeToDirName(PluginType pluginType);
+	std::vector<std::filesystem::path> buildPluginPaths(QList<PluginType> pluginTypes);
 };

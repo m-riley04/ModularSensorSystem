@@ -3,56 +3,91 @@
 #include <boost/dll/shared_library.hpp>
 #include <filesystem>
 #include <vector>
+#include <deque>
+#include <unordered_map>
 #include "sdk/plugins/factory.h"
-#include "sdk/plugins/isourceplugin.h"
+#include "sdk/plugins/iplugin.h"
+
+constexpr uint32_t FACTORY_API_VERSION = 0x00010000;
 
 struct LoadedPlugin {
     boost::dll::shared_library lib;
-    ISourcePlugin* instance{ nullptr };
+    IPlugin* instance{ nullptr };
     mss_destroy_t* destroy{ nullptr };
     std::string path;
 };
 
 class PluginRegistry {
 public:
-    void scan(const std::filesystem::path& dir, uint32_t requiredApi) {
-        for (auto& p : std::filesystem::directory_iterator(dir)) {
-            if (!p.is_regular_file()) continue;
-            if (!is_shared_lib(p.path())) continue;
+    void scan(const std::vector<std::filesystem::path>& dirs, uint32_t requiredApi) {
+        for (auto& d : dirs) if (std::filesystem::exists(d)) scanDir(d, requiredApi);
+    }
 
+    const std::deque<LoadedPlugin>& all() const { return m_all; }
+    const std::vector<LoadedPlugin*>& sources() const { return byType(PluginType::Source); }
+    const std::vector<LoadedPlugin*>& processors() const { return byType(PluginType::Processor); }
+    const std::vector<LoadedPlugin*>& mounts()   const { return byType(PluginType::Mount); }
+
+    void unloadAll() {
+        // 1) Destroy instances while code is still loaded
+        for (auto& p : m_all) {
+            if (p.instance && p.destroy) { p.destroy(p.instance); p.instance = nullptr; }
+        }
+        // 2) Now unload libs by clearing owners
+        m_all.clear();
+        // 3) Clear non-owning buckets
+        m_byType.clear();
+    }
+
+    template <typename T> std::vector<T*> as() const {
+        std::vector<T*> out;
+        out.reserve(m_all.size());
+        for (auto& p : m_all) if (auto cast = dynamic_cast<T*>(p.instance)) out.push_back(cast);
+        return out;
+    }
+
+    ~PluginRegistry() { unloadAll(); }
+
+private:
+    const std::vector<LoadedPlugin*>& byType(PluginType t) const {
+        static const std::vector<LoadedPlugin*> kEmpty;
+        auto it = m_byType.find(t);
+        return it == m_byType.end() ? kEmpty : it->second;
+    }
+
+    void scanDir(const std::filesystem::path& dir, uint32_t requiredApi) {
+        for (auto& e : std::filesystem::directory_iterator(dir)) {
+            if (!e.is_regular_file() || !isSharedLib(e.path())) continue;
             try {
-                boost::dll::shared_library lib(p.path().string());
+                boost::dll::shared_library lib(e.path().string());
+                if (lib.has("mss_api") == false) continue;
                 auto api = lib.get<mss_av_t*>("mss_api")();
                 if (api != requiredApi) continue;
 
                 auto make = lib.get<mss_make_t*>("mss_make");
                 auto destroy = lib.get<mss_destroy_t*>("mss_destroy");
-                ISourcePlugin* inst = make();
+                IPlugin* inst = make();
 
-                LoadedPlugin lp{ std::move(lib), inst, destroy, p.path().string() };
-                plugins_.push_back(std::move(lp));
+                // Bucket by kind
+                m_all.push_back(LoadedPlugin{ std::move(lib), inst, destroy, e.path().string() });
+                m_byType[inst->type()].push_back(&m_all.back()); // copies, so push then keep ref
             }
             catch (...) {
-                // log and skip
+				qDebug() << "Failed to load plugin from " << QString::fromStdString(e.path().string());
             }
         }
     }
 
-    const std::vector<LoadedPlugin>& all() const { return plugins_; }
-
-    ~PluginRegistry() {
-        for (auto& p : plugins_) if (p.instance && p.destroy) p.destroy(p.instance);
-    }
-
-private:
-    static bool is_shared_lib(const std::filesystem::path& f) {
+    static bool isSharedLib(const std::filesystem::path& p) {
 #ifdef _WIN32
-        return f.extension() == ".dll";
+        return p.extension() == ".dll";
 #elif __APPLE__
-        return f.extension() == ".dylib";
+        return p.extension() == ".dylib";
 #else
-        return f.extension() == ".so";
+        return p.extension() == ".so";
 #endif
     }
-    std::vector<LoadedPlugin> plugins_;
+
+    std::deque<LoadedPlugin> m_all;
+    std::unordered_map<PluginType, std::vector<LoadedPlugin*>> m_byType;
 };

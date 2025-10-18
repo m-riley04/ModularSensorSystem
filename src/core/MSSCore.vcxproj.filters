@@ -68,9 +68,6 @@
     <ClInclude Include="include\sdk\plugins\iplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\sdk\plugins\ielementplugin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\sdk\plugins\factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>

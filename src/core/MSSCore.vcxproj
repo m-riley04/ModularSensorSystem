@@ -116,7 +116,6 @@
     <ClInclude Include="include\features\mounts\mount.h" />
     <QtMoc Include="include\controllers\mountcontroller.h" />
     <ClInclude Include="include\sdk\plugins\factory.h" />
-    <ClInclude Include="include\sdk\plugins\ielementplugin.h" />
     <ClInclude Include="include\sdk\plugins\imountplugin.h" />
     <ClInclude Include="include\presets\preset.h" />
     <ClInclude Include="include\presets\sourcepreset.h" />

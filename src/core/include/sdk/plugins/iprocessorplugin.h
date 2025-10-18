@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QString>
-#include "sdk/plugins/ielementplugin.h"
+#include "sdk/plugins/iplugin.h"
 #include "features/sources/source.h"
 #include "features/processors/processorbase.h"
 
@@ -12,10 +12,11 @@ struct ProcessorInfo {
     Source::Type supportedSourceType;
 };
 
-class IProcessorPlugin : public IElementPlugin {
+class IProcessorPlugin : public IPlugin {
 public:
     virtual Source::Type supportedSourceType() const = 0;
     virtual ProcessorBase* createProcessor(Source* source, QObject* parent = nullptr) = 0;
+    PluginType type() const override { return PluginType::Processor; }
 };
 
 #define IProcessorPlugin_iid "com.modularsensorsystem.IProcessorPlugin/1.0"
