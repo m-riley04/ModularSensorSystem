@@ -11,5 +11,3 @@ public:
     virtual std::vector<Mount*> discover() = 0;
     PluginType type() const override { return PluginType::Mount; }
 };
-
-Q_DECLARE_INTERFACE(IMountPlugin, "com.mss.IMountPlugin/1.0")

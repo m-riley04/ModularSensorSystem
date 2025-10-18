@@ -8,10 +8,7 @@
 
 class YoloObjectDetectionProcessor;
 
-class YoloObjectDetectionProcessorPlugin : public QObject, public IProcessorPlugin {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID IProcessorPlugin_iid FILE "yoloobjectdetectionprocessorplugin.json")
-    Q_INTERFACES(IProcessorPlugin)
+class YoloObjectDetectionProcessorPlugin : public IProcessorPlugin {
 
 public:
     Source::Type supportedSourceType() const override { return Source::Type::VIDEO; }

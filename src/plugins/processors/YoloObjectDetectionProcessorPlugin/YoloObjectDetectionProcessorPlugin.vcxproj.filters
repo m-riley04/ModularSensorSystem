@@ -23,9 +23,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="yoloobjectdetectionprocessorplugin.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <ClCompile Include="yoloobjectdetectionprocessorplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -40,5 +37,10 @@
     <ClCompile Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="yoloobjectdetectionprocessorplugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

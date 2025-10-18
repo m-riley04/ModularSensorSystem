@@ -116,7 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.cpp" />
-    <QtMoc Include="yoloobjectdetectionprocessorplugin.h" />
+    <ClInclude Include="yoloobjectdetectionprocessorplugin.h" />
     <ClCompile Include="yoloobjectdetectionprocessorplugin.cpp" />
   </ItemGroup>
   <ItemGroup>

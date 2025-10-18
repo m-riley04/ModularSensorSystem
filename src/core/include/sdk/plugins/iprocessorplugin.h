@@ -18,6 +18,3 @@ public:
     virtual ProcessorBase* createProcessor(Source* source, QObject* parent = nullptr) = 0;
     PluginType type() const override { return PluginType::Processor; }
 };
-
-#define IProcessorPlugin_iid "com.modularsensorsystem.IProcessorPlugin/1.0"
-Q_DECLARE_INTERFACE(IProcessorPlugin, IProcessorPlugin_iid)
