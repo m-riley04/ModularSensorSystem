@@ -120,9 +120,6 @@
     <ClCompile Include="yoloobjectdetectionprocessorplugin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="yoloobjectdetectionprocessorplugin.json" />
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.h" />
   </ItemGroup>
   <ItemGroup>

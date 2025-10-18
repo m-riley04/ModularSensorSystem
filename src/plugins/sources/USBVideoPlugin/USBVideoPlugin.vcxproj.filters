@@ -68,9 +68,6 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <None Include="usbvideoplugin.json" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="USBVideoPropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -31,9 +31,6 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <None Include="yoloobjectdetectionprocessorplugin.json" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

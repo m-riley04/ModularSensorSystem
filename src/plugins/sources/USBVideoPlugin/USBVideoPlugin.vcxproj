@@ -133,9 +133,6 @@
     <ClCompile Include="usbvideoplugin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="usbvideoplugin.json" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\core\MSSCore.vcxproj">
       <Project>{90004517-cea0-493d-bc67-b07f996c62b8}</Project>
     </ProjectReference>

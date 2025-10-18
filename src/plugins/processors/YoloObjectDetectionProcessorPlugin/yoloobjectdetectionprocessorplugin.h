@@ -5,6 +5,11 @@
 #include "features/sources/source.h"
 #include "YoloObjectDetectionProcessor/yoloobjectdetectionprocessor.h"
 #include "interfaces/capability/ivideosource.h"
+#include <boost/dll/alias.hpp>
+
+namespace {
+    constexpr uint32_t MSS_API = 0x00010000; // 1.0.0
+}
 
 class YoloObjectDetectionProcessor;
 
@@ -19,3 +24,11 @@ public:
         return new YoloObjectDetectionProcessor(src, parent);
     }
 };
+
+static YoloObjectDetectionProcessorPlugin* make_impl() { return new YoloObjectDetectionProcessorPlugin(); }
+static void destroy_impl(IProcessorPlugin* p) { delete p; }
+static uint32_t api_impl() { return MSS_API; }
+
+BOOST_DLL_ALIAS(make_impl, mss_make)    // exports symbol "mss_make"
+BOOST_DLL_ALIAS(destroy_impl, mss_destroy) // exports symbol "mss_destroy"
+BOOST_DLL_ALIAS(api_impl, mss_api)     // exports symbol "mss_api"
