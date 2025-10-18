@@ -5,6 +5,7 @@
     "onnxruntime-gpu",
     "boost-signals2",
     "boost-uuid",
-    "boost-qvm"
+    "boost-qvm",
+    "boost-dll"
   ]
 }

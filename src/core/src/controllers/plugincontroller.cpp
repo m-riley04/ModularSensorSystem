@@ -77,8 +77,8 @@ void PluginController::loadPlugin(const QString& fullPath, const QString& fileNa
 ISourcePlugin* PluginController::getSourcePlugin(const QString& pluginId) const
 {
 	for (ISourcePlugin* plugin : mSourcePlugins) {
-		QString pluginName = plugin->pluginName();
-		if (plugin->pluginName() == pluginId) {
+		QString pluginName = QString::fromStdString(plugin->name());
+		if (plugin->name() == pluginId) {
 			return plugin;
 		}
 	}
@@ -88,7 +88,7 @@ ISourcePlugin* PluginController::getSourcePlugin(const QString& pluginId) const
 IProcessorPlugin* PluginController::getProcessorPlugin(const QString& pluginId) const
 {
 	for (IProcessorPlugin* plugin : mProcessorPlugins) {
-		QString pluginName = plugin->name();
+		QString pluginName = QString::fromStdString(plugin->name());
 		if (plugin->name() == pluginId) {
 			return plugin;
 		}

@@ -4,8 +4,8 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <QCoreApplication>
-#include <interfaces/plugins/isourceplugin.h>
-#include <interfaces/plugins/iprocessorplugin.h>
+#include "sdk/plugins/isourceplugin.h"
+#include "sdk/plugins/iprocessorplugin.h"
 #include "controllers/backendcontrollerbase.h"
 
 class PluginController : public BackendControllerBase

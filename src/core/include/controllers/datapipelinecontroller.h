@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <gstreamer-1.0/gst/gst.h>
+#include <gst/gst.h>
 #include <QDebug>
 
 class DataPipelineController  : public QObject

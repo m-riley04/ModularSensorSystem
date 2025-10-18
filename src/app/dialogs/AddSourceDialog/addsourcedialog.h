@@ -2,7 +2,7 @@
 
 #include <QDialog>
 #include "ui_addsourcedialog.h"
-#include "interfaces/plugins/isourceplugin.h"
+#include "sdk/plugins/isourceplugin.h"
 #include "controllers/plugincontroller.h"
 #include <QMessageBox>
 

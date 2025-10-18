@@ -38,10 +38,10 @@
     <ClInclude Include="include\interfaces\capability\ivideosource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\plugins\iprocessorplugin.h">
+    <ClInclude Include="include\sdk\plugins\iprocessorplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\plugins\isourceplugin.h">
+    <ClInclude Include="include\sdk\plugins\isourceplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\presets\preset.h">
@@ -50,7 +50,7 @@
     <ClInclude Include="include\presets\sourcepreset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\plugins\imountplugin.h">
+    <ClInclude Include="include\sdk\plugins\imountplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\features\sources\iclippablesource.h">
@@ -63,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\features\mounts\mount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sdk\plugins\iplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

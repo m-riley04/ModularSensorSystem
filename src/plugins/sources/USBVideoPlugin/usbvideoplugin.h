@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "interfaces/plugins/isourceplugin.h"
+#include "sdk/plugins/isourceplugin.h"
 #include "features/sources/source.h"
 #include "USBVideoSource/usbvideosource.h"
 #include <QtMultimedia>
@@ -13,8 +13,8 @@ class USBVideoPlugin : public QObject, public ISourcePlugin
 	Q_INTERFACES(ISourcePlugin)
 
 public:
-	QList<SourceInfo> availableSources() const override;
-	Source* createSource(const QByteArray& id, QObject* parent) override;
-	QString pluginName() const override { return "usb_video"; }
+	std::vector<SourceInfo> availableSources() const override;
+	Source* createSource(const std::string& id, QObject* parent) override;
+	std::string name() const override { return "usb_video"; }
 	Source::Type sourceType() const override { return Source::Type::VIDEO; }
 };

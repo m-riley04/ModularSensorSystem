@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include "features/sources/source.h"
-#include "interfaces/plugins/iprocessorplugin.h"
+#include "sdk/plugins/iprocessorplugin.h"
 
 class ProcessorBase : public QObject 
 {

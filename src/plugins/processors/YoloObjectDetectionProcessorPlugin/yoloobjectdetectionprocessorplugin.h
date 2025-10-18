@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "interfaces/plugins/iprocessorplugin.h"
+#include "sdk/plugins/iprocessorplugin.h"
 #include "features/sources/source.h"
 #include "YoloObjectDetectionProcessor/yoloobjectdetectionprocessor.h"
 #include "interfaces/capability/ivideosource.h"
@@ -15,7 +15,7 @@ class YoloObjectDetectionProcessorPlugin : public QObject, public IProcessorPlug
 
 public:
     Source::Type supportedSourceType() const override { return Source::Type::VIDEO; }
-    QString name() const override { return "yoloobjectdetectionprocessor"; }
+    std::string name() const override { return "yoloobjectdetectionprocessor"; }
     ProcessorBase* createProcessor(Source* src, QObject* parent = nullptr) override
     {
         return new YoloObjectDetectionProcessor(src, parent);
