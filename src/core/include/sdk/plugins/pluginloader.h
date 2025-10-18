@@ -31,13 +31,10 @@ public:
     const std::vector<LoadedPlugin*>& mounts()   const { return byType(PluginType::Mount); }
 
     void unloadAll() {
-        // 1) Destroy instances while code is still loaded
         for (auto& p : m_all) {
             if (p.instance && p.destroy) { p.destroy(p.instance); p.instance = nullptr; }
         }
-        // 2) Now unload libs by clearing owners
         m_all.clear();
-        // 3) Clear non-owning buckets
         m_byType.clear();
     }
 
