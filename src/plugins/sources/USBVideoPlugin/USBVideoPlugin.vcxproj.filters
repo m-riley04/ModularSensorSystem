@@ -23,9 +23,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="usbvideoplugin.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <ClCompile Include="usbvideoplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="USBVideoClipEncoder\usbvideoclipencoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="usbvideoplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

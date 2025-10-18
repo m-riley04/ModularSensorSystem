@@ -5,9 +5,9 @@
 #include "features/sources/source.h"
 
 struct SourcePreset {
-    QByteArray   sourceId;     // Device::id()
-	QString      sourceName;   // Device::name()
-    QString      pluginId;     // ISourcePlugin::name()
+    QByteArray sourceId; // Device::id()
+	QString sourceName; // Device::name()
+    QString pluginId; // ISourcePlugin::name()
     Source::Type sourceType;
-    QJsonObject  settings;     // arbitrary, written by plugin
+    QJsonObject settings; // arbitrary, written by plugin
 };

@@ -5,7 +5,7 @@
 #include "presets/sourcepreset.h"
 
 struct Preset {
-    QString                name;
-	QString                path;
-    QList<SourcePreset>    sources;
+    QString name;
+	QString path;
+    QList<SourcePreset> sources;
 };

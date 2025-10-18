@@ -129,7 +129,7 @@
     <QtMoc Include="USBVideoSource\usbvideosource.h" />
     <QtMoc Include="USBVideoClipBuffer\usbvideoclipbuffer.h" />
     <QtMoc Include="USBVideoPreview\usbvideopreview.h" />
-    <QtMoc Include="usbvideoplugin.h" />
+    <ClInclude Include="usbvideoplugin.h" />
     <ClCompile Include="usbvideoplugin.cpp" />
   </ItemGroup>
   <ItemGroup>
