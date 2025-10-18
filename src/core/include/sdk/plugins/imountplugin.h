@@ -2,10 +2,10 @@
 
 #include <QObject>
 #include <vector>
-#include "sdk/plugins/iplugin.h"
+#include "sdk/plugins/ielementplugin.h"
 #include "features/mounts/mount.h"
 
-class IMountPlugin : public IPlugin
+class IMountPlugin : public IElementPlugin
 {
 public:
     virtual std::vector<Mount*> discover() = 0;

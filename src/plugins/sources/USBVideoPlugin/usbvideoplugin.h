@@ -15,6 +15,7 @@ class USBVideoPlugin : public QObject, public ISourcePlugin
 public:
 	std::vector<SourceInfo> availableSources() const override;
 	Source* createSource(const std::string& id, QObject* parent) override;
-	std::string name() const override { return "usb_video"; }
+	std::string name() const override { return "USB Video"; }
+	uint32_t version() const override { return 0x00010000;  }
 	Source::Type sourceType() const override { return Source::Type::VIDEO; }
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QString>
-#include "sdk/plugins/iplugin.h"
+#include "sdk/plugins/ielementplugin.h"
 #include "features/sources/source.h"
 #include "features/processors/processorbase.h"
 
@@ -12,7 +12,7 @@ struct ProcessorInfo {
     Source::Type supportedSourceType;
 };
 
-class IProcessorPlugin : public IPlugin {
+class IProcessorPlugin : public IElementPlugin {
 public:
     virtual Source::Type supportedSourceType() const = 0;
     virtual ProcessorBase* createProcessor(Source* source, QObject* parent = nullptr) = 0;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QString>
-#include "sdk/plugins/iplugin.h"
+#include "sdk/plugins/ielementplugin.h"
 #include "features/sources/source.h"
 
 struct SourceInfo {
@@ -10,7 +10,7 @@ struct SourceInfo {
 	Source::Type type;
 };
 
-class ISourcePlugin : public IPlugin
+class ISourcePlugin : public IElementPlugin
 {
 
 public:
