@@ -9,6 +9,7 @@
 #include <controllers/presetscontroller.h>
 #include <controllers/processingcontroller.h>
 #include <controllers/sourcecontroller.h>
+#include "mountcontroller.h"
 
 class MainController  : public QObject
 {
@@ -31,7 +32,8 @@ public:
 			pClipController.get(),
 			pPluginController.get(),
 			pPresetsController.get(),
-			pProcessingController.get()
+			pProcessingController.get(),
+			pMountController.get()
 		};
 	}
 
@@ -41,6 +43,7 @@ public:
 	PluginController* pluginController() const { return pPluginController.get(); }
 	PresetsController* presetsController() const { return pPresetsController.get(); }
 	ProcessingController* processingController() const { return pProcessingController.get(); }
+	MountController* mountController() const { return pMountController.get(); }
 
 private:
 	std::unique_ptr<SourceController> pSourceController;
@@ -49,7 +52,7 @@ private:
 	std::unique_ptr<PluginController> pPluginController;
 	std::unique_ptr<PresetsController> pPresetsController;
 	std::unique_ptr<ProcessingController> pProcessingController;
-
+	std::unique_ptr<MountController> pMountController;
 
 signals:
 	void errorOccurred(const SourceError& e);

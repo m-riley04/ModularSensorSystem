@@ -9,6 +9,7 @@ MainController::MainController(QObject *parent)
 	pPresetsController = std::make_unique<PresetsController>(QCoreApplication::applicationDirPath() + "/presets", this);
 	pProcessingController = std::make_unique<ProcessingController>(this);
 	pClipController = std::make_unique<ClipController>(QDir::currentPath() + "/output/clips/", this); // TODO: Make this a configurable path (and just correct)
+	pMountController = std::make_unique<MountController>(this);
 }
 
 MainController::~MainController()

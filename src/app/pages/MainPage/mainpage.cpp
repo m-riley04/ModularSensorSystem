@@ -28,6 +28,9 @@ void MainPage::initWidgets()
 
 	// Init presets widget
 	ui.presetsWidget->setController(pController);
+
+	// Init elements tree
+	ui.dockWidget->setController(pController);
 }
 
 void MainPage::initSignals() {

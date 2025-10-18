@@ -4,7 +4,8 @@ ElementTreeModel::ElementTreeModel(MountController* mc,
     SourceController* sc,
     ProcessingController* pc,
     QObject* parent)
-	: QAbstractItemModel(parent)
+	: QAbstractItemModel(parent), mMountController(mc),
+      mSourceController(sc), mProcessingController(pc)
 {}
 
 ElementTreeModel::~ElementTreeModel()
@@ -77,19 +78,36 @@ void ElementTreeModel::rebuild()
     beginResetModel();
     mNodes.clear();
 
+	// TODO: add this better hierarchical structure instead of simple list of elements
     // flat list with parent indices
+    //for (Mount* m : mMountController->mounts()) {
+    //    int mRow = mNodes.size();
+    //    mNodes << Node{ Node::Kind::Mount, QUuid(m->id()), -1};
+
+    //    /*for (auto sId : mMountController->sourcesOf(m->id())) {
+    //        int sRow = mNodes.size();
+    //        mNodes << Node{ Node::Kind::Source, sId, mRow };
+
+    //        for (auto pId : mProcessingController->processorsForSource(sId)) {
+    //            mNodes << Node{ Node::Kind::Processor, pId, sRow };
+    //        }
+    //    }*/
+    //}
+
     for (Mount* m : mMountController->mounts()) {
         int mRow = mNodes.size();
         mNodes << Node{ Node::Kind::Mount, QUuid(m->id()), -1};
+    }
 
-        /*for (auto sId : mMountController->sourcesOf(m->id())) {
-            int sRow = mNodes.size();
-            mNodes << Node{ Node::Kind::Source, sId, mRow };
+    for (auto s : mSourceController->sources()) {
+        int sRow = mNodes.size();
+        mNodes << Node{ Node::Kind::Source, s->id(), -1};
 
-            for (auto pId : mProcessingController->processorsForSource(sId)) {
-                mNodes << Node{ Node::Kind::Processor, pId, sRow };
-            }
-        }*/
+    }
+
+    for (auto p : mProcessingController->processors()) {
+        // TODO: assign proper processor UUID
+        mNodes << Node{ Node::Kind::Processor, QUuid::createUuid(), -1};
     }
     endResetModel();
 }

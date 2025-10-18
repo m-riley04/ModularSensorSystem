@@ -9,8 +9,8 @@
 struct Node {
     enum class Kind { Mount, Source, Processor };
     Kind kind;
-    QUuid id;                  // the controller's primary key
-    int parentIndex;         // index in m_nodes (-1 for root)
+    QUuid id; // the controller's primary key
+    int parentIndex; // index in m_nodes (-1 for root)
 };
 
 class ElementTreeModel : public QAbstractItemModel
@@ -29,10 +29,11 @@ public:
     QVariant data(const QModelIndex&, int role) const override;
 
 public slots:
-    void rebuild();                          // quick & dirty first
-    //void onMountAdded(Mount*);
-    //void onSourceAdded(Source*);
-    //void onProcessorAdded(ProcessorBase*);
+    void rebuild(); // quick & dirty first
+	// TODO: incremental updates instead of complete rebuilds
+    /*void onMountAdded(Mount*);
+    void onSourceAdded(Source*);
+    void onProcessorAdded(ProcessorBase*);*/
 
 private:
     QVector<Node> mNodes;
