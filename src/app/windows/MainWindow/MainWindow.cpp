@@ -64,7 +64,7 @@ void MainWindow::initPages()
 	}
 
     // Init main page
-    pMainPage = new MainPage(pController.get(), this);
+    pMainPage = new MainPage(pController.get(), this, this);
     pMainPage->setObjectName("mainPage");
 	ui.pagesStack->addWidget(pMainPage);
     pMainPage->setLayout(ui.pagesStack->layout());

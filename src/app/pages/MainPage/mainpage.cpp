@@ -1,7 +1,7 @@
 #include "mainpage.h"
 
-MainPage::MainPage(MainController* controller, QWidget *parent)
-	: QMainWindow(parent), pController(controller)
+MainPage::MainPage(MainController* controller, MainWindow* mainWindow, QWidget *parent)
+	: QMainWindow(parent), pController(controller), m_mainWindow(mainWindow)
 {
 	ui.setupUi(this);
 
@@ -31,6 +31,7 @@ void MainPage::initWidgets()
 
 	// Init elements tree
 	ui.dockWidget->setController(pController);
+	ui.dockWidget->setMainWindow(m_mainWindow);
 }
 
 void MainPage::initSignals() {

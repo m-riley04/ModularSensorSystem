@@ -4,12 +4,14 @@
 #include "ui_mainpage.h"
 #include "controllers/maincontroller.h"
 
+class MainWindow;
+
 class MainPage : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-	MainPage(MainController* controller, QWidget *parent = nullptr);
+	MainPage(MainController* controller, MainWindow* mainWindow, QWidget *parent = nullptr);
 	~MainPage();
 
 	QGroupBox* presetsGroup() const { return ui.groupPresets; }
@@ -28,6 +30,7 @@ private:
 	Ui::MainPageClass ui;
 
 	MainController* pController = nullptr;
+	MainWindow* m_mainWindow = nullptr;
 
 	void initWidgets();
 	void initSignals();

@@ -36,6 +36,6 @@ private:
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
 
-	MainController* pMainController = nullptr;
+	MainController* m_mainController = nullptr;
 };
 

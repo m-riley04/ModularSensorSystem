@@ -2,7 +2,7 @@
 #include "controllers/maincontroller.h"
 
 DataPipelineController::DataPipelineController(MainController* mc, QObject *parent)
-	: BackendControllerBase("DataPipelineController", parent), pMainController(mc), pGError(nullptr)
+	: BackendControllerBase("DataPipelineController", parent), m_mainController(mc), pGError(nullptr)
 {
 	// Init gstreamer if not already done
 	if (gst_init_check(nullptr, nullptr, &pGError) != TRUE) {
@@ -48,7 +48,7 @@ QList<const Source*> DataPipelineController::getSourcesByMount(QUuid mountId) co
 	QList<const Source*> sources;
 	const auto sourceIds = m_mountToSources.value(mountId);
 	for (auto &id : sourceIds) {
-		const Source* source = pMainController->sourceController()->byId(id);
+		const Source* source = m_mainController->sourceController()->byId(id);
 		sources.push_back(source);
 	}
 	return sources;
@@ -59,7 +59,7 @@ QList<const ProcessorBase*> DataPipelineController::getProcessorsBySource(QUuid 
 	QList<const ProcessorBase*> processors;
 	const auto processorIds = m_sourceToProcessors.value(sourceId);
 	for (auto& id : processorIds) {
-		const ProcessorBase* source = pMainController->processingController()->byId(id);
+		const ProcessorBase* source = m_mainController->processingController()->byId(id);
 		processors.push_back(source);
 	}
 	return processors;

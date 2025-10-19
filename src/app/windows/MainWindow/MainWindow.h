@@ -22,6 +22,16 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+	QAction* actionAddSource() const { return ui.actionAddSource; }
+	QAction* actionRemoveSource() const { return ui.actionRemoveSource; }
+
+	QAction* actionAddProcessor() const { return ui.actionAddProcessor; }
+	QAction* actionRemoveProcessor() const { return ui.actionRemoveProcessor; }
+
+	// TODO: Implement these actions in the UI and link them properly
+	QAction* actionAddMount() const { return nullptr/*ui.actionAddMount*/; }
+	QAction* actionRemoveMount() const { return nullptr/*ui.actionRemoveMount*/; }
+
 protected:
     bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override; // TODO: Make this cross-platform and implement other platforms
 

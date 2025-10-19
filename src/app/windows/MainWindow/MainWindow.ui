@@ -1,12 +1,13 @@
-<UI version="4.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>MainWindowClass</class>
  <widget class="QMainWindow" name="MainWindowClass">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>626</width>
-    <height>513</height>
+    <width>978</width>
+    <height>658</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -371,7 +372,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>626</width>
+     <width>978</width>
      <height>21</height>
     </rect>
    </property>
@@ -809,4 +810,4 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <include location="../../MainWindow.qrc"/>
  </resources>
  <connections/>
-</UI>
+</ui>

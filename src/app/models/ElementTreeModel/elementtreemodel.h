@@ -38,7 +38,7 @@ public slots:
 
 private:
     QVector<Node> mNodes;
-    MainController* pMainController;
+    MainController* m_mainController;
 
     //static QVariant iconFor(Node::Kind k);
 };
