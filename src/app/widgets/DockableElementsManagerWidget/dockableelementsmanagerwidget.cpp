@@ -56,6 +56,7 @@ void DockableElementsManagerWidget::initSignals() {
 	if (!m_mainController) {
 		return;
 	}
+
 	disconnect(m_mainController->sourceController(), &SourceController::sourceAdded, m_elementModel, &ElementTreeModel::rebuild);
 	connect(m_mainController->sourceController(), &SourceController::sourceAdded, m_elementModel, &ElementTreeModel::rebuild);
 
@@ -64,9 +65,6 @@ void DockableElementsManagerWidget::initSignals() {
 
 	disconnect(m_mainController->processingController(), &ProcessingController::processorAdded, m_elementModel, &ElementTreeModel::rebuild);
 	connect(m_mainController->processingController(), &ProcessingController::processorAdded, m_elementModel, &ElementTreeModel::rebuild);
-
-	disconnect(ui.buttonRebuild, &QPushButton::clicked, m_elementModel, &ElementTreeModel::rebuild);
-	connect(ui.buttonRebuild, &QPushButton::clicked, m_elementModel, &ElementTreeModel::rebuild);
 }
 
 void DockableElementsManagerWidget::initContextMenu()
@@ -78,10 +76,20 @@ void DockableElementsManagerWidget::initContextMenu()
 
 	m_contextMenu = new QMenu(this);
 
-	QMenu* pAddElementMenu = m_contextMenu->addMenu("Add Element");
+	QMenu* pAddElementMenu = m_contextMenu->addMenu("Add...");
 	pAddElementMenu->addAction(m_actions.addMount);
 	pAddElementMenu->addAction(m_actions.addSource);
 	pAddElementMenu->addAction(m_actions.addProcessor);
+
+	m_contextMenu->addSeparator();
+
+	m_contextMenu->addAction(m_actions.removeMount);
+	m_contextMenu->addAction(m_actions.removeProcessor);
+	m_contextMenu->addAction(m_actions.removeSource);
+
+	m_contextMenu->addAction(m_actions.editMount);
+	m_contextMenu->addAction(m_actions.editProcessor);
+	m_contextMenu->addAction(m_actions.editSource);
 
 	m_contextMenu->addAction("Rebuild", this, &DockableElementsManagerWidget::handleRebuildClicked);
 

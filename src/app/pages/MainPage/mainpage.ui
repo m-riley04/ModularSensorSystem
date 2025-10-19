@@ -82,7 +82,34 @@
        <property name="frameShadow">
         <enum>QFrame::Shadow::Raised</enum>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QGroupBox" name="groupControls">
+          <property name="title">
+           <string>Controls</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="SessionControlsWidget" name="sessionControls" native="true"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item>
          <widget class="QGroupBox" name="groupPresets">
           <property name="title">
@@ -116,87 +143,6 @@
           </layout>
          </widget>
         </item>
-        <item>
-         <widget class="QGroupBox" name="groupProcessors">
-          <property name="title">
-           <string>Processors</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="ProcessorsWidget" name="processorsWidget" native="true"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupSources">
-          <property name="title">
-           <string>Sources</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="SourcesWidget" name="sourcesWidget" native="true"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupControls">
-          <property name="title">
-           <string>Controls</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="SessionControlsWidget" name="sessionControls" native="true"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
        </layout>
       </widget>
      </widget>
@@ -213,12 +159,6 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>SourcesWidget</class>
-   <extends>QWidget</extends>
-   <header>widgets/SourcesWidget/sourceswidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>PreviewContainerWidget</class>
    <extends>QWidget</extends>
    <header>widgets/PreviewContainerWidget/previewcontainerwidget.h</header>
@@ -234,12 +174,6 @@
    <class>SessionControlsWidget</class>
    <extends>QWidget</extends>
    <header>widgets/SessionControlsWidget/sessioncontrolswidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ProcessorsWidget</class>
-   <extends>QWidget</extends>
-   <header>widgets/ProcessorsWidget/processorswidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

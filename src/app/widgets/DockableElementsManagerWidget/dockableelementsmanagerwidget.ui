@@ -18,13 +18,6 @@
     <item>
      <widget class="QTreeView" name="treeElements"/>
     </item>
-    <item>
-     <widget class="QPushButton" name="buttonRebuild">
-      <property name="text">
-       <string>Rebuild</string>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
  </widget>
