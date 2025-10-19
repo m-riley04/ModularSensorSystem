@@ -1,5 +1,4 @@
 #include "dockableelementsmanagerwidget.h"
-#include "windows/MainWindow/MainWindow.h"
 
 DockableElementsManagerWidget::DockableElementsManagerWidget(QWidget *parent)
 	: QDockWidget(parent)
@@ -12,20 +11,21 @@ DockableElementsManagerWidget::DockableElementsManagerWidget(QWidget *parent)
 DockableElementsManagerWidget::~DockableElementsManagerWidget()
 {}
 
-void DockableElementsManagerWidget::setActions(QAction* addMount, QAction* addSource, QAction* addProcessor)
+void DockableElementsManagerWidget::setController(MainController* c)
 {
-	m_actionAddMount = addMount;
-	m_actionAddSource = addSource;
-	m_actionAddProcessor = addProcessor;
+	if (m_mainController == c) return;
+	m_mainController = c;
 
+	initWidgets();
+	initSignals();
 	initContextMenu();
 }
 
-void DockableElementsManagerWidget::setMainWindow(MainWindow* mw)
+void DockableElementsManagerWidget::setActions(ElementTreeActions actions)
 {
-	m_mainWindow = mw;
+	m_actions = ElementTreeActions(actions);
 
-	setActions(mw->actionAddMount(), mw->actionAddSource(), mw->actionAddProcessor());
+	initContextMenu();
 }
 
 void DockableElementsManagerWidget::initWidgets()
@@ -79,9 +79,9 @@ void DockableElementsManagerWidget::initContextMenu()
 	m_contextMenu = new QMenu(this);
 
 	QMenu* pAddElementMenu = m_contextMenu->addMenu("Add Element");
-	pAddElementMenu->addAction(m_actionAddMount);
-	pAddElementMenu->addAction(m_actionAddSource);
-	pAddElementMenu->addAction(m_actionAddProcessor);
+	pAddElementMenu->addAction(m_actions.addMount);
+	pAddElementMenu->addAction(m_actions.addSource);
+	pAddElementMenu->addAction(m_actions.addProcessor);
 
 	m_contextMenu->addAction("Rebuild", this, &DockableElementsManagerWidget::handleRebuildClicked);
 

@@ -6,9 +6,7 @@
 #include "controllers/maincontroller.h"
 #include "models/ElementTreeModel/elementtreemodel.h"
 #include <QMenu>
-
-class MainWindow;
-
+#include "data/requried_actions.h"
 
 class DockableElementsManagerWidget : public QDockWidget
 {
@@ -18,23 +16,13 @@ public:
 	DockableElementsManagerWidget(QWidget *parent = nullptr);
 	~DockableElementsManagerWidget();
 
-	void setController(MainController* c) {
-		if (m_mainController == c) return;
-		m_mainController = c;
-
-		initWidgets();
-		initSignals();
-	}
-
-	void setActions(QAction* addMount, QAction* addSource, QAction* addProcessor);
-
-	void setMainWindow(MainWindow* mw);
+	void setController(MainController* c);
+	void setActions(ElementTreeActions actions);
 
 private:
 	Ui::DockableElementsManagerWidgetClass ui;
 	QPointer<MainController> m_mainController;
 	QPointer<ElementTreeModel> m_elementModel;
-	QPointer<MainWindow> m_mainWindow;
 
 	void initWidgets();
 	void initSignals();
@@ -46,9 +34,7 @@ private:
 
 	QPointer<QMenu> m_contextMenu;
 
-	QPointer<QAction> m_actionAddMount;
-	QPointer<QAction> m_actionAddSource;
-	QPointer<QAction> m_actionAddProcessor;
+	ElementTreeActions m_actions;
 
 signals:
 	void elementSelected();

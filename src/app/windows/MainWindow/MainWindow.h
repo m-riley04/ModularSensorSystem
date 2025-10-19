@@ -9,6 +9,7 @@
 #include "widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "widgets/CustomTitleBar/customtitlebar.h"
 #include "pages/MainPage/mainpage.h"
+#include "data/requried_actions.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -22,15 +23,19 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-	QAction* actionAddSource() const { return ui.actionAddSource; }
-	QAction* actionRemoveSource() const { return ui.actionRemoveSource; }
-
-	QAction* actionAddProcessor() const { return ui.actionAddProcessor; }
-	QAction* actionRemoveProcessor() const { return ui.actionRemoveProcessor; }
-
-	// TODO: Implement these actions in the UI and link them properly
-	QAction* actionAddMount() const { return nullptr/*ui.actionAddMount*/; }
-	QAction* actionRemoveMount() const { return nullptr/*ui.actionRemoveMount*/; }
+    ElementTreeActions getElementTreeActions() const {
+        ElementTreeActions actions{};
+        actions.addSource = ui.actionAddSource;
+        actions.removeSource = ui.actionRemoveSource;
+        actions.editSource = ui.actionConfigureSource;
+        actions.addMount = nullptr; // TODO: Implement
+        actions.removeMount = nullptr; // TODO: Implement
+        actions.editMount = nullptr; // TODO: Implement
+        actions.addProcessor = ui.actionAddProcessor;
+        actions.removeProcessor = ui.actionRemoveProcessor;
+        actions.editProcessor = ui.actionConfigureProcessor;
+        return actions;
+	}
 
 protected:
     bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override; // TODO: Make this cross-platform and implement other platforms

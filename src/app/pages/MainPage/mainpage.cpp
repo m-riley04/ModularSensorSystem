@@ -1,4 +1,5 @@
 #include "mainpage.h"
+#include "windows/MainWindow/MainWindow.h"
 
 MainPage::MainPage(MainController* controller, MainWindow* mainWindow, QWidget *parent)
 	: QMainWindow(parent), pController(controller), m_mainWindow(mainWindow)
@@ -31,7 +32,7 @@ void MainPage::initWidgets()
 
 	// Init elements tree
 	ui.dockWidget->setController(pController);
-	ui.dockWidget->setMainWindow(m_mainWindow);
+	ui.dockWidget->setActions(m_mainWindow->getElementTreeActions());
 }
 
 void MainPage::initSignals() {
