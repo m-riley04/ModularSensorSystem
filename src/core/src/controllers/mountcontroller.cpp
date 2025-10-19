@@ -1,7 +1,7 @@
 #include "controllers/mountcontroller.h"
 
 MountController::MountController(QObject *parent)
-	: BackendControllerBase(mName, parent)
+	: BackendControllerBase("MountController", parent)
 {}
 
 MountController::~MountController()

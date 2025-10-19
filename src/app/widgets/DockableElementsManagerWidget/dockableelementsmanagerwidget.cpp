@@ -1,11 +1,10 @@
 #include "dockableelementsmanagerwidget.h"
+#include "models/ElementTreeModel/elementtreemodel.h"
 
 DockableElementsManagerWidget::DockableElementsManagerWidget(QWidget *parent)
 	: QDockWidget(parent)
 {
 	ui.setupUi(this);
-
-	
 }
 
 DockableElementsManagerWidget::~DockableElementsManagerWidget()
@@ -26,11 +25,7 @@ void DockableElementsManagerWidget::initWidgets()
 	}
 
 	// Create and set new model
-	pElementModel = new ElementTreeModel(
-		pMainController ? pMainController->mountController() : nullptr,
-		pMainController ? pMainController->sourceController() : nullptr,
-		pMainController ? pMainController->processingController() : nullptr,
-		this);
+	pElementModel = new ElementTreeModel(pMainController, this);
 
 	ui.treeElements->setModel(pElementModel);
 
@@ -43,6 +38,16 @@ void DockableElementsManagerWidget::initSignals() {
 	if (!pMainController) {
 		return;
 	}
+	disconnect(pMainController->sourceController(), &SourceController::sourceAdded, pElementModel, &ElementTreeModel::rebuild);
+	connect(pMainController->sourceController(), &SourceController::sourceAdded, pElementModel, &ElementTreeModel::rebuild);
+
+
+	disconnect(pMainController->mountController(), &MountController::mountAdded, pElementModel, &ElementTreeModel::rebuild);
+	connect(pMainController->mountController(), &MountController::mountAdded, pElementModel, &ElementTreeModel::rebuild);
+
+	disconnect(pMainController->processingController(), &ProcessingController::processorAdded, pElementModel, &ElementTreeModel::rebuild);
+	connect(pMainController->processingController(), &ProcessingController::processorAdded, pElementModel, &ElementTreeModel::rebuild);
+
 	disconnect(ui.buttonRebuild, &QPushButton::clicked, pElementModel, &ElementTreeModel::rebuild);
 	connect(ui.buttonRebuild, &QPushButton::clicked, pElementModel, &ElementTreeModel::rebuild);
 }

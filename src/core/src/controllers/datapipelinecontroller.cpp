@@ -1,11 +1,14 @@
 #include "controllers/datapipelinecontroller.h"
+#include "controllers/maincontroller.h"
 
-DataPipelineController::DataPipelineController(int argc, char* argv[], QObject *parent)
-	: QObject(parent)
+DataPipelineController::DataPipelineController(MainController* mc, QObject *parent)
+	: BackendControllerBase("DataPipelineController", parent), pMainController(mc), pGError(nullptr)
 {
-	// Init gstreamer
-	gst_init(&argc, &argv);
-
+	// Init gstreamer if not already done
+	if (gst_init_check(nullptr, nullptr, &pGError) != TRUE) {
+		gst_init(nullptr, nullptr);
+	}
+	
 	pPipeline = gst_pipeline_new("mss_pipeline");
 }
 
@@ -38,5 +41,27 @@ gboolean DataPipelineController::busCallback(GstBus* bus, GstMessage* msg, gpoin
 		break;
 	}
 	return TRUE;
+}
+
+QList<const Source*> DataPipelineController::getSourcesByMount(QUuid mountId) const
+{
+	QList<const Source*> sources;
+	const auto sourceIds = m_mountToSources.value(mountId);
+	for (auto &id : sourceIds) {
+		const Source* source = pMainController->sourceController()->byId(id);
+		sources.push_back(source);
+	}
+	return sources;
+}
+
+QList<const ProcessorBase*> DataPipelineController::getProcessorsBySource(QUuid sourceId) const
+{
+	QList<const ProcessorBase*> processors;
+	const auto processorIds = m_sourceToProcessors.value(sourceId);
+	for (auto& id : processorIds) {
+		const ProcessorBase* source = pMainController->processingController()->byId(id);
+		processors.push_back(source);
+	}
+	return processors;
 }
 

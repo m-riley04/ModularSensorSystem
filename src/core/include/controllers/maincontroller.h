@@ -10,6 +10,9 @@
 #include <controllers/processingcontroller.h>
 #include <controllers/sourcecontroller.h>
 #include "mountcontroller.h"
+#include <memory>
+
+class DataPipelineController; // forward declare to break circular include
 
 class MainController  : public QObject
 {
@@ -23,19 +26,7 @@ public:
 	 * @brief Returns the list of backend controller pointers owned by the main controller.
 	 * @return A QList containing pointers to various BackendControllerBase objects managed by this class.
 	 */
-	QList<BackendControllerBase*> getAllSubcontrollers() const
-	{
-		return QList<BackendControllerBase*>
-		{
-			pSourceController.get(),
-			pRecordingController.get(),
-			pClipController.get(),
-			pPluginController.get(),
-			pPresetsController.get(),
-			pProcessingController.get(),
-			pMountController.get()
-		};
-	}
+	QList<BackendControllerBase*> getAllSubcontrollers() const;
 
 	RecordingController* recordingController() const { return pRecordingController.get(); }
 	SourceController* sourceController() const { return pSourceController.get(); }
@@ -44,6 +35,7 @@ public:
 	PresetsController* presetsController() const { return pPresetsController.get(); }
 	ProcessingController* processingController() const { return pProcessingController.get(); }
 	MountController* mountController() const { return pMountController.get(); }
+	DataPipelineController* dataPipelineController() const { return pDataPipelineController.get(); }
 
 private:
 	std::unique_ptr<SourceController> pSourceController;
@@ -53,6 +45,7 @@ private:
 	std::unique_ptr<PresetsController> pPresetsController;
 	std::unique_ptr<ProcessingController> pProcessingController;
 	std::unique_ptr<MountController> pMountController;
+	std::unique_ptr<DataPipelineController> pDataPipelineController;
 
 signals:
 	void errorOccurred(const SourceError& e);

@@ -1,11 +1,9 @@
 #include "elementtreemodel.h"
+#include "controllers/datapipelinecontroller.h"
 
-ElementTreeModel::ElementTreeModel(MountController* mc,
-    SourceController* sc,
-    ProcessingController* pc,
+ElementTreeModel::ElementTreeModel(MainController* mc,
     QObject* parent)
-	: QAbstractItemModel(parent), mMountController(mc),
-      mSourceController(sc), mProcessingController(pc)
+	: QAbstractItemModel(parent), pMainController(mc)
 {}
 
 ElementTreeModel::~ElementTreeModel()
@@ -63,8 +61,8 @@ QVariant ElementTreeModel::data(const QModelIndex& idx, int role) const
     if (role == Qt::DisplayRole) {
         if (idx.column() == 0) {
             switch (n.kind) {
-            case Node::Kind::Mount: return QString::fromStdString(mMountController->byId(n.id)->name());
-            case Node::Kind::Source: return mSourceController->byId(n.id)->name();
+            case Node::Kind::Mount: return QString::fromStdString(pMainController->mountController()->byId(n.id)->name());
+            case Node::Kind::Source: return pMainController->sourceController()->byId(n.id)->name();
             //case Node::Kind::Processor: return QString(mProcessingController->byId(n.id)->name());
             }
         }
@@ -73,41 +71,48 @@ QVariant ElementTreeModel::data(const QModelIndex& idx, int role) const
     return {};
 }
 
-void ElementTreeModel::rebuild()
+void ElementTreeModel::rebuild(bool isFlat)
 {
     beginResetModel();
     mNodes.clear();
 
-	// TODO: add this better hierarchical structure instead of simple list of elements
-    // flat list with parent indices
-    //for (Mount* m : mMountController->mounts()) {
-    //    int mRow = mNodes.size();
-    //    mNodes << Node{ Node::Kind::Mount, QUuid(m->id()), -1};
+    if (isFlat) {
+        for (Mount* m : pMainController->mountController()->mounts()) {
+            int mRow = mNodes.size();
+			// TODO: use real mount ID
+            mNodes << Node{ Node::Kind::Mount, QUuid(m->id()), -1 };
+        }
 
-    //    /*for (auto sId : mMountController->sourcesOf(m->id())) {
-    //        int sRow = mNodes.size();
-    //        mNodes << Node{ Node::Kind::Source, sId, mRow };
+        for (auto s : pMainController->sourceController()->sources()) {
+            int sRow = mNodes.size();
+            mNodes << Node{ Node::Kind::Source, s->id(), -1 };
 
-    //        for (auto pId : mProcessingController->processorsForSource(sId)) {
-    //            mNodes << Node{ Node::Kind::Processor, pId, sRow };
-    //        }
-    //    }*/
-    //}
+        }
 
-    for (Mount* m : mMountController->mounts()) {
-        int mRow = mNodes.size();
-        mNodes << Node{ Node::Kind::Mount, QUuid(m->id()), -1};
+        for (auto p : pMainController->processingController()->processors()) {
+            // TODO: assign proper processor UUID
+            mNodes << Node{ Node::Kind::Processor, QUuid::createUuid(), -1 };
+        }
     }
+    else {
+        // TODO: add this better hierarchical structure instead of simple list of elements
+        // flat list with parent indices
+        for (Mount* m : pMainController->mountController()->mounts()) {
+            int mRow = mNodes.size();
+            // TODO: use real mount ID
+			QUuid id = QUuid(m->id());
+            mNodes << Node{ Node::Kind::Mount, id, -1};
 
-    for (auto s : mSourceController->sources()) {
-        int sRow = mNodes.size();
-        mNodes << Node{ Node::Kind::Source, s->id(), -1};
+            for (auto s : pMainController->dataPipelineController()->getSourcesByMount(id)) {
+                int sRow = mNodes.size();
+                mNodes << Node{ Node::Kind::Source, s->id(), mRow};
 
-    }
-
-    for (auto p : mProcessingController->processors()) {
-        // TODO: assign proper processor UUID
-        mNodes << Node{ Node::Kind::Processor, QUuid::createUuid(), -1};
+                for (auto p : pMainController->dataPipelineController()->getProcessorsBySource(s->id())) {
+					// TODO: use real processor ID
+                    mNodes << Node{ Node::Kind::Processor, QUuid::createUuid(), sRow};
+                }
+            }
+        }
     }
     endResetModel();
 }

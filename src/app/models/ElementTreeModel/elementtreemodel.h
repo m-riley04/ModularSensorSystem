@@ -5,6 +5,7 @@
 #include "controllers/sourcecontroller.h"
 #include "controllers/processingcontroller.h"
 #include "features/mounts/mount.h"
+#include <controllers/maincontroller.h>
 
 struct Node {
     enum class Kind { Mount, Source, Processor };
@@ -18,7 +19,7 @@ class ElementTreeModel : public QAbstractItemModel
 	Q_OBJECT
 
 public:
-	ElementTreeModel(MountController* mc, SourceController* sc, ProcessingController* pc, QObject* parent = nullptr);
+	ElementTreeModel(MainController*, QObject* parent = nullptr);
 	~ElementTreeModel();
 
     // --- mandatory overrides ---
@@ -29,7 +30,7 @@ public:
     QVariant data(const QModelIndex&, int role) const override;
 
 public slots:
-    void rebuild(); // quick & dirty first
+    void rebuild(bool isFlat = true); // quick & dirty first
 	// TODO: incremental updates instead of complete rebuilds
     /*void onMountAdded(Mount*);
     void onSourceAdded(Source*);
@@ -37,9 +38,7 @@ public slots:
 
 private:
     QVector<Node> mNodes;
-    MountController* mMountController;
-    SourceController* mSourceController;
-    ProcessingController* mProcessingController;
+    MainController* pMainController;
 
     //static QVariant iconFor(Node::Kind k);
 };

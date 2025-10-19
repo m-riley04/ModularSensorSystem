@@ -9,9 +9,6 @@ class MountController : public BackendControllerBase
 {
 	Q_OBJECT
 
-protected:
-	QString mName = "MountController";
-
 public: 
 	MountController(QObject *parent);
 	~MountController();
