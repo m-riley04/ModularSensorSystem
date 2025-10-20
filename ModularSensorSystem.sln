@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{02EA681E-C
 		naming_conventions.md = naming_conventions.md
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TripodPlugin", "src\plugins\mounts\TripodPlugin\TripodPlugin.vcxproj", "{7D93A3BD-376C-4ECD-BC55-5AFA7A806D88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -49,6 +51,10 @@ Global
 		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Debug|x64.Build.0 = Debug|x64
 		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Release|x64.ActiveCfg = Release|x64
 		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Release|x64.Build.0 = Release|x64
+		{7D93A3BD-376C-4ECD-BC55-5AFA7A806D88}.Debug|x64.ActiveCfg = Debug|x64
+		{7D93A3BD-376C-4ECD-BC55-5AFA7A806D88}.Debug|x64.Build.0 = Debug|x64
+		{7D93A3BD-376C-4ECD-BC55-5AFA7A806D88}.Release|x64.ActiveCfg = Release|x64
+		{7D93A3BD-376C-4ECD-BC55-5AFA7A806D88}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
