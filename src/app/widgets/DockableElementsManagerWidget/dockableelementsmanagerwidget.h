@@ -33,9 +33,9 @@ private:
 
 	QPointer<QMenu> m_contextMenu;
 
-	Node m_selectedNode;
+	Node m_selectedNode{};
 
-	ElementTreeActions m_actions;
+	ElementTreeActions m_actions{};
 
 public slots:
 	void handleRebuildClicked();
@@ -47,6 +47,6 @@ public slots:
 	void handleEditElementClicked();
 
 signals:
-	void elementSelected();
+	void elementSelected(Node node);
 };
 

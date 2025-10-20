@@ -15,6 +15,9 @@
 #include <windows.h>
 #endif
 
+// Forward declaration for element tree node
+struct Node;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -28,9 +31,9 @@ public:
         actions.addSource = ui.actionAddSource;
         actions.removeSource = ui.actionRemoveSource;
         actions.editSource = ui.actionConfigureSource;
-        actions.addMount = nullptr; // TODO: Implement
-        actions.removeMount = nullptr; // TODO: Implement
-        actions.editMount = nullptr; // TODO: Implement
+        actions.addMount = ui.actionAddMount;
+        actions.removeMount = ui.actionRemoveMount;
+        actions.editMount = ui.actionEditMount;
         actions.addProcessor = ui.actionAddProcessor;
         actions.removeProcessor = ui.actionRemoveProcessor;
         actions.editProcessor = ui.actionConfigureProcessor;
@@ -44,9 +47,8 @@ private:
     Ui::MainWindowClass ui;
     std::unique_ptr<MainController> pController;
 
-    QListWidgetItem* pSelectedSourceItem = nullptr;
     QListWidgetItem* pSelectedPresetItem = nullptr;
-    QListWidgetItem* pSelectedProcessorItem = nullptr;
+	Node m_selectedElement{};
 
     MainPage* pMainPage = nullptr;
 
@@ -70,6 +72,9 @@ private slots:
     void openDeletePresetDialog();
     void openConfigurePresetDialog();
     void onRefreshPresetClicked();
+    void openAddMountDialog();
+    void openRemoveMountDialog();
+    void openEditMountDialog();
     void openAddSourceDialog();
     void openRemoveSourceDialog();
     void openConfigureSourceDialog();
@@ -77,11 +82,11 @@ private slots:
 	void openRemoveProcessorDialog();
 	void openConfigureProcessorDialog();
 
+    void onSelectedElementChanged(Node node);
+
     void openGithubRepository();
 
-	void onSelectedSourceItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
 	void onSelectedPresetItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
-	void onSelectedProcessorItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
 	void updateToolbarButtonsState();
 
 public slots:

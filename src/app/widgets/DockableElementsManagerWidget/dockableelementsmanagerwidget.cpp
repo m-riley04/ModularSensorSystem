@@ -1,7 +1,7 @@
 #include "dockableelementsmanagerwidget.h"
 
 DockableElementsManagerWidget::DockableElementsManagerWidget(QWidget *parent)
-	: QDockWidget(parent)
+	: QDockWidget(parent), m_actions(ElementTreeActions())
 {
 	ui.setupUi(this);
 
@@ -57,13 +57,13 @@ void DockableElementsManagerWidget::initSignals() {
 		return;
 	}
 
-	disconnect(m_mainController->sourceController(), &SourceController::sourceAdded, m_elementModel, &ElementTreeModel::rebuild);
+	// TODO: consider disconnecting before reconnecting to avoid duplicate connections
+	// From my minimal research, Qt should handle this automatically, but it's worth verifying.
+
 	connect(m_mainController->sourceController(), &SourceController::sourceAdded, m_elementModel, &ElementTreeModel::rebuild);
 
-	disconnect(m_mainController->mountController(), &MountController::mountAdded, m_elementModel, &ElementTreeModel::rebuild);
 	connect(m_mainController->mountController(), &MountController::mountAdded, m_elementModel, &ElementTreeModel::rebuild);
 
-	disconnect(m_mainController->processingController(), &ProcessingController::processorAdded, m_elementModel, &ElementTreeModel::rebuild);
 	connect(m_mainController->processingController(), &ProcessingController::processorAdded, m_elementModel, &ElementTreeModel::rebuild);
 
 	connect(ui.treeElements, &QTreeView::clicked, this, &DockableElementsManagerWidget::handleElementClicked);
@@ -149,7 +149,7 @@ void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& inde
 
 	// Update the selected node
 	m_selectedNode = nodeData.value<Node>();
-	emit elementSelected();
+	emit elementSelected(m_selectedNode);
 }
 
 void DockableElementsManagerWidget::handleRemoveElementClicked()

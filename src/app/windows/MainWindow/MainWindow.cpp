@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include <dialogs/AddSourceDialog/addsourcedialog.h>
 #include <dialogs/AddProcessorDialog/addprocessordialog.h>
+#include <dialogs/AddMountDialog/addmountdialog.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -33,8 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {}
 
-
-
 void MainWindow::initStyles()
 {
     // Configure application properties
@@ -66,7 +65,7 @@ void MainWindow::initPages()
 	}
 
     // Init main page
-    pMainPage = new MainPage(pController.get(), this, this);
+    pMainPage = new MainPage(pController.get(), this->getElementTreeActions(), this);
     pMainPage->setObjectName("mainPage");
 	ui.pagesStack->addWidget(pMainPage);
     pMainPage->setLayout(ui.pagesStack->layout());
@@ -105,7 +104,6 @@ void MainWindow::initWidgets()
     ui.actionViewMenuBar->setChecked(!ui.menuBar->isVisible());
     ui.actionViewToolbar->setChecked(!ui.toolBar->isVisible());
     ui.actionViewCustomWindowHandle->setChecked(!ui.titleBar->isVisible());
-    
 
     // Init toolbar
     updateToolbarButtonsState();
@@ -122,6 +120,11 @@ void MainWindow::initActionSignals()
     connect(ui.actionToggleProcessing, &QAction::triggered, this, [this](bool checked) {
         // TODO: implement this
 		});
+
+    // Mounts
+	connect(ui.actionAddMount, &QAction::triggered, this, &MainWindow::openAddMountDialog);
+	connect(ui.actionRemoveMount, &QAction::triggered, this, &MainWindow::openRemoveMountDialog);
+	connect(ui.actionEditMount, &QAction::triggered, this, &MainWindow::openEditMountDialog);
 
     // Sources
     connect(ui.actionAddSource, &QAction::triggered, this, &MainWindow::openAddSourceDialog);
@@ -188,6 +191,7 @@ void MainWindow::initSignals() {
 
     // Connect signals to child widgets
     connect(pMainPage->presetsWidget(), &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
+	connect(pMainPage->elementsTreeWidget(), &DockableElementsManagerWidget::elementSelected, this, &MainWindow::onSelectedElementChanged);
 
     // Init toolbar and actions
     initActionSignals();
@@ -318,7 +322,7 @@ void MainWindow::openDeletePresetDialog()
 
 void MainWindow::openConfigurePresetDialog()
 {
-
+    // TODO: Implement
 }
 
 void MainWindow::onRefreshPresetClicked()
@@ -328,6 +332,50 @@ void MainWindow::onRefreshPresetClicked()
 
     // Scan
     pController->presetsController()->scanForPresets(); // CONSIDER: Pass specific path?
+}
+
+void MainWindow::openAddMountDialog()
+{
+    // Check controllers
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+    // Create and show the AddMountDialog
+    AddMountDialog* addDeviceDialog = new AddMountDialog(pController->pluginController(), this);
+    addDeviceDialog->setWindowModality(Qt::WindowModal);
+
+    connect(addDeviceDialog, &AddMountDialog::mountConfirmed, [this](IMountPlugin* plugin, MountInfo info) {
+		// TODO: fix this implementation
+        //pController->mountController()->addMount(mount);
+    });
+
+    addDeviceDialog->show();
+}
+
+void MainWindow::openRemoveMountDialog()
+{
+    // Check controllers
+    if (!checkIfControllersAreOk(pController.get())) return;
+
+    // Check selected item
+    if (m_selectedElement.kind != Node::Kind::Mount) {
+        QMessageBox::warning(this, "No Mount Selected", "Please select a mount to remove.");
+        return;
+    }
+
+    auto response = QMessageBox::question(this, "Remove Mount", "Are you sure you want to remove the selected mount?", QMessageBox::Yes | QMessageBox::No);
+    if (response == QMessageBox::Yes) {
+		// TODO: Check this implementation
+        const Mount* mount = pController->mountController()->byId(m_selectedElement.id);
+
+        // Remove mount from the controller
+		// TODO: reconsider const casting and const usage
+        pController->mountController()->removeMount(const_cast<Mount*>(mount));
+    }
+}
+
+void MainWindow::openEditMountDialog()
+{
+    // TODO: implement
 }
 
 void MainWindow::openAddSourceDialog()
@@ -350,17 +398,19 @@ void MainWindow::openRemoveSourceDialog()
     if (!checkIfControllersAreOk(pController.get())) return;
 
     // Check selected item
-    if (!pSelectedSourceItem) {
+    if (m_selectedElement.kind != Node::Kind::Source) {
         QMessageBox::warning(this, "No Source Selected", "Please select a source to remove.");
         return;
 	}
 
     auto response = QMessageBox::question(this, "Remove Source", "Are you sure you want to remove the selected source?", QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
-        Source* source = pSelectedSourceItem->data(Qt::UserRole).value<Source*>();
+		// TODO: check this implementation
+        const Source* source = pController->sourceController()->byId(m_selectedElement.id);
 
         // Remove source from the controller
-        pController->sourceController()->removeSource(source);
+        // TODO: reconsider const casting and const usage
+        pController->sourceController()->removeSource(const_cast<Source*>(source));
     }
 }
 
@@ -370,12 +420,14 @@ void MainWindow::openConfigureSourceDialog()
     if (!checkIfControllersAreOk(pController.get())) return;
 
     // Check selected item
-    if (!pSelectedSourceItem) {
+    if (m_selectedElement.kind != Node::Kind::Source) {
         QMessageBox::warning(this, "No Source Selected", "Please select a source to configure.");
         return;
     }
 
-    Source* source = pSelectedSourceItem->data(Qt::UserRole).value<Source*>();
+	// Get the source from the selected element
+    // TODO: check this implementation
+	Source* source = pController->sourceController()->byId(m_selectedElement.id);
     if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
         QWidget* w = cfg->createConfigWidget(this);
         QDialog dlg(this);
@@ -414,17 +466,19 @@ void MainWindow::openRemoveProcessorDialog()
     if (!checkIfControllersAreOk(pController.get())) return;
 
     // Check selected item
-    if (!pSelectedProcessorItem) {
+    if (m_selectedElement.kind != Node::Kind::Processor) {
         QMessageBox::warning(this, "No Processor Selected", "Please select a processor to remove.");
         return;
     }
 
     auto response = QMessageBox::question(this, "Remove Processor", "Are you sure you want to remove the selected processor?", QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
-        ProcessorBase* processor = pSelectedProcessorItem->data(Qt::UserRole).value<ProcessorBase*>();
+		// Get the processor from the selected element
+        // TODO: implement this
+        //ProcessorBase* processor = m_selectedElement.data(Qt::UserRole).value<ProcessorBase*>();
 
         // Remove source from the controller
-        pController->processingController()->removeProcessor(processor);
+        //pController->processingController()->removeProcessor(processor);
     }
 }
 
@@ -441,13 +495,6 @@ void MainWindow::openGithubRepository()
     }
 }
 
-void MainWindow::onSelectedSourceItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
-{
-	if (pSelectedSourceItem == current) return; // No change
-	pSelectedSourceItem = current;
-    updateToolbarButtonsState(); // CONSIDER: move this to it's own connection to this signal
-}
-
 void MainWindow::onSelectedPresetItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
 {
     if (pSelectedPresetItem == current) return; // No change
@@ -455,11 +502,10 @@ void MainWindow::onSelectedPresetItemChanged(QListWidgetItem* current, QListWidg
     updateToolbarButtonsState(); // CONSIDER: move this to it's own connection to this signal
 }
 
-void MainWindow::onSelectedProcessorItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
+void MainWindow::onSelectedElementChanged(Node node)
 {
-    if (pSelectedProcessorItem == current) return; // No change
-    pSelectedProcessorItem = current;
-    updateToolbarButtonsState(); // CONSIDER: move this to it's own connection to this signal
+	m_selectedElement = node; // TODO: check copying performance impact
+    updateToolbarButtonsState();
 }
 
 void MainWindow::updateToolbarButtonsState()
@@ -473,14 +519,21 @@ void MainWindow::updateToolbarButtonsState()
 
     /// SOURCES
     bool hasSources = !pController->sourceController()->sources().isEmpty();
-    ui.actionRemoveSource->setEnabled(hasSources && pSelectedSourceItem);
-    ui.actionConfigureSource->setEnabled(hasSources && pSelectedSourceItem); // TODO/CONSIDER: change this action to open a dialog for ALL sources
+    ui.actionRemoveSource->setEnabled(hasSources && m_selectedElement.kind == Node::Kind::Source);
+    ui.actionConfigureSource->setEnabled(hasSources && m_selectedElement.kind == Node::Kind::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
+	ui.actionOpenCloseSources->setEnabled(hasSources);
+	ui.actionStartStopSources->setEnabled(hasSources && ui.actionOpenCloseSources->isChecked());
 
     /// PROCESSING
     bool hasProcessors = !pController->processingController()->processors().isEmpty();
-    ui.actionRemoveProcessor->setEnabled(hasProcessors && pSelectedSourceItem);
-	ui.actionConfigureProcessor->setEnabled(hasProcessors && pSelectedSourceItem);
+    ui.actionRemoveProcessor->setEnabled(hasProcessors && m_selectedElement.kind == Node::Kind::Processor);
+	ui.actionConfigureProcessor->setEnabled(hasProcessors && m_selectedElement.kind == Node::Kind::Processor);
     ui.actionToggleProcessing->setEnabled(hasProcessors);
+
+	/// MOUNTS
+    bool hasMounts = !pController->mountController()->mounts().isEmpty();
+	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement.kind == Node::Kind::Mount);
+	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement.kind == Node::Kind::Mount);
 }
 
 void MainWindow::quit() {

@@ -37,7 +37,7 @@ public:
 	bool isClosed() const { return mState == CLOSED; }
 	bool isError() const { return mState == ERROR; }
 
-	const Source* byId(const QUuid& id) const;
+	Source* byId(const QUuid& id) const;
 
 private:
 	QList<Source*> mSources;

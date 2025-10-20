@@ -109,6 +109,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="dialogs\AddMountDialog\addmountdialog.cpp" />
     <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp" />
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
@@ -116,20 +117,17 @@
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
     <ClCompile Include="widgets\SourcePropertiesWidget\sourcepropertieswidget.cpp" />
-    <ClCompile Include="widgets\SourcesWidget\sourceswidget.cpp" />
     <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
-    <ClCompile Include="widgets\ProcessorsWidget\processorswidget.cpp" />
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
     <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
     <QtUic Include="pages\MainPage\mainpage.ui" />
     <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
-    <QtUic Include="widgets\SourcesWidget\sourceswidget.ui" />
-    <QtUic Include="widgets\ProcessorsWidget\processorswidget.ui" />
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui" />
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
@@ -149,14 +147,12 @@
     <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="widgets\ProcessorsWidget\processorswidget.h" />
     <QtMoc Include="dialogs\AddProcessorDialog\addprocessordialog.h" />
     <QtMoc Include="dialogs\AddSourceDialog\addsourcedialog.h" />
     <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h" />
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h" />
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />
-    <QtMoc Include="widgets\SourcesWidget\sourceswidget.h" />
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />
     <QtMoc Include="pages\MainPage\mainpage.h" />
     <QtMoc Include="widgets\SourcePreviewWidget\sourcepreviewwidget.h" />
@@ -202,6 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="data\requried_actions.h" />
+    <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

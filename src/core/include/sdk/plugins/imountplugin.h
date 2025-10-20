@@ -5,6 +5,11 @@
 #include "sdk/plugins/iplugin.h"
 #include "features/mounts/mount.h"
 
+struct MountInfo {
+    std::string id;
+    std::string name;
+};
+
 class IMountPlugin : public IPlugin
 {
 public:

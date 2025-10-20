@@ -497,9 +497,15 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <addaction name="actionRefreshPresets"/>
    <addaction name="actionDeletePreset"/>
    <addaction name="separator"/>
+   <addaction name="actionAddMount"/>
+   <addaction name="actionRemoveMount"/>
+   <addaction name="actionEditMount"/>
+   <addaction name="separator"/>
    <addaction name="actionAddSource"/>
    <addaction name="actionRemoveSource"/>
    <addaction name="actionConfigureSource"/>
+   <addaction name="actionOpenCloseSources"/>
+   <addaction name="actionStartStopSources"/>
    <addaction name="separator"/>
    <addaction name="actionAddProcessor"/>
    <addaction name="actionRemoveProcessor"/>
@@ -794,6 +800,79 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="text">
     <string>Custom Window Handle</string>
+   </property>
+  </action>
+  <action name="actionAddMount">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+   </property>
+   <property name="text">
+    <string>Add Mount</string>
+   </property>
+   <property name="toolTip">
+    <string>Adds a new mount</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionRemoveMount">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ListRemove"/>
+   </property>
+   <property name="text">
+    <string>Remove Mount</string>
+   </property>
+   <property name="toolTip">
+    <string>Removes the selected mount</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionEditMount">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+   </property>
+   <property name="text">
+    <string>Edit Mount</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenCloseSources">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::GoUp"/>
+   </property>
+   <property name="text">
+    <string>Open/Close Sources</string>
+   </property>
+   <property name="toolTip">
+    <string>Opens or closes the current sources</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionStartStopSources">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::MediaPlaybackStart"/>
+   </property>
+   <property name="text">
+    <string>Start/Stop Sources</string>
+   </property>
+   <property name="toolTip">
+    <string>Stops or starts all sources</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
  </widget>

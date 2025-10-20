@@ -1,8 +1,7 @@
 #include "mainpage.h"
-#include "windows/MainWindow/MainWindow.h"
 
-MainPage::MainPage(MainController* controller, MainWindow* mainWindow, QWidget *parent)
-	: QMainWindow(parent), pController(controller), m_mainWindow(mainWindow)
+MainPage::MainPage(MainController* controller, ElementTreeActions actions, QWidget *parent)
+	: QMainWindow(parent), pController(controller), m_actions(actions)
 {
 	ui.setupUi(this);
 
@@ -26,9 +25,9 @@ void MainPage::initWidgets()
 
 	// Init elements tree
 	ui.dockWidget->setController(pController);
-	ui.dockWidget->setActions(m_mainWindow->getElementTreeActions());
+	ui.dockWidget->setActions(m_actions);
 }
 
 void MainPage::initSignals() {
-	// TODO: think of what to do here
+	// TODO: implement something
 }

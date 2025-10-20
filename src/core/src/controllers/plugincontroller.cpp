@@ -1,7 +1,7 @@
 #include "controllers/plugincontroller.h"
 
 PluginController::PluginController(const QString& root, QObject* parent)
-	: BackendControllerBase("PluginController", parent), mPluginRoot(root)
+	: BackendControllerBase("PluginController", parent), m_pluginRoot(root)
 {
 	// Scan for plugins on initialization
 	// TODO: Make this configurable
@@ -17,7 +17,7 @@ void PluginController::loadPlugins(QList<PluginType> pluginTypes)
 	QString pluginDirName;
 	std::vector<std::filesystem::path> pluginPaths = buildPluginPaths(pluginTypes);
 
-	mPluginRegistry.scan(pluginPaths, FACTORY_API_VERSION);
+	m_pluginRegistry.scan(pluginPaths, FACTORY_API_VERSION);
 
 	// Populate plugin lists
 	populateSourcePlugins();
@@ -26,7 +26,7 @@ void PluginController::loadPlugins(QList<PluginType> pluginTypes)
 
 ISourcePlugin* PluginController::getSourcePlugin(const QString& pluginId) const
 {
-	for (ISourcePlugin* plugin : mSourcePlugins) {
+	for (ISourcePlugin* plugin : m_sourcePlugins) {
 		QString pluginName = QString::fromStdString(plugin->name());
 		if (plugin->name() == pluginId) {
 			return plugin;
@@ -37,7 +37,7 @@ ISourcePlugin* PluginController::getSourcePlugin(const QString& pluginId) const
 
 IProcessorPlugin* PluginController::getProcessorPlugin(const QString& pluginId) const
 {
-	for (IProcessorPlugin* plugin : mProcessorPlugins) {
+	for (IProcessorPlugin* plugin : m_processorPlugins) {
 		QString pluginName = QString::fromStdString(plugin->name());
 		if (plugin->name() == pluginId) {
 			return plugin;
@@ -48,18 +48,18 @@ IProcessorPlugin* PluginController::getProcessorPlugin(const QString& pluginId) 
 
 void PluginController::populateSourcePlugins() {
 	// Unload existing plugins using unload mechanism
-	mSourcePlugins.clear();
+	m_sourcePlugins.clear();
 
-	std::vector<ISourcePlugin*> p = mPluginRegistry.as<ISourcePlugin>();
-	mSourcePlugins = QList<ISourcePlugin*>(p.begin(), p.end());
+	std::vector<ISourcePlugin*> p = m_pluginRegistry.as<ISourcePlugin>();
+	m_sourcePlugins = QList<ISourcePlugin*>(p.begin(), p.end());
 }
 
 void PluginController::populateProcessorPlugins() {
 	// Unload existing plugins using unload mechanism
-	mProcessorPlugins.clear();
+	m_processorPlugins.clear();
 
-	std::vector<IProcessorPlugin*> p = mPluginRegistry.as<IProcessorPlugin>();
-	mProcessorPlugins = QList<IProcessorPlugin*>(p.begin(), p.end());
+	std::vector<IProcessorPlugin*> p = m_pluginRegistry.as<IProcessorPlugin>();
+	m_processorPlugins = QList<IProcessorPlugin*>(p.begin(), p.end());
 }
 
 QString PluginController::pluginTypeToDirName(PluginType pluginType)

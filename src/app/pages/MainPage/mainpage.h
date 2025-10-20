@@ -4,14 +4,12 @@
 #include "ui_mainpage.h"
 #include "controllers/maincontroller.h"
 
-class MainWindow;
-
 class MainPage : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-	MainPage(MainController* controller, MainWindow* mainWindow, QWidget *parent = nullptr);
+	MainPage(MainController* controller, ElementTreeActions actions, QWidget *parent = nullptr);
 	~MainPage();
 
 	QGroupBox* presetsGroup() const { return ui.groupPresets; }
@@ -19,6 +17,7 @@ public:
 
 	PresetsWidget* presetsWidget() const { return ui.presetsWidget; }
 	SessionControlsWidget* sessionControlsWidget() const { return ui.sessionControls; }
+	DockableElementsManagerWidget* elementsTreeWidget() const { return ui.dockWidget; }
 
 	QFrame* controlsFrame() const { return ui.frameControls; }
 
@@ -26,7 +25,7 @@ private:
 	Ui::MainPageClass ui;
 
 	MainController* pController = nullptr;
-	MainWindow* m_mainWindow = nullptr;
+	ElementTreeActions m_actions;
 
 	void initWidgets();
 	void initSignals();

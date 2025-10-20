@@ -7,7 +7,7 @@ SourceController::SourceController(PluginController* pluginController, QObject *
 SourceController::~SourceController()
 {}
 
-const Source* SourceController::byId(const QUuid & id) const
+Source* SourceController::byId(const QUuid & id) const
 {
 	return mSourcesById.value(id);
 }

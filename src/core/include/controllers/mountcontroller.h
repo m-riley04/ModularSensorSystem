@@ -17,6 +17,11 @@ public:
 
 	const Mount* byId(const QUuid& id) const;
 
+public slots:
+	void addMount(Mount* mount);
+	void removeMount(Mount* mount);
+	void removeMount(const QUuid& id);
+
 private:
 	QList<Mount*> mMounts;
 	QHash<QUuid, Mount*> mMountsById;
