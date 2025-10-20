@@ -65,6 +65,8 @@ void DockableElementsManagerWidget::initSignals() {
 
 	disconnect(m_mainController->processingController(), &ProcessingController::processorAdded, m_elementModel, &ElementTreeModel::rebuild);
 	connect(m_mainController->processingController(), &ProcessingController::processorAdded, m_elementModel, &ElementTreeModel::rebuild);
+
+	connect(ui.treeElements, &QTreeView::clicked, this, &DockableElementsManagerWidget::handleElementClicked);
 }
 
 void DockableElementsManagerWidget::initContextMenu()
@@ -83,13 +85,15 @@ void DockableElementsManagerWidget::initContextMenu()
 
 	m_contextMenu->addSeparator();
 
-	m_contextMenu->addAction(m_actions.removeMount);
+	m_actionRemoveElement = m_contextMenu->addAction("Remove", this, &DockableElementsManagerWidget::handleRemoveElementClicked);
+	/*m_contextMenu->addAction(m_actions.removeMount);
 	m_contextMenu->addAction(m_actions.removeProcessor);
-	m_contextMenu->addAction(m_actions.removeSource);
+	m_contextMenu->addAction(m_actions.removeSource);*/
 
-	m_contextMenu->addAction(m_actions.editMount);
+	m_actionEditElement = m_contextMenu->addAction("Edit", this, &DockableElementsManagerWidget::handleEditElementClicked);
+	/*m_contextMenu->addAction(m_actions.editMount);
 	m_contextMenu->addAction(m_actions.editProcessor);
-	m_contextMenu->addAction(m_actions.editSource);
+	m_contextMenu->addAction(m_actions.editSource);*/
 
 	m_contextMenu->addAction("Rebuild", this, &DockableElementsManagerWidget::handleRebuildClicked);
 
@@ -123,6 +127,64 @@ void DockableElementsManagerWidget::handleCollapseAllClicked()
 {
 	if (ui.treeElements) {
 		ui.treeElements->collapseAll();
+	}
+}
+
+void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& index)
+{
+	qDebug() << "Element clicked:" << index;
+
+	if (!index.isValid() || !m_elementModel) {
+		qDebug() << "Invalid index or model.";
+		return;
+	}
+	
+	QVariant nodeData = m_elementModel->data(index, Qt::UserRole);
+	if (!nodeData.isValid() || !nodeData.canConvert<Node>()) {
+		qDebug() << "Invalid node data.";
+		return;
+	}
+
+	qDebug() << "Node data:" << nodeData;
+
+	// Update the selected node
+	m_selectedNode = nodeData.value<Node>();
+	emit elementSelected();
+}
+
+void DockableElementsManagerWidget::handleRemoveElementClicked()
+{
+	switch (m_selectedNode.kind) {
+	case Node::Kind::Mount:
+		m_actions.removeMount->trigger();
+		break;
+	case Node::Kind::Source:
+		m_actions.removeSource->trigger();
+		break;
+	case Node::Kind::Processor:
+		m_actions.removeProcessor->trigger();
+		break;
+	case Node::Kind::None:
+	default:
+		break;
+	}
+}
+
+void DockableElementsManagerWidget::handleEditElementClicked()
+{
+	switch (m_selectedNode.kind) {
+	case Node::Kind::Mount:
+		m_actions.editMount->trigger();
+		break;
+	case Node::Kind::Source:
+		m_actions.editSource->trigger();
+		break;
+	case Node::Kind::Processor:
+		m_actions.editProcessor->trigger();
+		break;
+	case Node::Kind::None:
+	default:
+		break;
 	}
 }
 

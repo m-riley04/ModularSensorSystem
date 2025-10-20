@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QVariant>
 #include <QAbstractItemModel>
 #include "controllers/mountcontroller.h"
 #include "controllers/sourcecontroller.h"
@@ -8,11 +9,18 @@
 #include <controllers/maincontroller.h>
 
 struct Node {
-    enum class Kind { Mount, Source, Processor };
-    Kind kind;
+    enum class Kind { 
+        None = -1,
+        Mount,
+        Source,
+        Processor
+    };
+    Kind kind = Kind::None;
     QUuid id; // the controller's primary key
     int parentIndex; // index in m_nodes (-1 for root)
 };
+
+Q_DECLARE_METATYPE(Node)
 
 class ElementTreeModel : public QAbstractItemModel
 {
@@ -43,3 +51,4 @@ private:
     //static QVariant iconFor(Node::Kind k);
 };
 
+Q_DECLARE_METATYPE(ElementTreeModel*)

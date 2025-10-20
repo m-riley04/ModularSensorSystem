@@ -21,12 +21,6 @@ void MainPage::initWidgets()
 	// Init preview container widget
 	ui.devicePreviewWidget->setController(pController);
 
-	// Init source list widget
-	ui.sourcesWidget->setSourceController(pController->sourceController());
-
-	// Init processors widget
-	ui.processorsWidget->setController(pController);
-
 	// Init presets widget
 	ui.presetsWidget->setController(pController);
 

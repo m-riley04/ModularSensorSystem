@@ -1,4 +1,6 @@
 #include "MainWindow.h"
+#include <dialogs/AddSourceDialog/addsourcedialog.h>
+#include <dialogs/AddProcessorDialog/addprocessordialog.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -97,8 +99,6 @@ void MainWindow::initWidgets()
 
     // Init menu bar
     ui.actionViewPresetsList->setChecked(!pMainPage->presetsGroup()->isVisible()); // Not sure why I have to invert this to NOT, but it works.
-    ui.actionViewSourcesList->setChecked(!pMainPage->sourcesGroup()->isVisible());
-    ui.actionViewProcessorsList->setChecked(!pMainPage->processorsGroup()->isVisible());
     ui.actionViewControls->setChecked(!pMainPage->controlsGroup()->isVisible());
     ui.actionViewEntireRow->setChecked(!pMainPage->controlsFrame()->isVisible());
 
@@ -136,12 +136,6 @@ void MainWindow::initActionSignals()
     // View
     connect(ui.actionViewPresetsList, &QAction::triggered, [this](bool checked) {
         pMainPage->presetsGroup()->setVisible(checked);
-        });
-    connect(ui.actionViewSourcesList, &QAction::triggered, [this](bool checked) {
-        pMainPage->sourcesGroup()->setVisible(checked);
-        });
-    connect(ui.actionViewProcessorsList, &QAction::triggered, [this](bool checked) {
-        pMainPage->processorsGroup()->setVisible(checked);
         });
     connect(ui.actionViewControls, &QAction::triggered, [this](bool checked) {
         pMainPage->controlsGroup()->setVisible(checked);
@@ -194,8 +188,6 @@ void MainWindow::initSignals() {
 
     // Connect signals to child widgets
     connect(pMainPage->presetsWidget(), &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
-    connect(pMainPage->sourcesWidget(), &SourcesWidget::selectedSourceChanged, this, &MainWindow::onSelectedSourceItemChanged);
-    connect(pMainPage->processorsWidget(), &ProcessorsWidget::selectedProcessorChanged, this, &MainWindow::onSelectedProcessorItemChanged);
 
     // Init toolbar and actions
     initActionSignals();
