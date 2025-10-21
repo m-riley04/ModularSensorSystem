@@ -63,11 +63,11 @@
     <Import Project="$(QtMsBuild)\Qt.props" />
     <Import Project="..\..\..\VcpkgIncludeDirs.props" />
     <Import Project="..\..\..\MSSPlugin.props" />
+    <Import Project="..\..\..\..\..\..\..\AppData\Local\Microsoft\VisualStudio\17.0_57551874\Extensions\xeutmgoj.vwp\QtMSBuild\Qt.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\plugins\sources\</OutDir>
-    <IncludePath>$(SolutionDir)src\core\include;$(SolutionDir)src;$(SolutionDir)src\app;%(AdditionalIncludeDirectories)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
@@ -77,7 +77,6 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\core\include;$(SolutionDir)src;$(SolutionDir)src\app;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <QtMoc />
     <QtMoc>
@@ -85,10 +84,7 @@
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
     </QtMoc>
-    <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>MSSCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
