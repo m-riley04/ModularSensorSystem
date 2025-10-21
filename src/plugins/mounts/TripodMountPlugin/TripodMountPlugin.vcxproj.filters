@@ -26,9 +26,15 @@
     <ClCompile Include="tripodmountplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tripodmount.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tripodmountplugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tripodmount.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

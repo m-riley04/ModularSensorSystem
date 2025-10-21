@@ -85,7 +85,7 @@ void AddMountDialog::populateMountDropdown()
 	// Populate the mount dropdown with available mounts of the selected type
 	for (auto mount : m_selectedMountPlugin->discover()) {
 		// Add the mount to the dropdown
-		ui.dropdownMount->addItem(QString::fromStdString(mount->name()), QVariant::fromValue(mount));
+		ui.dropdownMount->addItem(QString::fromStdString(mount.name), QVariant::fromValue(mount));
 	}
 
 	// Set the default selection to the first item

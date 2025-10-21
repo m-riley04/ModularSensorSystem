@@ -7,7 +7,8 @@ PluginController::PluginController(const QString& root, QObject* parent)
 	// TODO: Make this configurable
 	loadPlugins(QList<PluginType>({
 		PluginType::SourcePlugin,
-		PluginType::ProcessorPlugin
+		PluginType::ProcessorPlugin,
+		PluginType::MountPlugin
 	}));
 }
 
@@ -22,6 +23,7 @@ void PluginController::loadPlugins(QList<PluginType> pluginTypes)
 	// Populate plugin lists
 	populateSourcePlugins();
 	populateProcessorPlugins();
+	populateMountPlugins();
 }
 
 ISourcePlugin* PluginController::getSourcePlugin(const QString& pluginId) const
@@ -46,6 +48,17 @@ IProcessorPlugin* PluginController::getProcessorPlugin(const QString& pluginId) 
 	return nullptr;  // Return nullptr if not found
 }
 
+IMountPlugin* PluginController::getMountPlugin(const QString& pluginId) const
+{
+	for (IMountPlugin* plugin : m_mountPlugins) {
+		QString pluginName = QString::fromStdString(plugin->name());
+		if (plugin->name() == pluginId) {
+			return plugin;
+		}
+	}
+	return nullptr;  // Return nullptr if not found
+}
+
 void PluginController::populateSourcePlugins() {
 	// Unload existing plugins using unload mechanism
 	m_sourcePlugins.clear();
@@ -60,6 +73,15 @@ void PluginController::populateProcessorPlugins() {
 
 	std::vector<IProcessorPlugin*> p = m_pluginRegistry.as<IProcessorPlugin>();
 	m_processorPlugins = QList<IProcessorPlugin*>(p.begin(), p.end());
+}
+
+void PluginController::populateMountPlugins()
+{
+	// Unload existing plugins using unload mechanism
+	m_mountPlugins.clear();
+
+	std::vector<IMountPlugin*> p = m_pluginRegistry.as<IMountPlugin>();
+	m_mountPlugins = QList<IMountPlugin*>(p.begin(), p.end());
 }
 
 QString PluginController::pluginTypeToDirName(PluginType pluginType)

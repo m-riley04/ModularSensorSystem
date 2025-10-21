@@ -4,6 +4,8 @@
 #include <features/mounts/mount.h>
 #include <QHash>
 #include <QUuid>
+#include <QDebug>
+#include <sdk/plugins/imountplugin.h>
 
 class MountController : public BackendControllerBase
 {
@@ -18,7 +20,7 @@ public:
 	const Mount* byId(const QUuid& id) const;
 
 public slots:
-	void addMount(Mount* mount);
+	Mount* addMount(IMountPlugin* plugin, MountInfo mount);
 	void removeMount(Mount* mount);
 	void removeMount(const QUuid& id);
 

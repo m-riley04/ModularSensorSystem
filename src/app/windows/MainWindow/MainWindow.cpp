@@ -212,7 +212,9 @@ bool MainWindow::checkIfControllersAreOk(MainController* controller) const
         controller->pluginController() /*&& 
         controller->settingsController()*/ && 
         controller->clipController() && 
-        controller->recordingController()) {
+        controller->recordingController() && 
+        controller->dataPipelineController() &&
+        controller->mountController()) {
         return true;
 	}
 
@@ -343,10 +345,7 @@ void MainWindow::openAddMountDialog()
     AddMountDialog* addDeviceDialog = new AddMountDialog(pController->pluginController(), this);
     addDeviceDialog->setWindowModality(Qt::WindowModal);
 
-    connect(addDeviceDialog, &AddMountDialog::mountConfirmed, [this](IMountPlugin* plugin, MountInfo info) {
-		// TODO: fix this implementation
-        //pController->mountController()->addMount(mount);
-    });
+    connect(addDeviceDialog, &AddMountDialog::mountConfirmed, pController->mountController(), &MountController::addMount);
 
     addDeviceDialog->show();
 }

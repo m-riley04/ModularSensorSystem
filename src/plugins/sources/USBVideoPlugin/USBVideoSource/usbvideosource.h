@@ -10,7 +10,6 @@
 #include <chrono>
 #include "features/sources/source.h"
 #include "features/sources/iconfigurablesource.h"
-// Removed dependency on app-level SourcePropertiesWidget to avoid linker errors
 #include "features/sources/iclippablesource.h"
 #include "interfaces/capability/ivideosource.h"
 #include "USBVideoClipBuffer/usbvideoclipbuffer.h"
@@ -25,7 +24,7 @@ class USBVideoSource : public Source,
 	public IVideoSource
 {
 	Q_OBJECT
-	Q_INTERFACES(IConfigurableSource IClippableSource IVideoSource)
+	//Q_INTERFACES(IConfigurableSource IClippableSource IVideoSource)
 
 public:
 	USBVideoSource(QByteArray hardwareId, QObject* parent);

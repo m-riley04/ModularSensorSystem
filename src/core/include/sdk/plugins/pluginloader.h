@@ -41,6 +41,7 @@ public:
     template <typename T> std::vector<T*> as() const {
         std::vector<T*> out;
         out.reserve(m_all.size());
+        // TODO: fix this cast or something to do with mount plugins
         for (auto& p : m_all) if (auto cast = dynamic_cast<T*>(p.instance)) out.push_back(cast);
         return out;
     }

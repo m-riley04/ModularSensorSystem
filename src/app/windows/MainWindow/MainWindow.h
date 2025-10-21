@@ -6,6 +6,7 @@
 #include <QVideoWidget>
 #include "controllers/maincontroller.h"
 #include "controllers/clipcontroller.h"
+#include "controllers/mountcontroller.h"
 #include "widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "widgets/CustomTitleBar/customtitlebar.h"
 #include "pages/MainPage/mainpage.h"

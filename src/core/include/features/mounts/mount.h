@@ -23,7 +23,7 @@ public:
 	};
 
 public:
-	Mount() = default;
+	Mount();
 	virtual ~Mount() = default;
 
 	std::string id() const { return mId; }
@@ -31,6 +31,7 @@ public:
 	virtual Kind kind() const = 0;
 	virtual bool isMovable() const = 0;
 
+	virtual bool isPosable() const = 0;
 	virtual std::optional<Pose> pose() const = 0;
 	virtual bool setPose(const Pose& newPose) = 0;
 

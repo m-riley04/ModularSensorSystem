@@ -13,6 +13,7 @@ struct MountInfo {
 class IMountPlugin : public IPlugin
 {
 public:
-    virtual std::vector<Mount*> discover() = 0;
+    virtual std::vector<MountInfo> discover() = 0;
+    virtual Mount* createMount(const std::string& id, QObject* parent) = 0;
     PluginType type() const override { return PluginType::Mount; }
 };
