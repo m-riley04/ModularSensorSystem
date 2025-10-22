@@ -66,24 +66,22 @@ QVariant ElementTreeModel::data(const QModelIndex& idx, int role) const
         }
         if (idx.column() == 1) { /* status text */ }
     }
+    if (role == Qt::UserRole) {
+		return QVariant::fromValue(n);
+    }
     return {};
 }
 
 void ElementTreeModel::buildFlat()
 {
     for (Mount* m : m_mainController->mountController()->mounts()) {
-        int mRow = mNodes.size();
-        Q_UNUSED(mRow);
         // Use controller-assigned ID
         QUuid id = m_mainController->mountController()->idFor(m);
         mNodes << Node{ Node::Kind::Mount, id, -1 };
     }
 
     for (auto s : m_mainController->sourceController()->sources()) {
-        int sRow = mNodes.size();
-        Q_UNUSED(sRow);
         mNodes << Node{ Node::Kind::Source, s->id(), -1 };
-
     }
 
     for (auto p : m_mainController->processingController()->processors()) {

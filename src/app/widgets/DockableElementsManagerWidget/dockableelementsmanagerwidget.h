@@ -47,6 +47,6 @@ public slots:
 	void handleEditElementClicked();
 
 signals:
-	void elementSelected(Node node);
+	void elementSelected(Node* node);
 };
 

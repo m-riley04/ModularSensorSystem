@@ -30,3 +30,31 @@ QList<BackendControllerBase*> MainController::getAllSubcontrollers() const
 		 << pDataPipelineController.get();
 	return list;
 }
+
+bool MainController::checkIfControllersAreOk() const
+{
+	// Check if they are all okay just to see if we can exit early
+	if (pSourceController &&
+		pProcessingController &&
+		pPresetsController &&
+		pPluginController /*&&
+		pSettingsController*/ &&
+		pClipController &&
+		pRecordingController &&
+		pDataPipelineController &&
+		pMountController)
+	{
+		return true;
+	}
+
+	// Otherwise, we can do more work to see which specific subcontroller(s) are not initialized
+	for (BackendControllerBase* subcontroller : getAllSubcontrollers()) {
+		if (!subcontroller) {
+			qDebug() << "A subcontroller is not initialized:" << subcontroller->name();
+			// TODO/CONSIDER: Show a message box or some other UI feedback to the user
+			// TODO/CONSIDER: return early here, or continue checking all controllers? Probably easier for debugging this way.
+		}
+	}
+
+	return false;
+}

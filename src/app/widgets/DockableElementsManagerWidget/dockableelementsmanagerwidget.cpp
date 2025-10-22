@@ -149,7 +149,7 @@ void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& inde
 
 	// Update the selected node
 	m_selectedNode = nodeData.value<Node>();
-	emit elementSelected(m_selectedNode);
+	emit elementSelected(&m_selectedNode);
 }
 
 void DockableElementsManagerWidget::handleRemoveElementClicked()

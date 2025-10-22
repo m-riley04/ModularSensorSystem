@@ -20,8 +20,6 @@ struct Node {
     int parentIndex; // index in m_nodes (-1 for root)
 };
 
-Q_DECLARE_METATYPE(Node)
-
 class ElementTreeModel : public QAbstractItemModel
 {
 	Q_OBJECT

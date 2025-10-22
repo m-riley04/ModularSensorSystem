@@ -34,6 +34,21 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {}
 
+ElementTreeActions MainWindow::getElementTreeActions() const
+{
+    ElementTreeActions actions{};
+    actions.addSource = ui.actionAddSource;
+    actions.removeSource = ui.actionRemoveSource;
+    actions.editSource = ui.actionConfigureSource;
+    actions.addMount = ui.actionAddMount;
+    actions.removeMount = ui.actionRemoveMount;
+    actions.editMount = ui.actionEditMount;
+    actions.addProcessor = ui.actionAddProcessor;
+    actions.removeProcessor = ui.actionRemoveProcessor;
+    actions.editProcessor = ui.actionConfigureProcessor;
+    return actions;
+}
+
 void MainWindow::initStyles()
 {
     // Configure application properties
@@ -111,7 +126,7 @@ void MainWindow::initWidgets()
 
 void MainWindow::initActionSignals()
 {
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
     // Presets
 	connect(ui.actionSavePreset, &QAction::triggered, this, &MainWindow::openSavePresetDialog);
@@ -171,7 +186,7 @@ void MainWindow::initActionSignals()
 }
 
 void MainWindow::initSignals() {
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 	SourceController* pSourceController = pController->sourceController();
 
     // Init error message propagation
@@ -192,47 +207,15 @@ void MainWindow::initSignals() {
     // Connect signals to child widgets
     connect(pMainPage->presetsWidget(), &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
 	connect(pMainPage->elementsTreeWidget(), &DockableElementsManagerWidget::elementSelected, this, &MainWindow::onSelectedElementChanged);
+    //connect(pController->mountController(), &MountController::mountRemoved, pMainPage->elementsTreeWidget(), &DockableElementsManagerWidget::handleMountRemoved);
 
     // Init toolbar and actions
     initActionSignals();
 }
 
-bool MainWindow::checkIfControllersAreOk(MainController* controller) const
-{
-    // Check the main controller first and foremost
-    if (!controller) {
-        qDebug() << "MainController is not initialized.";
-        return false;
-	}
-
-    // Check if they are all okay just to see if we can exit early
-    if (controller->sourceController() && 
-        controller->processingController() && 
-        controller->presetsController() && 
-        controller->pluginController() /*&& 
-        controller->settingsController()*/ && 
-        controller->clipController() && 
-        controller->recordingController() && 
-        controller->dataPipelineController() &&
-        controller->mountController()) {
-        return true;
-	}
-
-	// Otherwise, we can do more work to see which specific subcontroller(s) are not initialized
-    for (BackendControllerBase* subcontroller : controller->getAllSubcontrollers()) {
-        if (!subcontroller) {
-            qDebug() << "A subcontroller is not initialized:" << subcontroller->name();
-            // TODO/CONSIDER: Show a message box or some other UI feedback to the user
-			// TODO/CONSIDER: return early here, or continue checking all controllers? Probably easier for debugging this way.
-		}
-    }
-
-    return false;
-}
-
 void MainWindow::openSavePresetDialog()
 {
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
     // Get the preset name from the user
     bool ok;
@@ -263,7 +246,7 @@ void MainWindow::openSavePresetDialog()
 void MainWindow::onLoadPresetClicked()
 {
     // Check controllers
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
     
 	// Check selected item
     if (!pSelectedPresetItem) {
@@ -289,7 +272,7 @@ void MainWindow::onLoadPresetClicked()
 void MainWindow::openDeletePresetDialog()
 {
 	// Check controllers
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
 	// Check selected item
     if (!pSelectedPresetItem) {
@@ -330,7 +313,7 @@ void MainWindow::openConfigurePresetDialog()
 void MainWindow::onRefreshPresetClicked()
 {
     // Check controllers
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
     // Scan
     pController->presetsController()->scanForPresets(); // CONSIDER: Pass specific path?
@@ -339,7 +322,7 @@ void MainWindow::onRefreshPresetClicked()
 void MainWindow::openAddMountDialog()
 {
     // Check controllers
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
     // Create and show the AddMountDialog
     AddMountDialog* addDeviceDialog = new AddMountDialog(pController->pluginController(), this);
@@ -353,10 +336,10 @@ void MainWindow::openAddMountDialog()
 void MainWindow::openRemoveMountDialog()
 {
     // Check controllers
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
     // Check selected item
-    if (m_selectedElement.kind != Node::Kind::Mount) {
+    if (m_selectedElement->kind != Node::Kind::Mount) {
         QMessageBox::warning(this, "No Mount Selected", "Please select a mount to remove.");
         return;
     }
@@ -364,7 +347,7 @@ void MainWindow::openRemoveMountDialog()
     auto response = QMessageBox::question(this, "Remove Mount", "Are you sure you want to remove the selected mount?", QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
 		// TODO: Check this implementation
-        const Mount* mount = pController->mountController()->byId(m_selectedElement.id);
+        const Mount* mount = pController->mountController()->byId(m_selectedElement->id);
 
         // Remove mount from the controller
 		// TODO: reconsider const casting and const usage
@@ -380,7 +363,7 @@ void MainWindow::openEditMountDialog()
 void MainWindow::openAddSourceDialog()
 {
     // Check controllers
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
 	// Create and show the AddSourceDialog
     AddSourceDialog* addDeviceDialog = new AddSourceDialog(pController->pluginController(), this);
@@ -394,10 +377,10 @@ void MainWindow::openAddSourceDialog()
 void MainWindow::openRemoveSourceDialog()
 {
     // Check controllers
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
     // Check selected item
-    if (m_selectedElement.kind != Node::Kind::Source) {
+    if (m_selectedElement->kind != Node::Kind::Source) {
         QMessageBox::warning(this, "No Source Selected", "Please select a source to remove.");
         return;
 	}
@@ -405,7 +388,7 @@ void MainWindow::openRemoveSourceDialog()
     auto response = QMessageBox::question(this, "Remove Source", "Are you sure you want to remove the selected source?", QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
 		// TODO: check this implementation
-        const Source* source = pController->sourceController()->byId(m_selectedElement.id);
+        const Source* source = pController->sourceController()->byId(m_selectedElement->id);
 
         // Remove source from the controller
         // TODO: reconsider const casting and const usage
@@ -416,17 +399,17 @@ void MainWindow::openRemoveSourceDialog()
 void MainWindow::openConfigureSourceDialog()
 {
     // Check controllers
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
     // Check selected item
-    if (m_selectedElement.kind != Node::Kind::Source) {
+    if (m_selectedElement->kind != Node::Kind::Source) {
         QMessageBox::warning(this, "No Source Selected", "Please select a source to configure.");
         return;
     }
 
 	// Get the source from the selected element
     // TODO: check this implementation
-	Source* source = pController->sourceController()->byId(m_selectedElement.id);
+	Source* source = pController->sourceController()->byId(m_selectedElement->id);
     if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
         QWidget* w = cfg->createConfigWidget(this);
         QDialog dlg(this);
@@ -445,7 +428,7 @@ void MainWindow::openConfigureSourceDialog()
 void MainWindow::openAddProcessorDialog()
 {
 	// Check controllers
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
     ProcessingController* pProcessingController = pController->processingController();
     PluginController* pPluginController = pController->pluginController();
@@ -462,10 +445,10 @@ void MainWindow::openAddProcessorDialog()
 void MainWindow::openRemoveProcessorDialog()
 {
     // Check controllers
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
     // Check selected item
-    if (m_selectedElement.kind != Node::Kind::Processor) {
+    if (m_selectedElement->kind != Node::Kind::Processor) {
         QMessageBox::warning(this, "No Processor Selected", "Please select a processor to remove.");
         return;
     }
@@ -501,38 +484,52 @@ void MainWindow::onSelectedPresetItemChanged(QListWidgetItem* current, QListWidg
     updateToolbarButtonsState(); // CONSIDER: move this to it's own connection to this signal
 }
 
-void MainWindow::onSelectedElementChanged(Node node)
+void MainWindow::onSelectedElementChanged(Node* node)
 {
 	m_selectedElement = node; // TODO: check copying performance impact
     updateToolbarButtonsState();
 }
 
+void MainWindow::onSelectedElementRemoved()
+{
+    m_selectedElement = nullptr;
+    // Update the elements tree
+    pMainPage->elementsTreeWidget()->update();
+    updateToolbarButtonsState();
+}
+
 void MainWindow::updateToolbarButtonsState()
 {
-    if (!checkIfControllersAreOk(pController.get())) return;
+    if (!pController->checkIfControllersAreOk()) return;
 
     /// PRESETS
     bool hasPresets = !pController->presetsController()->presets().isEmpty();
     ui.actionLoadPreset->setEnabled(hasPresets && pSelectedPresetItem);
     ui.actionDeletePreset->setEnabled(hasPresets && pSelectedPresetItem);
 
+    // Check selected element
+    if (!m_selectedElement) {
+		// TODO: maybe disable all element-related actions here?
+        return;
+    }
+
     /// SOURCES
     bool hasSources = !pController->sourceController()->sources().isEmpty();
-    ui.actionRemoveSource->setEnabled(hasSources && m_selectedElement.kind == Node::Kind::Source);
-    ui.actionConfigureSource->setEnabled(hasSources && m_selectedElement.kind == Node::Kind::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
+    ui.actionRemoveSource->setEnabled(hasSources && m_selectedElement->kind == Node::Kind::Source);
+    ui.actionConfigureSource->setEnabled(hasSources && m_selectedElement->kind == Node::Kind::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
 	ui.actionOpenCloseSources->setEnabled(hasSources);
 	ui.actionStartStopSources->setEnabled(hasSources && ui.actionOpenCloseSources->isChecked());
 
     /// PROCESSING
     bool hasProcessors = !pController->processingController()->processors().isEmpty();
-    ui.actionRemoveProcessor->setEnabled(hasProcessors && m_selectedElement.kind == Node::Kind::Processor);
-	ui.actionConfigureProcessor->setEnabled(hasProcessors && m_selectedElement.kind == Node::Kind::Processor);
+    ui.actionRemoveProcessor->setEnabled(hasProcessors && m_selectedElement->kind == Node::Kind::Processor);
+	ui.actionConfigureProcessor->setEnabled(hasProcessors && m_selectedElement->kind == Node::Kind::Processor);
     ui.actionToggleProcessing->setEnabled(hasProcessors);
 
 	/// MOUNTS
     bool hasMounts = !pController->mountController()->mounts().isEmpty();
-	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement.kind == Node::Kind::Mount);
-	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement.kind == Node::Kind::Mount);
+	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement->kind == Node::Kind::Mount);
+	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement->kind == Node::Kind::Mount);
 }
 
 void MainWindow::quit() {

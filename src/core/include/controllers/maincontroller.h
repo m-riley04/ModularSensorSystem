@@ -37,6 +37,14 @@ public:
 	MountController* mountController() const { return pMountController.get(); }
 	DataPipelineController* dataPipelineController() const { return pDataPipelineController.get(); }
 
+	/**
+	 * @brief Checks whether the specified main controller and its associated controllers are in a valid state.
+	 * Logs if any issues are found.
+	 * @param controller: Pointer to the main controller to be checked.
+	 * @return True if all controllers are valid, false otherwise.
+	 */
+	bool checkIfControllersAreOk() const;
+
 private:
 	std::unique_ptr<SourceController> pSourceController;
 	std::unique_ptr<RecordingController> pRecordingController;
