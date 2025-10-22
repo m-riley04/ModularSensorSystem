@@ -9,29 +9,28 @@ MountController::~MountController()
 
 const Mount* MountController::byId(const QUuid& id) const
 {
-	// TODO: Implement the logic to find a Mount by its ID
-	return nullptr;
+	return mMountsById.value(id, nullptr);
+}
+
+QUuid MountController::idFor(const Mount* mount) const
+{
+	return mIdByMount.value(mount, QUuid());
 }
 
 Mount* MountController::addMount(IMountPlugin* plugin, MountInfo info)
 {
 	if (!plugin) {
-		/*emit errorOccurred({
-			"Cannot add source: plugin is null",
-			nullptr,
-			ErrorSeverity::CRITICAL
-			});
-		qWarning() << "Plugin for source is null";*/
 		return nullptr;
 	}
 
 	auto mount = plugin->createMount(info.id, this);
+	if (!mount) return nullptr;
 
 	mMounts.append(mount);
-	mMountsById[QUuid::fromString(mount->id())] = mount;
-
-	// Connect errors
-	//connect(mount, &Mount::errorOccurred, this, &MountController::errorOccurred);
+	// Assign a controller-managed UUID (do not reinterpret mount->id() as a QUuid)
+	QUuid uid = QUuid::createUuid();
+	mMountsById[uid] = mount;
+	mIdByMount[mount] = uid;
 
 	emit mountAdded(mount);
 	return mount;
@@ -40,40 +39,31 @@ Mount* MountController::addMount(IMountPlugin* plugin, MountInfo info)
 void MountController::removeMount(Mount* mount)
 {
 	if (!mount) {
-		/*emit errorOccurred({
-			"Cannot remove source: source is null",
-			nullptr,
-			ErrorSeverity::CRITICAL
-			});*/
 		qWarning() << "Cannot remove source: source is null";
 		return;
 	};
 
-	// Get source id before deleting
-	std::string mountId = mount->id();
-
-	// Remove source from the list
+	// Remove from lists/maps
 	mMounts.removeAll(mount);
+	QUuid uid = mIdByMount.take(mount);
+	if (!uid.isNull()) {
+		mMountsById.remove(uid);
+	}
 
-	emit mountRemoved(mount); // TODO: Emit the mount's ID instead of the mount itself
+	emit mountRemoved(mount);
 }
 
 void MountController::removeMount(const QUuid& id)
 {
 	auto mount = mMountsById.value(id, nullptr);
 	if (!mount) {
-		/*emit errorOccurred({
-			"Cannot remove mount: mount not found",
-			nullptr,
-			ErrorSeverity::CRITICAL
-		});*/
 		qWarning() << "Cannot remove mount: mount not found";
 		return;
 	}
 
-	// Remove mount from the list
 	mMounts.removeAll(mount);
 	mMountsById.remove(id);
+	mIdByMount.remove(mount);
 
 	emit mountRemoved(mount);
 }

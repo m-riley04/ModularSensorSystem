@@ -19,8 +19,9 @@ public:
 	uint32_t version() const override { return MSS_API; }
 };
 
-static TripodMount* make_impl() { return new TripodMount(); }
-static void destroy_impl(IMountPlugin* p) { delete p; }
+// Export proper factory functions that create/destroy the plugin instance
+static IPlugin* make_impl() { return new TripodPlugin(); }
+static void destroy_impl(IPlugin* p) { delete p; }
 static uint32_t api_impl() { return MSS_API; }
 
 BOOST_DLL_ALIAS(make_impl, mss_make)    // exports symbol "mss_make"

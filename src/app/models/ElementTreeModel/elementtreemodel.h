@@ -48,6 +48,9 @@ private:
     QVector<Node> mNodes;
     MainController* m_mainController;
 
+	void buildFlat();
+	void buildHierarchical();
+
     //static QVariant iconFor(Node::Kind k);
 };
 

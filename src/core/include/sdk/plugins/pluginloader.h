@@ -28,7 +28,7 @@ public:
     const std::deque<LoadedPlugin>& all() const { return m_all; }
     const std::vector<LoadedPlugin*>& sources() const { return byType(PluginType::Source); }
     const std::vector<LoadedPlugin*>& processors() const { return byType(PluginType::Processor); }
-    const std::vector<LoadedPlugin*>& mounts()   const { return byType(PluginType::Mount); }
+    const std::vector<LoadedPlugin*>& mounts() const { return byType(PluginType::Mount); }
 
     void unloadAll() {
         for (auto& p : m_all) {

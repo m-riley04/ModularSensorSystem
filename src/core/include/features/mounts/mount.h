@@ -19,11 +19,13 @@ public:
 	};
 
 	struct Pose { // TODO: think about if this is the best way to do this
-		double x, y, z, yaw, pitch, roll;
+		double x, y, z;
+		double yaw, pitch, roll;
 	};
 
 public:
-	Mount();
+	Mount() {}
+	Mount(std::string id, std::string name) : mId(id), mName(name) {}
 	virtual ~Mount() = default;
 
 	std::string id() const { return mId; }
@@ -36,9 +38,7 @@ public:
 	virtual bool setPose(const Pose& newPose) = 0;
 
 protected:
-	Mount(std::string id, std::string name) : mId(id), mName(name) {}
-
-	std::string mId;
+	std::string mId = "default_mount";
 	std::string mName = "New Mount";
 };
 

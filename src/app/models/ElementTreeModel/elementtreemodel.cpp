@@ -52,23 +52,66 @@ QVariant ElementTreeModel::data(const QModelIndex& idx, int role) const
     if (!idx.isValid()) return {};
     const Node& n = mNodes[int(idx.internalId())];
 
-    /*if (role == TreeRoles::TypeRole) return int(n.kind);
-    if (role == TreeRoles::IdRole)   return n.id;*/
-
-    /*if (role == Qt::DecorationRole && idx.column() == 0)
-        return iconFor(n.kind);*/
-
     if (role == Qt::DisplayRole) {
         if (idx.column() == 0) {
             switch (n.kind) {
-            case Node::Kind::Mount: return QString::fromStdString(m_mainController->mountController()->byId(n.id)->name());
+            case Node::Kind::Mount: {
+                const Mount* m = m_mainController->mountController()->byId(n.id);
+                return m ? QString::fromStdString(m->name()) : QString("<unknown mount>");
+            }
             case Node::Kind::Source: return m_mainController->sourceController()->byId(n.id)->name();
-            //case Node::Kind::Processor: return QString(mProcessingController->byId(n.id)->name());
+            case Node::Kind::Processor: return QString("Processor");
+            default: break;
             }
         }
         if (idx.column() == 1) { /* status text */ }
     }
     return {};
+}
+
+void ElementTreeModel::buildFlat()
+{
+    for (Mount* m : m_mainController->mountController()->mounts()) {
+        int mRow = mNodes.size();
+        Q_UNUSED(mRow);
+        // Use controller-assigned ID
+        QUuid id = m_mainController->mountController()->idFor(m);
+        mNodes << Node{ Node::Kind::Mount, id, -1 };
+    }
+
+    for (auto s : m_mainController->sourceController()->sources()) {
+        int sRow = mNodes.size();
+        Q_UNUSED(sRow);
+        mNodes << Node{ Node::Kind::Source, s->id(), -1 };
+
+    }
+
+    for (auto p : m_mainController->processingController()->processors()) {
+        // TODO: assign proper processor UUID
+        mNodes << Node{ Node::Kind::Processor, QUuid::createUuid(), -1 };
+    }
+}
+
+void ElementTreeModel::buildHierarchical()
+{
+    // TODO: add this better hierarchical structure instead of simple list of elements
+    // flat list with parent indices
+    for (Mount* m : m_mainController->mountController()->mounts()) {
+        int mRow = mNodes.size();
+        // Use controller-assigned ID
+        QUuid id = m_mainController->mountController()->idFor(m);
+        mNodes << Node{ Node::Kind::Mount, id, -1 };
+
+        for (auto s : m_mainController->dataPipelineController()->getSourcesByMount(id)) {
+            int sRow = mNodes.size();
+            mNodes << Node{ Node::Kind::Source, s->id(), mRow };
+
+            for (auto p : m_mainController->dataPipelineController()->getProcessorsBySource(s->id())) {
+                // TODO: use real processor ID
+                mNodes << Node{ Node::Kind::Processor, QUuid::createUuid(), sRow };
+            }
+        }
+    }
 }
 
 void ElementTreeModel::rebuild(bool isFlat)
@@ -77,42 +120,10 @@ void ElementTreeModel::rebuild(bool isFlat)
     mNodes.clear();
 
     if (isFlat) {
-        for (Mount* m : m_mainController->mountController()->mounts()) {
-            int mRow = mNodes.size();
-			// TODO: use real mount ID
-            mNodes << Node{ Node::Kind::Mount, QUuid(m->id()), -1 };
-        }
-
-        for (auto s : m_mainController->sourceController()->sources()) {
-            int sRow = mNodes.size();
-            mNodes << Node{ Node::Kind::Source, s->id(), -1 };
-
-        }
-
-        for (auto p : m_mainController->processingController()->processors()) {
-            // TODO: assign proper processor UUID
-            mNodes << Node{ Node::Kind::Processor, QUuid::createUuid(), -1 };
-        }
+		this->buildFlat();
     }
     else {
-        // TODO: add this better hierarchical structure instead of simple list of elements
-        // flat list with parent indices
-        for (Mount* m : m_mainController->mountController()->mounts()) {
-            int mRow = mNodes.size();
-            // TODO: use real mount ID
-			QUuid id = QUuid(m->id());
-            mNodes << Node{ Node::Kind::Mount, id, -1};
-
-            for (auto s : m_mainController->dataPipelineController()->getSourcesByMount(id)) {
-                int sRow = mNodes.size();
-                mNodes << Node{ Node::Kind::Source, s->id(), mRow};
-
-                for (auto p : m_mainController->dataPipelineController()->getProcessorsBySource(s->id())) {
-					// TODO: use real processor ID
-                    mNodes << Node{ Node::Kind::Processor, QUuid::createUuid(), sRow};
-                }
-            }
-        }
+        this->buildHierarchical();
     }
     endResetModel();
 }
