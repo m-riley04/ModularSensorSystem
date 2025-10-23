@@ -6,7 +6,7 @@
 /**
  * An element is a generic component of the system that sends and/or recieves data.
  * Ex: mount, source, processor.
- * NOTE: I know this isn't a pure interface, but idc lol. Close enough.
+ * NOTE: I know this isn't a pure interface, but idc lol. It's convenient, it centralizes uuids, and it's close enough.
  */
 class IElement : public QObject
 {
