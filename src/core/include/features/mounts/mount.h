@@ -33,6 +33,7 @@ public:
 	std::string id() const override { return m_id; }
 	std::string name() const override { return m_name; }
 	void setName(const std::string& newName) override { m_name = newName; }
+
 	virtual Kind kind() const = 0;
 	virtual bool isMovable() const = 0;
 

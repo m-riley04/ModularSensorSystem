@@ -40,7 +40,7 @@ void PresetsController::savePreset(QString name, QList<Source*> activeSources, Q
 		SourcePreset preset {
 			QByteArray::fromStdString(source->id()),
 			QString::fromStdString(source->name()),
-			source->pluginId(),
+			QString::fromStdString(source->pluginId()),
 			source->type(),
 			config
 		};

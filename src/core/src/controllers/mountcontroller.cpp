@@ -1,4 +1,5 @@
 #include "controllers/mountcontroller.h"
+#include <utils/boost_qt_conversions.h>
 
 MountController::MountController(QObject *parent)
 	: BackendControllerBase("MountController", parent)
@@ -10,11 +11,6 @@ MountController::~MountController()
 const Mount* MountController::byId(const QUuid& id) const
 {
 	return mMountsById.value(id, nullptr);
-}
-
-QUuid MountController::idFor(const Mount* mount) const
-{
-	return mIdByMount.value(mount, QUuid());
 }
 
 Mount* MountController::addMount(IMountPlugin* plugin, MountInfo info)
@@ -30,7 +26,6 @@ Mount* MountController::addMount(IMountPlugin* plugin, MountInfo info)
 	// Assign a controller-managed UUID (do not reinterpret mount->id() as a QUuid)
 	QUuid uid = QUuid::createUuid();
 	mMountsById[uid] = mount;
-	mIdByMount[mount] = uid;
 
 	emit mountAdded(mount);
 	return mount;
@@ -43,12 +38,11 @@ void MountController::removeMount(Mount* mount)
 		return;
 	};
 
+	QUuid uid = boostUuidToQUuid(mount->uuid());
+	
 	// Remove from lists/maps
 	mMounts.removeAll(mount);
-	QUuid uid = mIdByMount.take(mount);
-	if (!uid.isNull()) {
-		mMountsById.remove(uid);
-	}
+	mMountsById.remove(uid);
 
 	emit mountRemoved(mount);
 }
@@ -61,9 +55,6 @@ void MountController::removeMount(const QUuid& id)
 		return;
 	}
 
-	mMounts.removeAll(mount);
-	mMountsById.remove(id);
-	mIdByMount.remove(mount);
-
-	emit mountRemoved(mount);
+	// Use existing method (slightly slower, since it gets the ID again, but cleaner)
+	removeMount(mount);
 }

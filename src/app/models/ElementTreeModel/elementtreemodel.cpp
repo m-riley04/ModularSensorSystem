@@ -100,7 +100,7 @@ void ElementTreeModel::buildHierarchical()
     for (Mount* m : m_mainController->mountController()->mounts()) {
         int mRow = mNodes.size();
         // Use controller-assigned ID
-        QUuid id = m_mainController->mountController()->idFor(m);
+        QUuid id = boostUuidToQUuid(m->uuid());
         mNodes << ElementTreeNode{ ElementTreeNode::Kind::Mount, id, -1};
 
         for (auto s : m_mainController->dataPipelineController()->getSourcesByMount(id)) {

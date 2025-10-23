@@ -120,14 +120,8 @@ public:
 	 * @return user-friendly name of the device from the hardware.
 	 */
 	std::string name() const { return m_name.toStdString(); }
-
 	void setName(const std::string& newName) override { m_name = QString::fromStdString(newName); }
-
-	/**
-	 * @brief The ID of the plugin that created this source.
-	 * @return The ID of the plugin that created this source.
-	 */
-	QString pluginId() const { return m_pluginId; }
+	std::string pluginId() const override { return m_pluginId.toStdString(); }
 
 	/**
 	 * The type of device.

@@ -42,6 +42,14 @@ public:
 	virtual void setName(const std::string& newName) = 0;
 
 	/**
+	 * The ID of the plugin that created this element.
+	 * By default, returns "unknown_plugin".
+	 * @return string ID of the parent plugin.
+	 */
+	virtual std::string pluginId() const { return "unknown_plugin"; } // default implementation
+	virtual void setPluginId(const std::string& newPluginId) {} // default no-op
+
+	/**
 	 * The display name of the element, used for user interfaces
 	 * Can be changed by the user.
 	 * By default, it displays the same as name().
