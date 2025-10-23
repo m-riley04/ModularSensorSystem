@@ -4,8 +4,6 @@ DockableElementsManagerWidget::DockableElementsManagerWidget(QWidget *parent)
 	: QDockWidget(parent), m_actions(ElementTreeActions())
 {
 	ui.setupUi(this);
-
-	
 }
 
 DockableElementsManagerWidget::~DockableElementsManagerWidget()
@@ -56,15 +54,6 @@ void DockableElementsManagerWidget::initSignals() {
 	if (!m_mainController) {
 		return;
 	}
-
-	// TODO: consider disconnecting before reconnecting to avoid duplicate connections
-	// From my minimal research, Qt should handle this automatically, but it's worth verifying.
-
-	connect(m_mainController->sourceController(), &SourceController::sourceAdded, m_elementModel, &ElementTreeModel::rebuild);
-
-	connect(m_mainController->mountController(), &MountController::mountAdded, m_elementModel, &ElementTreeModel::rebuild);
-
-	connect(m_mainController->processingController(), &ProcessingController::processorAdded, m_elementModel, &ElementTreeModel::rebuild);
 
 	connect(ui.treeElements, &QTreeView::clicked, this, &DockableElementsManagerWidget::handleElementClicked);
 }

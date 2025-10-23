@@ -5,7 +5,18 @@
 ElementTreeModel::ElementTreeModel(MainController* mc,
     QObject* parent)
 	: QAbstractItemModel(parent), m_mainController(mc)
-{}
+{
+	// Connect signals for rebuilds
+    connect(m_mainController->sourceController(), &SourceController::sourceAdded, this, [this]() {
+        this->rebuild();
+		});
+
+    connect(m_mainController->mountController(), &MountController::mountAdded, this, &ElementTreeModel::rebuild);
+
+    connect(m_mainController->processingController(), &ProcessingController::processorAdded, this, &ElementTreeModel::rebuild);
+
+    connect(m_mainController->mountController(), &MountController::mountRemoved, this, &ElementTreeModel::removeNode);
+}
 
 ElementTreeModel::~ElementTreeModel()
 {}
@@ -71,6 +82,23 @@ QVariant ElementTreeModel::data(const QModelIndex& idx, int role) const
 		return QVariant::fromValue(n);
     }
     return {};
+}
+
+ElementTreeNode* ElementTreeModel::findNode(QUuid uuid)
+{
+    for (auto& node : mNodes) {
+        if (node.id == uuid) {
+            return &node;
+        }
+    }
+}
+
+void ElementTreeModel::removeNode(QUuid uuid)
+{
+    // Removes a node at a specific UUID
+    mNodes.removeIf([this, uuid](ElementTreeNode node) {
+        return node.id == uuid;
+        });
 }
 
 void ElementTreeModel::buildFlat()

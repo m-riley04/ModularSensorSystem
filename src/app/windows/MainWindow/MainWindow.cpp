@@ -211,7 +211,6 @@ void MainWindow::initSignals() {
     // Connect signals to child widgets
     connect(pMainPage->presetsWidget(), &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
 	connect(pMainPage->elementsTreeWidget(), &DockableElementsManagerWidget::elementSelected, this, &MainWindow::onSelectedElementChanged);
-    //connect(pController->mountController(), &MountController::mountRemoved, pMainPage->elementsTreeWidget(), &DockableElementsManagerWidget::handleMountRemoved);
 
     // Init toolbar and actions
     initActionSignals();

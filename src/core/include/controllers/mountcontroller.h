@@ -30,6 +30,6 @@ private:
 
 signals:
 	void mountAdded(Mount*);
-	void mountRemoved(Mount*);
+	void mountRemoved(QUuid);
 };
 

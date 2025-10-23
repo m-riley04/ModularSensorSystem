@@ -35,8 +35,12 @@ public:
     int columnCount(const QModelIndex&)   const override { return 2; }
     QVariant data(const QModelIndex&, int role) const override;
 
+    // helpers for management
+    ElementTreeNode* findNode(QUuid uuid);
+
 public slots:
     void rebuild(bool isFlat = true); // quick & dirty first
+    void removeNode(QUuid uuid);
 	// TODO: incremental updates instead of complete rebuilds
     /*void onMountAdded(Mount*);
     void onSourceAdded(Source*);

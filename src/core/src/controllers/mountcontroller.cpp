@@ -44,7 +44,7 @@ void MountController::removeMount(Mount* mount)
 	mMounts.removeAll(mount);
 	mMountsById.remove(uid);
 
-	emit mountRemoved(mount);
+	emit mountRemoved(uid);
 }
 
 void MountController::removeMount(const QUuid& id)
