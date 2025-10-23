@@ -7,13 +7,14 @@
 #include <QPointer>
 #include "clipbufferbase.h"
 #include "sourceerror.h"
+#include "features/ielement.h"
 #include <QUuid>
 
 class RecordingSession;
 class SourcePreview;
 struct SourceError;
 
-class Source : public QObject
+class Source : public IElement
 {
 	Q_OBJECT
 
@@ -40,6 +41,11 @@ public:
 		UNKNOWN_ERROR
 	};
 
+	/**
+	 * Converts a State enum value to its corresponding string representation.
+	 * @param state The state to convert.
+	 * @return The string representation of the state.
+	 */
 	static QString stateToString(State state)
 	{
 		switch (state) {
@@ -51,6 +57,11 @@ public:
 		}
 	}
 
+	/**
+	 * Converts a Type enum value to its corresponding string representation.
+	 * @param type The type to convert.
+	 * @return The string representation of the type.
+	 */
 	static QString typeToString(Type type)
 	{
 		switch (type) {
@@ -62,6 +73,11 @@ public:
 		}
 	}
 
+	/**
+	 * Converts an ErrorState enum value to its corresponding string representation.
+	 * @param errorState The error state to convert.
+	 * @return The string representation of the error state.
+	 */
 	static QString errorStateToString(ErrorState errorState)
 	{
 		switch (errorState) {
@@ -74,31 +90,14 @@ public:
 		}
 	}
 
-protected:
-	/// <summary>
-	/// The unique hardware ID if possible.
-	/// Should be set in each child's initializer.
-	/// </summary>
-	QUuid mId;
-
-	QString mPluginId = "Unknown Plugin";
-
-	QString mName = "New Source";
-	Source::Type mSourceType = Source::Type::OTHER;
-	Source::State mState = Source::State::CLOSED;
-	qint64 mStartTime = 0;
-	Source::ErrorState mErrorState = ErrorState::NO_ERROR;
-
-	QPointer<RecordingSession> pRecordingSession;
-	std::unique_ptr<SourcePreview> pPreview = nullptr;
-	std::unique_ptr<ClipBufferBase> pClipBuffer = nullptr;
-
 public:
-	Source(QByteArray hardwareId, QObject* parent) {
-		mId = QUuid::fromBytes(hardwareId); // Must be big endian to be reversible. TODO: make sure this works on all platforms
+	Source(QByteArray hardwareId, QObject* parent = nullptr) : IElement(parent) {
+		m_id = QUuid::fromBytes(hardwareId); // Must be big endian to be reversible. TODO: make sure this works on all platforms
 	};
-	Source(QObject* parent) : QObject(parent) {}
-	~Source() = default;
+	Source(QObject* parent = nullptr) : IElement(parent) {
+		m_id = QUuid::createUuid(); // TODO: make sure this is fine
+	};
+	virtual ~Source() = default;
 
 	virtual void open() = 0;
 	virtual void start() = 0;
@@ -109,38 +108,69 @@ public:
 	virtual void beginRecording(RecordingSession*) = 0;
 	virtual void endRecording() = 0;
 
-	/// <summary>
-	/// The unique ID for the device
-	/// </summary>
-	QUuid id() const { return mId; }
+	/**
+	 * The hardware ID for the device
+	 * @return hardware ID string
+	 */
+	std::string id() const override { return m_id.toString().toStdString(); }
 
-	QString pluginId() const { return mPluginId; }
+	/**
+	 * The name of the device from the system.
+	 * Sometimes this is called "description".
+	 * @return user-friendly name of the device from the hardware.
+	 */
+	std::string name() const { return m_name.toStdString(); }
 
-	/// <summary>
-	/// The user-facing name of the device.
-	/// </summary>
-	QString name() const { return mName; }
+	void setName(const std::string& newName) override { m_name = QString::fromStdString(newName); }
 
-	/// <summary>
-	/// The type of device
-	/// </summary>
+	/**
+	 * @brief The ID of the plugin that created this source.
+	 * @return The ID of the plugin that created this source.
+	 */
+	QString pluginId() const { return m_pluginId; }
+
+	/**
+	 * The type of device.
+	 * @return the type of a device as Source::Type enum.
+	 */
 	Source::Type type() const { return mSourceType; }
 
-	/// <summary>
-	/// The current state of the device
-	/// </summary>
+	/**
+	 * The current state of the device.
+	 * @return the state of the device as Source::State enum.
+	 */
 	Source::State state() const { return mState; }
 
-	/// <summary>
-	/// The SourcePreview object for the device.
-	/// Used for previewing the device's output.
-	/// </summary>
+	/**
+	 * SourcePreview object for the device.
+	 * Used for previewing the device's output.
+	 * @return a weak pointer to the SourcePreview object.
+	 */
 	SourcePreview* preview() const { return pPreview.get(); }
 
 	void setSession(RecordingSession* session)
 	{
 		pRecordingSession = session;
 	}
+
+protected:
+	/**
+	 * The unique hardware ID if possible.
+	 * Should be set in each child's initializer.
+	 */
+	QUuid m_id;
+
+	QString m_pluginId = "Unknown Plugin";
+
+	QString m_name = "New Source";
+	Source::Type mSourceType = Source::Type::OTHER;
+	Source::State mState = Source::State::CLOSED;
+	qint64 mStartTime = 0;
+	Source::ErrorState mErrorState = ErrorState::NO_ERROR;
+
+	QPointer<RecordingSession> pRecordingSession;
+	std::unique_ptr<SourcePreview> pPreview = nullptr;
+	std::unique_ptr<ClipBufferBase> pClipBuffer = nullptr;
 
 signals:
 	void opened();

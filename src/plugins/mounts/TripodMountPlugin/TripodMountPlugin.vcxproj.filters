@@ -34,8 +34,10 @@
     <ClInclude Include="tripodmountplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tripodmount.h">
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="tripodmount.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
+    </QtMoc>
   </ItemGroup>
 </Project>

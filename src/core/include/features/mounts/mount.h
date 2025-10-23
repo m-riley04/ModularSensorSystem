@@ -2,12 +2,14 @@
 
 #include <string>
 #include <optional>
+#include "features/ielement.h"
 
 /**
  * @brief Mounts represent the physical "mount" that physical sources sit on. They provide data
  */
-class Mount
+class Mount : public IElement
 {
+	Q_OBJECT
 
 public:
 	enum Kind {
@@ -24,12 +26,13 @@ public:
 	};
 
 public:
-	Mount() {}
-	Mount(std::string id, std::string name) : mId(id), mName(name) {}
+	Mount(QObject* parent) : IElement(parent) {}
+	Mount(std::string id, std::string name, QObject* parent) : IElement(parent), m_id(id), m_name(name) {}
 	virtual ~Mount() = default;
 
-	std::string id() const { return mId; }
-	std::string name() const { return mName; }
+	std::string id() const override { return m_id; }
+	std::string name() const override { return m_name; }
+	void setName(const std::string& newName) override { m_name = newName; }
 	virtual Kind kind() const = 0;
 	virtual bool isMovable() const = 0;
 
@@ -38,7 +41,7 @@ public:
 	virtual bool setPose(const Pose& newPose) = 0;
 
 protected:
-	std::string mId = "default_mount";
-	std::string mName = "New Mount";
+	std::string m_id = "default_mount";
+	std::string m_name = "New Mount";
 };
 

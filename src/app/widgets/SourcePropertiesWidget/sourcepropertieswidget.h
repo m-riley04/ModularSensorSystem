@@ -14,12 +14,12 @@ public:
 	SourcePropertiesWidget(Source* source, QWidget* parent = nullptr);
 	~SourcePropertiesWidget();
 
-	Source* source() const { return pSource; }
+	Source* source() const { return m_source; }
 
 	void addPage(const QString& title, QWidget* page);
 
 private:
-	Source* pSource = nullptr;
+	Source* m_source = nullptr;
 	QFrame* pFrameButtons = nullptr;
 	QStackedWidget* pStackPages = nullptr;
 	QVBoxLayout* pButtonLayout = nullptr;

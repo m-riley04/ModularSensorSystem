@@ -140,7 +140,7 @@ void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& inde
 	}
 	
 	QVariant nodeData = m_elementModel->data(index, Qt::UserRole);
-	if (!nodeData.isValid() || !nodeData.canConvert<Node>()) {
+	if (!nodeData.isValid() || !nodeData.canConvert<ElementTreeNode>()) {
 		qDebug() << "Invalid node data.";
 		return;
 	}
@@ -148,23 +148,23 @@ void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& inde
 	qDebug() << "Node data:" << nodeData;
 
 	// Update the selected node
-	m_selectedNode = nodeData.value<Node>();
+	m_selectedNode = nodeData.value<ElementTreeNode>();
 	emit elementSelected(&m_selectedNode);
 }
 
 void DockableElementsManagerWidget::handleRemoveElementClicked()
 {
 	switch (m_selectedNode.kind) {
-	case Node::Kind::Mount:
+	case ElementTreeNode::Kind::Mount:
 		m_actions.removeMount->trigger();
 		break;
-	case Node::Kind::Source:
+	case ElementTreeNode::Kind::Source:
 		m_actions.removeSource->trigger();
 		break;
-	case Node::Kind::Processor:
+	case ElementTreeNode::Kind::Processor:
 		m_actions.removeProcessor->trigger();
 		break;
-	case Node::Kind::None:
+	case ElementTreeNode::Kind::None:
 	default:
 		break;
 	}
@@ -173,16 +173,16 @@ void DockableElementsManagerWidget::handleRemoveElementClicked()
 void DockableElementsManagerWidget::handleEditElementClicked()
 {
 	switch (m_selectedNode.kind) {
-	case Node::Kind::Mount:
+	case ElementTreeNode::Kind::Mount:
 		m_actions.editMount->trigger();
 		break;
-	case Node::Kind::Source:
+	case ElementTreeNode::Kind::Source:
 		m_actions.editSource->trigger();
 		break;
-	case Node::Kind::Processor:
+	case ElementTreeNode::Kind::Processor:
 		m_actions.editProcessor->trigger();
 		break;
-	case Node::Kind::None:
+	case ElementTreeNode::Kind::None:
 	default:
 		break;
 	}

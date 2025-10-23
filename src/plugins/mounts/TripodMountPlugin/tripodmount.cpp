@@ -1,8 +1,8 @@
 #include "tripodmount.h"
 
-TripodMount::TripodMount() : Mount("tripod_default", "Default Tripod Mount")
+TripodMount::TripodMount(QObject* parent) : Mount("tripod_default", "Default Tripod Mount", parent)
 {
 }
 
-TripodMount::TripodMount(std::string id, std::string name) : Mount(id, name)
+TripodMount::TripodMount(std::string id, std::string name, QObject* parent) : Mount(id, name, parent)
 {}

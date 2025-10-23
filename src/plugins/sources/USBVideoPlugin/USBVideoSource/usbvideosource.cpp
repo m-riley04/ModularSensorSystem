@@ -10,9 +10,9 @@ USBVideoSource::USBVideoSource(QByteArray hardwareId, QObject* parent)
 USBVideoSource::USBVideoSource(QCameraDevice qVideoDevice, QObject* parent)
 	: Source(parent), mCamera(qVideoDevice)
 {
-    mId = QUuid::fromBytes(qVideoDevice.id());
-	mPluginId = "usb_video";
-    mName = qVideoDevice.description();
+    m_id = QUuid::fromBytes(qVideoDevice.id());
+	m_pluginId = "usb_video";
+    m_name = qVideoDevice.description();
     mSourceType = Source::Type::VIDEO;
     pPreview.reset(new USBVideoPreview(&mSession, this));
 
@@ -286,7 +286,7 @@ void USBVideoSource::clip(const QDir& dir)
     const double fps = camera()->cameraFormat().maxFrameRate();
 
 	// Create the encoder helper
-    USBVideoClipEncoder enc(dir.filePath(mName + ".mp4"), sz, fps);
+    USBVideoClipEncoder enc(dir.filePath(m_name + ".mp4"), sz, fps);
     if (!enc.isOk()) {
         qWarning() << enc.errorString();
         return;
@@ -299,7 +299,7 @@ void USBVideoSource::clip(const QDir& dir)
 
     // Finish encoding
     enc.finish();
-    qDebug() << "Clip saved:" << dir.filePath(mName + ".mp4");
+    qDebug() << "Clip saved:" << dir.filePath(m_name + ".mp4");
 }
 
 void USBVideoSource::restart() {
@@ -312,7 +312,7 @@ void USBVideoSource::beginRecording(RecordingSession* s)
 	// Update recording session
 	pRecordingSession = s;
 
-    QString f = s->outputDir().filePath(mName + ".mp4"); // TODO: Change from mName to something better for file names
+    QString f = s->outputDir().filePath(m_name + ".mp4"); // TODO: Change from m_name to something better for file names
 	mRecorder.setOutputLocation(QUrl::fromLocalFile(f));
     mRecorder.record();
 }

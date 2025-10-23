@@ -54,12 +54,12 @@ QList<const Source*> DataPipelineController::getSourcesByMount(QUuid mountId) co
 	return sources;
 }
 
-QList<const ProcessorBase*> DataPipelineController::getProcessorsBySource(QUuid sourceId) const
+QList<const Processor*> DataPipelineController::getProcessorsBySource(QUuid sourceId) const
 {
-	QList<const ProcessorBase*> processors;
+	QList<const Processor*> processors;
 	const auto processorIds = m_sourceToProcessors.value(sourceId);
 	for (auto& id : processorIds) {
-		const ProcessorBase* source = m_mainController->processingController()->byId(id);
+		const Processor* source = m_mainController->processingController()->byId(id);
 		processors.push_back(source);
 	}
 	return processors;

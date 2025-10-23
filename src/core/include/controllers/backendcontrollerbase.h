@@ -12,16 +12,16 @@ class BackendControllerBase : public QObject
 	Q_OBJECT
 
 public:
-	BackendControllerBase(QString controllerName, QObject* parent) : QObject(parent), mName(controllerName) {}
+	BackendControllerBase(QString controllerName, QObject* parent) : QObject(parent), m_name(controllerName) {}
 	~BackendControllerBase() = default;
 
 	/**
 	 * @brief Returns the name of the specific controller. Initialized in each derived class.
 	 * @return The name as a QString.
 	 */
-	QString name() const { return mName; }
+	QString name() const { return m_name; }
 
 protected:
-	QString mName = "BackendControllerBase";
+	QString m_name = "BackendControllerBase";
 };
 

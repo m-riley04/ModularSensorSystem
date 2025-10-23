@@ -2,8 +2,6 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include <QVideoFrame>
-#include <QVideoWidget>
 #include "controllers/maincontroller.h"
 #include "controllers/clipcontroller.h"
 #include "controllers/mountcontroller.h"
@@ -12,12 +10,8 @@
 #include "pages/MainPage/mainpage.h"
 #include "data/requried_actions.h"
 
-#ifdef Q_OS_WIN
-#include <windows.h>
-#endif
-
 // Forward declaration for element tree node
-struct Node;
+struct ElementTreeNode;
 
 class MainWindow : public QMainWindow
 {
@@ -51,7 +45,7 @@ private slots:
     void openRemoveProcessorDialog();
     void openConfigureProcessorDialog();
 
-    void onSelectedElementChanged(Node* node);
+    void onSelectedElementChanged(ElementTreeNode* node);
     void onSelectedElementRemoved();
 
     void openGithubRepository();
@@ -68,7 +62,7 @@ private:
     std::unique_ptr<MainController> pController;
 
     QListWidgetItem* pSelectedPresetItem = nullptr;
-	Node* m_selectedElement = nullptr;
+	ElementTreeNode* m_selectedElement = nullptr;
 
     MainPage* pMainPage = nullptr;
 

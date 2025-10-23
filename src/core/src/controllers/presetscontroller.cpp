@@ -38,8 +38,8 @@ void PresetsController::savePreset(QString name, QList<Source*> activeSources, Q
 		}
 
 		SourcePreset preset {
-			source->id().toRfc4122(),
-			source->name(),
+			QByteArray::fromStdString(source->id()),
+			QString::fromStdString(source->name()),
 			source->pluginId(),
 			source->type(),
 			config

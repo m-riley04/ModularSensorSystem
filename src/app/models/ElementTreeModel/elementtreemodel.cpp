@@ -1,5 +1,6 @@
 #include "elementtreemodel.h"
 #include "controllers/datapipelinecontroller.h"
+#include <utils/boost_qt_conversions.h>
 
 ElementTreeModel::ElementTreeModel(MainController* mc,
     QObject* parent)
@@ -44,23 +45,23 @@ int ElementTreeModel::rowCount(const QModelIndex& p) const
 {
     int parentRow = p.isValid() ? p.internalId() : -1;
     return std::count_if(mNodes.begin(), mNodes.end(),
-        [=](const Node& n) { return n.parentIndex == parentRow; });
+        [=](const ElementTreeNode& n) { return n.parentIndex == parentRow; });
 }
 
 QVariant ElementTreeModel::data(const QModelIndex& idx, int role) const
 {
     if (!idx.isValid()) return {};
-    const Node& n = mNodes[int(idx.internalId())];
+    const ElementTreeNode& n = mNodes[int(idx.internalId())];
 
     if (role == Qt::DisplayRole) {
         if (idx.column() == 0) {
             switch (n.kind) {
-            case Node::Kind::Mount: {
+            case ElementTreeNode::Kind::Mount: {
                 const Mount* m = m_mainController->mountController()->byId(n.id);
                 return m ? QString::fromStdString(m->name()) : QString("<unknown mount>");
             }
-            case Node::Kind::Source: return m_mainController->sourceController()->byId(n.id)->name();
-            case Node::Kind::Processor: return QString("Processor");
+            case ElementTreeNode::Kind::Source: return QString::fromStdString(m_mainController->sourceController()->byId(n.id)->name());
+            case ElementTreeNode::Kind::Processor: return QString("Processor");
             default: break;
             }
         }
@@ -76,17 +77,19 @@ void ElementTreeModel::buildFlat()
 {
     for (Mount* m : m_mainController->mountController()->mounts()) {
         // Use controller-assigned ID
-        QUuid id = m_mainController->mountController()->idFor(m);
-        mNodes << Node{ Node::Kind::Mount, id, -1 };
+        QUuid mId = boostUuidToQUuid(m->uuid());
+        mNodes << ElementTreeNode{ ElementTreeNode::Kind::Mount, mId, -1 };
     }
 
     for (auto s : m_mainController->sourceController()->sources()) {
-        mNodes << Node{ Node::Kind::Source, s->id(), -1 };
+		// Use universal uuid
+		QUuid sId = boostUuidToQUuid(s->uuid());
+        mNodes << ElementTreeNode{ ElementTreeNode::Kind::Source, sId, -1 };
     }
 
     for (auto p : m_mainController->processingController()->processors()) {
-        // TODO: assign proper processor UUID
-        mNodes << Node{ Node::Kind::Processor, QUuid::createUuid(), -1 };
+		QUuid pId = boostUuidToQUuid(p->uuid());
+        mNodes << ElementTreeNode{ ElementTreeNode::Kind::Processor, pId, -1 };
     }
 }
 
@@ -98,15 +101,16 @@ void ElementTreeModel::buildHierarchical()
         int mRow = mNodes.size();
         // Use controller-assigned ID
         QUuid id = m_mainController->mountController()->idFor(m);
-        mNodes << Node{ Node::Kind::Mount, id, -1 };
+        mNodes << ElementTreeNode{ ElementTreeNode::Kind::Mount, id, -1};
 
         for (auto s : m_mainController->dataPipelineController()->getSourcesByMount(id)) {
             int sRow = mNodes.size();
-            mNodes << Node{ Node::Kind::Source, s->id(), mRow };
+			QUuid sId = boostUuidToQUuid(s->uuid());
+            mNodes << ElementTreeNode{ ElementTreeNode::Kind::Source, sId, mRow };
 
-            for (auto p : m_mainController->dataPipelineController()->getProcessorsBySource(s->id())) {
+            for (auto p : m_mainController->dataPipelineController()->getProcessorsBySource(sId)) {
                 // TODO: use real processor ID
-                mNodes << Node{ Node::Kind::Processor, QUuid::createUuid(), sRow };
+                mNodes << ElementTreeNode{ ElementTreeNode::Kind::Processor, boostUuidToQUuid(p->uuid()), sRow};
             }
         }
     }

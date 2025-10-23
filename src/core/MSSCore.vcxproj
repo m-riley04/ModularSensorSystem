@@ -110,10 +110,12 @@
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
     <ClCompile Include="src\features\sources\clipbufferbase.cpp" />
     <ClCompile Include="src\features\sources\sourcepreview.cpp" />
+    <ClInclude Include="include\utils\boost_qt_conversions.h" />
+    <QtMoc Include="include\features\ielement.h" />
     <ClInclude Include="include\sdk\plugins\pluginloader.h" />
     <QtMoc Include="include\controllers\backendcontrollerbase.h" />
     <QtMoc Include="include\controllers\datapipelinecontroller.h" />
-    <ClInclude Include="include\features\mounts\mount.h" />
+    <QtMoc Include="include\features\mounts\mount.h" />
     <QtMoc Include="include\controllers\mountcontroller.h" />
     <ClInclude Include="include\sdk\plugins\factory.h" />
     <ClInclude Include="include\sdk\plugins\imountplugin.h" />
@@ -126,7 +128,7 @@
     <QtMoc Include="include\features\sources\sourcepreview.h" />
     <QtMoc Include="include\features\sources\sourcemetadata.h" />
     <QtMoc Include="include\features\sources\clipbufferbase.h" />
-    <QtMoc Include="include\features\processors\processorbase.h" />
+    <QtMoc Include="include\features\processors\processor.h" />
     <QtMoc Include="include\controllers\clipcontroller.h" />
     <QtMoc Include="include\controllers\maincontroller.h" />
     <QtMoc Include="include\controllers\plugincontroller.h" />

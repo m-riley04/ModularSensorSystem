@@ -43,7 +43,7 @@ private:
 	QList<Source*> mSources;
 	SourceController::State mState = CLOSED;
 
-	QHash<QUuid, QList<ProcessorBase*>> mProcessorsBySourceId;
+	QHash<QUuid, QList<Processor*>> mProcessorsBySourceId;
 	QHash<QUuid, Source*> mSourcesById;
 
 	QPointer<PluginController> pPluginController;

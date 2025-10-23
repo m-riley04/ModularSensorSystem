@@ -664,6 +664,6 @@ void USBVideoPropertiesWidget::openFFMPEGSettings()
 		}
 		});
 	QStringList args;
-	args << "-f" << "dshow" << "-show_video_device_dialog" << "true" << "-i" << "video=" + pVideoDevice->name();
+	args << "-f" << "dshow" << "-show_video_device_dialog" << "true" << "-i" << "video=" + QString::fromStdString(pVideoDevice->name());
 	process->start("ffmpeg", args);
 }

@@ -7,7 +7,7 @@ ProcessingController::ProcessingController(QObject *parent)
 ProcessingController::~ProcessingController()
 {}
 
-const ProcessorBase* ProcessingController::byId(const QUuid& id) const {
+const Processor* ProcessingController::byId(const QUuid& id) const {
 	return mProcessorsById.value(id);
 }
 
@@ -20,13 +20,13 @@ void ProcessingController::addProcessor(IProcessorPlugin* plugin)
 	emit processorAdded(processor);
 }
 
-void ProcessingController::removeProcessor(ProcessorBase* processor)
+void ProcessingController::removeProcessor(Processor* processor)
 {
 
 	emit processorRemoved(processor);
 }
 
-bool ProcessingController::isCompatible(ProcessorBase* proc, Source* src) {
+bool ProcessingController::isCompatible(Processor* proc, Source* src) {
     auto processorSource = proc->source();
 	if (!processorSource) return false; // No source set in processor
     return processorSource->type() == src->type();

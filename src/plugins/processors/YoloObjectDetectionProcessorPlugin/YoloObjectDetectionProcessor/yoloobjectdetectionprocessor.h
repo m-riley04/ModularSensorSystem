@@ -3,11 +3,11 @@
 #include <QObject>
 #include <QImage>
 #include <QVideoFrame>
-#include "features/processors/processorbase.h"
+#include "features/processors/processor.h"
 
-class ProcessorBase;
+class Processor;
 
-class YoloObjectDetectionProcessor : public ProcessorBase
+class YoloObjectDetectionProcessor : public Processor
 {
 	Q_OBJECT
 

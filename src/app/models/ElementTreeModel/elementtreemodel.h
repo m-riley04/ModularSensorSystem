@@ -6,9 +6,9 @@
 #include "controllers/sourcecontroller.h"
 #include "controllers/processingcontroller.h"
 #include "features/mounts/mount.h"
-#include <controllers/maincontroller.h>
+#include "controllers/maincontroller.h"
 
-struct Node {
+struct ElementTreeNode {
     enum class Kind { 
         None = -1,
         Mount,
@@ -43,7 +43,7 @@ public slots:
     void onProcessorAdded(ProcessorBase*);*/
 
 private:
-    QVector<Node> mNodes;
+    QVector<ElementTreeNode> mNodes;
     MainController* m_mainController;
 
 	void buildFlat();

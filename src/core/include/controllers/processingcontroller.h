@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <features/sources/source.h>
-#include <features/processors/processorbase.h>
+#include <features/processors/processor.h>
 #include "controllers/backendcontrollerbase.h"
 #include <qhash.h>
 
@@ -14,7 +14,7 @@ public:
 	ProcessingController(QObject *parent);
 	~ProcessingController();
 
-	QList<ProcessorBase*> processors() { return mProcessors; }
+	QList<Processor*> processors() { return mProcessors; }
 
     void setActive(bool active) {
 		if (active == mActive) return;
@@ -23,21 +23,21 @@ public:
     }
 
 	void addProcessor(IProcessorPlugin* plugin);
-	void removeProcessor(ProcessorBase* processor);
+	void removeProcessor(Processor* processor);
 
-	const ProcessorBase* byId(const QUuid& id) const;
+	const Processor* byId(const QUuid& id) const;
 
 private:
-	QList<ProcessorBase*> mProcessors;
-    QHash<QUuid, QList<ProcessorBase*>> mSourcesProcessorsMap;
-	QHash<QUuid, ProcessorBase*> mProcessorsById;
+	QList<Processor*> mProcessors;
+    QHash<QUuid, QList<Processor*>> mSourcesProcessorsMap;
+	QHash<QUuid, Processor*> mProcessorsById;
     bool mActive = false;
 
-    bool isCompatible(ProcessorBase* proc, Source* src);
+    bool isCompatible(Processor* proc, Source* src);
 
 signals:
-	void processorAdded(ProcessorBase* proc);
-	void processorRemoved(ProcessorBase* proc);
+	void processorAdded(Processor* proc);
+	void processorRemoved(Processor* proc);
     void processingStarted();
     void processingStopped();
 };

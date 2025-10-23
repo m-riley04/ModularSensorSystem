@@ -102,7 +102,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="tripodmount.h" />
+    <QtMoc Include="tripodmount.h" />
     <ClInclude Include="tripodmountplugin.h" />
     <ClCompile Include="tripodmount.cpp" />
     <ClCompile Include="tripodmountplugin.cpp" />

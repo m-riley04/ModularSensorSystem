@@ -3,6 +3,10 @@
 #include <dialogs/AddProcessorDialog/addprocessordialog.h>
 #include <dialogs/AddMountDialog/addmountdialog.h>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -191,7 +195,7 @@ void MainWindow::initSignals() {
 
     // Init error message propagation
     connect(pController.get(), &MainController::errorOccurred, [this](const SourceError& e) {
-        QString deviceInfo = "Source: " + (e.source != nullptr ? e.source->name() : "null");
+        QString deviceInfo = "Source: " + (e.source != nullptr ? QString::fromStdString(e.source->name()) : "null");
         QString errorMessage = "Error: " + e.msg + "\n" + deviceInfo;
         QMessageBox::warning(this, "Error", errorMessage);
         });
@@ -339,7 +343,7 @@ void MainWindow::openRemoveMountDialog()
     if (!pController->checkIfControllersAreOk()) return;
 
     // Check selected item
-    if (m_selectedElement->kind != Node::Kind::Mount) {
+    if (m_selectedElement->kind != ElementTreeNode::Kind::Mount) {
         QMessageBox::warning(this, "No Mount Selected", "Please select a mount to remove.");
         return;
     }
@@ -380,7 +384,7 @@ void MainWindow::openRemoveSourceDialog()
     if (!pController->checkIfControllersAreOk()) return;
 
     // Check selected item
-    if (m_selectedElement->kind != Node::Kind::Source) {
+    if (m_selectedElement->kind != ElementTreeNode::Kind::Source) {
         QMessageBox::warning(this, "No Source Selected", "Please select a source to remove.");
         return;
 	}
@@ -402,7 +406,7 @@ void MainWindow::openConfigureSourceDialog()
     if (!pController->checkIfControllersAreOk()) return;
 
     // Check selected item
-    if (m_selectedElement->kind != Node::Kind::Source) {
+    if (m_selectedElement->kind != ElementTreeNode::Kind::Source) {
         QMessageBox::warning(this, "No Source Selected", "Please select a source to configure.");
         return;
     }
@@ -413,7 +417,7 @@ void MainWindow::openConfigureSourceDialog()
     if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
         QWidget* w = cfg->createConfigWidget(this);
         QDialog dlg(this);
-        dlg.setWindowTitle(source->name() + " Properties");
+        dlg.setWindowTitle(QString::fromStdString(source->name()) + " Properties");
         QVBoxLayout lay(&dlg);
         lay.addWidget(w);
         dlg.exec();
@@ -448,7 +452,7 @@ void MainWindow::openRemoveProcessorDialog()
     if (!pController->checkIfControllersAreOk()) return;
 
     // Check selected item
-    if (m_selectedElement->kind != Node::Kind::Processor) {
+    if (m_selectedElement->kind != ElementTreeNode::Kind::Processor) {
         QMessageBox::warning(this, "No Processor Selected", "Please select a processor to remove.");
         return;
     }
@@ -484,7 +488,7 @@ void MainWindow::onSelectedPresetItemChanged(QListWidgetItem* current, QListWidg
     updateToolbarButtonsState(); // CONSIDER: move this to it's own connection to this signal
 }
 
-void MainWindow::onSelectedElementChanged(Node* node)
+void MainWindow::onSelectedElementChanged(ElementTreeNode* node)
 {
 	m_selectedElement = node; // TODO: check copying performance impact
     updateToolbarButtonsState();
@@ -515,21 +519,21 @@ void MainWindow::updateToolbarButtonsState()
 
     /// SOURCES
     bool hasSources = !pController->sourceController()->sources().isEmpty();
-    ui.actionRemoveSource->setEnabled(hasSources && m_selectedElement->kind == Node::Kind::Source);
-    ui.actionConfigureSource->setEnabled(hasSources && m_selectedElement->kind == Node::Kind::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
+    ui.actionRemoveSource->setEnabled(hasSources && m_selectedElement->kind == ElementTreeNode::Kind::Source);
+    ui.actionConfigureSource->setEnabled(hasSources && m_selectedElement->kind == ElementTreeNode::Kind::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
 	ui.actionOpenCloseSources->setEnabled(hasSources);
 	ui.actionStartStopSources->setEnabled(hasSources && ui.actionOpenCloseSources->isChecked());
 
     /// PROCESSING
     bool hasProcessors = !pController->processingController()->processors().isEmpty();
-    ui.actionRemoveProcessor->setEnabled(hasProcessors && m_selectedElement->kind == Node::Kind::Processor);
-	ui.actionConfigureProcessor->setEnabled(hasProcessors && m_selectedElement->kind == Node::Kind::Processor);
+    ui.actionRemoveProcessor->setEnabled(hasProcessors && m_selectedElement->kind == ElementTreeNode::Kind::Processor);
+	ui.actionConfigureProcessor->setEnabled(hasProcessors && m_selectedElement->kind == ElementTreeNode::Kind::Processor);
     ui.actionToggleProcessing->setEnabled(hasProcessors);
 
 	/// MOUNTS
     bool hasMounts = !pController->mountController()->mounts().isEmpty();
-	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement->kind == Node::Kind::Mount);
-	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement->kind == Node::Kind::Mount);
+	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
+	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
 }
 
 void MainWindow::quit() {

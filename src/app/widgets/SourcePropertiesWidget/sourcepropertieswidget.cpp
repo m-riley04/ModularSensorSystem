@@ -1,7 +1,7 @@
 #include "sourcepropertieswidget.h"
 
 SourcePropertiesWidget::SourcePropertiesWidget(Source* source, QWidget *parent)
-	: QWidget(parent), pSource(source)
+	: QWidget(parent), m_source(source)
 {
 	// Init button frame
 	pFrameButtons = new QFrame(this);

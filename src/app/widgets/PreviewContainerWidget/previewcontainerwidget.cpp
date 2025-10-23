@@ -47,7 +47,7 @@ void PreviewContainerWidget::addSourceWidget(Source* source)
 	mSourcePreviewWidgets.append(widget);
 
 	// Add tab
-	QString tabName = source->name();
+	QString tabName = QString::fromStdString(source->name());
 	ui.tabDevicePreviews->addTab(widget, tabName);
 
 	// Emit signal

@@ -33,7 +33,7 @@ private:
 
 	QPointer<QMenu> m_contextMenu;
 
-	Node m_selectedNode{};
+	ElementTreeNode m_selectedNode{};
 
 	ElementTreeActions m_actions{};
 
@@ -47,6 +47,6 @@ public slots:
 	void handleEditElementClicked();
 
 signals:
-	void elementSelected(Node* node);
+	void elementSelected(ElementTreeNode* node);
 };
 

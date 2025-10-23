@@ -19,7 +19,7 @@ public:
     Source::Type supportedSourceType() const override { return Source::Type::VIDEO; }
     std::string name() const override { return "YOLO Object Detection"; }
     uint32_t version() const override { return 0x00010000; }
-    ProcessorBase* createProcessor(Source* src, QObject* parent = nullptr) override
+    Processor* createProcessor(Source* src, QObject* parent = nullptr) override
     {
         return new YoloObjectDetectionProcessor(src, parent);
     }

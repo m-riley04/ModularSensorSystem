@@ -1,6 +1,6 @@
 #include "yoloobjectdetectionprocessorplugin.h"
 
-ProcessorBase* createProcessor(Source* source, QObject* parent)
+Processor* createProcessor(Source* source, QObject* parent)
 {
     auto p = new YoloObjectDetectionProcessor(source, parent);
 

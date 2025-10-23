@@ -62,9 +62,6 @@
     <ClInclude Include="include\features\sources\sourceerror.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\features\mounts\mount.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\sdk\plugins\iplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -72,6 +69,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\sdk\plugins\pluginloader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\boost_qt_conversions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -156,10 +156,16 @@
     <QtMoc Include="include\features\sources\clipbufferbase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\features\processors\processorbase.h">
+    <QtMoc Include="include\features\processors\processor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\controllers\datapipelinecontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\features\ielement.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\features\mounts\mount.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -11,7 +11,7 @@
 
 class MainController;
 class Source;
-class ProcessorBase;
+class Processor;
 
 using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
@@ -26,7 +26,7 @@ public:
 	gboolean busCallback(GstBus* bus, GstMessage* msg, gpointer data);
 
 	QList<const Source*> getSourcesByMount(QUuid mountId) const;
-	QList<const ProcessorBase*> getProcessorsBySource(QUuid sourceId) const;
+	QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
 
 private:
 	GError* pGError = nullptr;

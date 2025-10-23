@@ -1,13 +1,15 @@
 #pragma once
 
+#include <qobject.h>
 #include "features/mounts/mount.h"
 
 class TripodMount : public Mount
 {
+	Q_OBJECT
 
 public:
-	TripodMount();
-	TripodMount(std::string id, std::string name);
+	TripodMount(QObject* parent);
+	TripodMount(std::string id, std::string name, QObject* parent);
 	~TripodMount() = default;
 
 	Kind kind() const override { return Kind::STATIC; };

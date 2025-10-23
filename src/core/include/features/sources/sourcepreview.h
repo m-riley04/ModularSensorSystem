@@ -13,10 +13,10 @@ public:
 	SourcePreview(QObject* parent);
 	~SourcePreview() = default;
 
-	Source* source() const { return pSource; }
+	Source* source() const { return m_source; }
 
 private:
-	Source* pSource = nullptr;
+	Source* m_source = nullptr;
 
 signals:
 	void frameReady(const QImage& frame);

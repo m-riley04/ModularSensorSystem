@@ -8,7 +8,7 @@ TripodPlugin::TripodPlugin()
 TripodMount* TripodPlugin::createMount(const std::string& id, QObject* parent)
 {
     if (id == "tripod_standard") {
-		TripodMount* mount = new TripodMount(id, "Standard Tripod");
+		TripodMount* mount = new TripodMount(id, "Standard Tripod", parent);
         return mount;
 	}
     return nullptr;
