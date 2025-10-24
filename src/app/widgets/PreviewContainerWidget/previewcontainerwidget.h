@@ -15,11 +15,11 @@ public:
 	PreviewContainerWidget(QWidget *parent = nullptr);
 	~PreviewContainerWidget();
 
-	void setController(MainController* controller) { 
-		if (pController == controller) return;
-		pController = controller;
-		initSignals();
-	}
+	void setController(MainController* controller);
+
+public slots:
+	void addSourceWidget(Source*);
+	void removeSourceWidget(QUuid id);
 
 private:
 	Ui::PreviewContainerWidgetClass ui;
@@ -28,10 +28,6 @@ private:
 	MainController* pController = nullptr;
 
 	void initSignals();
-
-public slots:
-	void addSourceWidget(Source*);
-	void removeSourceWidget(QUuid id);
 
 signals:
 	void sourceWidgetAdded(SourcePreviewWidget* widget);

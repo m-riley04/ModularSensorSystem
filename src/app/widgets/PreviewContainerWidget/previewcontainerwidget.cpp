@@ -27,6 +27,11 @@ void PreviewContainerWidget::initSignals()
 	connect(sourceController, &SourceController::sourceRemoved, this, &PreviewContainerWidget::removeSourceWidget);
 }
 
+void PreviewContainerWidget::setController(MainController* controller) {
+	if (pController == controller) return;
+	pController = controller;
+	initSignals();
+}
 
 void PreviewContainerWidget::addSourceWidget(Source* source)
 {
