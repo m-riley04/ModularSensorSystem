@@ -54,17 +54,17 @@ void PreviewContainerWidget::addSourceWidget(Source* source)
 	emit sourceWidgetAdded(widget);
 }
 
-void PreviewContainerWidget::removeSourceWidget(Source* source)
+void PreviewContainerWidget::removeSourceWidget(QUuid id)
 {
-	if (source == nullptr) {
-		qDebug() << "Cannot remove source widget: source is null";
+	if (id.isNull()) {
+		qDebug() << "Cannot remove source widget: source id is null";
 		return;
 	}
 
 	// Find the video widget for the source
 	for (int i = 0; i < mSourcePreviewWidgets.size(); ++i) {
 		SourcePreviewWidget* widget = mSourcePreviewWidgets[i];
-		if (widget->preview()->source() == source) {
+		if (widget->preview()->sourceId() == id) {
 			// Remove the widget from the list and UI
 			ui.tabDevicePreviews->removeTab(i);
 			mSourcePreviewWidgets.removeAt(i);

@@ -109,12 +109,12 @@ void SourceController::removeSource(Source* source)
 	};
 
 	// Get source id before deleting
-	QByteArray sourceId = boostUuidToQUuid(source->uuid()).toRfc4122();
+	QUuid sourceId = boostUuidToQUuid(source->uuid());
 
 	// Remove source from the list
 	mSources.removeAll(source);
 
-	emit sourceRemoved(source); // TODO: Emit the source's ID instead of the source itself
+	emit sourceRemoved(sourceId); // TODO: Emit the source's ID instead of the source itself
 }
 
 Source* SourceController::getSource(QByteArray id) const
@@ -133,8 +133,9 @@ void SourceController::clearSources()
 {
 	for (Source* source : mSources) {
 		if (source) {
+			QUuid sourceId = boostUuidToQUuid(source->uuid());
 			source->deleteLater();
-			emit sourceRemoved(source);
+			emit sourceRemoved(sourceId);
 		}
 	}
 

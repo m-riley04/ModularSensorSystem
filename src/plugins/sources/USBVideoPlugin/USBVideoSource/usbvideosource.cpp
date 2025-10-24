@@ -1,6 +1,7 @@
 #include "usbvideosource.h"
 #include <QTabWidget>
 #include <QVBoxLayout>
+#include <utils/boost_qt_conversions.h>
 
 
 USBVideoSource::USBVideoSource(QByteArray hardwareId, QObject* parent)
@@ -14,7 +15,7 @@ USBVideoSource::USBVideoSource(QCameraDevice qVideoDevice, QObject* parent)
 	m_pluginId = "usb_video";
     m_name = qVideoDevice.description();
     mSourceType = Source::Type::VIDEO;
-    pPreview.reset(new USBVideoPreview(&mSession, this));
+    pPreview.reset(new USBVideoPreview(&mSession, boostUuidToQUuid(this->uuid()), this));
 
     // Initialize capture session
     mSession.setCamera(&mCamera);
@@ -47,7 +48,7 @@ void USBVideoSource::open() {
     }
 
     // Init preview
-	if (!pPreview) pPreview.reset(new USBVideoPreview(&mSession, this));
+	if (!pPreview) pPreview.reset(new USBVideoPreview(&mSession, boostUuidToQUuid(this->uuid()), this));
 
     // Init buffer
     if (!pClipBuffer) pClipBuffer.reset(new USBVideoClipBuffer(2, this));

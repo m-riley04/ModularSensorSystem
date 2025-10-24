@@ -10,7 +10,7 @@ class USBVideoPreview : public SourcePreview
 	Q_OBJECT
 
 public:
-	USBVideoPreview(QMediaCaptureSession* session, QObject *parent);
+	USBVideoPreview(QMediaCaptureSession* session, QUuid sourceId, QObject *parent);
 	~USBVideoPreview();
 
 private:

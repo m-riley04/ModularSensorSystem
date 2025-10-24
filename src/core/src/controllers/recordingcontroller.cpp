@@ -48,7 +48,7 @@ void RecordingController::onSourceAdded(Source* source)
 {
 }
 
-void RecordingController::onSourceRemoved(Source* source)
+void RecordingController::onSourceRemoved(QUuid id)
 {
 }
 

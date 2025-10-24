@@ -1,7 +1,7 @@
 #include "usbvideopreview.h"
 
-USBVideoPreview::USBVideoPreview(QMediaCaptureSession* session, QObject*parent)
-	: SourcePreview(parent), mSink(QVideoSink(this))
+USBVideoPreview::USBVideoPreview(QMediaCaptureSession* session, QUuid sourceId, QObject*parent)
+	: SourcePreview(sourceId, parent), mSink(QVideoSink(this))
 {
 	// Connect the video sink to the session
 	session->setVideoSink(&mSink);

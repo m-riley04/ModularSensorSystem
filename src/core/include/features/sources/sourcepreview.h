@@ -10,13 +10,13 @@ class SourcePreview : public QObject
 	Q_OBJECT
 
 public:
-	SourcePreview(QObject* parent);
+	SourcePreview(QUuid sourceId, QObject* parent);
 	~SourcePreview() = default;
 
-	Source* source() const { return m_source; }
+	QUuid sourceId() const { return m_sourceId; }
 
 private:
-	Source* m_source = nullptr;
+	QUuid m_sourceId;
 
 signals:
 	void frameReady(const QImage& frame);

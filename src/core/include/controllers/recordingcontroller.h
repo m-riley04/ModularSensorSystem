@@ -39,7 +39,7 @@ public slots:
 
 private slots:
 	void onSourceAdded(Source* source);
-	void onSourceRemoved(Source* source);
+	void onSourceRemoved(QUuid id);
 
 signals:
 	void started(RecordingSession* session);

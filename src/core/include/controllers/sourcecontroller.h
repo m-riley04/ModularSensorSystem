@@ -74,7 +74,7 @@ signals:
 	void stateChanged(SourceController::State state);
 
 	void sourceAdded(Source*);
-	void sourceRemoved(Source*);
+	void sourceRemoved(QUuid);
 
 	void errorOccurred(const SourceError& e);
 };

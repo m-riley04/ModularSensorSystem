@@ -31,7 +31,7 @@ private:
 
 public slots:
 	void addSourceWidget(Source*);
-	void removeSourceWidget(Source*);
+	void removeSourceWidget(QUuid id);
 
 signals:
 	void sourceWidgetAdded(SourcePreviewWidget* widget);
