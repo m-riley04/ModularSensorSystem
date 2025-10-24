@@ -37,7 +37,7 @@ private:
 
 signals:
 	void processorAdded(Processor* proc);
-	void processorRemoved(Processor* proc);
+	void processorRemoved(QUuid id);
     void processingStarted();
     void processingStopped();
 };

@@ -1,4 +1,5 @@
 #include "controllers/processingcontroller.h"
+#include <utils/boost_qt_conversions.h>
 
 ProcessingController::ProcessingController(QObject *parent)
 	: BackendControllerBase("ProcessingController", parent)
@@ -22,8 +23,8 @@ void ProcessingController::addProcessor(IProcessorPlugin* plugin)
 
 void ProcessingController::removeProcessor(Processor* processor)
 {
-
-	emit processorRemoved(processor);
+	// TODO: actually remove processor
+	emit processorRemoved(boostUuidToQUuid(processor->uuid()));
 }
 
 bool ProcessingController::isCompatible(Processor* proc, Source* src) {
