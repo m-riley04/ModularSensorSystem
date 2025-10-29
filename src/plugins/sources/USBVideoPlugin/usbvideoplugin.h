@@ -3,8 +3,8 @@
 #include <QObject>
 #include "features/sources/source.h"
 #include "USBVideoSource/usbvideosource.h"
-#include <QtMultimedia>
 #include <boost/dll/alias.hpp>
+#include <gst/gst.h>
 #include "sdk/plugins/isourceplugin.h"
 
 namespace {
