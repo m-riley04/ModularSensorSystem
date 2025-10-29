@@ -33,9 +33,7 @@ public:
 
 	static QCameraDevice getCameraDevice(const QByteArray& id);
 
-    QMediaCaptureSession* session() { return &mSession; }
 	QCamera* camera() { return &mCamera; }
-	QMediaRecorder* recorder() { return &mRecorder; }
 
 	// IConfigurableDevice interface
 	QWidget* createConfigWidget(QWidget* parent = nullptr) override;

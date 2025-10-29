@@ -6,14 +6,16 @@
 
 USBVideoSource::USBVideoSource(QByteArray hardwareId, QObject* parent)
 	: USBVideoSource(getCameraDevice(hardwareId), parent)
-{}
+{
+    m_id = hardwareId;
+}
 
 USBVideoSource::USBVideoSource(QCameraDevice qVideoDevice, QObject* parent)
 	: Source(parent), mCamera(qVideoDevice)
 {
-    m_id = QUuid::fromBytes(qVideoDevice.id());
-	m_pluginId = "usb_video";
+    m_id = qVideoDevice.id();
     m_name = qVideoDevice.description();
+	m_pluginId = "usb_video";
     mSourceType = Source::Type::VIDEO;
     pPreview.reset(new USBVideoPreview(&mSession, boostUuidToQUuid(this->uuid()), this));
 

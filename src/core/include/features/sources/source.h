@@ -91,12 +91,8 @@ public:
 	}
 
 public:
-	Source(QByteArray hardwareId, QObject* parent = nullptr) : IElement(parent) {
-		m_id = QUuid::fromBytes(hardwareId); // Must be big endian to be reversible. TODO: make sure this works on all platforms
-	};
-	Source(QObject* parent = nullptr) : IElement(parent) {
-		m_id = QUuid::createUuid(); // TODO: make sure this is fine
-	};
+	Source(QByteArray hardwareId, QObject* parent = nullptr) : IElement(parent) {}; // TOOD: must initialize m_id
+	Source(QObject* parent = nullptr) : IElement(parent) {};
 	virtual ~Source() = default;
 
 	virtual void open() = 0;
@@ -112,7 +108,7 @@ public:
 	 * The hardware ID for the device
 	 * @return hardware ID string
 	 */
-	std::string id() const override { return m_id.toString().toStdString(); }
+	std::string id() const override { return m_id.toStdString(); }
 
 	/**
 	 * The name of the device from the system.
@@ -152,15 +148,15 @@ protected:
 	 * The unique hardware ID if possible.
 	 * Should be set in each child's initializer.
 	 */
-	QUuid m_id;
-
+	QString m_id = "Unknown_ID";
 	QString m_pluginId = "Unknown Plugin";
-
 	QString m_name = "New Source";
+
 	Source::Type mSourceType = Source::Type::OTHER;
 	Source::State mState = Source::State::CLOSED;
-	qint64 mStartTime = 0;
 	Source::ErrorState mErrorState = ErrorState::NO_ERROR;
+
+	qint64 mStartTime = 0;
 
 	QPointer<RecordingSession> pRecordingSession;
 	std::unique_ptr<SourcePreview> pPreview = nullptr;
