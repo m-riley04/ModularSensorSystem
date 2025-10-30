@@ -106,10 +106,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\controllers\sessioncontroller.cpp" />
     <ClCompile Include="src\controllers\datapipelinecontroller.cpp" />
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
     <ClCompile Include="src\features\sources\clipbufferbase.cpp" />
     <ClCompile Include="src\features\sources\sourcepreview.cpp" />
+    <QtMoc Include="include\controllers\sessioncontroller.h" />
     <ClInclude Include="include\utils\boost_qt_conversions.h" />
     <QtMoc Include="include\features\ielement.h" />
     <ClInclude Include="include\sdk\plugins\pluginloader.h" />
