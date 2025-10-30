@@ -43,9 +43,6 @@
     <ClCompile Include="USBVideoSource\usbvideosource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="USBVideoClipBuffer\usbvideoclipbuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="USBVideoPropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -55,23 +52,14 @@
     <ClCompile Include="USBVideoRecordingPropertiesWidget\usbvideorecordingpropertieswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="USBVideoClipEncoder\usbvideoclipencoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="USBVideoPreview\usbvideopreview.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="USBVideoClipBuffer\usbvideoclipbuffer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="USBVideoPropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="USBVideoClipEncoder\usbvideoclipencoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="usbvideoplugin.h">

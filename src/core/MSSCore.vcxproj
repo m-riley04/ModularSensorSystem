@@ -123,21 +123,16 @@
     <ClInclude Include="include\sdk\plugins\imountplugin.h" />
     <ClInclude Include="include\presets\preset.h" />
     <ClInclude Include="include\presets\sourcepreset.h" />
-    <ClInclude Include="include\features\sources\iclippablesource.h" />
     <ClInclude Include="include\features\sources\iconfigurablesource.h" />
     <QtMoc Include="include\features\sources\source.h" />
     <ClInclude Include="include\features\sources\sourceerror.h" />
     <QtMoc Include="include\features\sources\sourcepreview.h" />
     <QtMoc Include="include\features\sources\sourcemetadata.h" />
-    <QtMoc Include="include\features\sources\clipbufferbase.h" />
     <QtMoc Include="include\features\processors\processor.h" />
-    <QtMoc Include="include\controllers\clipcontroller.h" />
     <QtMoc Include="include\controllers\maincontroller.h" />
     <QtMoc Include="include\controllers\plugincontroller.h" />
     <QtMoc Include="include\controllers\presetscontroller.h" />
     <QtMoc Include="include\controllers\processingcontroller.h" />
-    <QtMoc Include="include\controllers\recordingcontroller.h" />
-    <QtMoc Include="include\controllers\recordingsession.h" />
     <QtMoc Include="include\controllers\sourcecontroller.h" />
     <ClInclude Include="include\interfaces\capability\ianalogsource.h" />
     <ClInclude Include="include\interfaces\capability\iaudiosource.h" />
@@ -147,13 +142,10 @@
     <ClInclude Include="include\sdk\plugins\iplugin.h" />
     <ClInclude Include="include\sdk\plugins\iprocessorplugin.h" />
     <ClInclude Include="include\sdk\plugins\isourceplugin.h" />
-    <ClCompile Include="src\controllers\clipcontroller.cpp" />
     <ClCompile Include="src\controllers\maincontroller.cpp" />
     <ClCompile Include="src\controllers\plugincontroller.cpp" />
     <ClCompile Include="src\controllers\presetscontroller.cpp" />
     <ClCompile Include="src\controllers\processingcontroller.cpp" />
-    <ClCompile Include="src\controllers\recordingcontroller.cpp" />
-    <ClCompile Include="src\controllers\recordingsession.cpp" />
     <ClCompile Include="src\controllers\sourcecontroller.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

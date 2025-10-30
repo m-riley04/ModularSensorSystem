@@ -20,7 +20,6 @@ void SessionControlsWidget::initSignals()
 	}
 
 	SourceController* pSourceController = pController->sourceController();
-	RecordingController* pRecordingController = pController->recordingController();
 
 	// Init open/close button
 	connect(ui.buttonOpenCloseDevices, &QPushButton::clicked, [this, pSourceController]() {
@@ -40,21 +39,6 @@ void SessionControlsWidget::initSignals()
 		else if (pSourceController->isStarted()) {
 			pSourceController->stopSources();
 		}
-		});
-
-	// Recording button
-	connect(ui.buttonRecord, &QPushButton::clicked, [this, pRecordingController]() {
-		if (pRecordingController->isRecording()) { // CONSIDER: check source state too?
-			pRecordingController->stop();
-		}
-		else if (pRecordingController->isStopped()) {
-			pRecordingController->start();
-		}
-		});
-
-	// Clip button
-	connect(ui.buttonClip, &QPushButton::clicked, [this, pSourceController]() {
-		// TODO: Implement clip button
 		});
 
 	// Properties button
@@ -79,8 +63,6 @@ void SessionControlsWidget::initSignals()
 	connect(pSourceController, &SourceController::sourceRemoved, this, &SessionControlsWidget::updateUi);
 	connect(pSourceController, &SourceController::sourceAdded, this, &SessionControlsWidget::updateUi);
 	connect(pSourceController, &SourceController::stateChanged, this, &SessionControlsWidget::updateUi);
-	connect(pRecordingController, &RecordingController::started, this, &SessionControlsWidget::updateUi);
-	connect(pRecordingController, &RecordingController::stopped, this, &SessionControlsWidget::updateUi);
 	
 }
 
@@ -131,26 +113,6 @@ void SessionControlsWidget::updateUi()
 		ui.buttonStartStopDevices->setEnabled(false);
 		break;
 	default:
-		break;
-	}
-
-	// Recording controller updates
-	RecordingController::State recState = pController->recordingController()->state();
-	switch (recState) {
-	case RecordingController::STARTED:
-		ui.buttonRecord->setText("Stop Recording");
-		//ui.buttonOpenCloseDevices->setEnabled(false);
-		//ui.buttonStartStopDevices->setEnabled(false);
-		break;
-	case SourceController::STOPPED:
-		ui.buttonRecord->setText("Start Recording");
-		//ui.buttonOpenCloseDevices->setEnabled(true);
-		//ui.buttonStartStopDevices->setEnabled(true);
-		break;
-	default:
-		ui.buttonRecord->setText("Start Recording");
-		//ui.buttonOpenCloseDevices->setEnabled(true);
-		//ui.buttonStartStopDevices->setEnabled(true);
 		break;
 	}
 }

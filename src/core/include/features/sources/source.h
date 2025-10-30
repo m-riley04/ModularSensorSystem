@@ -1,16 +1,13 @@
 #pragma once
 
 #include <QObject>
-#include "controllers/recordingsession.h"
 #include <quuid.h>
 #include "sourcepreview.h"
 #include <QPointer>
-#include "clipbufferbase.h"
 #include "sourceerror.h"
 #include "features/ielement.h"
 #include <QUuid>
 
-class RecordingSession;
 class SourcePreview;
 struct SourceError;
 
@@ -101,9 +98,6 @@ public:
 	virtual void close() = 0;
 	virtual void restart() = 0;
 
-	virtual void beginRecording(RecordingSession*) = 0;
-	virtual void endRecording() = 0;
-
 	/**
 	 * The hardware ID for the device
 	 * @return hardware ID string
@@ -138,11 +132,6 @@ public:
 	 */
 	SourcePreview* preview() const { return pPreview.get(); }
 
-	void setSession(RecordingSession* session)
-	{
-		pRecordingSession = session;
-	}
-
 protected:
 	/**
 	 * The unique hardware ID if possible.
@@ -158,9 +147,7 @@ protected:
 
 	qint64 mStartTime = 0;
 
-	QPointer<RecordingSession> pRecordingSession;
 	std::unique_ptr<SourcePreview> pPreview = nullptr;
-	std::unique_ptr<ClipBufferBase> pClipBuffer = nullptr;
 
 signals:
 	void opened();

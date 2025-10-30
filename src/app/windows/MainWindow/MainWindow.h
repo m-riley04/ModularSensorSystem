@@ -3,7 +3,6 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
 #include "controllers/maincontroller.h"
-#include "controllers/clipcontroller.h"
 #include "controllers/mountcontroller.h"
 #include "widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "widgets/CustomTitleBar/customtitlebar.h"

@@ -12,9 +12,9 @@ enum class ErrorSeverity {
 };
 
 struct SourceError {
-	QString msg;
+	QString msg = "";
 	Source* source = nullptr;
 	ErrorSeverity severity = ErrorSeverity::INFO;
 };
 
-Q_DECLARE_METATYPE(SourceError);
+Q_DECLARE_METATYPE(SourceError)

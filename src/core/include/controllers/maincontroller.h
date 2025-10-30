@@ -1,15 +1,14 @@
 #pragma once
 
 #include <QObject>
-#include <controllers/clipcontroller.h>
-#include <controllers/recordingcontroller.h>
-#include <controllers/plugincontroller.h>
 #include <qcoreapplication.h>
 #include <QtMultimedia>
-#include <controllers/presetscontroller.h>
-#include <controllers/processingcontroller.h>
-#include <controllers/sourcecontroller.h>
-#include "mountcontroller.h"
+#include "controllers/plugincontroller.h"
+#include "controllers/datapipelinecontroller.h"
+#include "controllers/presetscontroller.h"
+#include "controllers/processingcontroller.h"
+#include "controllers/sourcecontroller.h"
+#include "controllers/mountcontroller.h"
 #include <memory>
 
 class DataPipelineController; // forward declare to break circular include
@@ -28,9 +27,7 @@ public:
 	 */
 	QList<BackendControllerBase*> getAllSubcontrollers() const;
 
-	RecordingController* recordingController() const { return pRecordingController.get(); }
 	SourceController* sourceController() const { return pSourceController.get(); }
-	ClipController* clipController() const { return pClipController.get(); }
 	PluginController* pluginController() const { return pPluginController.get(); }
 	PresetsController* presetsController() const { return pPresetsController.get(); }
 	ProcessingController* processingController() const { return pProcessingController.get(); }
@@ -47,8 +44,6 @@ public:
 
 private:
 	std::unique_ptr<SourceController> pSourceController;
-	std::unique_ptr<RecordingController> pRecordingController;
-	std::unique_ptr<ClipController> pClipController;
 	std::unique_ptr<PluginController> pPluginController;
 	std::unique_ptr<PresetsController> pPresetsController;
 	std::unique_ptr<ProcessingController> pProcessingController;

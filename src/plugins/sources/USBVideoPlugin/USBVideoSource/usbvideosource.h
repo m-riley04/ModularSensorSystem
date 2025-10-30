@@ -10,17 +10,13 @@
 #include <chrono>
 #include "features/sources/source.h"
 #include "features/sources/iconfigurablesource.h"
-#include "features/sources/iclippablesource.h"
 #include "interfaces/capability/ivideosource.h"
-#include "USBVideoClipBuffer/usbvideoclipbuffer.h"
 #include "USBVideoPreview/usbvideopreview.h"
 #include "USBVideoPropertiesWidget/usbvideopropertieswidget.h"
 #include "USBVideoRecordingPropertiesWidget/usbvideorecordingpropertieswidget.h"
-#include "USBVideoClipEncoder/usbvideoclipencoder.h"
 
 class USBVideoSource : public Source, 
 	public IConfigurableSource, 
-	public IClippableSource, 
 	public IVideoSource
 {
 	Q_OBJECT
@@ -40,10 +36,6 @@ public:
 	void loadSettings(const QJsonObject& obj) override;
 	QJsonObject saveSettings() override;
 
-	// IClippableSource interface
-	void clip(const QDir& dir) override;
-	ClipBufferBase* clipBuffer() override { return pClipBuffer.get(); }
-
 	// IVideoSource interface
 	QObject* asQObject() override { return this; }
 
@@ -58,9 +50,6 @@ public slots:
     void stop() override;
 	void close() override;
     void restart() override;
-
-	void beginRecording(RecordingSession*) override;
-	void endRecording() override;
     
 	void setMediaDirectory(QUrl directory);
 

@@ -14,21 +14,6 @@ SessionPropertiesDialog::~SessionPropertiesDialog()
 void SessionPropertiesDialog::initSignals()
 {
 	connect(ui.buttonBox, &QDialogButtonBox::clicked, this, &SessionPropertiesDialog::transmit);
-
-	ClipController* pClipController = pController->clipController();
-
-	// Clipping signals
-	connect(ui.checkboxClippingEnabled, &QCheckBox::toggled, [this, pClipController]() {
-		
-		});
-
-	connect(ui.checkboxAutoClip, &QCheckBox::toggled, [this, pClipController]() {
-
-		});
-
-	connect(ui.buttonClearBuffer, &QPushButton::clicked, [this, pClipController]() {
-
-		});
 }
 
 void SessionPropertiesDialog::transmit(QAbstractButton* button) {

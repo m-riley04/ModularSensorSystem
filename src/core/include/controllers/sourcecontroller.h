@@ -2,7 +2,6 @@
 
 #include <QObject>
 #include <features/sources/source.h>
-#include <controllers/recordingsession.h>
 #include <qcameradevice.h>
 #include <controllers/plugincontroller.h>
 #include <features/sources/sourceerror.h>
@@ -47,7 +46,6 @@ private:
 	QHash<QUuid, Source*> mSourcesById;
 
 	QPointer<PluginController> pPluginController;
-	RecordingSession* pRecordingSession;
 
 public slots:
 	Source* addSource(ISourcePlugin* plugin, SourceInfo info);

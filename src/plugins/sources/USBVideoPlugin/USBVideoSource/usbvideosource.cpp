@@ -3,7 +3,6 @@
 #include <QVBoxLayout>
 #include <utils/boost_qt_conversions.h>
 
-
 USBVideoSource::USBVideoSource(QByteArray hardwareId, QObject* parent)
 	: USBVideoSource(getCameraDevice(hardwareId), parent)
 {
@@ -52,9 +51,6 @@ void USBVideoSource::open() {
     // Init preview
 	if (!pPreview) pPreview.reset(new USBVideoPreview(&mSession, boostUuidToQUuid(this->uuid()), this));
 
-    // Init buffer
-    if (!pClipBuffer) pClipBuffer.reset(new USBVideoClipBuffer(2, this));
-
     emit previewAvailable(this, pPreview.get());
 }
 
@@ -91,15 +87,6 @@ void USBVideoSource::close()
 }
 
 void USBVideoSource::onNewFrame(const QVideoFrame& frame) {
-	// Get the timestamp
-	ClipBufferBase::time timestamp = 0; // TODO: Get the timestamp from the frame
-
-	// Cast buffer to USBVideoClipBuffer
-	USBVideoClipBuffer* pVideoBuffer = static_cast<USBVideoClipBuffer*>(pClipBuffer.get()); // CONSIDER: Do this differently/no casting?
-    
-    // Add the frame to the buffer
-	pVideoBuffer->push(frame, timestamp);
-
 	// Emit signal with the frame
 	emit frameReady(frame);
 }
@@ -271,56 +258,8 @@ QJsonObject USBVideoSource::saveSettings()
     return obj;
 }
 
-void USBVideoSource::clip(const QDir& dir)
-{
-    // Cast the clip buffer 
-    auto videoClipBuffer = static_cast<USBVideoClipBuffer*>(pClipBuffer.get());
-    if (!videoClipBuffer) {
-        qWarning() << "Unable to clip: not a video buffer";
-        return;
-    }
-
-    // Grab buffer data
-    auto buf = videoClipBuffer->data();
-    if (buf.empty()) return;
-
-    // Init sizes
-    const QSize sz = buf.front().frame.size();
-    const double fps = camera()->cameraFormat().maxFrameRate();
-
-	// Create the encoder helper
-    USBVideoClipEncoder enc(dir.filePath(m_name + ".mp4"), sz, fps);
-    if (!enc.isOk()) {
-        qWarning() << enc.errorString();
-        return;
-    }
-
-    // Iterate and add frames from buffer
-    for (auto& it : buf) {
-        enc.addFrame(it.frame, it.timestamp);
-    }
-
-    // Finish encoding
-    enc.finish();
-    qDebug() << "Clip saved:" << dir.filePath(m_name + ".mp4");
-}
-
 void USBVideoSource::restart() {
     stop();
     start();
 }
 
-void USBVideoSource::beginRecording(RecordingSession* s)
-{
-	// Update recording session
-	pRecordingSession = s;
-
-    QString f = s->outputDir().filePath(m_name + ".mp4"); // TODO: Change from m_name to something better for file names
-	mRecorder.setOutputLocation(QUrl::fromLocalFile(f));
-    mRecorder.record();
-}
-
-void USBVideoSource::endRecording()
-{
-    mRecorder.stop();
-}

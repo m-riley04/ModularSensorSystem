@@ -53,9 +53,6 @@
     <ClInclude Include="include\sdk\plugins\imountplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\features\sources\iclippablesource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\features\sources\iconfigurablesource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -76,9 +73,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\controllers\clipcontroller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\controllers\maincontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -89,12 +83,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\controllers\processingcontroller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\controllers\recordingcontroller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\controllers\recordingsession.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\controllers\sourcecontroller.cpp">
@@ -117,9 +105,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="include\controllers\clipcontroller.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="include\controllers\maincontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -130,12 +115,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\controllers\processingcontroller.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="include\controllers\recordingcontroller.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="include\controllers\recordingsession.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\controllers\sourcecontroller.h">
@@ -154,9 +133,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\features\sources\sourcemetadata.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="include\features\sources\clipbufferbase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\features\processors\processor.h">

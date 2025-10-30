@@ -2,7 +2,7 @@
 #include <utils/boost_qt_conversions.h>
 
 SourceController::SourceController(PluginController* pluginController, QObject *parent)
-	: BackendControllerBase("SourceController", parent), pPluginController(pluginController), pRecordingSession(nullptr)
+	: BackendControllerBase("SourceController", parent), pPluginController(pluginController)
 {}
 
 SourceController::~SourceController()
