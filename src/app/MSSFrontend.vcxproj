@@ -113,7 +113,6 @@
     <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp" />
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
-    <ClCompile Include="pages\MainPage\mainpage.cpp" />
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
     <ClCompile Include="widgets\SourcePropertiesWidget\sourcepropertieswidget.cpp" />
@@ -125,7 +124,6 @@
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
-    <QtUic Include="pages\MainPage\mainpage.ui" />
     <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui" />
@@ -154,7 +152,6 @@
     <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />
-    <QtMoc Include="pages\MainPage\mainpage.h" />
     <QtMoc Include="widgets\SourcePreviewWidget\sourcepreviewwidget.h" />
   </ItemGroup>
   <ItemGroup>

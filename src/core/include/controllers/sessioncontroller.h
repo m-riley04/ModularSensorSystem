@@ -17,6 +17,9 @@ public:
 	 */
 	void buildPipeline();
 
+public slots:
+	void addSource();
+
 private:
 	GstPipeline* m_pipeline;
 };

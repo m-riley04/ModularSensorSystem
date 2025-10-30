@@ -31,9 +31,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pages\MainPage\mainpage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -96,9 +93,6 @@
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="pages\MainPage\mainpage.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="dialogs\AddProcessorDialog\addprocessordialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -125,9 +119,6 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="pages\MainPage\mainpage.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>

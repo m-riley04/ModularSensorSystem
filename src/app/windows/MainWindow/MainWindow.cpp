@@ -22,15 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
     QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
 
     // Init flags
-    setWindowFlags(Qt::FramelessWindowHint);
+    //setWindowFlags(Qt::FramelessWindowHint);
 
     // Initialize
-    /*
-        TODO: either remove initStyles() or implement/document properly.
-        Currently, we are loading the stylesheet directly in the UI file and UI editor.
-    */
-	//initStyles();
-	initPages();
     initWidgets();
     initSignals();
 }
@@ -53,79 +47,53 @@ ElementTreeActions MainWindow::getElementTreeActions() const
     return actions;
 }
 
-void MainWindow::initStyles()
-{
-    // Configure application properties
-	const QString stylePath = ":/styles/styles/styles.qss";
-    QFile f(stylePath);
-
-	// Check if the stylesheet file exists
-	if (!f.exists()) {
-		QMessageBox::warning(this, "Error", "Stylesheet file not found: " + stylePath);
-		return;
-	}
-
-	// Check if the stylesheet file can be opened
-    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		QMessageBox::warning(this, "Error", "Could not open stylesheet file.");
-        return;
-    }
-
-	// Read the stylesheet and apply it to the application
-    const QString stylesheetString = f.readAll();
-    qApp->setStyleSheet(stylesheetString);
-}
-
-void MainWindow::initPages()
-{
-	if (!pController) {
-		qDebug() << "MainController is not initialized.";
-		return;
-	}
-
-    // Init main page
-    pMainPage = new MainPage(pController.get(), this->getElementTreeActions(), this);
-    pMainPage->setObjectName("mainPage");
-	ui.pagesStack->addWidget(pMainPage);
-    pMainPage->setLayout(ui.pagesStack->layout());
-}
-
 void MainWindow::initWidgets()
 {
     // Init menu bar
-    ui.menuBar->setParent(this->centralWidget());
+    //ui.menuBar->setParent(this->centralWidget());
 
     // Remove widgets from layout
-    QLayout* layout = this->centralWidget()->layout();
+    /*QLayout* layout = this->centralWidget()->layout();
     layout->removeWidget(ui.titleBar);
-    layout->removeWidget(ui.frameNav);
-	layout->removeWidget(ui.toolBar);
-    layout->removeWidget(ui.pagesStack);
+	layout->removeWidget(ui.toolBar);*/
+    //layout->removeWidget(ui.dockWidget);
+    //layout->removeWidget(ui.splitter);
 
     // Init stack
-    layout->addWidget(ui.titleBar); // Add menu bar FIRST so it is ABOVE all
-    layout->addWidget(ui.menuBar); // Add menu bar SECOND so it is UNDER the title bar
-    layout->addWidget(ui.toolBar);
-    layout->addWidget(ui.frameNav);
-    layout->addWidget(ui.pagesStack);
+    //layout->addWidget(ui.titleBar); // Add menu bar FIRST so it is ABOVE all
+    //layout->addWidget(ui.menuBar); // Add menu bar SECOND so it is UNDER the title bar
+    //layout->addWidget(ui.toolBar);
+    //layout->addWidget(ui.dockWidget);
+    //layout->addWidget(ui.splitter);
+
 
     // Init title bar
-    ui.titleBar->setParentWindow(this);
-
-	// Set default page to home
-	ui.pagesStack->setCurrentIndex(0);
+    //ui.titleBar->setParentWindow(this);
 
     // Init menu bar
-    ui.actionViewPresetsList->setChecked(!pMainPage->presetsGroup()->isVisible()); // Not sure why I have to invert this to NOT, but it works.
-    ui.actionViewControls->setChecked(!pMainPage->controlsGroup()->isVisible());
-    ui.actionViewEntireRow->setChecked(!pMainPage->controlsFrame()->isVisible());
+    ui.actionViewPresetsList->setChecked(!ui.groupPresets->isVisible()); // Not sure why I have to invert this to NOT, but it works.
+    ui.actionViewControls->setChecked(!ui.groupControls->isVisible());
+    ui.actionViewEntireRow->setChecked(!ui.frameControls->isVisible());
 
     ui.actionViewMenuBar->setChecked(!ui.menuBar->isVisible());
     ui.actionViewToolbar->setChecked(!ui.toolBar->isVisible());
-    ui.actionViewCustomWindowHandle->setChecked(!ui.titleBar->isVisible());
+    //ui.actionViewCustomWindowHandle->setChecked(!ui.titleBar->isVisible());
 
     // Init toolbar
     updateToolbarButtonsState();
+
+    // Init session controls widget
+    ui.sessionControls->setController(pController.get());
+
+    // Init preview container widget
+    ui.devicePreviewWidget->setController(pController.get());
+
+    // Init presets widget
+    ui.presetsWidget->setController(pController.get());
+
+    // Init elements tree
+    ui.dockWidget->setController(pController.get());
+    ui.dockWidget->setActions(this->getElementTreeActions());
 }
 
 void MainWindow::initActionSignals()
@@ -157,13 +125,13 @@ void MainWindow::initActionSignals()
 
     // View
     connect(ui.actionViewPresetsList, &QAction::triggered, [this](bool checked) {
-        pMainPage->presetsGroup()->setVisible(checked);
+        ui.groupPresets->setVisible(checked);
         });
     connect(ui.actionViewControls, &QAction::triggered, [this](bool checked) {
-        pMainPage->controlsGroup()->setVisible(checked);
+        ui.groupControls->setVisible(checked);
         });
     connect(ui.actionViewEntireRow, &QAction::triggered, [this](bool checked) {
-        pMainPage->controlsFrame()->setVisible(checked);
+        ui.frameControls->setVisible(checked);
         });
 
     connect(ui.actionViewMenuBar, &QAction::triggered, [this](bool checked) {
@@ -172,14 +140,14 @@ void MainWindow::initActionSignals()
     connect(ui.actionViewToolbar, &QAction::triggered, [this](bool checked) {
         ui.toolBar->setVisible(checked);
         });
-    connect(ui.actionViewCustomWindowHandle, &QAction::triggered, [this](bool checked) {
-        ui.titleBar->setVisible(checked);
+  //  connect(ui.actionViewCustomWindowHandle, &QAction::triggered, [this](bool checked) {
+  //      ui.titleBar->setVisible(checked);
 
-        Qt::WindowType flags = checked ? Qt::FramelessWindowHint : Qt::Window;
-        setWindowFlags(flags);
+  //      Qt::WindowType flags = checked ? Qt::FramelessWindowHint : Qt::Window;
+  //      setWindowFlags(flags);
 
-		show(); // Refresh the window to apply the new flags
-        });
+		//show(); // Refresh the window to apply the new flags
+  //      });
 
     // About
     connect(ui.actionGitHub, &QAction::triggered, this, &MainWindow::openGithubRepository);
@@ -200,17 +168,9 @@ void MainWindow::initSignals() {
         QMessageBox::warning(this, "Error", errorMessage);
         });
 
-    // Init pages
-	connect(ui.buttonHome, &QPushButton::clicked, [this]() {
-		ui.pagesStack->setCurrentIndex(0);
-		});
-    connect(ui.buttonPlayback, &QPushButton::clicked, [this]() {
-        ui.pagesStack->setCurrentIndex(1);
-        });
-
     // Connect signals to child widgets
-    connect(pMainPage->presetsWidget(), &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
-	connect(pMainPage->elementsTreeWidget(), &DockableElementsManagerWidget::elementSelected, this, &MainWindow::onSelectedElementChanged);
+    connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
+	connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, this, &MainWindow::onSelectedElementChanged);
 
     // Init toolbar and actions
     initActionSignals();
@@ -226,7 +186,7 @@ void MainWindow::openSavePresetDialog()
     if (ok && !presetName.isEmpty()) {
         // Check if the preset name already exists
         // If so, ask to overwrite
-        auto existingItems = pMainPage->presetsWidget()->listWidget()->findItems(presetName, Qt::MatchExactly);
+        auto existingItems = ui.presetsWidget->listWidget()->findItems(presetName, Qt::MatchExactly);
         if (!existingItems.isEmpty()) {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(this, tr("Overwrite Preset"),
@@ -497,7 +457,7 @@ void MainWindow::onSelectedElementRemoved()
 {
     m_selectedElement = nullptr;
     // Update the elements tree
-    pMainPage->elementsTreeWidget()->update();
+    ui.dockWidget->update();
     updateToolbarButtonsState();
 }
 
@@ -544,93 +504,97 @@ void MainWindow::restart() {
     QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
 }
 
-bool MainWindow::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)
-{
-#ifdef Q_OS_WIN
-    MSG* msg = static_cast<MSG*>(message);
-
-    if (msg->message == WM_NCHITTEST)
-    {
-        if (isMaximized())
-        {
-            return false;
-        }
-
-        *result = 0;
-        const LONG borderWidth = 8;
-        RECT winrect;
-        GetWindowRect(reinterpret_cast<HWND>(winId()), &winrect);
-
-        // must be short to correctly work with multiple monitors (negative coordinates)
-        short x = msg->lParam & 0x0000FFFF;
-        short y = (msg->lParam & 0xFFFF0000) >> 16;
-
-        bool resizeWidth = minimumWidth() != maximumWidth();
-        bool resizeHeight = minimumHeight() != maximumHeight();
-        if (resizeWidth)
-        {
-            //left border
-            if (x >= winrect.left && x < winrect.left + borderWidth)
-            {
-                *result = HTLEFT;
-            }
-            //right border
-            if (x < winrect.right && x >= winrect.right - borderWidth)
-            {
-                *result = HTRIGHT;
-            }
-        }
-        if (resizeHeight)
-        {
-            //bottom border
-            if (y < winrect.bottom && y >= winrect.bottom - borderWidth)
-            {
-                *result = HTBOTTOM;
-            }
-            //top border
-            if (y >= winrect.top && y < winrect.top + borderWidth)
-            {
-                *result = HTTOP;
-            }
-        }
-        if (resizeWidth && resizeHeight)
-        {
-            //bottom left corner
-            if (x >= winrect.left && x < winrect.left + borderWidth &&
-                y < winrect.bottom && y >= winrect.bottom - borderWidth)
-            {
-                *result = HTBOTTOMLEFT;
-            }
-            //bottom right corner
-            if (x < winrect.right && x >= winrect.right - borderWidth &&
-                y < winrect.bottom && y >= winrect.bottom - borderWidth)
-            {
-                *result = HTBOTTOMRIGHT;
-            }
-            //top left corner
-            if (x >= winrect.left && x < winrect.left + borderWidth &&
-                y >= winrect.top && y < winrect.top + borderWidth)
-            {
-                *result = HTTOPLEFT;
-            }
-            //top right corner
-            if (x < winrect.right && x >= winrect.right - borderWidth &&
-                y >= winrect.top && y < winrect.top + borderWidth)
-            {
-                *result = HTTOPRIGHT;
-            }
-        }
-
-        if (*result != 0)
-            return true;
-
-        QWidget* action = QApplication::widgetAt(QCursor::pos());
-        if (action == this) {
-            *result = HTCAPTION;
-            return true;
-        }
-    }
-#endif
-
-    return false;
-}
+/**
+ * Primarily for the custom window resizing and dragging.
+ * Implement on Windows only for now.
+ */
+//bool MainWindow::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)
+//{
+//#ifdef Q_OS_WIN
+//    MSG* msg = static_cast<MSG*>(message);
+//
+//    if (msg->message == WM_NCHITTEST)
+//    {
+//        if (isMaximized())
+//        {
+//            return false;
+//        }
+//
+//        *result = 0;
+//        const LONG borderWidth = 8;
+//        RECT winrect;
+//        GetWindowRect(reinterpret_cast<HWND>(winId()), &winrect);
+//
+//        // must be short to correctly work with multiple monitors (negative coordinates)
+//        short x = msg->lParam & 0x0000FFFF;
+//        short y = (msg->lParam & 0xFFFF0000) >> 16;
+//
+//        bool resizeWidth = minimumWidth() != maximumWidth();
+//        bool resizeHeight = minimumHeight() != maximumHeight();
+//        if (resizeWidth)
+//        {
+//            //left border
+//            if (x >= winrect.left && x < winrect.left + borderWidth)
+//            {
+//                *result = HTLEFT;
+//            }
+//            //right border
+//            if (x < winrect.right && x >= winrect.right - borderWidth)
+//            {
+//                *result = HTRIGHT;
+//            }
+//        }
+//        if (resizeHeight)
+//        {
+//            //bottom border
+//            if (y < winrect.bottom && y >= winrect.bottom - borderWidth)
+//            {
+//                *result = HTBOTTOM;
+//            }
+//            //top border
+//            if (y >= winrect.top && y < winrect.top + borderWidth)
+//            {
+//                *result = HTTOP;
+//            }
+//        }
+//        if (resizeWidth && resizeHeight)
+//        {
+//            //bottom left corner
+//            if (x >= winrect.left && x < winrect.left + borderWidth &&
+//                y < winrect.bottom && y >= winrect.bottom - borderWidth)
+//            {
+//                *result = HTBOTTOMLEFT;
+//            }
+//            //bottom right corner
+//            if (x < winrect.right && x >= winrect.right - borderWidth &&
+//                y < winrect.bottom && y >= winrect.bottom - borderWidth)
+//            {
+//                *result = HTBOTTOMRIGHT;
+//            }
+//            //top left corner
+//            if (x >= winrect.left && x < winrect.left + borderWidth &&
+//                y >= winrect.top && y < winrect.top + borderWidth)
+//            {
+//                *result = HTTOPLEFT;
+//            }
+//            //top right corner
+//            if (x < winrect.right && x >= winrect.right - borderWidth &&
+//                y >= winrect.top && y < winrect.top + borderWidth)
+//            {
+//                *result = HTTOPRIGHT;
+//            }
+//        }
+//
+//        if (*result != 0)
+//            return true;
+//
+//        QWidget* action = QApplication::widgetAt(QCursor::pos());
+//        if (action == this) {
+//            *result = HTCAPTION;
+//            return true;
+//        }
+//    }
+//#endif
+//
+//    return false;
+//}

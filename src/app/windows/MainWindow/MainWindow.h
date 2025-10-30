@@ -7,7 +7,6 @@
 #include "controllers/mountcontroller.h"
 #include "widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
 #include "widgets/CustomTitleBar/customtitlebar.h"
-#include "pages/MainPage/mainpage.h"
 #include "data/requried_actions.h"
 
 // Forward declaration for element tree node
@@ -23,8 +22,8 @@ public:
 
     ElementTreeActions getElementTreeActions() const;
 
-protected:
-    bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override; // TODO: Make this cross-platform and implement other platforms
+//protected:
+//    bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override; // TODO: Make this cross-platform and implement other platforms
 
 private slots:
     void openSavePresetDialog();
@@ -64,10 +63,6 @@ private:
     QListWidgetItem* pSelectedPresetItem = nullptr;
 	ElementTreeNode* m_selectedElement = nullptr;
 
-    MainPage* pMainPage = nullptr;
-
-    void initStyles();
-    void initPages();
     void initWidgets();
     void initSignals();
     void initActionSignals();
