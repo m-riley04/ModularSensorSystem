@@ -2,13 +2,15 @@
 
 #include <QObject>
 #include <QString>
-#include "source.h"
 #include <QMetaType>
+
+// Forward declaration
+class Source;
 
 enum class ErrorSeverity {
 	INFO,
 	WARNING,
-	CRITICAL
+	CRITICAL	
 };
 
 struct SourceError {
