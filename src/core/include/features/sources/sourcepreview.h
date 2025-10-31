@@ -1,9 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "source.h"
-
-class Source;
+#include <QUuid>
 
 class SourcePreview : public QObject
 {
