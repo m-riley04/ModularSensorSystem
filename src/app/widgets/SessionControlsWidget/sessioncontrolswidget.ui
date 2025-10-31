@@ -15,35 +15,19 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QPushButton" name="buttonOpenCloseDevices">
+    <widget class="QPushButton" name="buttonStartStop">
      <property name="toolTip">
       <string>Opens or closes all of the devices in the session</string>
      </property>
      <property name="text">
-      <string>Open Devices</string>
+      <string>Start Session</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="buttonStartStopDevices">
-     <property name="toolTip">
-      <string>Starts or stops all sources in the session</string>
-     </property>
+    <widget class="QPushButton" name="buttonRestart">
      <property name="text">
-      <string>Start Devices</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="buttonRestartDevices">
-     <property name="toolTip">
-      <string>Restarts all sources in the session</string>
-     </property>
-     <property name="text">
-      <string>Restart Devices</string>
-     </property>
-     <property name="icon">
-      <iconset theme="QIcon::ThemeIcon::SystemReboot"/>
+      <string>Restart Session</string>
      </property>
     </widget>
    </item>

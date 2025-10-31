@@ -9,6 +9,7 @@
 #include "controllers/processingcontroller.h"
 #include "controllers/sourcecontroller.h"
 #include "controllers/mountcontroller.h"
+#include "controllers/sessioncontroller.h"
 #include <memory>
 
 class DataPipelineController; // forward declare to break circular include
@@ -33,6 +34,7 @@ public:
 	ProcessingController* processingController() const { return pProcessingController.get(); }
 	MountController* mountController() const { return pMountController.get(); }
 	DataPipelineController* dataPipelineController() const { return pDataPipelineController.get(); }
+	SessionController* sessionController() const { return pSessionController.get(); }
 
 	/**
 	 * @brief Checks whether the specified main controller and its associated controllers are in a valid state.
@@ -49,6 +51,7 @@ private:
 	std::unique_ptr<ProcessingController> pProcessingController;
 	std::unique_ptr<MountController> pMountController;
 	std::unique_ptr<DataPipelineController> pDataPipelineController;
+	std::unique_ptr<SessionController> pSessionController;
 
 signals:
 	void errorOccurred(const SourceError& e);

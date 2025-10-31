@@ -10,6 +10,7 @@ MainController::MainController(QObject *parent)
 	pProcessingController = std::make_unique<ProcessingController>(this);
 	pMountController = std::make_unique<MountController>(this);
 	pDataPipelineController = std::make_unique<DataPipelineController>(this, this);
+	pSessionController = std::make_unique<SessionController>(this);
 }
 
 MainController::~MainController()
@@ -35,6 +36,7 @@ bool MainController::checkIfControllersAreOk() const
 		pPresetsController &&
 		pPluginController &&
 		pDataPipelineController &&
+		pSessionController && 
 		pMountController)
 	{
 		return true;
