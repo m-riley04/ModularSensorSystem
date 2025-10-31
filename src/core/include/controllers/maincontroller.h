@@ -2,7 +2,6 @@
 
 #include <QObject>
 #include <qcoreapplication.h>
-#include <QtMultimedia>
 #include "controllers/plugincontroller.h"
 #include "controllers/datapipelinecontroller.h"
 #include "controllers/presetscontroller.h"

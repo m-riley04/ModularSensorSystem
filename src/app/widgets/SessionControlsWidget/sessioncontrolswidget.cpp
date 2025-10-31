@@ -58,8 +58,8 @@ void SessionControlsWidget::initSignals()
 
 void SessionControlsWidget::updateUi()
 {
-	this->setEnabled(!pController);
-	if (!pController) return;
+	/*this->setEnabled(!pController);
+	if (!pController) return;*/
 
 	//// Check if there are any sources
 	//bool isEmpty = pController->sourceController()->isEmpty();

@@ -87,6 +87,8 @@ void MainWindow::initWidgets()
 
     // Init preview container widget
     ui.devicePreviewWidget->setController(pController.get());
+	// TODO/DEBUG: add test video output
+    pController->sessionController()->setVideoSinkWindowId(ui.devicePreviewWidget->winId());
 
     // Init presets widget
     ui.presetsWidget->setController(pController.get());
