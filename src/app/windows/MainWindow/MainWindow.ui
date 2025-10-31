@@ -277,13 +277,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
 </string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="DockableElementsManagerWidget" name="dockWidget">
-      <widget class="QWidget" name="dockWidgetContents"/>
-     </widget>
-    </item>
-    <item row="0" column="1">
+   <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,3">
+    <item row="0" column="2">
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Orientation::Vertical</enum>
@@ -398,6 +393,20 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
         </item>
        </layout>
       </widget>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="DockableElementsManagerWidget" name="dockWidget">
+      <property name="maximumSize">
+       <size>
+        <width>524287</width>
+        <height>524287</height>
+       </size>
+      </property>
+      <property name="floating">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="dockWidgetContents"/>
      </widget>
     </item>
    </layout>

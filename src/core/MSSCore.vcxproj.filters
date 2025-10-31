@@ -91,12 +91,6 @@
     <ClCompile Include="src\controllers\mountcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\features\sources\clipbufferbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\features\sources\sourcepreview.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\controllers\datapipelinecontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

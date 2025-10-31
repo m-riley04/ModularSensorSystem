@@ -10,7 +10,7 @@ class SourcePreview : public QObject
 	Q_OBJECT
 
 public:
-	SourcePreview(QUuid sourceId, QObject* parent);
+	SourcePreview(QUuid sourceId, QObject* parent) : QObject(parent), m_sourceId(sourceId) {}
 	~SourcePreview() = default;
 
 	QUuid sourceId() const { return m_sourceId; }
