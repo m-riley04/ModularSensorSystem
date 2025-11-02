@@ -13,6 +13,18 @@
   <property name="windowTitle">
    <string>SourcePreviewWidget</string>
   </property>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+   <item>
+    <widget class="QLabel" name="labelSource">
+     <property name="text">
+      <string>Source</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="sinkWidget" native="true"/>
+   </item>
+  </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

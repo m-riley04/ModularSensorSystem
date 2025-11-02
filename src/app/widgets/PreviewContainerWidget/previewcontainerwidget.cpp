@@ -1,4 +1,5 @@
 #include "previewcontainerwidget.h"
+#include <utils/boost_qt_conversions.h>
 
 PreviewContainerWidget::PreviewContainerWidget(QWidget *parent)
 	: QWidget(parent)
@@ -40,9 +41,8 @@ void PreviewContainerWidget::addSourceWidget(Source* source)
 		return;
 	}
 
-	auto* widget = new SourcePreviewWidget(source->preview(), ui.tabDevicePreviews);
-
-	// Null check
+	// Create new source preview widget
+	auto* widget = new SourcePreviewWidget(source, this);
 	if (widget == nullptr) {
 		qDebug() << "Failed to create widget for source";
 		return;
@@ -50,10 +50,6 @@ void PreviewContainerWidget::addSourceWidget(Source* source)
 
 	// Add widget to list
 	mSourcePreviewWidgets.append(widget);
-
-	// Add tab
-	QString tabName = QString::fromStdString(source->name());
-	ui.tabDevicePreviews->addTab(widget, tabName);
 
 	// Emit signal
 	emit sourceWidgetAdded(widget);
@@ -67,18 +63,18 @@ void PreviewContainerWidget::removeSourceWidget(QUuid id)
 	}
 
 	// Find the video widget for the source
-	for (int i = 0; i < mSourcePreviewWidgets.size(); ++i) {
-		SourcePreviewWidget* widget = mSourcePreviewWidgets[i];
-		if (widget->preview()->sourceId() == id) {
-			// Remove the widget from the list and UI
-			ui.tabDevicePreviews->removeTab(i);
-			mSourcePreviewWidgets.removeAt(i);
-
-			// TODO: Implement proper/more cleanup for the widget (if needed, READ QT DOCS ON QLIST/QTAB MEMORY)
-			widget->deleteLater();
-
-			emit sourceWidgetRemoved(widget); /// CONSIDER: Returning something OTHER than a pointer to the widget (since it's being deleted)
-			break;
+	for (auto& widget : mSourcePreviewWidgets) {
+		if (boostUuidToQUuid(widget->source()->uuid()) != id) {
+			continue;
 		}
+
+		// Remove the widget from the list and UI
+		mSourcePreviewWidgets.removeAll(widget);
+
+		// TODO: Implement proper/more cleanup for the widget (if needed, READ QT DOCS ON QLIST/QTAB MEMORY)
+		widget->deleteLater();
+
+		emit sourceWidgetRemoved(widget); /// CONSIDER: Returning something OTHER than a pointer to the widget (since it's being deleted)
+		break;
 	}
 }

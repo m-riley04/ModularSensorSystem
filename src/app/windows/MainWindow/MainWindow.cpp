@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui.setupUi(this);
 
 	// Initialize the main controller
-	pController = std::make_unique<MainController>(this);
+	pController = new MainController(this);
 
     // Initialize core app
     QCoreApplication::setApplicationName("ModularSensorSystem");
@@ -83,19 +83,18 @@ void MainWindow::initWidgets()
     updateToolbarButtonsState();
 
     // Init session controls widget
-    ui.sessionControls->setController(pController.get());
+    ui.sessionControls->setController(pController);
 
     // Init preview container widget
-    ui.devicePreviewWidget->setController(pController.get());
+    ui.devicePreviewWidget->setController(pController);
 	// TODO/DEBUG: add test video output
-	ui.devicePreviewWidget->setAttribute(Qt::WA_NativeWindow); // Ensure the widget has a native window handle for video rendering
     pController->sessionController()->setVideoSinkWindowId(ui.devicePreviewWidget->winId());
 
     // Init presets widget
-    ui.presetsWidget->setController(pController.get());
+    ui.presetsWidget->setController(pController);
 
     // Init elements tree
-    ui.dockWidget->setController(pController.get());
+    ui.dockWidget->setController(pController);
     ui.dockWidget->setActions(this->getElementTreeActions());
 }
 
@@ -165,7 +164,7 @@ void MainWindow::initSignals() {
 	SourceController* pSourceController = pController->sourceController();
 
     // Init error message propagation
-    connect(pController.get(), &MainController::errorOccurred, [this](const SourceError& e) {
+    connect(pController, &MainController::errorOccurred, [this](const SourceError& e) {
         QString deviceInfo = "Source: " + (e.source != nullptr ? QString::fromStdString(e.source->name()) : "null");
         QString errorMessage = "Error: " + e.msg + "\n" + deviceInfo;
         QMessageBox::warning(this, "Error", errorMessage);

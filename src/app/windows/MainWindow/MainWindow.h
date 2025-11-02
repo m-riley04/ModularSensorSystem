@@ -57,7 +57,7 @@ public slots:
 
 private:
     Ui::MainWindowClass ui;
-    std::unique_ptr<MainController> pController;
+    MainController* pController;
 
     QListWidgetItem* pSelectedPresetItem = nullptr;
 	ElementTreeNode* m_selectedElement = nullptr;

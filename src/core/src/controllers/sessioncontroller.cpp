@@ -42,15 +42,18 @@ void SessionController::buildPipeline()
 	// Step through states to surface problems earlier
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_READY) == GST_STATE_CHANGE_FAILURE) {
 		qWarning() << "Failed to set pipeline to READY";
-		closePipeline(); return;
+		closePipeline();
+		return;
 	}
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_PAUSED) == GST_STATE_CHANGE_FAILURE) {
 		qWarning() << "Failed to set pipeline to PAUSED";
-		closePipeline(); return;
+		closePipeline();
+		return;
 	}
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_PLAYING) == GST_STATE_CHANGE_FAILURE) {
 		qWarning() << "Failed to set pipeline to PLAYING";
-		closePipeline(); return;
+		closePipeline();
+		return;
 	}
 }
 	
