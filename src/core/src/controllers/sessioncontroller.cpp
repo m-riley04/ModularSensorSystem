@@ -30,7 +30,7 @@ void SessionController::buildPipeline()
 
 	// Iterate over all sources and add them
 	for (auto& src : m_sourceController->sources()) {
-		SourceGstElements elements = createVideoSourceElements(src);
+		SourceGstElements elements = createSourceElements(src);
 
 		if (!isValidElements(elements)) {
 			qWarning() << "Invalid source elements created";
