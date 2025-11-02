@@ -1,6 +1,14 @@
 {
   "dependencies": [
-    "gstreamer",
+    {
+      "name": "gstreamer",
+      "features": [
+        "gl",
+        "plugins-base",
+        "plugins-good"
+      ],
+      "version>=": "1.26.5#0"
+    },
     "onnx",
     "onnxruntime-gpu",
     "boost-signals2",

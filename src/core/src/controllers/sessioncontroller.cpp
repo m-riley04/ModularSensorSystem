@@ -19,8 +19,8 @@ void SessionController::buildPipeline()
 	m_pipeline.reset(GST_PIPELINE(gst_pipeline_new(MAIN_PIPELINE_NAME)));
 
 	// TODO/DEBUG: this is just a test pipeline to get video output working
-	GstElement* source = gst_element_factory_make("videotestsrc", NULL);
-	GstElement* sink = gst_element_factory_make("autovideosink", NULL); // Or xvimagesink, ximagesink, etc.
+	GstElement* source = gst_element_factory_make("autovideosrc", "testsrc");
+	GstElement* sink = gst_element_factory_make("autovideosink", "testsink"); // Or xvimagesink, ximagesink, etc.
 
 	// Add elements to pipeline
 	gst_bin_add_many(GST_BIN(m_pipeline.get()), source, sink, NULL);
