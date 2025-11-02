@@ -88,6 +88,7 @@ void MainWindow::initWidgets()
     // Init preview container widget
     ui.devicePreviewWidget->setController(pController.get());
 	// TODO/DEBUG: add test video output
+	ui.devicePreviewWidget->setAttribute(Qt::WA_NativeWindow); // Ensure the widget has a native window handle for video rendering
     pController->sessionController()->setVideoSinkWindowId(ui.devicePreviewWidget->winId());
 
     // Init presets widget

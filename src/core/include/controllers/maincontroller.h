@@ -3,13 +3,13 @@
 #include <QObject>
 #include <qcoreapplication.h>
 #include "controllers/plugincontroller.h"
-#include "controllers/datapipelinecontroller.h"
 #include "controllers/presetscontroller.h"
 #include "controllers/processingcontroller.h"
 #include "controllers/sourcecontroller.h"
 #include "controllers/mountcontroller.h"
 #include "controllers/sessioncontroller.h"
 #include <memory>
+#include <QThread>
 
 class DataPipelineController; // forward declare to break circular include
 
@@ -27,13 +27,12 @@ public:
 	 */
 	QList<BackendControllerBase*> getAllSubcontrollers() const;
 
-	SourceController* sourceController() const { return pSourceController.get(); }
-	PluginController* pluginController() const { return pPluginController.get(); }
-	PresetsController* presetsController() const { return pPresetsController.get(); }
-	ProcessingController* processingController() const { return pProcessingController.get(); }
-	MountController* mountController() const { return pMountController.get(); }
-	DataPipelineController* dataPipelineController() const { return pDataPipelineController.get(); }
-	SessionController* sessionController() const { return pSessionController.get(); }
+	SourceController* sourceController() const { return pSourceController; }
+	PluginController* pluginController() const { return pPluginController; }
+	PresetsController* presetsController() const { return pPresetsController; }
+	ProcessingController* processingController() const { return pProcessingController; }
+	MountController* mountController() const { return pMountController; }
+	SessionController* sessionController() const { return pSessionController; }
 
 	/**
 	 * @brief Checks whether the specified main controller and its associated controllers are in a valid state.
@@ -44,13 +43,15 @@ public:
 	bool checkIfControllersAreOk() const;
 
 private:
-	std::unique_ptr<SourceController> pSourceController;
-	std::unique_ptr<PluginController> pPluginController;
-	std::unique_ptr<PresetsController> pPresetsController;
-	std::unique_ptr<ProcessingController> pProcessingController;
-	std::unique_ptr<MountController> pMountController;
-	std::unique_ptr<DataPipelineController> pDataPipelineController;
-	std::unique_ptr<SessionController> pSessionController;
+	// NOTE: These were previously unique_ptrs.
+	// I favored for Qt dealing with object ownership and parent-child relationships.
+	// It was also causing issues with double deletion side-effects.
+	SourceController* pSourceController;
+	PluginController* pPluginController;
+	PresetsController* pPresetsController;
+	ProcessingController* pProcessingController;
+	MountController* pMountController;
+	SessionController* pSessionController;
 
 signals:
 	void errorOccurred(const SourceError& e);

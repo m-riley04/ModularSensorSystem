@@ -107,14 +107,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\sessioncontroller.cpp" />
-    <ClCompile Include="src\controllers\datapipelinecontroller.cpp" />
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
     <QtMoc Include="include\controllers\sessioncontroller.h" />
     <ClInclude Include="include\utils\boost_qt_conversions.h" />
     <QtMoc Include="include\features\ielement.h" />
     <ClInclude Include="include\sdk\plugins\pluginloader.h" />
     <QtMoc Include="include\controllers\backendcontrollerbase.h" />
-    <QtMoc Include="include\controllers\datapipelinecontroller.h" />
     <QtMoc Include="include\features\mounts\mount.h" />
     <QtMoc Include="include\controllers\mountcontroller.h" />
     <ClInclude Include="include\sdk\plugins\factory.h" />

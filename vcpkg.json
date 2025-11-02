@@ -5,7 +5,9 @@
       "features": [
         "gl",
         "plugins-base",
-        "plugins-good"
+        "plugins-good",
+        "plugins-bad",
+        "plugins-ugly"
       ],
       "version>=": "1.26.5#0"
     },

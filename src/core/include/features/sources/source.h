@@ -19,7 +19,7 @@ public:
 	enum Type {
 		VIDEO,
 		AUDIO,
-		GPS,
+		DATA,
 		OTHER
 	};
 
@@ -37,6 +37,18 @@ public:
 		SOURCE_DISCONNECTED,
 		UNKNOWN_ERROR
 	};
+
+	static bool isVideo(Source* src) {
+		return src->type() == Source::Type::VIDEO;
+	}
+
+	static bool isAudio(Source* src) {
+		return src->type() == Source::Type::AUDIO;
+	}
+
+	static bool isData(Source* src) {
+		return src->type() == Source::Type::DATA;
+	}
 
 	/**
 	 * Converts a State enum value to its corresponding string representation.
@@ -62,9 +74,9 @@ public:
 	static QString typeToString(Type type)
 	{
 		switch (type) {
-		case VIDEO: return "Camera";
-		case AUDIO: return "Microphone";
-		case GPS: return "GPS";
+		case VIDEO: return "Video";
+		case AUDIO: return "Audio";
+		case DATA: return "Data";
 		case OTHER: return "Other";
 		default: return "Unknown";
 		}

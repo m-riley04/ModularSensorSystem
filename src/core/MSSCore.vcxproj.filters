@@ -91,9 +91,6 @@
     <ClCompile Include="src\controllers\mountcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\datapipelinecontroller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\controllers\sessioncontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -130,9 +127,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\features\processors\processor.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="include\controllers\datapipelinecontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\features\ielement.h">

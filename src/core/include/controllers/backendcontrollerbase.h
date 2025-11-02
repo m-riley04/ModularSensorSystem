@@ -13,7 +13,7 @@ class BackendControllerBase : public QObject
 
 public:
 	BackendControllerBase(QString controllerName, QObject* parent) : QObject(parent), m_name(controllerName) {}
-	~BackendControllerBase() = default;
+	virtual ~BackendControllerBase() = default;
 
 	/**
 	 * @brief Returns the name of the specific controller. Initialized in each derived class.

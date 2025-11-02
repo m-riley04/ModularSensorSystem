@@ -1,5 +1,5 @@
 #include "elementtreemodel.h"
-#include "controllers/datapipelinecontroller.h"
+#include "controllers/sessioncontroller.h"
 #include <utils/boost_qt_conversions.h>
 
 ElementTreeModel::ElementTreeModel(MainController* mc,
@@ -131,12 +131,12 @@ void ElementTreeModel::buildHierarchical()
         QUuid id = boostUuidToQUuid(m->uuid());
         mNodes << ElementTreeNode{ ElementTreeNode::Kind::Mount, id, -1};
 
-        for (auto s : m_mainController->dataPipelineController()->getSourcesByMount(id)) {
+        for (auto s : m_mainController->sessionController()->getSourcesByMount(id)) {
             int sRow = mNodes.size();
 			QUuid sId = boostUuidToQUuid(s->uuid());
             mNodes << ElementTreeNode{ ElementTreeNode::Kind::Source, sId, mRow };
 
-            for (auto p : m_mainController->dataPipelineController()->getProcessorsBySource(sId)) {
+            for (auto p : m_mainController->sessionController()->getProcessorsBySource(sId)) {
                 // TODO: use real processor ID
                 mNodes << ElementTreeNode{ ElementTreeNode::Kind::Processor, boostUuidToQUuid(p->uuid()), sRow};
             }

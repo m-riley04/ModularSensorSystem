@@ -4,13 +4,12 @@
 MainController::MainController(QObject *parent)
 	: QObject(parent)
 {
-	pPluginController = std::make_unique<PluginController>(QCoreApplication::applicationDirPath() + "/plugins", this);
-	pSourceController = std::make_unique<SourceController>(pPluginController.get(), this);
-	pPresetsController = std::make_unique<PresetsController>(QCoreApplication::applicationDirPath() + "/presets", this);
-	pProcessingController = std::make_unique<ProcessingController>(this);
-	pMountController = std::make_unique<MountController>(this);
-	pDataPipelineController = std::make_unique<DataPipelineController>(this, this);
-	pSessionController = std::make_unique<SessionController>(this);
+	pPluginController = new PluginController(QCoreApplication::applicationDirPath() + "/plugins", this);
+	pSourceController = new SourceController(pPluginController, this);
+	pPresetsController = new PresetsController(QCoreApplication::applicationDirPath() + "/presets", this);
+	pProcessingController = new ProcessingController(this);
+	pMountController = new MountController(this);
+	pSessionController = new SessionController(pSourceController, pProcessingController, pMountController, this);
 }
 
 MainController::~MainController()
@@ -19,12 +18,12 @@ MainController::~MainController()
 QList<BackendControllerBase*> MainController::getAllSubcontrollers() const
 {
 	QList<BackendControllerBase*> list;
-	list << pSourceController.get()
-		 << pPluginController.get()
-		 << pPresetsController.get()
-		 << pProcessingController.get()
-		 << pMountController.get()
-		 << pDataPipelineController.get();
+	list << pSourceController
+		 << pPluginController
+		 << pPresetsController
+		 << pProcessingController
+		 << pMountController
+		 << pSessionController;
 	return list;
 }
 
@@ -35,7 +34,6 @@ bool MainController::checkIfControllersAreOk() const
 		pProcessingController &&
 		pPresetsController &&
 		pPluginController &&
-		pDataPipelineController &&
 		pSessionController && 
 		pMountController)
 	{
