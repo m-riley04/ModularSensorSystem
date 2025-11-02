@@ -21,6 +21,8 @@ public slots:
 	void addSourceWidget(Source*);
 	void removeSourceWidget(QUuid id);
 
+	void updateButtonControls();
+
 private:
 	Ui::PreviewContainerWidgetClass ui;
 	QList<SourcePreviewWidget*> mSourcePreviewWidgets;

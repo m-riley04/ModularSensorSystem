@@ -137,12 +137,8 @@ public:
 	 */
 	Source::State state() const { return mState; }
 
-	/**
-	 * SourcePreview object for the device.
-	 * Used for previewing the device's output.
-	 * @return a weak pointer to the SourcePreview object.
-	 */
-	SourcePreview* preview() const { return pPreview.get(); }
+	quintptr windowId() const { return m_windowId;  }
+	void setWindowId(quintptr newId) { m_windowId = newId; }
 
 protected:
 	/**
@@ -152,6 +148,7 @@ protected:
 	QString m_id = "Unknown_ID";
 	QString m_pluginId = "Unknown Plugin";
 	QString m_name = "New Source";
+	quintptr m_windowId = 0;
 
 	Source::Type mSourceType = Source::Type::OTHER;
 	Source::State mState = Source::State::CLOSED;

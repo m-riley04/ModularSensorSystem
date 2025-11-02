@@ -95,7 +95,7 @@ SourceGstElements SessionController::createVideoSourceElements(Source* source)
 
 	// Initialize sink
 	GstElement* sink = gst_element_factory_make("d3dvideosink", NULL); // TODO: make this dynamic
-	guintptr windowId = static_cast<guintptr>(m_sinkWindowId); // TODO: make this dynamic
+	guintptr windowId = static_cast<guintptr>(source->windowId());
 
 	if (!sourceGst || !queue || !conv || !sink) {
 		qWarning() << "Failed to create one or more elements";

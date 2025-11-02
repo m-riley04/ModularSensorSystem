@@ -23,9 +23,41 @@ void PreviewContainerWidget::initSignals()
 		return;
 	}
 
-	// Device added ui updates
+	// Button controls
+	connect(ui.buttonPrevious, &QPushButton::clicked, this, [this]() {
+		int currentIndex = ui.stackedWidget->currentIndex();
+		if (currentIndex > 0) {
+			ui.stackedWidget->setCurrentIndex(currentIndex - 1);
+		}
+		});
+
+	connect(ui.buttonNext, &QPushButton::clicked, this, [this]() {
+		int currentIndex = ui.stackedWidget->currentIndex();
+		if (currentIndex < ui.stackedWidget->count() - 1) {
+			ui.stackedWidget->setCurrentIndex(currentIndex + 1);
+		}
+		});
+
+	// Source added ui updates
 	connect(sourceController, &SourceController::sourceAdded, this, &PreviewContainerWidget::addSourceWidget);
 	connect(sourceController, &SourceController::sourceRemoved, this, &PreviewContainerWidget::removeSourceWidget);
+
+	connect(ui.stackedWidget, &QStackedWidget::currentChanged, this, &PreviewContainerWidget::updateButtonControls);
+	connect(ui.stackedWidget, &QStackedWidget::widgetRemoved, this, &PreviewContainerWidget::updateButtonControls);
+}
+
+void PreviewContainerWidget::updateButtonControls()
+{
+	if (mSourcePreviewWidgets.size() <= 1) {
+		ui.frameControls->setEnabled(false);
+		return;
+	}
+
+	ui.frameControls->setEnabled(true);
+
+	// Check current index
+	ui.buttonPrevious->setEnabled(ui.stackedWidget->currentIndex() > 0);
+	ui.buttonNext->setEnabled(ui.stackedWidget->currentIndex() < ui.stackedWidget->count() - 1);
 }
 
 void PreviewContainerWidget::setController(MainController* controller) {
@@ -50,6 +82,10 @@ void PreviewContainerWidget::addSourceWidget(Source* source)
 
 	// Add widget to list
 	mSourcePreviewWidgets.append(widget);
+
+	// TODO: make this a single-page system
+	ui.stackedWidget->removeWidget(ui.pageMain);
+	ui.stackedWidget->addWidget(widget);
 
 	// Emit signal
 	emit sourceWidgetAdded(widget);
