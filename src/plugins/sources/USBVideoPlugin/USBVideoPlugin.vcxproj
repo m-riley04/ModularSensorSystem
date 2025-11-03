@@ -121,9 +121,7 @@
     <ClCompile Include="USBVideoPropertiesWidget\usbvideopropertieswidget.cpp" />
     <ClCompile Include="USBVideoRecordingPropertiesWidget\usbvideorecordingpropertieswidget.cpp" />
     <ClCompile Include="USBVideoSource\usbvideosource.cpp" />
-    <ClCompile Include="USBVideoPreview\usbvideopreview.cpp" />
     <QtMoc Include="USBVideoSource\usbvideosource.h" />
-    <QtMoc Include="USBVideoPreview\usbvideopreview.h" />
     <ClInclude Include="usbvideoplugin.h" />
     <ClCompile Include="usbvideoplugin.cpp" />
   </ItemGroup>

@@ -122,7 +122,6 @@
     <ClInclude Include="include\features\sources\iconfigurablesource.h" />
     <QtMoc Include="include\features\sources\source.h" />
     <ClInclude Include="include\features\sources\sourceerror.h" />
-    <QtMoc Include="include\features\sources\sourcepreview.h" />
     <QtMoc Include="include\features\sources\sourcemetadata.h" />
     <QtMoc Include="include\features\processors\processor.h" />
     <QtMoc Include="include\controllers\maincontroller.h" />

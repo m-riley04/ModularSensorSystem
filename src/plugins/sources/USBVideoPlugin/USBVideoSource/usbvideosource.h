@@ -11,7 +11,6 @@
 #include "features/sources/source.h"
 #include "features/sources/iconfigurablesource.h"
 #include "interfaces/capability/ivideosource.h"
-#include "USBVideoPreview/usbvideopreview.h"
 #include "USBVideoPropertiesWidget/usbvideopropertieswidget.h"
 #include "USBVideoRecordingPropertiesWidget/usbvideorecordingpropertieswidget.h"
 

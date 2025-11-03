@@ -16,7 +16,6 @@ USBVideoSource::USBVideoSource(QCameraDevice qVideoDevice, QObject* parent)
     m_name = qVideoDevice.description();
 	m_pluginId = "usb_video";
     mSourceType = Source::Type::VIDEO;
-    pPreview.reset(new USBVideoPreview(&mSession, boostUuidToQUuid(this->uuid()), this));
 
     // Initialize capture session
     mSession.setCamera(&mCamera);
@@ -47,11 +46,6 @@ void USBVideoSource::open() {
         QMessageBox::warning(nullptr, "Camera Error", "Camera is already active.");
         return;
     }
-
-    // Init preview
-	if (!pPreview) pPreview.reset(new USBVideoPreview(&mSession, boostUuidToQUuid(this->uuid()), this));
-
-    emit previewAvailable(this, pPreview.get());
 }
 
 void USBVideoSource::start() {

@@ -391,6 +391,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </item>
     <item row="0" column="1">
      <widget class="DockableElementsManagerWidget" name="dockWidget">
+      <property name="minimumSize">
+       <size>
+        <width>48</width>
+        <height>32</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
         <width>524287</width>

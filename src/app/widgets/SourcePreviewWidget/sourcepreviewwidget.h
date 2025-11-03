@@ -3,7 +3,6 @@
 #include <QWidget>
 #include "ui_sourcepreviewwidget.h"
 #include "features/sources/source.h"
-#include "features/sources/sourcepreview.h"
 #include <QPainter>
 
 class SourcePreviewWidget : public QWidget

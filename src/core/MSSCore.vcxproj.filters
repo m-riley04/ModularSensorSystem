@@ -120,9 +120,6 @@
     <QtMoc Include="include\features\sources\source.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\features\sources\sourcepreview.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="include\features\sources\sourcemetadata.h">
       <Filter>Header Files</Filter>
     </QtMoc>

@@ -2,13 +2,11 @@
 
 #include <QObject>
 #include <quuid.h>
-#include "sourcepreview.h"
 #include <QPointer>
 #include "sourceerror.h"
 #include "features/ielement.h"
 #include <QUuid>
 
-class SourcePreview;
 struct SourceError;
 
 class Source : public IElement
@@ -156,18 +154,11 @@ protected:
 
 	qint64 mStartTime = 0;
 
-	std::unique_ptr<SourcePreview> pPreview = nullptr;
-
 signals:
 	void opened();
 	void started();
 	void stopped();
 	void closed();
-
-	/// <summary>
-	/// Emitted when the source's preview is available.
-	/// </summary>
-	void previewAvailable(Source* src, SourcePreview* preview);
 
 	void errorOccurred(const SourceError& e);
 };
