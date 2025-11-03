@@ -21,9 +21,6 @@ MainWindow::MainWindow(QWidget *parent)
     QCoreApplication::setOrganizationName("Riley Meyerkorth");
     QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
 
-    // Init flags
-    //setWindowFlags(Qt::FramelessWindowHint);
-
     // Initialize
     initWidgets();
     initSignals();
