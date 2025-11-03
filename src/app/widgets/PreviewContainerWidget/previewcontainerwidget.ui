@@ -34,7 +34,9 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="pageMain"/>
+     <widget class="QDynamicGridWidget" name="pageMain">
+      <layout class="QVBoxLayout" name="verticalLayout_2"/>
+     </widget>
     </widget>
    </item>
    <item>
@@ -103,6 +105,14 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QDynamicGridWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/QDynamicGridWidget/qdynamicgridwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

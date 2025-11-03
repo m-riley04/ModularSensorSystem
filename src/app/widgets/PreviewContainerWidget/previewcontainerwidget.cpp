@@ -5,6 +5,8 @@ PreviewContainerWidget::PreviewContainerWidget(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
+
+	m_gridWidgets.push_back(ui.pageMain); // TODO/FIX: does this need to be a cast?
 }
 
 PreviewContainerWidget::~PreviewContainerWidget()
@@ -12,12 +14,12 @@ PreviewContainerWidget::~PreviewContainerWidget()
 
 void PreviewContainerWidget::initSignals()
 {
-	if (pController == nullptr) {
+	if (m_controller == nullptr) {
 		qDebug() << "Cannot initialize signals: main controller is null";
 		return;
 	}
 
-	SourceController* sourceController = pController->sourceController();
+	SourceController* sourceController = m_controller->sourceController();
 	if (sourceController == nullptr) {
 		qDebug() << "Cannot initialize signals: source controller is null";
 		return;
@@ -54,7 +56,7 @@ void PreviewContainerWidget::initSignals()
 
 void PreviewContainerWidget::updateButtonControls()
 {
-	if (mSourcePreviewWidgets.size() <= 1) {
+	if (m_sourcePreviewWidgets.size() <= 1) {
 		ui.frameControls->setEnabled(false);
 		return;
 	}
@@ -67,8 +69,8 @@ void PreviewContainerWidget::updateButtonControls()
 }
 
 void PreviewContainerWidget::setController(MainController* controller) {
-	if (pController == controller) return;
-	pController = controller;
+	if (m_controller == controller) return;
+	m_controller = controller;
 	initSignals();
 }
 
@@ -87,11 +89,10 @@ void PreviewContainerWidget::addSourceWidget(Source* source)
 	}
 
 	// Add widget to list
-	mSourcePreviewWidgets.append(widget);
+	m_sourcePreviewWidgets.append(widget);
 
-	// TODO: make this a single-page system
-	ui.stackedWidget->removeWidget(ui.pageMain);
-	ui.stackedWidget->addWidget(widget);
+	// TODO: make this system add pages when too many sources are added
+	ui.pageMain->addWidgetToGrid(widget);
 
 	// Emit signal
 	emit sourceWidgetAdded(widget);
@@ -105,13 +106,13 @@ void PreviewContainerWidget::removeSourceWidget(QUuid id)
 	}
 
 	// Find the video widget for the source
-	for (auto& widget : mSourcePreviewWidgets) {
+	for (auto& widget : m_sourcePreviewWidgets) {
 		if (boostUuidToQUuid(widget->source()->uuid()) != id) {
 			continue;
 		}
 
 		// Remove the widget from the list and UI
-		mSourcePreviewWidgets.removeAll(widget);
+		m_sourcePreviewWidgets.removeAll(widget);
 
 		// TODO: Implement proper/more cleanup for the widget (if needed, READ QT DOCS ON QLIST/QTAB MEMORY)
 		widget->deleteLater();

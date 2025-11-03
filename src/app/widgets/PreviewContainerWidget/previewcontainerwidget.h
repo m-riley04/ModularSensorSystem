@@ -24,9 +24,10 @@ public slots:
 
 private:
 	Ui::PreviewContainerWidgetClass ui;
-	QList<SourcePreviewWidget*> mSourcePreviewWidgets;
+	QList<SourcePreviewWidget*> m_sourcePreviewWidgets;
+	QList<QDynamicGridWidget*> m_gridWidgets;
 
-	MainController* pController = nullptr;
+	MainController* m_controller = nullptr;
 
 	void initSignals();
 

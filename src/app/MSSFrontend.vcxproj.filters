@@ -73,6 +73,9 @@
     <ClCompile Include="dialogs\AddMountDialog\addmountdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\QDynamicGridWidget\qdynamicgridwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -117,6 +120,9 @@
     <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="widgets\QDynamicGridWidget\qdynamicgridwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
@@ -153,6 +159,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="widgets\QDynamicGridWidget\qdynamicgridwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

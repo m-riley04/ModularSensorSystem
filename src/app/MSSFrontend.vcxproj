@@ -115,6 +115,7 @@
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
+    <ClCompile Include="widgets\QDynamicGridWidget\qdynamicgridwidget.cpp" />
     <ClCompile Include="widgets\SourcePropertiesWidget\sourcepropertieswidget.cpp" />
     <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
@@ -126,6 +127,7 @@
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
     <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
+    <QtUic Include="widgets\QDynamicGridWidget\qdynamicgridwidget.ui" />
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui" />
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
@@ -195,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="data\requried_actions.h" />
+    <QtMoc Include="widgets\QDynamicGridWidget\qdynamicgridwidget.h" />
     <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
