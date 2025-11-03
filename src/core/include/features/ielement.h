@@ -46,7 +46,7 @@ public:
 	 * By default, returns "unknown_plugin".
 	 * @return string ID of the parent plugin.
 	 */
-	virtual std::string pluginId() const { return "unknown_plugin"; } // default implementation
+	virtual std::string pluginId() const { return "plugin_unknown"; } // default implementation
 	virtual void setPluginId(const std::string& newPluginId) {} // default no-op
 
 	/**

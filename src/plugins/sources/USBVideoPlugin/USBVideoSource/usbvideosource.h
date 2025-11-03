@@ -11,37 +11,24 @@
 #include "features/sources/source.h"
 #include "features/sources/iconfigurablesource.h"
 #include "interfaces/capability/ivideosource.h"
-#include "USBVideoPropertiesWidget/usbvideopropertieswidget.h"
-#include "USBVideoRecordingPropertiesWidget/usbvideorecordingpropertieswidget.h"
+#include <sdk/plugins/isourceplugin.h>
+#include <utils/boost_qt_conversions.h>
+#include <usbvideoplugin.h>
 
 class USBVideoSource : public Source, 
-	public IConfigurableSource, 
 	public IVideoSource
 {
 	Q_OBJECT
-	//Q_INTERFACES(IConfigurableSource IClippableSource IVideoSource)
 
 public:
-	USBVideoSource(QByteArray hardwareId, QObject* parent);
-    USBVideoSource(QCameraDevice qVideoDevice, QObject *parent);
+	USBVideoSource(const std::string& hardwareId, QObject* parent);
+    USBVideoSource(SourceInfo sourceInfo, QObject *parent);
 	~USBVideoSource();
 
-	static QCameraDevice getCameraDevice(const QByteArray& id);
-
-	QCamera* camera() { return &mCamera; }
-
-	// IConfigurableDevice interface
-	QWidget* createConfigWidget(QWidget* parent = nullptr) override;
-	void loadSettings(const QJsonObject& obj) override;
-	QJsonObject saveSettings() override;
+	SourceInfo getSourceInfo(const std::string& id) const;
 
 	// IVideoSource interface
 	QObject* asQObject() override { return this; }
-
-private:
-	QMediaCaptureSession mSession;
-	QCamera mCamera;
-	QMediaRecorder mRecorder;
 
 public slots:
     void open() override;

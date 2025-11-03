@@ -112,16 +112,16 @@ public:
 	 * The hardware ID for the device
 	 * @return hardware ID string
 	 */
-	std::string id() const override { return m_id.toStdString(); }
+	std::string id() const override { return m_id; }
 
 	/**
 	 * The name of the device from the system.
 	 * Sometimes this is called "description".
 	 * @return user-friendly name of the device from the hardware.
 	 */
-	std::string name() const { return m_name.toStdString(); }
-	void setName(const std::string& newName) override { m_name = QString::fromStdString(newName); }
-	std::string pluginId() const override { return m_pluginId.toStdString(); }
+	std::string name() const { return m_name; }
+	void setName(const std::string& newName) override { m_name = std::string(newName); }
+	std::string pluginId() const override { return m_pluginId; }
 
 	/**
 	 * The type of device.
@@ -143,9 +143,9 @@ protected:
 	 * The unique hardware ID if possible.
 	 * Should be set in each child's initializer.
 	 */
-	QString m_id = "Unknown_ID";
-	QString m_pluginId = "Unknown Plugin";
-	QString m_name = "New Source";
+	std::string m_id = "src_unknown";
+	std::string m_pluginId = "plugin_unknown";
+	std::string m_name = "New Source";
 	quintptr m_windowId = 0;
 
 	Source::Type mSourceType = Source::Type::OTHER;
