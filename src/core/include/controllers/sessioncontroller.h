@@ -21,6 +21,25 @@ struct SourceGstElements {
 	GstElement* convElement = nullptr;
 	GstElement* sinkElement = nullptr;
 	guintptr sinkWindowId = 0;
+
+	~SourceGstElements() {
+		if (srcElement) {
+			gst_object_unref(srcElement);
+			srcElement = nullptr;
+		}
+		if (queueElement) {
+			gst_object_unref(queueElement);
+			queueElement = nullptr;
+		}
+		if (convElement) {
+			gst_object_unref(convElement);
+			convElement = nullptr;
+		}
+		if (sinkElement) {
+			gst_object_unref(sinkElement);
+			sinkElement = nullptr;
+		}
+	}
 };
 
 class SessionController : public BackendControllerBase
