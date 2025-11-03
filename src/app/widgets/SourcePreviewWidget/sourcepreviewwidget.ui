@@ -1,4 +1,5 @@
-<UI version="4.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>SourcePreviewWidgetClass</class>
  <widget class="QWidget" name="SourcePreviewWidgetClass">
   <property name="geometry">
@@ -13,6 +14,21 @@
    <string>SourcePreviewWidget</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QLabel" name="labelSource">
      <property name="text">
@@ -28,4 +44,4 @@
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
-</UI>
+</ui>

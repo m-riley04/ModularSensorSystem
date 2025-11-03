@@ -6,14 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>133</width>
-    <height>199</height>
+    <width>436</width>
+    <height>26</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>SessionControlsWidget</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QPushButton" name="buttonStartStop">
      <property name="toolTip">
@@ -32,15 +47,15 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="buttonRecord">
+    <widget class="QPushButton" name="buttonProperties">
      <property name="toolTip">
-      <string>Starts recording of all sources</string>
+      <string>Opens the session's properties</string>
      </property>
      <property name="text">
-      <string>Start Recording</string>
+      <string>Properties</string>
      </property>
      <property name="icon">
-      <iconset theme="QIcon::ThemeIcon::MediaRecord"/>
+      <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
      </property>
     </widget>
    </item>
@@ -55,15 +70,15 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="buttonProperties">
+    <widget class="QPushButton" name="buttonRecord">
      <property name="toolTip">
-      <string>Opens the session's properties</string>
+      <string>Starts recording of all sources</string>
      </property>
      <property name="text">
-      <string>Properties</string>
+      <string>Start Recording</string>
      </property>
      <property name="icon">
-      <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+      <iconset theme="QIcon::ThemeIcon::MediaRecord"/>
      </property>
     </widget>
    </item>

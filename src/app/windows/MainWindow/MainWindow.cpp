@@ -72,7 +72,7 @@ void MainWindow::initWidgets()
 
     // Init menu bar
     ui.actionViewPresetsList->setChecked(!ui.groupPresets->isVisible()); // Not sure why I have to invert this to NOT, but it works.
-    ui.actionViewControls->setChecked(!ui.groupControls->isVisible());
+    ui.actionViewControls->setChecked(!ui.sessionControls->isVisible());
     ui.actionViewEntireRow->setChecked(!ui.frameControls->isVisible());
 
     ui.actionViewMenuBar->setChecked(!ui.menuBar->isVisible());
@@ -128,7 +128,7 @@ void MainWindow::initActionSignals()
         ui.groupPresets->setVisible(checked);
         });
     connect(ui.actionViewControls, &QAction::triggered, [this](bool checked) {
-        ui.groupControls->setVisible(checked);
+        ui.sessionControls->setVisible(checked);
         });
     connect(ui.actionViewEntireRow, &QAction::triggered, [this](bool checked) {
         ui.frameControls->setVisible(checked);
