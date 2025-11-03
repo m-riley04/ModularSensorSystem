@@ -3,6 +3,9 @@
 #include <QWidget>
 #include "ui_qdynamicgridwidget.h"
 
+/**
+ * A grid widget that dynamically adjusts its layout based on the number of child widgets.
+ */
 class QDynamicGridWidget : public QWidget
 {
 	Q_OBJECT

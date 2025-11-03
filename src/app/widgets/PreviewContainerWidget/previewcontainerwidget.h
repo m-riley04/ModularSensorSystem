@@ -6,6 +6,9 @@
 #include "controllers/maincontroller.h"
 #include "widgets/SourcePreviewWidget/sourcepreviewwidget.h"
 
+/**
+ * A widget that contains and manages multiple QDynamicGridWidget instances to display SourcePreviewWidget instances.
+ */
 class PreviewContainerWidget : public QWidget
 {
 	Q_OBJECT
