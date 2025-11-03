@@ -152,7 +152,6 @@ void SessionController::closePipeline()
 {
 	if (!m_pipeline) return;
 	gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_NULL);
-	m_videoSink = nullptr;
 	m_pipeline.reset();
 }
 

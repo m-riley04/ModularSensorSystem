@@ -42,17 +42,16 @@ public:
 	 */
 	void closePipeline();
 
-	bool isPipelineBuilt() const { return m_pipeline != nullptr; }
+	GstPipeline* pipeline() const { return m_pipeline.get(); }
 
-	void setVideoSinkWindowId(quintptr windowId) { m_sinkWindowId = windowId; }
+	bool isPipelineBuilt() const { return m_pipeline != nullptr; }
 
 	QList<const Source*> getSourcesByMount(QUuid mountId) const;
 	QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
 
 private:
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
-	GstElement* m_videoSink = nullptr;
-	quintptr m_sinkWindowId = 0;
+
 	SourceController* m_sourceController = nullptr;
 	ProcessingController* m_processingController = nullptr;
 	MountController* m_mountController = nullptr;

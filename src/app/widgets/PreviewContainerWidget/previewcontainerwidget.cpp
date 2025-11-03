@@ -39,7 +39,13 @@ void PreviewContainerWidget::initSignals()
 		});
 
 	// Source added ui updates
-	connect(sourceController, &SourceController::sourceAdded, this, &PreviewContainerWidget::addSourceWidget);
+	connect(sourceController, &SourceController::sourceAdded, [this](Source* source) {
+		// Add source widget
+		addSourceWidget(source);
+
+		// Update UI
+		updateButtonControls();
+		});
 	connect(sourceController, &SourceController::sourceRemoved, this, &PreviewContainerWidget::removeSourceWidget);
 
 	connect(ui.stackedWidget, &QStackedWidget::currentChanged, this, &PreviewContainerWidget::updateButtonControls);
