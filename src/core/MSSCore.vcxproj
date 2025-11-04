@@ -109,6 +109,7 @@
     <ClCompile Include="src\controllers\sessioncontroller.cpp" />
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
     <QtMoc Include="include\controllers\sessioncontroller.h" />
+    <ClInclude Include="include\gst\sourcebins.h" />
     <ClInclude Include="include\utils\boost_qt_conversions.h" />
     <QtMoc Include="include\features\ielement.h" />
     <ClInclude Include="include\sdk\plugins\pluginloader.h" />

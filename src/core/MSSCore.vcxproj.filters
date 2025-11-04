@@ -71,6 +71,9 @@
     <ClInclude Include="include\utils\boost_qt_conversions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\gst\sourcebins.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">
