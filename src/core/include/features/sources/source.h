@@ -6,9 +6,14 @@
 #include "sourceerror.h"
 #include "features/ielement.h"
 #include <QUuid>
+#include <gst/gst.h>
 
 struct SourceError;
 
+/**
+ * Represents a data source (e.g., video, audio, data).
+ * TODO: rename this to ISource (since I've been working on making this a more pure interface)
+ */
 class Source : public IElement
 {
 	Q_OBJECT
@@ -53,7 +58,7 @@ public:
 	 * @param state The state to convert.
 	 * @return The string representation of the state.
 	 */
-	static QString stateToString(State state)
+	static std::string stateToString(State state)
 	{
 		switch (state) {
 		case OPENED: return "Opened";
@@ -69,7 +74,7 @@ public:
 	 * @param type The type to convert.
 	 * @return The string representation of the type.
 	 */
-	static QString typeToString(Type type)
+	static std::string typeToString(Type type)
 	{
 		switch (type) {
 		case VIDEO: return "Video";
@@ -85,7 +90,7 @@ public:
 	 * @param errorState The error state to convert.
 	 * @return The string representation of the error state.
 	 */
-	static QString errorStateToString(ErrorState errorState)
+	static std::string errorStateToString(ErrorState errorState)
 	{
 		switch (errorState) {
 		case NO_ERROR: return "No Error";
@@ -98,8 +103,7 @@ public:
 	}
 
 public:
-	Source(QByteArray hardwareId, QObject* parent = nullptr) : IElement(parent) {}; // TOOD: must initialize m_id
-	Source(QObject* parent = nullptr) : IElement(parent) {};
+	Source(QObject* parent = nullptr) : IElement(parent) {}
 	virtual ~Source() = default;
 
 	virtual void open() = 0;
@@ -112,47 +116,38 @@ public:
 	 * The hardware ID for the device
 	 * @return hardware ID string
 	 */
-	std::string id() const override { return m_id; }
+	virtual std::string id() const override { return "src_unknown"; }
 
 	/**
 	 * The name of the device from the system.
-	 * Sometimes this is called "description".
+	 * Sometimes this is called "description", other times "device-id", and even "device-path".
 	 * @return user-friendly name of the device from the hardware.
 	 */
-	std::string name() const { return m_name; }
-	void setName(const std::string& newName) override { m_name = std::string(newName); }
-	std::string pluginId() const override { return m_pluginId; }
+	virtual std::string name() const override { return "New Source"; }
+	virtual void setName(const std::string& newName) override = 0;
+	virtual std::string pluginId() const override { return "plugin_unknown"; }
 
 	/**
 	 * The type of device.
 	 * @return the type of a device as Source::Type enum.
 	 */
-	Source::Type type() const { return mSourceType; }
+	virtual Source::Type type() const { return Source::Type::OTHER; }
 
 	/**
 	 * The current state of the device.
 	 * @return the state of the device as Source::State enum.
 	 */
-	Source::State state() const { return mState; }
+	virtual Source::State state() const { return Source::State::CLOSED; }
 
-	quintptr windowId() const { return m_windowId;  }
-	void setWindowId(quintptr newId) { m_windowId = newId; }
-
-protected:
 	/**
-	 * The unique hardware ID if possible.
-	 * Should be set in each child's initializer.
+	 * @brief The window ID where the source's video output should be rendered.
+	 * @return The window ID.
 	 */
-	std::string m_id = "src_unknown";
-	std::string m_pluginId = "plugin_unknown";
-	std::string m_name = "New Source";
-	quintptr m_windowId = 0;
+	virtual quintptr windowId() const { return 0; }
+	virtual void setWindowId(quintptr newId) = 0;
 
-	Source::Type mSourceType = Source::Type::OTHER;
-	Source::State mState = Source::State::CLOSED;
-	Source::ErrorState mErrorState = ErrorState::NO_ERROR;
 
-	qint64 mStartTime = 0;
+	virtual GstElement* gstBin() const = 0;
 
 signals:
 	void opened();

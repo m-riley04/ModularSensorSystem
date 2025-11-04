@@ -30,13 +30,7 @@ void SessionController::buildPipeline()
 
 	// Iterate over all sources and add them
 	for (auto& src : m_sourceController->sources()) {
-		SourceGstElements elements = createSourceElements(src);
-
-		if (!isValidElements(elements)) {
-			qWarning() << "Invalid source elements created";
-			closePipeline();
-			return;
-		}
+		createSourceElements(src);
 	}
 	
 	// Step through states to surface problems earlier
@@ -56,18 +50,13 @@ void SessionController::buildPipeline()
 		return;
 	}
 }
-	
-bool SessionController::isValidElements(SourceGstElements elements) const
-{
-	return elements.srcElement != nullptr && elements.sinkElement != nullptr && elements.sinkWindowId != 0;
-}
 
-SourceGstElements SessionController::createSourceElements(Source* source)
+void SessionController::createSourceElements(Source* source)
 {
 	// Check source
 	if (!source) {
 		qWarning() << "Cannot create source elements: source is null";
-		return SourceGstElements();
+		return;
 	}
 
 	switch (source->type()) {
@@ -81,75 +70,47 @@ SourceGstElements SessionController::createSourceElements(Source* source)
 	}
 }
 
-SourceGstElements SessionController::createVideoSourceElements(Source* source)
+void SessionController::createVideoSourceElements(Source* source)
 {
-	SourceGstElements elements;
-
-	// Initialize source
-	GstElement* sourceGst = gst_element_factory_make("mfvideosrc", NULL); // TODO: make this dynamic and cross-platform
-	g_object_set(sourceGst, "device-path", source->id().c_str(), NULL);
-
-	// Initialize queue and converter
-	GstElement* queue = gst_element_factory_make("queue", NULL);
-	GstElement* conv = gst_element_factory_make("videoconvert", NULL);
-
 	// Initialize sink
 	GstElement* sink = gst_element_factory_make("d3dvideosink", NULL); // TODO: make this dynamic
 	guintptr windowId = static_cast<guintptr>(source->windowId());
 
-	if (!sourceGst || !queue || !conv || !sink) {
+	// Check validity of each
+	if (!sink) {
 		qWarning() << "Failed to create one or more elements";
-		if (sourceGst)  gst_object_unref(sourceGst);
-		if (queue) gst_object_unref(queue);
-		if (conv) gst_object_unref(conv);
 		if (sink) gst_object_unref(sink);
-		return {};
+		return;
 	}
 
 	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(m_pipeline.get()), sourceGst, queue, conv, sink, NULL);
+	gst_bin_add_many(GST_BIN(m_pipeline.get()), source->gstBin(), sink, NULL);
 
-	// Link elements
-	if (!gst_element_link_many(sourceGst, queue, conv, sink, NULL)) {
-		qWarning() << "Failed to link mfvideosrc -> queue -> videoconvert -> d3dvideosink";
-		// Remove and unref on failure
-		gst_bin_remove_many(GST_BIN(m_pipeline.get()), sourceGst, queue, conv, sink, nullptr);
-		gst_object_unref(sourceGst); gst_object_unref(queue); gst_object_unref(conv); gst_object_unref(sink);
-		return {};
+	// Link source bin to sink
+	if (!gst_element_link(source->gstBin(), sink)) {
+		qWarning() << "Failed to link source bin to sink.";
+		gst_bin_remove_many(GST_BIN(m_pipeline.get()), source->gstBin(), sink, NULL);
+		gst_object_unref(sink);
 	}
 
 	// Set the video sink for overlay
 	if (windowId != 0 && GST_IS_VIDEO_OVERLAY(sink)) {
-        gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(sink), windowId);
-    }
-
-	// Assign to output
-	elements.src = source;
-	elements.srcElement = sourceGst;
-	elements.queueElement = queue;
-	elements.convElement = conv;
-	elements.sinkElement = sink;
-	elements.sinkWindowId = windowId;
-
-	return elements;
+		gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(sink), windowId);
+	}
 }
 
-SourceGstElements SessionController::createAudioSourceElements(Source* source)
+void SessionController::createAudioSourceElements(Source* source)
 {
-	SourceGstElements elements;
-
 	// TODO: Implement audio source element creation
 
-	return elements;
+	return;
 }
 
-SourceGstElements SessionController::createDataSourceElements(Source* source)
+void SessionController::createDataSourceElements(Source* source)
 {
-	SourceGstElements elements;
-
 	// TODO: Implement data source element creation
 
-	return elements;
+	return;
 }
 
 void SessionController::closePipeline()

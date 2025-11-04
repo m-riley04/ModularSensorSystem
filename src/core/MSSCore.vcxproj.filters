@@ -71,7 +71,10 @@
     <ClInclude Include="include\utils\boost_qt_conversions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\gst\sourcebins.h">
+    <ClInclude Include="include\bins\binbase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bins\sourcebin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

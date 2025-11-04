@@ -2,17 +2,16 @@
 
 USBVideoSource::USBVideoSource(const std::string& hardwareId, QObject* parent)
 	: USBVideoSource(getSourceInfo(hardwareId), parent)
-{
-    m_id = hardwareId;
-}
+{}
 
 USBVideoSource::USBVideoSource(SourceInfo sourceInfo, QObject* parent)
 	: Source(parent)
 {
     m_id = sourceInfo.id;
     m_name = sourceInfo.displayName;
-	m_pluginId = "plugin_usb_video";
-    mSourceType = Source::Type::VIDEO;
+
+	// Init bin
+	m_sourceBin = std::make_unique<USBVideoSourceBin>(sourceInfo.id, this);
 }
 
 USBVideoSource::~USBVideoSource()
@@ -34,18 +33,8 @@ void USBVideoSource::stop() {
 
 void USBVideoSource::close()
 {
-    if (mState == CLOSED || mState == STOPPED) return;
+    if (m_state == CLOSED || m_state == STOPPED) return;
 	// TODO: Implement close
-}
-
-void USBVideoSource::onNewFrame(const QVideoFrame& frame) {
-	// Emit signal with the frame
-	emit frameReady(frame);
-}
-
-void USBVideoSource::setMediaDirectory(QUrl directory)
-{
-	// TODO: Implement(?)
 }
 
 SourceInfo USBVideoSource::getSourceInfo(const std::string& id) const

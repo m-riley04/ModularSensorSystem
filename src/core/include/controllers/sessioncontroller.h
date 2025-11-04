@@ -14,15 +14,6 @@ using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
 
-struct SourceGstElements {
-	Source* src = nullptr;
-	GstElement* srcElement = nullptr;
-	GstElement* queueElement = nullptr;
-	GstElement* convElement = nullptr;
-	GstElement* sinkElement = nullptr;
-	guintptr sinkWindowId = 0;
-};
-
 class SessionController : public BackendControllerBase
 {
 	Q_OBJECT
@@ -59,10 +50,8 @@ private:
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
 
-	bool isValidElements(SourceGstElements elements) const;
-
-	SourceGstElements createSourceElements(Source* source);
-	SourceGstElements createVideoSourceElements(Source* source);
-	SourceGstElements createAudioSourceElements(Source* source);
-	SourceGstElements createDataSourceElements(Source* source);
+	void createSourceElements(Source* source);
+	void createVideoSourceElements(Source* source);
+	void createAudioSourceElements(Source* source);
+	void createDataSourceElements(Source* source);
 };
