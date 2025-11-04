@@ -110,7 +110,7 @@ SourceGstElements SessionController::createVideoSourceElements(Source* source)
 	gst_bin_add_many(GST_BIN(m_pipeline.get()), sourceGst, queue, conv, sink, NULL);
 
 	// Link elements
-	if (!gst_element_link_many(sourceGst, queue, conv, sink, nullptr)) {
+	if (!gst_element_link_many(sourceGst, queue, conv, sink, NULL)) {
 		qWarning() << "Failed to link mfvideosrc -> queue -> videoconvert -> d3dvideosink";
 		// Remove and unref on failure
 		gst_bin_remove_many(GST_BIN(m_pipeline.get()), sourceGst, queue, conv, sink, nullptr);
@@ -138,12 +138,16 @@ SourceGstElements SessionController::createAudioSourceElements(Source* source)
 {
 	SourceGstElements elements;
 
+	// TODO: Implement audio source element creation
+
 	return elements;
 }
 
 SourceGstElements SessionController::createDataSourceElements(Source* source)
 {
 	SourceGstElements elements;
+
+	// TODO: Implement data source element creation
 
 	return elements;
 }
