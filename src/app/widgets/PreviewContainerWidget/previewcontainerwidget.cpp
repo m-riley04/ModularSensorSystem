@@ -56,7 +56,7 @@ void PreviewContainerWidget::initSignals()
 
 void PreviewContainerWidget::updateButtonControls()
 {
-	if (m_sourcePreviewWidgets.size() <= 1) {
+	if (ui.pageMain->widgets().size() <= 1) {
 		ui.frameControls->setEnabled(false);
 		return;
 	}
@@ -88,14 +88,8 @@ void PreviewContainerWidget::addSourceWidget(Source* source)
 		return;
 	}
 
-	// Add widget to list
-	m_sourcePreviewWidgets.append(widget);
-
 	// TODO: make this system add pages when too many sources are added
 	ui.pageMain->addWidgetToGrid(widget);
-
-	// Emit signal
-	emit sourceWidgetAdded(widget);
 }
 
 void PreviewContainerWidget::removeSourceWidget(QUuid id)
@@ -105,19 +99,20 @@ void PreviewContainerWidget::removeSourceWidget(QUuid id)
 		return;
 	}
 
-	// Find the video widget for the source
-	for (auto& widget : m_sourcePreviewWidgets) {
-		if (boostUuidToQUuid(widget->source()->uuid()) != id) {
+	// Find and remove the source preview widget
+	for (QWidget* widget : ui.pageMain->widgets()) {
+		auto* srcWidget = dynamic_cast<SourcePreviewWidget*>(widget);
+
+		if (srcWidget == nullptr) {
 			continue;
 		}
 
-		// Remove the widget from the list and UI
-		m_sourcePreviewWidgets.removeAll(widget);
+		if (boostUuidToQUuid(srcWidget->source()->uuid()) != id) {
+			continue;
+		}
 
-		// TODO: Implement proper/more cleanup for the widget (if needed, READ QT DOCS ON QLIST/QTAB MEMORY)
+		ui.pageMain->removeWidgetFromGrid(widget);
 		widget->deleteLater();
-
-		emit sourceWidgetRemoved(widget); /// CONSIDER: Returning something OTHER than a pointer to the widget (since it's being deleted)
-		break;
+		return;
 	}
 }

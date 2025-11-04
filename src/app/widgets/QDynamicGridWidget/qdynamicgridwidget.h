@@ -32,6 +32,8 @@ public slots:
      */
     void updateLayout();
 
+	QList<QWidget*> widgets() const { return m_widgets; }
+
 private:
 	Ui::QDynamicGridWidgetClass ui;
 

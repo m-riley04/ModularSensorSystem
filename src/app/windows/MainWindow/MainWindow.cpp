@@ -139,6 +139,11 @@ void MainWindow::initSignals() {
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
 	connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, this, &MainWindow::onSelectedElementChanged);
 
+	// Connect element removal signal
+    connect(pController->sourceController(), &SourceController::sourceRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
+    connect(pController->mountController(), &MountController::mountRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
+    connect(pController->processingController(), &ProcessingController::processorRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
+
     // Init toolbar and actions
     initActionSignals();
 }
