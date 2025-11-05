@@ -135,11 +135,11 @@ void MainWindow::initSignals() {
         QMessageBox::warning(this, "Error", errorMessage);
         });
 
-    // Connect signals to child widgets
+    // Connect preset widget signals
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
-	connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, this, &MainWindow::onSelectedElementChanged);
 
-	// Connect element removal signal
+	// Connect dock widget signals
+    connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, this, &MainWindow::onSelectedElementChanged);
     connect(pController->sourceController(), &SourceController::sourceRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
     connect(pController->mountController(), &MountController::mountRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
     connect(pController->processingController(), &ProcessingController::processorRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);

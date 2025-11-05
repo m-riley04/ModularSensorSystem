@@ -41,15 +41,10 @@ void PreviewContainerWidget::initSignals()
 		});
 
 	// Source added ui updates
-	connect(sourceController, &SourceController::sourceAdded, [this](Source* source) {
-		// Add source widget
-		addSourceWidget(source);
-
-		// Update UI
-		updateButtonControls();
-		});
+	connect(sourceController, &SourceController::sourceAdded, this, &PreviewContainerWidget::addSourceWidget);
 	connect(sourceController, &SourceController::sourceRemoved, this, &PreviewContainerWidget::removeSourceWidget);
-
+	
+	// Page changed ui updates
 	connect(ui.stackedWidget, &QStackedWidget::currentChanged, this, &PreviewContainerWidget::updateButtonControls);
 	connect(ui.stackedWidget, &QStackedWidget::widgetRemoved, this, &PreviewContainerWidget::updateButtonControls);
 }
@@ -90,6 +85,9 @@ void PreviewContainerWidget::addSourceWidget(Source* source)
 
 	// TODO: make this system add pages when too many sources are added
 	ui.pageMain->addWidgetToGrid(widget);
+
+	// Update UI
+	updateButtonControls();
 }
 
 void PreviewContainerWidget::removeSourceWidget(QUuid id)
@@ -115,4 +113,8 @@ void PreviewContainerWidget::removeSourceWidget(QUuid id)
 		widget->deleteLater();
 		return;
 	}
+
+
+	// Update UI
+	updateButtonControls();
 }

@@ -32,6 +32,10 @@ public slots:
      */
     void updateLayout();
 
+	/**
+	 * Gets the list of widgets currently in the grid.
+	 * @return the list of widgets
+	 */
 	QList<QWidget*> widgets() const { return m_widgets; }
 
 private:

@@ -21,9 +21,6 @@ public:
 
     ElementTreeActions getElementTreeActions() const;
 
-//protected:
-//    bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override; // TODO: Make this cross-platform and implement other platforms
-
 private slots:
     void openSavePresetDialog();
     void onLoadPresetClicked();
