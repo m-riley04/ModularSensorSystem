@@ -90,9 +90,8 @@ void SessionController::createVideoSourceElements(Source* source)
 	// Link source bin to sink
 	if (!gst_element_link(gstBin, sink)) {
 		qWarning() << "Failed to link source bin to sink.";
-		//gst_object_ref(gstBin); // Keep the ref
-		//gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
-		//return;
+		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
+		return;
 	}
 
 	// Set the video sink for overlay
