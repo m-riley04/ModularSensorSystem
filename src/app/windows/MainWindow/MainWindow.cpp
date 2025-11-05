@@ -473,17 +473,24 @@ void MainWindow::onPrintPipelineDebugClicked()
         return;
 	}
 
-	gst_debug_bin_to_dot_file(GST_BIN(pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline_debug");
-
 	// Run Graphviz to generate the PNG
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     QString pipelineDotDir = env.value("GST_DEBUG_DUMP_DOT_DIR", "");
 
+    if (pipelineDotDir.isEmpty()) {
+        QMessageBox::warning(this, "GST_DEBUG_DUMP_DOT_DIR Not Set", "The GST_DEBUG_DUMP_DOT_DIR environment variable is not set. Please set it to a valid directory to save the pipeline debug files.");
+        return;
+	}
+
+	// Export the pipeline to a DOT file
+    QString pipelineDotFileName = "pipeline_debug";
+    gst_debug_bin_to_dot_file(GST_BIN(pipeline), GST_DEBUG_GRAPH_SHOW_ALL, pipelineDotFileName.toStdString().c_str());
+
     // dot should be in path
 	// Run command: dot -Tpng pipeline_debug.dot -o pipeline_debug.png
     QString dotPath = "dot";
-    QString inputDotFile = pipelineDotDir + "/pipeline_debug.dot";
-    QString outputPngFile = pipelineDotDir + "/pipeline_debug.png";
+    QString inputDotFile = pipelineDotDir + "/" + pipelineDotFileName + ".dot";
+    QString outputPngFile = pipelineDotDir + "/" + pipelineDotFileName + ".png";
     QProcess dotProcess;
     QStringList arguments;
     arguments << "-Tpng" << inputDotFile << "-o" << outputPngFile;
