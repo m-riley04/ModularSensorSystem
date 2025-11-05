@@ -912,6 +912,17 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
+  <action name="actionDebugPipelineDiagram">
+   <property name="text">
+    <string>Show Pipeline Diagram</string>
+   </property>
+   <property name="toolTip">
+    <string>Uses GraphViz to translate the GStreamer pipeline dotfile to a PNG</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

@@ -119,6 +119,9 @@ void MainWindow::initActionSignals()
     // About
     connect(ui.actionGitHub, &QAction::triggered, this, &MainWindow::openGithubRepository);
 
+    // Debug
+	connect(ui.actionDebugPipelineDiagram, &QAction::triggered, this, &MainWindow::onPrintPipelineDebugClicked);
+
     // Quitting/restarting
     connect(ui.actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(ui.actionRestart, &QAction::triggered, this, &MainWindow::restart);
@@ -140,7 +143,7 @@ void MainWindow::initSignals() {
     connect(pController->processingController(), &ProcessingController::processorRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
 
     // Init debug button(s)
-	connect(ui.buttonPrintPipelineDebug, &QPushButton::clicked, this, &MainWindow::onPrintPipelineDebugClicked);
+	connect(ui.buttonPrintPipelineDebug, &QPushButton::clicked, ui.actionDebugPipelineDiagram, &QAction::trigger);
 
     // Init toolbar and actions
     initActionSignals();
@@ -463,6 +466,9 @@ void MainWindow::updateToolbarButtonsState()
     bool hasMounts = !pController->mountController()->mounts().isEmpty();
 	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
 	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
+
+    /// DEBUG
+	ui.actionDebugPipelineDiagram->setEnabled(pController->sessionController()->isPipelineBuilt());
 }
 
 void MainWindow::onPrintPipelineDebugClicked()
