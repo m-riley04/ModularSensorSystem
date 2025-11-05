@@ -128,12 +128,7 @@ void MainWindow::initSignals() {
     if (!pController->checkIfControllersAreOk()) return;
 	SourceController* pSourceController = pController->sourceController();
 
-    // Init error message propagation
-    connect(pController, &MainController::errorOccurred, [this](const SourceError& e) {
-        QString deviceInfo = "Source: " + (e.source != nullptr ? QString::fromStdString(e.source->name()) : "null");
-        QString errorMessage = "Error: " + e.msg + "\n" + deviceInfo;
-        QMessageBox::warning(this, "Error", errorMessage);
-        });
+    // TODO: Error message propagation
 
     // Connect preset widget signals
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
@@ -143,6 +138,9 @@ void MainWindow::initSignals() {
     connect(pController->sourceController(), &SourceController::sourceRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
     connect(pController->mountController(), &MountController::mountRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
     connect(pController->processingController(), &ProcessingController::processorRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
+
+    // Init debug button(s)
+	connect(ui.buttonPrintPipelineDebug, &QPushButton::clicked, this, &MainWindow::onPrintPipelineDebugClicked);
 
     // Init toolbar and actions
     initActionSignals();
@@ -465,6 +463,17 @@ void MainWindow::updateToolbarButtonsState()
     bool hasMounts = !pController->mountController()->mounts().isEmpty();
 	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
 	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
+}
+
+void MainWindow::onPrintPipelineDebugClicked()
+{
+	GstPipeline* pipeline = pController->sessionController()->pipeline();
+    if (!pipeline) {
+        QMessageBox::warning(this, "Pipeline Not Built", "The GStreamer pipeline is not built yet.");
+        return;
+	}
+
+	gst_debug_bin_to_dot_file(GST_BIN(pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline_debug");
 }
 
 void MainWindow::quit() {

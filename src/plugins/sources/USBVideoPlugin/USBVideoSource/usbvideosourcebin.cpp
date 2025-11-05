@@ -1,8 +1,7 @@
 #include "usbvideosourcebin.h"
-#include "usbvideosource.h"
 
-USBVideoSourceBin::USBVideoSourceBin(const std::string& id, USBVideoSource* source)
-	: SourceBin(id, Source::Type::VIDEO, "src", source)
+USBVideoSourceBin::USBVideoSourceBin(const std::string& id)
+	: SourceBin(id, Source::Type::VIDEO, "src")
 {
 	build();
 }
@@ -13,7 +12,7 @@ bool USBVideoSourceBin::build()
 
     // Initialize source
     GstElement* src = gst_element_factory_make("mfvideosrc", ("usb_vid_src_" + m_id).c_str()); // TODO: make this dynamic and cross-platform
-    g_object_set(src, "device-path", m_source->id().c_str(), NULL);
+    g_object_set(src, "device-path", m_id.c_str(), NULL); // TODO/CONSIDER: m_id should probably be better labeled to indicate it's the source id
 
     // Initialize queue and converter
     GstElement* queue = gst_element_factory_make("queue", ("usb_vid_queue_" + m_id).c_str());
@@ -42,9 +41,6 @@ bool USBVideoSourceBin::build()
     if (!gst_element_link_many(src, queue, conv, NULL)) {
         qWarning() << "Failed to link mfvideosrc -> queue -> videoconvert";
         gst_bin_remove_many(GST_BIN(m_bin), src, queue, conv, NULL);
-        gst_object_unref(src);
-        gst_object_unref(queue);
-        gst_object_unref(conv);
         return false;
     }
 
@@ -53,9 +49,6 @@ bool USBVideoSourceBin::build()
         qWarning() << "Failed to create ghost source pads";
         gst_element_unlink_many(src, queue, conv, NULL);
         gst_bin_remove_many(GST_BIN(m_bin), src, queue, conv, NULL);
-        gst_object_unref(src);
-        gst_object_unref(queue);
-        gst_object_unref(conv);
         return false;
     }
 

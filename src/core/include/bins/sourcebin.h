@@ -16,9 +16,9 @@ public:
 	const char* srcPadName() const { return m_srcPadName.c_str(); }
 
 protected:
-	SourceBin(std::string id, Source::Type sourceType, std::string srcPadName, Source* source)
+	SourceBin(std::string id, Source::Type sourceType, std::string srcPadName)
 		: BinBase(std::move(id)),
-		m_type(sourceType), m_srcPadName(std::move(srcPadName)), m_source(source)
+		m_type(sourceType), m_srcPadName(std::move(srcPadName))
 	{}
 
 	virtual bool build() = 0;
@@ -30,6 +30,5 @@ protected:
 
 	Source::Type m_type;
 	std::string m_srcPadName;
-	Source* m_source = nullptr;
 
 };

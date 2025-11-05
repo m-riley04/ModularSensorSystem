@@ -48,6 +48,8 @@ private slots:
     void onSelectedPresetItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
     void updateToolbarButtonsState();
 
+	void onPrintPipelineDebugClicked();
+
 public slots:
     void quit();
     void restart();

@@ -1,25 +1,19 @@
 #pragma once
 
 #include <QObject>
-#include <QtMultimedia>
-#include <QThread>
-#include <QVideoWidget>
-#include <QtConcurrent>
-#include <chrono>
-#include "features/sources/source.h"
+#include <features/sources/source.h>
+#include "testdatasourcebin.h"
 #include <sdk/plugins/isourceplugin.h>
-#include <utils/boost_qt_conversions.h>
-#include "utils.h"
-#include "USBVideoSourceBin.h"
+#include "testdatasourcepluginutils.h"
 
-class USBVideoSource : public Source
+class TestDataSource : public Source
 {
 	Q_OBJECT
 
 public:
-	USBVideoSource(const std::string& hardwareId, QObject* parent);
-    USBVideoSource(SourceInfo sourceInfo, QObject *parent);
-	~USBVideoSource();
+	TestDataSource(const std::string& hardwareId, QObject* parent);
+	TestDataSource(SourceInfo sourceInfo, QObject* parent);
+	~TestDataSource();
 
 	SourceInfo getSourceInfo(const std::string& id) const;
 
@@ -36,8 +30,8 @@ public:
 private:
 	std::string m_id;
 	std::string m_name;
-	std::string m_pluginId = "plugin_usb_video";
-	Source::Type m_sourceType = Source::Type::VIDEO;
+	std::string m_pluginId = "plugin_test_data";
+	Source::Type m_sourceType = Source::Type::DATA;
 	quintptr m_windowId = 0;
-	std::unique_ptr<USBVideoSourceBin> m_sourceBin;
+	std::unique_ptr<TestDataSourceBin> m_sourceBin;
 };

@@ -1,13 +1,13 @@
 #pragma once
 
+#include <QObject>
+#include <QDebug>
 #include <bins/sourcebin.h>
 #include <gst/video/videooverlay.h>
 
-class USBVideoSource;
-
 class USBVideoSourceBin : public SourceBin {
 public:
-	USBVideoSourceBin(const std::string& id, USBVideoSource* source); // TODO/CONSIDER: Is passing the source ptr best practice?
+	USBVideoSourceBin(const std::string& id);
 
 	virtual ~USBVideoSourceBin() = default;
 

@@ -84,13 +84,15 @@ void SessionController::createVideoSourceElements(Source* source)
 	}
 
 	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(m_pipeline.get()), source->gstBin(), sink, NULL);
+	GstElement* gstBin = source->gstBin();
+	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
 
 	// Link source bin to sink
-	if (!gst_element_link(source->gstBin(), sink)) {
+	if (!gst_element_link(gstBin, sink)) {
 		qWarning() << "Failed to link source bin to sink.";
-		gst_bin_remove_many(GST_BIN(m_pipeline.get()), source->gstBin(), sink, NULL);
-		gst_object_unref(sink);
+		//gst_object_ref(gstBin); // Keep the ref
+		//gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
+		//return;
 	}
 
 	// Set the video sink for overlay
@@ -108,7 +110,32 @@ void SessionController::createAudioSourceElements(Source* source)
 
 void SessionController::createDataSourceElements(Source* source)
 {
-	// TODO: Implement data source element creation
+	// Initialize sink
+	GstElement* sink = gst_element_factory_make("fakesink", NULL); // TODO: make this a real sink
+	guintptr windowId = static_cast<guintptr>(source->windowId());
+
+	// Check validity of each
+	if (!sink) {
+		qWarning() << "Failed to create one or more elements";
+		if (sink) gst_object_unref(sink);
+		return;
+	}
+
+	// Add elements to pipeline
+	GstElement* gstBin = source->gstBin();
+	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
+
+	// Link source bin to sink
+	if (!gst_element_link(gstBin, sink)) {
+		qWarning() << "Failed to link source bin to sink.";
+		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
+		return;
+	}
+
+	// Set the video sink for overlay
+	if (windowId != 0 && GST_IS_VIDEO_OVERLAY(sink)) {
+		gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(sink), windowId);
+	}
 
 	return;
 }
@@ -117,7 +144,8 @@ void SessionController::closePipeline()
 {
 	if (!m_pipeline) return;
 	gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_NULL);
-	m_pipeline.reset();
+	m_pipeline.release();
+	m_pipeline.reset(nullptr);
 }
 
 

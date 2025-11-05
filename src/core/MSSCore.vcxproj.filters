@@ -56,9 +56,6 @@
     <ClInclude Include="include\features\sources\iconfigurablesource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\features\sources\sourceerror.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\sdk\plugins\iplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>

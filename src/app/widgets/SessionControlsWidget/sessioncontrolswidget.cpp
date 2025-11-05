@@ -53,9 +53,7 @@ void SessionControlsWidget::initSignals()
 	// External UI updates
 	// TODO: add ui update for recording state changes, clipping, etc.
 	connect(pSourceController, &SourceController::sourceRemoved, this, &SessionControlsWidget::updateUi);
-	connect(pSourceController, &SourceController::sourceAdded, this, &SessionControlsWidget::updateUi);
-	connect(pSourceController, &SourceController::stateChanged, this, &SessionControlsWidget::updateUi);
-	
+	connect(pSourceController, &SourceController::sourceAdded, this, &SessionControlsWidget::updateUi);	
 }
 
 void SessionControlsWidget::updateUi()

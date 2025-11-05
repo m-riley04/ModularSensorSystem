@@ -1,12 +1,8 @@
 #include "Windows/MainWindow/MainWindow.h"
 #include <QtWidgets/QApplication>
-#include "features/sources/sourceerror.h"
 
 int main(int argc, char *argv[])
 {
-	// Register metatypes
-	qRegisterMetaType<SourceError>("SourceError");
-
 	// Create application
     QApplication a(argc, argv);
     MainWindow w;

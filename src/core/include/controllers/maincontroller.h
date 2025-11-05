@@ -53,6 +53,4 @@ private:
 	MountController* pMountController;
 	SessionController* pSessionController;
 
-signals:
-	void errorOccurred(const SourceError& e);
 };
