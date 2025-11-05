@@ -474,6 +474,31 @@ void MainWindow::onPrintPipelineDebugClicked()
 	}
 
 	gst_debug_bin_to_dot_file(GST_BIN(pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline_debug");
+
+	// Run Graphviz to generate the PNG
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    QString pipelineDotDir = env.value("GST_DEBUG_DUMP_DOT_DIR", "");
+
+    // dot should be in path
+	// Run command: dot -Tpng pipeline_debug.dot -o pipeline_debug.png
+    QString dotPath = "dot";
+    QString inputDotFile = pipelineDotDir + "/pipeline_debug.dot";
+    QString outputPngFile = pipelineDotDir + "/pipeline_debug.png";
+    QProcess dotProcess;
+    QStringList arguments;
+    arguments << "-Tpng" << inputDotFile << "-o" << outputPngFile;
+    dotProcess.start(dotPath, arguments);
+    dotProcess.waitForFinished();
+    if (dotProcess.exitCode() != 0) {
+        QMessageBox::warning(this, "Graphviz Error", "Could not generate pipeline debug PNG. Please ensure Graphviz is installed and 'dot' is in your system PATH.");
+        return;
+    }
+
+	// Open the PNG file
+    if (!QDesktopServices::openUrl(QUrl::fromLocalFile(outputPngFile))) {
+        QMessageBox::warning(this, "Open File Error", "Could not open the pipeline debug PNG file.");
+        return;
+	}
 }
 
 void MainWindow::quit() {
