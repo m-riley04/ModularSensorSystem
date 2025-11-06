@@ -54,4 +54,8 @@ private:
 	void createVideoSourceElements(Source* source);
 	void createAudioSourceElements(Source* source);
 	void createDataSourceElements(Source* source);
+
+signals:
+	void sessionStarted();
+	void sessionStopped();
 };

@@ -60,6 +60,17 @@ public:
 	}
 	virtual void setDisplayName(const std::string& newDisplayName) {} // default no-op
 
+public slots:
+	/**
+	 * A hook called when a session starts.
+	 */
+	virtual void onSessionStart() {}
+
+	/**
+	 * A hook called when a session stops.
+	 */
+	virtual void onSessionStop() {}
+
 private:
 	boost::uuids::uuid m_uuid;
 };

@@ -31,6 +31,10 @@ void SessionController::buildPipeline()
 	// Iterate over all sources and add them
 	for (auto& src : m_sourceController->sources()) {
 		createSourceElements(src);
+
+		// Link start and stop hooks
+		connect(this, &SessionController::sessionStarted, src, &Source::onSessionStart);
+		connect(this, &SessionController::sessionStopped, src, &Source::onSessionStop);
 	}
 	
 	// Step through states to surface problems earlier
@@ -49,6 +53,8 @@ void SessionController::buildPipeline()
 		closePipeline();
 		return;
 	}
+
+	emit sessionStarted();
 }
 
 void SessionController::createSourceElements(Source* source)
@@ -145,6 +151,8 @@ void SessionController::closePipeline()
 	gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_NULL);
 	m_pipeline.release();
 	m_pipeline.reset(nullptr);
+
+	emit sessionStopped();
 }
 
 
