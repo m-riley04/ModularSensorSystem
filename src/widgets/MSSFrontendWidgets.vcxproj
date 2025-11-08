@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{90004517-CEA0-493D-BC67-B07F996C62B8}</ProjectGuid>
+    <ProjectGuid>{C19648CA-6CE4-47AF-9D2D-37197198A1EB}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
@@ -25,7 +25,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -37,12 +37,14 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.8.3_msvc2022_64</QtInstall>
-    <QtModules>core;gui;testlib;concurrent;multimedia;sensors;serialbus;serialport;positioning</QtModules>
+    <QtModules>core;gui;testlib;widgets;opengl;openglwidgets;multimediawidgets;quickwidgets;svg;svgwidgets;charts;datavisualization;designer;uitools;uiplugin</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
+    <QtHeaderSearchPath>
+    </QtHeaderSearchPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>6.9.0_msvc2022_64</QtInstall>
-    <QtModules>core</QtModules>
+    <QtInstall>6.8.3_msvc2022_64</QtInstall>
+    <QtModules>charts;core;datavisualization;gui;multimediawidgets;opengl;openglwidgets;pdf;pdfwidgets;quickwidgets;svg;svgwidgets;testlib;uiplugin;uitools;widgets;designer</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -66,19 +68,18 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>MSSCORE_LIB;BUILD_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MSSFRONTENDWIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
@@ -91,7 +92,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>MSSCORE_LIB;BUILD_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MSSFRONTENDWIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
@@ -106,43 +107,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\controllers\sessioncontroller.cpp" />
-    <ClCompile Include="src\controllers\mountcontroller.cpp" />
-    <QtMoc Include="include\controllers\sessioncontroller.h" />
-    <ClInclude Include="include\bins\binbase.h" />
-    <ClInclude Include="include\bins\sourcebin.h" />
-    <ClInclude Include="include\utils\boost_qt_conversions.h" />
-    <QtMoc Include="include\features\ielement.h" />
-    <ClInclude Include="include\sdk\plugins\pluginloader.h" />
-    <QtMoc Include="include\controllers\backendcontrollerbase.h" />
-    <QtMoc Include="include\features\mounts\mount.h" />
-    <QtMoc Include="include\controllers\mountcontroller.h" />
-    <ClInclude Include="include\sdk\plugins\factory.h" />
-    <ClInclude Include="include\sdk\plugins\imountplugin.h" />
-    <ClInclude Include="include\presets\preset.h" />
-    <ClInclude Include="include\presets\sourcepreset.h" />
-    <ClInclude Include="include\features\sources\iconfigurablesource.h" />
-    <QtMoc Include="include\features\sources\source.h" />
-    <QtMoc Include="include\features\sources\sourcemetadata.h" />
-    <QtMoc Include="include\features\processors\processor.h" />
-    <QtMoc Include="include\controllers\maincontroller.h" />
-    <QtMoc Include="include\controllers\plugincontroller.h" />
-    <QtMoc Include="include\controllers\presetscontroller.h" />
-    <QtMoc Include="include\controllers\processingcontroller.h" />
-    <QtMoc Include="include\controllers\sourcecontroller.h" />
-    <ClInclude Include="include\interfaces\capability\ianalogsource.h" />
-    <ClInclude Include="include\interfaces\capability\iaudiosource.h" />
-    <ClInclude Include="include\interfaces\capability\idatasource.h" />
-    <ClInclude Include="include\interfaces\capability\igpssource.h" />
-    <ClInclude Include="include\interfaces\capability\ivideosource.h" />
-    <ClInclude Include="include\sdk\plugins\iplugin.h" />
-    <ClInclude Include="include\sdk\plugins\iprocessorplugin.h" />
-    <ClInclude Include="include\sdk\plugins\isourceplugin.h" />
-    <ClCompile Include="src\controllers\maincontroller.cpp" />
-    <ClCompile Include="src\controllers\plugincontroller.cpp" />
-    <ClCompile Include="src\controllers\presetscontroller.cpp" />
-    <ClCompile Include="src\controllers\processingcontroller.cpp" />
-    <ClCompile Include="src\controllers\sourcecontroller.cpp" />
+    <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
+    <ClCompile Include="widgets\QDynamicGridWidget\qdynamicgridwidget.cpp" />
+    <ClInclude Include="mssfrontendwidgets_global.h" />
+    <QtMoc Include="widgets\QDynamicGridWidget\qdynamicgridwidget.h" />
+    <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h" />
+    <QtMoc Include="mssfrontendwidgets.h" />
+    <ClCompile Include="mssfrontendwidgets.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui" />
+    <QtUic Include="widgets\QDynamicGridWidget\qdynamicgridwidget.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

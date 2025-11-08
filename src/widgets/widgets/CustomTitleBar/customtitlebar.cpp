@@ -1,5 +1,4 @@
 #include "customtitlebar.h"
-#include <QWindow>
 
 CustomTitleBar::CustomTitleBar(QWidget *parent)
 	: QWidget(parent)

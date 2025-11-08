@@ -143,8 +143,6 @@ void MainWindow::initSignals() {
     connect(pController->processingController(), &ProcessingController::processorRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
 
     // Init debug signals
-	connect(ui.buttonPrintPipelineDebug, &QPushButton::clicked, ui.actionDebugPipelineDiagram, &QAction::trigger);
-
     connect(pController->sessionController(), &SessionController::dataSampleReceived,
         this, [](const QString& sensorId, double value, quint64 tNs) {
             qDebug() << "[Data]" << sensorId << "value:" << value << "t_ns:" << tNs;

@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include "ui_customtitlebar.h"
+#include <QWindow>
 #include <qevent.h>
 #include <QPoint>
 #include <qmainwindow.h>

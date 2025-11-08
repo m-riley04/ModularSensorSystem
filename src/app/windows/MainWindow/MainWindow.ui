@@ -330,7 +330,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
        <property name="frameShadow">
         <enum>QFrame::Shadow::Raised</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -346,13 +346,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
-         <widget class="QPushButton" name="buttonPrintPipelineDebug">
-          <property name="text">
-           <string>[DEBUG] Output Pipeline</string>
-          </property>
-         </widget>
-        </item>
         <item>
          <widget class="SessionControlsWidget" name="sessionControls" native="true"/>
         </item>
@@ -490,6 +483,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
      <string>Help</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuDebug">
+    <property name="title">
+     <string>Debug</string>
+    </property>
+    <addaction name="actionDebugPipelineDiagram"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
@@ -497,6 +496,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <addaction name="menuPlugins"/>
    <addaction name="menuAbout"/>
    <addaction name="menuHelp"/>
+   <addaction name="menuDebug"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">

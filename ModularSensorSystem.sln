@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TripodMountPlugin", "src\pl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDataSourcePlugin", "src\plugins\sources\TestDataSourcePlugin\TestDataSourcePlugin.vcxproj", "{AF72BA6D-2843-429F-BD57-FA7B184F8307}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSFrontendWidgets", "src\widgets\MSSFrontendWidgets.vcxproj", "{C19648CA-6CE4-47AF-9D2D-37197198A1EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,10 @@ Global
 		{AF72BA6D-2843-429F-BD57-FA7B184F8307}.Debug|x64.Build.0 = Debug|x64
 		{AF72BA6D-2843-429F-BD57-FA7B184F8307}.Release|x64.ActiveCfg = Release|x64
 		{AF72BA6D-2843-429F-BD57-FA7B184F8307}.Release|x64.Build.0 = Release|x64
+		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Debug|x64.ActiveCfg = Debug|x64
+		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Debug|x64.Build.0 = Debug|x64
+		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Release|x64.ActiveCfg = Release|x64
+		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
