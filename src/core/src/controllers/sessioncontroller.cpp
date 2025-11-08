@@ -115,34 +115,51 @@ void SessionController::createAudioSourceElements(Source* source)
 
 void SessionController::createDataSourceElements(Source* source)
 {
-	// Initialize sink
-	GstElement* sink = gst_element_factory_make("fakesink", NULL); // TODO: make this a real sink
-	guintptr windowId = static_cast<guintptr>(source->windowId());
+	// Check source
+	if (!source) {
+		qWarning() << "Cannot create data source elements: source is null";
+		return;
+	}
 
-	// Check validity of each
+	// Create appsink for data
+	GstElement* sink = gst_element_factory_make("appsink", nullptr);
 	if (!sink) {
-		qWarning() << "Failed to create one or more elements";
-		if (sink) gst_object_unref(sink);
+		qWarning() << "Failed to create appsink for data source";
 		return;
 	}
 
-	// Add elements to pipeline
+	// Configure appsink: emit signals, don't sync to clock, bounded queue
+	g_object_set(G_OBJECT(sink),
+		"emit-signals", TRUE,
+		"sync", FALSE,
+		"max-buffers", 100u,
+		"drop", TRUE,
+		nullptr);
+
+	// Optionally restrict caps to your NDJSON if you like:
+	// GstCaps* caps = gst_caps_from_string("application/x-mss-random-ndjson");
+	// g_object_set(G_OBJECT(sink), "caps", caps, nullptr);
+	// gst_caps_unref(caps);
+
 	GstElement* gstBin = source->gstBin();
-	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
-
-	// Link source bin to sink
-	if (!gst_element_link(gstBin, sink)) {
-		qWarning() << "Failed to link source bin to sink.";
-		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
+	if (!gstBin) {
+		qWarning() << "Data source has no Gst bin";
+		gst_object_unref(sink);
 		return;
 	}
 
-	// Set the video sink for overlay
-	if (windowId != 0 && GST_IS_VIDEO_OVERLAY(sink)) {
-		gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(sink), windowId);
+	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sink, nullptr);
+
+	// Link source bin to appsink's sink pad
+	if (!gst_element_link(gstBin, sink)) {
+		qWarning() << "Failed to link data source bin to appsink";
+		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sink, nullptr);
+		return;
 	}
 
-	return;
+	// Connect "new-sample" to our static callback
+	// userData = this, we will parse sensor_id out of JSON
+	g_signal_connect(sink, "new-sample", G_CALLBACK(&SessionController::onDataNewSampleStatic), this);
 }
 
 void SessionController::closePipeline()
@@ -154,7 +171,6 @@ void SessionController::closePipeline()
 
 	emit sessionStopped();
 }
-
 
 QList<const Source*> SessionController::getSourcesByMount(QUuid mountId) const
 {
@@ -176,4 +192,68 @@ QList<const Processor*> SessionController::getProcessorsBySource(QUuid sourceId)
 		processors.push_back(source);
 	}
 	return processors;
+}
+
+GstFlowReturn SessionController::onDataNewSampleStatic(GstAppSink* sink, gpointer userData)
+{
+	auto* self = static_cast<SessionController*>(userData);
+	return self ? self->onDataNewSample(sink) : GST_FLOW_ERROR;
+}
+
+GstFlowReturn SessionController::onDataNewSample(GstAppSink* sink)
+{
+	GstSample* sample = gst_app_sink_pull_sample(sink);
+	if (!sample)
+		return GST_FLOW_ERROR;
+
+	GstBuffer* buffer = gst_sample_get_buffer(sample);
+	if (!buffer) {
+		gst_sample_unref(sample);
+		return GST_FLOW_ERROR;
+	}
+
+	GstMapInfo map;
+	if (!gst_buffer_map(buffer, &map, GST_MAP_READ)) {
+		gst_sample_unref(sample);
+		return GST_FLOW_ERROR;
+	}
+
+	QByteArray payload(reinterpret_cast<const char*>(map.data),
+		static_cast<int>(map.size));
+
+	gst_buffer_unmap(buffer, &map);
+
+	// Optional: running-time PTS in ns (if appsink caps/format support it)
+	GstClockTime pts = GST_BUFFER_PTS(buffer);
+	quint64 tNs = (pts == GST_CLOCK_TIME_NONE) ? 0 : static_cast<quint64>(pts);
+
+	gst_sample_unref(sample);
+
+	// Our TestDataSourceBin emits NDJSON, possibly with multiple lines
+	const auto lines = payload.split('\n');
+	for (const QByteArray& line : lines) {
+		const QByteArray trimmed = line.trimmed();
+		if (trimmed.isEmpty())
+			continue;
+
+		QJsonParseError err{};
+		QJsonDocument doc = QJsonDocument::fromJson(trimmed, &err);
+		if (err.error != QJsonParseError::NoError || !doc.isObject())
+			continue;
+
+		QJsonObject obj = doc.object();
+		const QString sensorId = obj.value(QStringLiteral("sensor_id")).toString();
+		const double value = obj.value(QStringLiteral("value")).toDouble(
+			std::numeric_limits<double>::quiet_NaN());
+
+		// Forward into Qt world
+		QMetaObject::invokeMethod(
+			this,
+			[this, sensorId, value, tNs]() {
+				emit dataSampleReceived(sensorId, value, tNs);
+			},
+			Qt::QueuedConnection);
+	}
+
+	return GST_FLOW_OK;
 }

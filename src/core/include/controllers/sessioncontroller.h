@@ -9,6 +9,9 @@
 #include "controllers/processingcontroller.h"
 #include "controllers/mountcontroller.h"
 #include "features/sources/source.h"
+#include <gst/app/gstappsink.h>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
@@ -55,7 +58,12 @@ private:
 	void createAudioSourceElements(Source* source);
 	void createDataSourceElements(Source* source);
 
+	static GstFlowReturn onDataNewSampleStatic(GstAppSink* sink, gpointer userData);
+	GstFlowReturn onDataNewSample(GstAppSink* sink);
+
 signals:
 	void sessionStarted();
 	void sessionStopped();
+
+	void dataSampleReceived(const QString& sensorId, double value, quint64 tNs);
 };
