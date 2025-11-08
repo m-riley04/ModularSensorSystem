@@ -166,10 +166,11 @@ void SessionController::closePipeline()
 {
 	if (!m_pipeline) return;
 	gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_NULL);
-	m_pipeline.release();
-	m_pipeline.reset(nullptr);
 
 	emit sessionStopped();
+
+	// Should go after emit to allow sources to clean up
+	m_pipeline.reset(nullptr);
 }
 
 QList<const Source*> SessionController::getSourcesByMount(QUuid mountId) const

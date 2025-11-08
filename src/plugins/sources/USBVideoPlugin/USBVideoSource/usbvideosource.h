@@ -31,13 +31,19 @@ public:
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
 
-	GstElement* gstBin() const override { return m_sourceBin->bin(); }
+	GstElement* gstBin() const override;
+
+public slots:
+	void onSessionStart() override;
+	void onSessionStop() override;
 
 private:
+	void createBinIfNeeded();
+
 	std::string m_id;
 	std::string m_name;
 	std::string m_pluginId = "plugin_usb_video";
 	Source::Type m_sourceType = Source::Type::VIDEO;
 	quintptr m_windowId = 0;
-	std::unique_ptr<USBVideoSourceBin> m_sourceBin;
+	std::unique_ptr<USBVideoSourceBin> m_bin;
 };

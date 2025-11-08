@@ -36,7 +36,7 @@ public:
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
 
-	GstElement* gstBin() const override { return m_bin->bin(); }
+	GstElement* gstBin() const override;
 
 public slots:
 	void onSessionStart() override;
@@ -47,6 +47,7 @@ private slots:
 
 private:
 	void scheduleNextTick();
+	void createBinIfNeeded();
 
 	std::string m_id;
 	std::string m_name;

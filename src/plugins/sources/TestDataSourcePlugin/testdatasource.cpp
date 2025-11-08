@@ -28,6 +28,24 @@ SourceInfo TestDataSource::getSourceInfo(const std::string& id) const
 	return SourceInfo();
 }
 
+void TestDataSource::createBinIfNeeded()
+{
+	if (!m_bin) {
+		m_bin = std::make_unique<TestDataSourceBin>(m_id);
+	}
+}
+
+GstElement* TestDataSource::gstBin() const
+{
+	// lazy creation; note m_bin must be mutable
+	if (!m_bin) {
+		// const_cast is safe here because we're only mutating cache-like state
+		auto* self = const_cast<TestDataSource*>(this);
+		self->m_bin = std::make_unique<TestDataSourceBin>(m_id);
+	}
+	return m_bin->bin();
+}
+
 void TestDataSource::onSessionStart()
 {
 	m_seq = 0;
@@ -37,6 +55,9 @@ void TestDataSource::onSessionStart()
 void TestDataSource::onSessionStop()
 {
 	m_timer.stop();
+
+	// Reset bin
+	m_bin.reset(nullptr);
 }
 
 void TestDataSource::onTimerTimeout()

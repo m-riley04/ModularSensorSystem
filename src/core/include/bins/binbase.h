@@ -4,13 +4,7 @@
 
 class BinBase {
 public:
-	virtual ~BinBase() {
-		if (m_bin) {
-			// Bin should already be removed from any parent and set to NULL state.
-			gst_object_unref(m_bin);
-			m_bin = nullptr;
-		}
-	}
+	virtual ~BinBase() = default;
 
 	GstElement* bin() const { return m_bin; }
 
