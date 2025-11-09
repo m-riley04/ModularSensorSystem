@@ -109,7 +109,9 @@
   <ItemGroup>
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
     <ClCompile Include="widgets\QDynamicGridWidget\qdynamicgridwidget.cpp" />
+    <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
     <ClInclude Include="mssfrontendwidgets_global.h" />
+    <ClInclude Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="widgets\QDynamicGridWidget\qdynamicgridwidget.h" />
     <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h" />
     <QtMoc Include="mssfrontendwidgets.h" />
@@ -118,6 +120,7 @@
   <ItemGroup>
     <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui" />
     <QtUic Include="widgets\QDynamicGridWidget\qdynamicgridwidget.ui" />
+    <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

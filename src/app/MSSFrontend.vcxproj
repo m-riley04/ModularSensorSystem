@@ -121,7 +121,6 @@
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
-    <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
@@ -130,7 +129,6 @@
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
     <QtUic Include="widgets\SessionControlsWidget\sessioncontrolswidget.ui" />
-    <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
     <QtUic Include="dialogs\AddSourceDialog\addsourcedialog.ui" />
     <QtUic Include="dialogs\AddProcessorDialog\addprocessordialog.ui" />
     <QtUic Include="windows\MainWindow\MainWindow.ui" />
@@ -149,7 +147,6 @@
     <QtMoc Include="dialogs\AddSourceDialog\addsourcedialog.h" />
     <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h" />
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h" />
-    <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />
     <QtMoc Include="widgets\SourcePreviewWidget\sourcepreviewwidget.h" />

@@ -4,8 +4,6 @@
 #include "ui_MainWindow.h"
 #include "controllers/maincontroller.h"
 #include "controllers/mountcontroller.h"
-#include "widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
-#include "widgets/CustomTitleBar/customtitlebar.h"
 #include "data/requried_actions.h"
 
 // Forward declaration for element tree node
