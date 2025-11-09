@@ -1,14 +1,14 @@
 #include "usbvideosourcebin.h"
 
-USBVideoSourceBin::USBVideoSourceBin(const std::string& id)
-	: SourceBin(id, Source::Type::VIDEO, "src")
+USBVideoSourceBin::USBVideoSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
+	: SourceBin(uuid, id, Source::Type::VIDEO, "src")
 {
 	build();
 }
 
 bool USBVideoSourceBin::build()
 {
-    std::string deviceName = m_id; // TODO: this is usually the device id, but they're pretty long and I want to see the graph view.
+    std::string deviceName = boost::uuids::to_string(m_uuid);
 
     if (!this->create(("usb_vid_bin_" + deviceName).c_str())) return false;
 

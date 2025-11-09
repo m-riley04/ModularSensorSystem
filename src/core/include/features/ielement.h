@@ -25,7 +25,7 @@ public:
 	 * Assigned in the constructor.
 	 * @return The UUID of the element.
 	 */
-	virtual boost::uuids::uuid uuid() const noexcept { return m_uuid; }
+	virtual const boost::uuids::uuid uuid() const noexcept { return m_uuid; }
 
 	/**
 	 * The hardware/location ID of the element.

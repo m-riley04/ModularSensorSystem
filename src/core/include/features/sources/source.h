@@ -87,6 +87,6 @@ public:
 	 * Gets the GStreamer bin element representing this source.
 	 * @return 
 	 */
-	virtual GstElement* gstBin() const = 0;
+	virtual GstElement* gstBin() = 0;
 
 };

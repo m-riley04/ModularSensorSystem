@@ -17,8 +17,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    ElementTreeActions getElementTreeActions() const;
-
 private slots:
     void openSavePresetDialog();
     void onLoadPresetClicked();
@@ -53,13 +51,17 @@ public slots:
     void restart();
 
 private:
+    void initWidgets();
+    void initSignals();
+    void initActionSignals();
+
+    ElementTreeActions getElementTreeActions() const;
+
+    void syncViewActionChecks();
+
     Ui::MainWindowClass ui;
     MainController* pController;
 
     QListWidgetItem* pSelectedPresetItem = nullptr;
 	ElementTreeNode* m_selectedElement = nullptr;
-
-    void initWidgets();
-    void initSignals();
-    void initActionSignals();
 };

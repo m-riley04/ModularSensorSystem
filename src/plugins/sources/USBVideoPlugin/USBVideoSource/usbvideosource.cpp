@@ -5,7 +5,8 @@ USBVideoSource::USBVideoSource(const std::string& hardwareId, QObject* parent)
 {}
 
 USBVideoSource::USBVideoSource(SourceInfo sourceInfo, QObject* parent)
-	: Source(parent), m_id(sourceInfo.id), m_name(sourceInfo.displayName), m_bin(std::make_unique<USBVideoSourceBin>(sourceInfo.id))
+	: Source(parent), m_id(sourceInfo.id), m_name(sourceInfo.displayName),
+	m_bin(std::make_unique<USBVideoSourceBin>(this->uuid(), sourceInfo.id))
 {}
 
 USBVideoSource::~USBVideoSource()
@@ -40,17 +41,13 @@ void USBVideoSource::onSessionStop()
 void USBVideoSource::createBinIfNeeded()
 {
 	if (!m_bin) {
-		m_bin = std::make_unique<USBVideoSourceBin>(m_id);
+		m_bin = std::make_unique<USBVideoSourceBin>(this->uuid(), m_id);
 	}
 }
 
-GstElement* USBVideoSource::gstBin() const
+GstElement* USBVideoSource::gstBin()
 {
 	// lazy creation; note m_bin must be mutable
-	if (!m_bin) {
-		// const_cast is safe here because we're only mutating cache-like state
-		auto* self = const_cast<USBVideoSource*>(this);
-		self->m_bin = std::make_unique<USBVideoSourceBin>(m_id);
-	}
+	createBinIfNeeded();
 	return m_bin->bin();
 }

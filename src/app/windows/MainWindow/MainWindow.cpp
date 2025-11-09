@@ -8,18 +8,9 @@
 #endif
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent), pController(new MainController(this))
 {
     ui.setupUi(this);
-
-	// Initialize the main controller
-	pController = new MainController(this);
-
-    // Initialize core app
-    QCoreApplication::setApplicationName("ModularSensorSystem");
-    QCoreApplication::setApplicationVersion("1.0.0");
-    QCoreApplication::setOrganizationName("Riley Meyerkorth");
-    QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
 
     // Initialize
     initWidgets();
@@ -44,15 +35,21 @@ ElementTreeActions MainWindow::getElementTreeActions() const
     return actions;
 }
 
+void MainWindow::syncViewActionChecks()
+{
+    // Initialize checkable actions to reflect current widget visibility
+    ui.actionViewPresetsList->setChecked(ui.groupPresets->isVisible());
+    ui.actionViewControls->setChecked(ui.sessionControls->isVisible());
+    ui.actionViewEntireRow->setChecked(ui.frameControls->isVisible());
+
+    ui.actionViewMenuBar->setChecked(ui.menuBar->isVisible());
+    ui.actionViewToolbar->setChecked(ui.toolBar->isVisible());
+}
+
 void MainWindow::initWidgets()
 {
     // Init menu bar
-    ui.actionViewPresetsList->setChecked(!ui.groupPresets->isVisible()); // Not sure why I have to invert this to NOT, but it works.
-    ui.actionViewControls->setChecked(!ui.sessionControls->isVisible());
-    ui.actionViewEntireRow->setChecked(!ui.frameControls->isVisible());
-
-    ui.actionViewMenuBar->setChecked(!ui.menuBar->isVisible());
-    ui.actionViewToolbar->setChecked(!ui.toolBar->isVisible());
+    syncViewActionChecks();
 
     // Init toolbar
     updateToolbarButtonsState();
@@ -285,12 +282,7 @@ void MainWindow::openRemoveMountDialog()
 
     auto response = QMessageBox::question(this, "Remove Mount", "Are you sure you want to remove the selected mount?", QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
-		// TODO: Check this implementation
-        const Mount* mount = pController->mountController()->byId(m_selectedElement->id);
-
-        // Remove mount from the controller
-		// TODO: reconsider const casting and const usage
-        pController->mountController()->removeMount(const_cast<Mount*>(mount));
+        pController->mountController()->removeMount(m_selectedElement->id);
     }
 }
 
@@ -326,12 +318,7 @@ void MainWindow::openRemoveSourceDialog()
 
     auto response = QMessageBox::question(this, "Remove Source", "Are you sure you want to remove the selected source?", QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
-		// TODO: check this implementation
-        const Source* source = pController->sourceController()->byId(m_selectedElement->id);
-
-        // Remove source from the controller
-        // TODO: reconsider const casting and const usage
-        pController->sourceController()->removeSource(const_cast<Source*>(source));
+        pController->sourceController()->removeSource(m_selectedElement->id);
     }
 }
 

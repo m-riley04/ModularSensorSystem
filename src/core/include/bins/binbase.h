@@ -9,7 +9,7 @@ public:
 	GstElement* bin() const { return m_bin; }
 
 protected:
-	explicit BinBase(std::string id) : m_id(std::move(id))
+	explicit BinBase(const boost::uuids::uuid& uuid, const std::string& id) : m_uuid(uuid), m_id(id)
 	{
 		create(m_id.c_str());
 	}
@@ -61,5 +61,6 @@ protected:
 	}
 
 	GstElement* m_bin = nullptr;
+	boost::uuids::uuid m_uuid;
 	std::string m_id;
 };

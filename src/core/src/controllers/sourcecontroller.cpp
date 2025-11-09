@@ -41,8 +41,20 @@ void SourceController::removeSource(Source* source)
 
 	// Remove source from the list
 	mSources.removeAll(source);
+	mSourcesById.remove(sourceId);
+	source->deleteLater();
 
 	emit sourceRemoved(sourceId); // TODO: Emit the source's ID instead of the source itself
+}
+
+void SourceController::removeSource(const QUuid& uuid)
+{
+	Source* source = byId(uuid);
+	if (!source) {
+		qWarning() << "Cannot remove source: source with given UUID not found";
+		return;
+	}
+	removeSource(source);
 }
 
 Source* SourceController::getSource(QByteArray id) const

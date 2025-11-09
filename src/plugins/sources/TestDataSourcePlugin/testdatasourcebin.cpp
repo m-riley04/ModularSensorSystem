@@ -1,7 +1,8 @@
 #include "testdatasourcebin.h"
+#include <utils/boost_qt_conversions.h>
 
-TestDataSourceBin::TestDataSourceBin(const std::string& id)
-    : SourceBin(id, Source::Type::DATA, "src")
+TestDataSourceBin::TestDataSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
+    : SourceBin(uuid, id, Source::Type::DATA, "src")
 {
 	build();
 }
@@ -11,8 +12,10 @@ void TestDataSourceBin::pushRandomSample(uint64_t seq, double value)
     if (!m_appsrc)
         return;
 
-    // Build JSON: {"sensor_id":"random_test","seq":N,"value":X.YYYYYY}
-    QByteArray json = QByteArray("{\"sensor_id\":\"")
+    // Build JSON: {"uuid":".......","sensor_id":"random_test","seq":N,"value":X.YYYYYY}
+    QByteArray json = QByteArray("{\"uuid\":\"")
+        + QByteArray::fromStdString(boost::uuids::to_string(m_uuid))
+        + QByteArray("\",\"sensor_id\":\"")
         + QByteArray::fromStdString(m_id)
         + "\",\"seq\":" + QByteArray::number(seq)
         + ",\"value\":" + QByteArray::number(value, 'f', 6)
@@ -38,16 +41,18 @@ void TestDataSourceBin::pushRandomSample(uint64_t seq, double value)
 }
 
 bool TestDataSourceBin::build() {
-    if (!this->create(("rand_data_bin_" + m_id).c_str())) {
+	std::string binName = boost::uuids::to_string(m_uuid);
+
+    if (!this->create(("rand_data_bin_" + binName).c_str())) {
         return false;
     }
 
-    m_appsrc = gst_element_factory_make("appsrc", ("rand_src_" + m_id).c_str());
-    GstElement* q = gst_element_factory_make("queue", ("rand_q_" + m_id).c_str());
+    m_appsrc = gst_element_factory_make("appsrc", ("rand_src_" + binName).c_str());
+    GstElement* q = gst_element_factory_make("queue", ("rand_q_" + binName).c_str());
     if (!m_appsrc || !q) return false;
 
     GstCaps* caps = gst_caps_new_simple("application/x-mss-random-ndjson",
-        "sensor-id", G_TYPE_STRING, m_id.c_str(),
+        "sensor_id", G_TYPE_STRING, binName.c_str(),
         nullptr);
 
     g_object_set(G_OBJECT(m_appsrc),

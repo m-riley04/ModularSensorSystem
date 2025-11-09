@@ -5,7 +5,8 @@ TestDataSource::TestDataSource(const std::string& hardwareId, QObject* parent)
 {}
 
 TestDataSource::TestDataSource(SourceInfo sourceInfo, QObject* parent)
-	: Source(parent), m_id(sourceInfo.id), m_name(sourceInfo.displayName), m_bin(std::make_unique<TestDataSourceBin>(sourceInfo.id))
+	: Source(parent), m_id(sourceInfo.id), m_name(sourceInfo.displayName), 
+	m_bin(std::make_unique<TestDataSourceBin>(this->uuid(), sourceInfo.id))
 {
 	m_cfg.sensorId = sourceInfo.id;
 
@@ -31,18 +32,13 @@ SourceInfo TestDataSource::getSourceInfo(const std::string& id) const
 void TestDataSource::createBinIfNeeded()
 {
 	if (!m_bin) {
-		m_bin = std::make_unique<TestDataSourceBin>(m_id);
+		m_bin = std::make_unique<TestDataSourceBin>(this->uuid(), m_id);
 	}
 }
 
-GstElement* TestDataSource::gstBin() const
+GstElement* TestDataSource::gstBin()
 {
-	// lazy creation; note m_bin must be mutable
-	if (!m_bin) {
-		// const_cast is safe here because we're only mutating cache-like state
-		auto* self = const_cast<TestDataSource*>(this);
-		self->m_bin = std::make_unique<TestDataSourceBin>(m_id);
-	}
+	createBinIfNeeded();
 	return m_bin->bin();
 }
 

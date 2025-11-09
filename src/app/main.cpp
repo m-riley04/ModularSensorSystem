@@ -8,6 +8,12 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
+	// Initialize core app
+	QCoreApplication::setApplicationName("ModularSensorSystem");
+	QCoreApplication::setApplicationVersion("1.0.0");
+	QCoreApplication::setOrganizationName("Riley Meyerkorth");
+	QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
+
 	// Execute the application and handle exceptions
     int ret;
     try {

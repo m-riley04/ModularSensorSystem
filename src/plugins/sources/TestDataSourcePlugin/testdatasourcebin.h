@@ -6,7 +6,7 @@
 
 class TestDataSourceBin : public SourceBin {
 public:
-	TestDataSourceBin(const std::string& id);
+	TestDataSourceBin(const boost::uuids::uuid& uuid, const std::string& id);
 
 	virtual ~TestDataSourceBin() = default;
 

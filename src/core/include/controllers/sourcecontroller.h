@@ -32,7 +32,8 @@ private:
 
 public slots:
 	Source* addSource(ISourcePlugin* plugin, SourceInfo info);
-	void removeSource(Source*);
+	void removeSource(Source* src);
+	void removeSource(const QUuid& uuid);
 	Source* getSource(QByteArray id) const;
 
 	void clearSources();

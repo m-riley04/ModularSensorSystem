@@ -36,7 +36,7 @@ public:
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
 
-	GstElement* gstBin() const override;
+	GstElement* gstBin() override;
 
 public slots:
 	void onSessionStart() override;
