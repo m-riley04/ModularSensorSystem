@@ -65,5 +65,5 @@ signals:
 	void sessionStarted();
 	void sessionStopped();
 
-	void dataSampleReceived(const QString& sensorId, double value, quint64 tNs);
+	void dataSampleReceived(QUuid uuid, double value, quint64 tNs);
 };

@@ -243,15 +243,16 @@ GstFlowReturn SessionController::onDataNewSample(GstAppSink* sink)
 			continue;
 
 		QJsonObject obj = doc.object();
-		const QString sensorId = obj.value(QStringLiteral("sensor_id")).toString();
+		const QString uuidStr = obj.value(QStringLiteral("uuid")).toString();
+		QUuid uuid(uuidStr);
 		const double value = obj.value(QStringLiteral("value")).toDouble(
 			std::numeric_limits<double>::quiet_NaN());
 
 		// Forward into Qt world
 		QMetaObject::invokeMethod(
 			this,
-			[this, sensorId, value, tNs]() {
-				emit dataSampleReceived(sensorId, value, tNs);
+			[this, uuid, value, tNs]() {
+				emit dataSampleReceived(uuid, value, tNs);
 			},
 			Qt::QueuedConnection);
 	}

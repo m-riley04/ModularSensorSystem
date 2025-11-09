@@ -141,9 +141,14 @@ void MainWindow::initSignals() {
 
     // Init debug signals
     connect(pController->sessionController(), &SessionController::dataSampleReceived,
-        this, [](const QString& sensorId, double value, quint64 tNs) {
-            qDebug() << "[Data]" << sensorId << "value:" << value << "t_ns:" << tNs;
+        this, [](QUuid uuid, double value, quint64 tNs) {
+            qDebug() << "[Data]" << uuid << "value:" << value << "t_ns:" << tNs;
         });
+
+    /*connect(pController->sessionController(), &SessionController::dataSampleReceived,
+        this, [](QUuid uuid, double value, quint64 tNs) {
+            qDebug() << "[Data]" << uuid << "value:" << value << "t_ns:" << tNs;
+        });*/
 
     // Init toolbar and actions
     initActionSignals();
