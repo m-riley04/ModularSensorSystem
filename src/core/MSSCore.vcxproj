@@ -111,6 +111,7 @@
     <QtMoc Include="include\controllers\sessioncontroller.h" />
     <ClInclude Include="include\bins\binbase.h" />
     <ClInclude Include="include\bins\sourcebin.h" />
+    <ClInclude Include="include\interfaces\capability\iapisource.h" />
     <ClInclude Include="include\utils\boost_qt_conversions.h" />
     <QtMoc Include="include\features\ielement.h" />
     <ClInclude Include="include\sdk\plugins\pluginloader.h" />

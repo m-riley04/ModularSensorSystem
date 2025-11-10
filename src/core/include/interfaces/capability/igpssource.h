@@ -8,7 +8,6 @@ class IGpsSource : public IDataSource
 public:
     virtual ~IGpsSource() = default;
 
-    virtual QObject* asQObject() = 0;
 signals:
     void nmeaReceived(const QByteArray&);
 };
