@@ -80,7 +80,6 @@
     </ClCompile>
     <QtMoc />
     <QtMoc>
-      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
     </QtMoc>

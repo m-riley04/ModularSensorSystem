@@ -17,40 +17,40 @@ bool USBVideoSourceBin::build()
     g_object_set(src, "device-path", m_id.c_str(), NULL); // TODO/CONSIDER: m_id should probably be better labeled to indicate it's the source id
 
     // Initialize queue and converter
-    GstElement* queue = gst_element_factory_make("queue", ("usb_vid_queue_" + deviceName).c_str());
     GstElement* conv = gst_element_factory_make("videoconvert", ("usb_vid_conv_" + deviceName).c_str());
+    GstElement* queue = gst_element_factory_make("queue", ("usb_vid_queue_" + deviceName).c_str());
     //GstElement* capsf = gst_element_factory_make("capsfilter", ("usb_vid_caps_" + deviceName).c_str()); // TODO: do we need this?
 
     // Check validity of each
-    if (!src || !queue || !conv) {
+    if (!src || !conv || !queue) {
         qWarning() << "Failed to create one or more elements";
         if (src)  gst_object_unref(src);
-        if (queue) gst_object_unref(queue);
         if (conv) gst_object_unref(conv);
+        if (queue) gst_object_unref(queue);
         return false;
     }
 
     // Add elements to bin, and clean up if failed
-    if (!this->addMany(src, queue, conv)) {
+    if (!this->addMany(src, conv, queue)) {
         qWarning() << "Failed to add elements to source bin";
         gst_object_unref(src);
-        gst_object_unref(queue);
         gst_object_unref(conv);
+        gst_object_unref(queue);
         return false;
     }
 
     // Link elements, and clean up if failed
-    if (!gst_element_link_many(src, queue, conv, NULL)) {
+    if (!gst_element_link_many(src, conv, queue, NULL)) {
         qWarning() << "Failed to link mfvideosrc -> queue -> videoconvert";
-        gst_bin_remove_many(GST_BIN(m_bin), src, queue, conv, NULL);
+        gst_bin_remove_many(GST_BIN(m_bin), src, conv, queue, NULL);
         return false;
     }
 
     // Create ghost source pads, and clean up if failed
-    if (!this->createSrcGhostPad(conv, "src")) {
+    if (!this->createSrcGhostPad(queue, "src")) {
         qWarning() << "Failed to create ghost source pads";
-        gst_element_unlink_many(src, queue, conv, NULL);
-        gst_bin_remove_many(GST_BIN(m_bin), src, queue, conv, NULL);
+        gst_element_unlink_many(src, conv, queue, NULL);
+        gst_bin_remove_many(GST_BIN(m_bin), src, conv, queue, NULL);
         return false;
     }
 

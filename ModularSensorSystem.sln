@@ -33,6 +33,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDataSourcePlugin", "src
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSFrontendWidgets", "src\widgets\MSSFrontendWidgets.vcxproj", "{C19648CA-6CE4-47AF-9D2D-37197198A1EB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "USBAudioPlugin", "src\plugins\sources\USBAudioPlugin\USBAudioPlugin.vcxproj", "{FB72DF6B-B4D7-4378-B63B-E4F6F4E3EDA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -67,6 +69,10 @@ Global
 		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Debug|x64.Build.0 = Debug|x64
 		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Release|x64.ActiveCfg = Release|x64
 		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Release|x64.Build.0 = Release|x64
+		{FB72DF6B-B4D7-4378-B63B-E4F6F4E3EDA8}.Debug|x64.ActiveCfg = Debug|x64
+		{FB72DF6B-B4D7-4378-B63B-E4F6F4E3EDA8}.Debug|x64.Build.0 = Debug|x64
+		{FB72DF6B-B4D7-4378-B63B-E4F6F4E3EDA8}.Release|x64.ActiveCfg = Release|x64
+		{FB72DF6B-B4D7-4378-B63B-E4F6F4E3EDA8}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,24 +1,21 @@
 #pragma once
 
 #include <QObject>
-#include <QtMultimedia>
-#include <QThread>
-#include <QtConcurrent>
 #include <chrono>
 #include "features/sources/source.h"
 #include <sdk/plugins/isourceplugin.h>
 #include <utils/boost_qt_conversions.h>
 #include "utils.h"
-#include "usbvideosourcebin.h"
+#include "usbaudiosourcebin.h"
 
-class USBVideoSource : public Source
+class USBAudioSource : public Source
 {
 	Q_OBJECT
 
 public:
-	USBVideoSource(const std::string& hardwareId, QObject* parent);
-    USBVideoSource(SourceInfo sourceInfo, QObject *parent);
-	~USBVideoSource();
+	USBAudioSource(const std::string& hardwareId, QObject* parent);
+	USBAudioSource(SourceInfo sourceInfo, QObject *parent);
+	~USBAudioSource();
 
 	SourceInfo getSourceInfo(const std::string& id) const;
 
@@ -41,8 +38,8 @@ private:
 
 	std::string m_id;
 	std::string m_name;
-	std::string m_pluginId = "plugin_usb_video";
-	Source::Type m_sourceType = Source::Type::VIDEO;
+	std::string m_pluginId = "plugin_usb_audio";
+	Source::Type m_sourceType = Source::Type::AUDIO;
 	quintptr m_windowId = 0;
-	std::unique_ptr<USBVideoSourceBin> m_bin;
+	std::unique_ptr<USBAudioSourceBin> m_bin;
 };

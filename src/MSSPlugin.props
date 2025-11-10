@@ -5,6 +5,10 @@
   <PropertyGroup>
     <IncludePath>$(SolutionDir)\src\core\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
-  <ItemDefinitionGroup />
+  <ItemDefinitionGroup>
+    <QtMoc>
+      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </QtMoc>
+  </ItemDefinitionGroup>
   <ItemGroup />
 </Project>

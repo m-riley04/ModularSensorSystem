@@ -78,19 +78,19 @@ void SessionController::createSourceElements(Source* source)
 
 void SessionController::createVideoSourceElements(Source* source)
 {
-	// Initialize sink
+	// Initialize elements
+	GstElement* gstBin = source->gstBin();
 	GstElement* sink = gst_element_factory_make("d3dvideosink", NULL); // TODO: make this dynamic
 	guintptr windowId = static_cast<guintptr>(source->windowId());
 
 	// Check validity of each
-	if (!sink) {
+	if (!gstBin || !sink) {
 		qWarning() << "Failed to create one or more elements";
 		if (sink) gst_object_unref(sink);
 		return;
 	}
 
 	// Add elements to pipeline
-	GstElement* gstBin = source->gstBin();
 	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
 
 	// Link source bin to sink
@@ -108,9 +108,38 @@ void SessionController::createVideoSourceElements(Source* source)
 
 void SessionController::createAudioSourceElements(Source* source)
 {
-	// TODO: Implement audio source element creation
+	// Initialize elements
+	GstElement* gstBin = source->gstBin();
+	GstElement* wavescope = gst_element_factory_make("wavescope", NULL);
+	GstElement* conv = gst_element_factory_make("videoconvert", NULL);
+	GstElement* queue = gst_element_factory_make("queue", NULL);
+	GstElement* sink = gst_element_factory_make("d3dvideosink", NULL); // TODO: make this dynamic
+	guintptr windowId = static_cast<guintptr>(source->windowId());
 
-	return;
+	// Check validity of each
+	if (!gstBin || !sink || !wavescope || !conv || !queue) {
+		qWarning() << "Failed to create one or more elements";
+		if (sink) gst_object_unref(sink);
+		if (wavescope) gst_object_unref(wavescope);
+		if (conv) gst_object_unref(conv);
+		if (queue) gst_object_unref(queue);
+		return;
+	}
+
+	// Add elements to pipeline
+	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, wavescope, conv, queue, sink, NULL);
+
+	// Link source bin to elements
+	if (!gst_element_link_many(gstBin, wavescope, conv, queue, sink, NULL)) {
+		qWarning() << "Failed to link source bin to elements.";
+		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, wavescope, conv, queue, sink, NULL);
+		return;
+	}
+
+	// Set the video sink for overlay
+	if (windowId != 0 && GST_IS_VIDEO_OVERLAY(sink)) {
+		gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(sink), windowId);
+	}
 }
 
 void SessionController::createDataSourceElements(Source* source)
