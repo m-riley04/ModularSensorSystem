@@ -12,6 +12,7 @@
 #include <gst/app/gstappsink.h>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <interfaces/capability/ianalogsource.h>
 
 using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
@@ -65,5 +66,5 @@ signals:
 	void sessionStarted();
 	void sessionStopped();
 
-	void dataSampleReceived(QUuid uuid, double value, quint64 tNs);
+	void dataSampleReceived(AnalogDataSample sample);
 };

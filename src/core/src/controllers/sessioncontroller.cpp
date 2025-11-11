@@ -108,9 +108,21 @@ void SessionController::createVideoSourceElements(Source* source)
 
 void SessionController::createAudioSourceElements(Source* source)
 {
+	/** Multiple differet visualizers could be used here.
+	 * - goom
+	 * - monoscope
+	 * - spacescope
+	 * - specrtascope
+	 * - synaescope
+	 * - wavescope
+	 * - libvisual(?)
+	 * - 
+	 * TODO: implement a way to choose between them.*/
+
+
 	// Initialize elements
 	GstElement* gstBin = source->gstBin();
-	GstElement* wavescope = gst_element_factory_make("wavescope", NULL);
+	GstElement* wavescope = gst_element_factory_make("goom", NULL);
 	GstElement* conv = gst_element_factory_make("videoconvert", NULL);
 	GstElement* queue = gst_element_factory_make("queue", NULL);
 	GstElement* sink = gst_element_factory_make("d3dvideosink", NULL); // TODO: make this dynamic
@@ -160,7 +172,7 @@ void SessionController::createDataSourceElements(Source* source)
 	// Configure appsink: emit signals, don't sync to clock, bounded queue
 	g_object_set(G_OBJECT(sink),
 		"emit-signals", TRUE,
-		"sync", FALSE,
+		"sync", TRUE,
 		"max-buffers", 100u,
 		"drop", TRUE,
 		nullptr);
@@ -281,7 +293,12 @@ GstFlowReturn SessionController::onDataNewSample(GstAppSink* sink)
 		QMetaObject::invokeMethod(
 			this,
 			[this, uuid, value, tNs]() {
-				emit dataSampleReceived(uuid, value, tNs);
+				AnalogDataSample sample = {
+					uuid,
+					value,
+					tNs
+				};
+				emit dataSampleReceived(sample);
 			},
 			Qt::QueuedConnection);
 	}

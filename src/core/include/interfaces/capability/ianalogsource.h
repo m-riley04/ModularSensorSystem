@@ -10,8 +10,7 @@ struct AnalogDataSample
     quint64 tNs;
 };
 
-class IAnalogSource : public IDataSource
-{
+class IAnalogSource : public IDataSource {
 
 public:
     virtual ~IAnalogSource() = default;

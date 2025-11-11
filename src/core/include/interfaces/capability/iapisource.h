@@ -12,8 +12,7 @@ struct ApiDataSample
     quint64 tNs;
 };
 
-class IApiSource : public IDataSource
-{
+class IApiSource : public IDataSource {
 
 public:
     virtual ~IApiSource() = default;
