@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <gst/gst.h>
 #include <QDebug>
@@ -87,43 +87,47 @@ inline GstElement* createDefaultDataVisualizerSink(guintptr windowId, const char
 
 	const char* sinkName = getVideoSinkFactoryName();
 
-	// Initialize elements
 	GstElement* bin = gst_bin_new(binName);
-	GstElement* textov = gst_element_factory_make("textrender", nullptr);
-	GstElement* conv = gst_element_factory_make("videoconvert", nullptr);
-	GstElement* queue = gst_element_factory_make("queue", nullptr);
-	GstElement* sink = gst_element_factory_make(sinkName, nullptr);
+	GstElement* queue = gst_element_factory_make("queue", "queue");
+	GstElement* text_rend = gst_element_factory_make("textrender", "text_rend");
+	GstElement* conv = gst_element_factory_make("videoconvert", "conv");
+	GstElement* video_sink = gst_element_factory_make(sinkName, "video_sink");
 
-	// Check validity of each
-	if (!bin || !textov || !conv || !queue || !sink) {
-		qWarning() << "Failed to create one or more elements";
-		if (bin) gst_object_unref(bin);
-		if (textov) gst_object_unref(textov);
-		if (conv) gst_object_unref(conv);
-		if (queue) gst_object_unref(queue);
-		if (sink) gst_object_unref(sink);
+	if (!bin || !queue || !text_rend || !conv || !video_sink) {
+		qWarning() << "Failed to create one or more elements in data-visualizer bin";
+		if (bin)         gst_object_unref(bin);
+		if (queue)       gst_object_unref(queue);
+		if (text_rend)   gst_object_unref(text_rend);
+		if (conv)        gst_object_unref(conv);
+		if (video_sink)  gst_object_unref(video_sink);
 		return nullptr;
 	}
 
-	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(bin), textov, conv, queue, sink, nullptr);
+	// Add elements
+	gst_bin_add_many(GST_BIN(bin),
+		queue,
+		text_rend,
+		conv,
+		video_sink,
+		nullptr);
 
-	// Link source bin to elements
-	if (!gst_element_link_many(textov, conv, queue, sink, nullptr)) {
-		qWarning() << "Failed to link source bin to elements.";
+	// Link the chain: queue → textrender → videoconvert → video_sink
+	if (!gst_element_link_many(queue, text_rend, conv, video_sink, nullptr)) {
+		qWarning() << "Failed to link elements in data-visualizer bin";
 		gst_object_unref(bin);
 		return nullptr;
 	}
 
-	// Add input ghost pad
-	GstPad* inputPad = gst_element_get_static_pad(textov, "sink");
-	GstPad* ghostPad = gst_ghost_pad_new("sink", inputPad);
-	gst_object_unref(inputPad);
-	gst_element_add_pad(bin, ghostPad);
+	// Expose a sink ghost pad on the bin for upstream linking
+	GstPad* pad_queue_sink = gst_element_get_static_pad(queue, "sink");
+	GstPad* ghost_sink = gst_ghost_pad_new("sink", pad_queue_sink);
+	gst_object_unref(pad_queue_sink);
+	gst_element_add_pad(bin, ghost_sink);
 
-	// Set the video sink for overlay
-	if (windowId != 0 && GST_IS_VIDEO_OVERLAY(sink)) {
-		gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(sink), windowId);
+	// Set sink window handle if needed
+	if (windowId != 0 && GST_IS_VIDEO_OVERLAY(video_sink)) {
+		gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(video_sink),
+			windowId);
 	}
 
 	return bin;
