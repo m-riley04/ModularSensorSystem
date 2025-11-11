@@ -34,18 +34,18 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="USBAudioSource\usbaudiosourcebin.h">
+    <ClInclude Include="USBAudioSource\usbaudiosourcebin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="usbaudioplugin.h">
+    <ClInclude Include="usbaudioplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
+    <ClInclude Include="utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="USBAudioSource\usbaudiosource.h">
+    <QtMoc Include="USBAudioSource\usbaudiosource.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

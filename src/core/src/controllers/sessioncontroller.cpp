@@ -1,4 +1,4 @@
-#include "controllers/sessioncontroller.h"
+#include "controllers/sessioncontroller.hpp"
 
 SessionController::SessionController(SourceController* sourceController, ProcessingController* processingController, 
 	MountController* mountController, QObject* parent)
@@ -113,7 +113,7 @@ void SessionController::createAudioSourceElements(Source* source)
 	/** Multiple differet visualizers could be used here.
 	 * - monoscope (best one by far)
 	 * - goom (cool visuals, but not really good for real visualization)
-	 * - audiovisualizations (these are a set of visualizers, but are not very good and pretty buggy on some systems)
+	 * - audiovisualizers (these are a set of visualizers, but are not very good and pretty buggy on some systems)
 	 *     - spacescope
 	 *     - specrtascope
 	 *     - synaescope

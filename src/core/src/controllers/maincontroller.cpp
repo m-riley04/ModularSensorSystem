@@ -1,4 +1,4 @@
-#include "controllers/maincontroller.h"
+#include "controllers/maincontroller.hpp"
 
 
 MainController::MainController(QObject *parent)

@@ -1,4 +1,4 @@
-#include "controllers/plugincontroller.h"
+#include "controllers/plugincontroller.hpp"
 
 PluginController::PluginController(const QString& root, QObject* parent)
 	: BackendControllerBase("PluginController", parent), m_pluginRoot(root)

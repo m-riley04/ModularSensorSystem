@@ -2,11 +2,13 @@
 
 #include <QVariant>
 #include <QAbstractItemModel>
-#include "controllers/mountcontroller.h"
-#include "controllers/sourcecontroller.h"
-#include "controllers/processingcontroller.h"
-#include "features/mounts/mount.h"
-#include "controllers/maincontroller.h"
+#include "controllers/mountcontroller.hpp"
+#include "controllers/sourcecontroller.hpp"
+#include "controllers/processingcontroller.hpp"
+#include "features/mounts/mount.hpp"
+#include "controllers/maincontroller.hpp"
+#include "controllers/sessioncontroller.hpp"
+#include "utils/boost_qt_conversions.hpp"
 
 struct ElementTreeNode {
     enum class Kind { 

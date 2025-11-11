@@ -1,4 +1,4 @@
-#include "usbvideoplugin.h"
+#include "usbvideoplugin.hpp"
 
 std::vector<SourceInfo> USBVideoPlugin::availableSources() const
 { 

@@ -1,4 +1,4 @@
-#include "controllers/presetscontroller.h"
+#include "controllers/presetscontroller.hpp"
 
 PresetsController::PresetsController(const QString& dir, QObject *parent)
 	: BackendControllerBase("PresetsController", parent), mPresetsDir(dir)

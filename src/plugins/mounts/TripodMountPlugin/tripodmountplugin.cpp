@@ -1,4 +1,4 @@
-#include "tripodmountplugin.h"
+#include "tripodmountplugin.hpp"
 
 TripodPlugin::TripodPlugin()
 {

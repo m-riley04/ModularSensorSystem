@@ -2,9 +2,9 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include "controllers/maincontroller.h"
-#include "controllers/mountcontroller.h"
-#include "data/requried_actions.h"
+#include "controllers/maincontroller.hpp"
+#include "controllers/mountcontroller.hpp"
+#include "data/required_actions.hpp"
 
 // Forward declaration for element tree node
 struct ElementTreeNode;

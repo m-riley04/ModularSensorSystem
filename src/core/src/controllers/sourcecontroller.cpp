@@ -1,5 +1,4 @@
-#include "controllers/sourcecontroller.h"
-#include <utils/boost_qt_conversions.h>
+#include "controllers/sourcecontroller.hpp"
 
 SourceController::SourceController(PluginController* pluginController, QObject *parent)
 	: BackendControllerBase("SourceController", parent), pPluginController(pluginController)

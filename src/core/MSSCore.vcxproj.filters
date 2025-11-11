@@ -23,58 +23,58 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\interfaces\capability\ianalogsource.h">
+    <ClInclude Include="include\interfaces\capability\ianalogsource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\iaudiosource.h">
+    <ClInclude Include="include\interfaces\capability\iaudiosource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\idatasource.h">
+    <ClInclude Include="include\interfaces\capability\idatasource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\igpssource.h">
+    <ClInclude Include="include\interfaces\capability\igpssource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\ivideosource.h">
+    <ClInclude Include="include\interfaces\capability\ivideosource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\sdk\plugins\iprocessorplugin.h">
+    <ClInclude Include="include\sdk\plugins\iprocessorplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\sdk\plugins\isourceplugin.h">
+    <ClInclude Include="include\sdk\plugins\isourceplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\presets\preset.h">
+    <ClInclude Include="include\presets\preset.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\presets\sourcepreset.h">
+    <ClInclude Include="include\presets\sourcepreset.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\sdk\plugins\imountplugin.h">
+    <ClInclude Include="include\sdk\plugins\imountplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\features\sources\iconfigurablesource.h">
+    <ClInclude Include="include\features\sources\iconfigurablesource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\sdk\plugins\iplugin.h">
+    <ClInclude Include="include\sdk\plugins\iplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\sdk\plugins\factory.h">
+    <ClInclude Include="include\sdk\plugins\factory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\sdk\plugins\pluginloader.h">
+    <ClInclude Include="include\sdk\plugins\pluginloader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\utils\boost_qt_conversions.h">
+    <ClInclude Include="include\utils\boost_qt_conversions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\bins\binbase.h">
+    <ClInclude Include="include\bins\binbase.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\bins\sourcebin.h">
+    <ClInclude Include="include\bins\sourcebin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\iapisource.h">
+    <ClInclude Include="include\interfaces\capability\iapisource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -102,43 +102,43 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="include\controllers\maincontroller.h">
+    <QtMoc Include="include\controllers\maincontroller.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\controllers\plugincontroller.h">
+    <QtMoc Include="include\controllers\plugincontroller.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\controllers\presetscontroller.h">
+    <QtMoc Include="include\controllers\presetscontroller.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\controllers\processingcontroller.h">
+    <QtMoc Include="include\controllers\processingcontroller.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\controllers\sourcecontroller.h">
+    <QtMoc Include="include\controllers\sourcecontroller.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\controllers\backendcontrollerbase.h">
+    <QtMoc Include="include\controllers\backendcontrollerbase.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\controllers\mountcontroller.h">
+    <QtMoc Include="include\controllers\mountcontroller.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\features\sources\source.h">
+    <QtMoc Include="include\features\sources\source.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\features\sources\sourcemetadata.h">
+    <QtMoc Include="include\features\sources\sourcemetadata.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\features\processors\processor.h">
+    <QtMoc Include="include\features\processors\processor.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\features\ielement.h">
+    <QtMoc Include="include\features\ielement.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\features\mounts\mount.h">
+    <QtMoc Include="include\features\mounts\mount.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\controllers\sessioncontroller.h">
+    <QtMoc Include="include\controllers\sessioncontroller.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

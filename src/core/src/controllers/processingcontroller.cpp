@@ -1,5 +1,4 @@
-#include "controllers/processingcontroller.h"
-#include <utils/boost_qt_conversions.h>
+#include "controllers/processingcontroller.hpp"
 
 ProcessingController::ProcessingController(QObject *parent)
 	: BackendControllerBase("ProcessingController", parent)

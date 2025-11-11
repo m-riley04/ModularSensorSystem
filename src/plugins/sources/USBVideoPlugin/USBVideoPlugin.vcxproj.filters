@@ -26,7 +26,7 @@
     <ClCompile Include="usbvideoplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <QtMoc Include="USBVideoSource\usbvideosource.h">
+    <QtMoc Include="USBVideoSource\usbvideosource.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClCompile Include="USBVideoSource\usbvideosourcebin.cpp">
@@ -39,13 +39,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="usbvideoplugin.h">
+    <ClInclude Include="usbvideoplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
+    <ClInclude Include="utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="USBVideoSource\usbvideosourcebin.h">
+    <ClInclude Include="USBVideoSource\usbvideosourcebin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,8 +3,9 @@
 #include <QWidget>
 #include "ui_previewcontainerwidget.h"
 #include <QList>
-#include "controllers/maincontroller.h"
+#include "controllers/maincontroller.hpp"
 #include "widgets/SourcePreviewWidget/sourcepreviewwidget.h"
+#include "utils/boost_qt_conversions.hpp"
 
 /**
  * A widget that contains and manages multiple QDynamicGridWidget instances to display SourcePreviewWidget instances.

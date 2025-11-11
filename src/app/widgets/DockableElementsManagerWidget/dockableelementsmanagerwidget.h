@@ -2,11 +2,11 @@
 
 #include <QDockWidget>
 #include <QPointer>
-#include "ui_dockableelementsmanagerwidget.h"
-#include "controllers/maincontroller.h"
-#include "models/ElementTreeModel/elementtreemodel.h"
 #include <QMenu>
-#include "data/requried_actions.h"
+#include "ui_dockableelementsmanagerwidget.h"
+#include "controllers/maincontroller.hpp"
+#include "models/ElementTreeModel/elementtreemodel.h"
+#include "data/required_actions.hpp"
 
 class DockableElementsManagerWidget : public QDockWidget
 {

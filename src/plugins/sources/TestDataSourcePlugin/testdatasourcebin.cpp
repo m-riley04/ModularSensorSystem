@@ -1,5 +1,4 @@
-#include "testdatasourcebin.h"
-#include <utils/boost_qt_conversions.h>
+#include "testdatasourcebin.hpp"
 
 TestDataSourceBin::TestDataSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
     : SourceBin(uuid, id, Source::Type::DATA, "src")

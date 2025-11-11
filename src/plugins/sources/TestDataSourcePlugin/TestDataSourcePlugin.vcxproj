@@ -109,10 +109,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="testdatasourcepluginutils.h" />
-    <QtMoc Include="testdatasource.h" />
-    <ClInclude Include="testdatasourcebin.h" />
-    <ClInclude Include="testdatasourceplugin.h" />
+    <ClInclude Include="testdatasourcepluginutils.hpp" />
+    <QtMoc Include="testdatasource.hpp" />
+    <ClInclude Include="testdatasourcebin.hpp" />
+    <ClInclude Include="testdatasourceplugin.hpp" />
     <ClCompile Include="testdatasource.cpp" />
     <ClCompile Include="testdatasourcebin.cpp" />
     <ClCompile Include="testdatasourceplugin.cpp" />

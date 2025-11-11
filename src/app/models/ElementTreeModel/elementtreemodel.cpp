@@ -1,6 +1,4 @@
 #include "elementtreemodel.h"
-#include "controllers/sessioncontroller.h"
-#include <utils/boost_qt_conversions.h>
 
 ElementTreeModel::ElementTreeModel(MainController* mc,
     QObject* parent)

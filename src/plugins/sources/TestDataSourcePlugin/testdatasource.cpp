@@ -1,4 +1,4 @@
-#include "testdatasource.h"
+#include "testdatasource.hpp"
 
 TestDataSource::TestDataSource(const std::string& hardwareId, QObject* parent)
 	: TestDataSource(getSourceInfo(hardwareId), parent)

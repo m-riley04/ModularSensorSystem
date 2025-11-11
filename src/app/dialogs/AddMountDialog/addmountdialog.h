@@ -1,10 +1,10 @@
 #pragma once
 
 #include <QDialog>
-#include "ui_addmountdialog.h"
-#include <sdk/plugins/imountplugin.h>
-#include <controllers/plugincontroller.h>
 #include <qmessagebox.h>
+#include "ui_addmountdialog.h"
+#include <sdk/plugins/imountplugin.hpp>
+#include <controllers/plugincontroller.hpp>
 
 class AddMountDialog : public QDialog
 {

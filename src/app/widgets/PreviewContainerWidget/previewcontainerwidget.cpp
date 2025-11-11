@@ -1,5 +1,4 @@
 #include "previewcontainerwidget.h"
-#include <utils/boost_qt_conversions.h>
 
 PreviewContainerWidget::PreviewContainerWidget(QWidget *parent)
 	: QWidget(parent)

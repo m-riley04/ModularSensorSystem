@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "ui_sessioncontrolswidget.h"
-#include "controllers/maincontroller.h"
+#include "controllers/maincontroller.hpp"
 #include "dialogs/SessionPropertiesDialog/sessionpropertiesdialog.h"
 
 class SessionControlsWidget : public QWidget

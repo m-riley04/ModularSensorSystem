@@ -34,18 +34,18 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="testdatasourceplugin.h">
+    <ClInclude Include="testdatasourceplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="testdatasourcebin.h">
+    <ClInclude Include="testdatasourcebin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="testdatasourcepluginutils.h">
+    <ClInclude Include="testdatasourcepluginutils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="testdatasource.h">
+    <QtMoc Include="testdatasource.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

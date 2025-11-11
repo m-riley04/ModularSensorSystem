@@ -1,4 +1,4 @@
-#include "usbaudiosourcebin.h"
+#include "usbaudiosourcebin.hpp"
 
 USBAudioSourceBin::USBAudioSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
 	: SourceBin(uuid, id, Source::Type::AUDIO, "src")

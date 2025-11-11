@@ -16,10 +16,10 @@
     <ClCompile Include="USBAudioSource\usbaudiosourcebin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="usbaudioplugin.h" />
-    <QtMoc Include="USBAudioSource\usbaudiosource.h" />
-    <ClInclude Include="USBAudioSource\usbaudiosourcebin.h" />
-    <ClInclude Include="utils.h" />
+    <ClInclude Include="usbaudioplugin.hpp" />
+    <QtMoc Include="USBAudioSource\usbaudiosource.hpp" />
+    <ClInclude Include="USBAudioSource\usbaudiosourcebin.hpp" />
+    <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\core\MSSCore.vcxproj">

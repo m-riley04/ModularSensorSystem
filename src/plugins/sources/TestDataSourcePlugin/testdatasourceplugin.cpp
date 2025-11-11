@@ -1,4 +1,4 @@
-#include "testdatasourceplugin.h"
+#include "testdatasourceplugin.hpp"
 
 std::vector<SourceInfo> TestDataSourcePlugin::availableSources() const
 {

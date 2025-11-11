@@ -191,7 +191,7 @@
     <QtMoc Include="widgets\SourcePropertiesWidget\sourcepropertieswidget.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="data\requried_actions.h" />
+    <ClInclude Include="data\required_actions.hpp" />
     <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

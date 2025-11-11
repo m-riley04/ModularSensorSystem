@@ -195,7 +195,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="data\requried_actions.h">
+    <ClInclude Include="data\required_actions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "yoloobjectdetectionprocessor.h"
+#include "yoloobjectdetectionprocessor.hpp"
 
 YoloObjectDetectionProcessor::YoloObjectDetectionProcessor(Source* src, QObject *parent)
 	: Processor(src, parent)

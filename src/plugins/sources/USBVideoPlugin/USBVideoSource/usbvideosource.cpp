@@ -1,4 +1,4 @@
-#include "usbvideosource.h"
+#include "usbvideosource.hpp"
 
 USBVideoSource::USBVideoSource(const std::string& hardwareId, QObject* parent)
 	: USBVideoSource(getSourceInfo(hardwareId), parent)

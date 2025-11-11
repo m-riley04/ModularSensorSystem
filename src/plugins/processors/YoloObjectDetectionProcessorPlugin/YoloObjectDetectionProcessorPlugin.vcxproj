@@ -117,11 +117,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.cpp" />
-    <ClInclude Include="yoloobjectdetectionprocessorplugin.h" />
+    <ClInclude Include="yoloobjectdetectionprocessorplugin.hpp" />
     <ClCompile Include="yoloobjectdetectionprocessorplugin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.h" />
+    <QtMoc Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\core\MSSCore.vcxproj">

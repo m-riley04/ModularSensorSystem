@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "ui_sourcepreviewwidget.h"
-#include "features/sources/source.h"
+#include "features/sources/source.hpp"
 #include <QPainter>
 
 class SourcePreviewWidget : public QWidget

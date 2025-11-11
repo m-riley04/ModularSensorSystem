@@ -1,4 +1,4 @@
-#include "yoloobjectdetectionprocessorplugin.h"
+#include "yoloobjectdetectionprocessorplugin.hpp"
 
 Processor* createProcessor(Source* source, QObject* parent)
 {

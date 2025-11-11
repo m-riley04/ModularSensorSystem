@@ -1,4 +1,4 @@
-#include "usbaudiosource.h"
+#include "usbaudiosource.hpp"
 
 USBAudioSource::USBAudioSource(const std::string& hardwareId, QObject* parent)
 	: USBAudioSource(getSourceInfo(hardwareId), parent)

@@ -1,4 +1,4 @@
-#include "usbaudioplugin.h"
+#include "usbaudioplugin.hpp"
 
 std::vector<SourceInfo> USBAudioPlugin::availableSources() const
 { 
