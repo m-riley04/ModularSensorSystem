@@ -158,24 +158,25 @@ void SessionController::createDataSourceElements(Source* source)
 	// gst_caps_unref(caps);
 
 	GstElement* gstBin = source->gstBin();
+	GstElement* dataSink = createDefaultDataVisualizerSink(source->windowId());
 	if (!gstBin) {
 		qWarning() << "Data source has no Gst bin";
 		gst_object_unref(sink);
 		return;
 	}
 
-	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sink, nullptr);
+	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, dataSink, nullptr);
 
 	// Link source bin to appsink's sink pad
-	if (!gst_element_link(gstBin, sink)) {
+	if (!gst_element_link(gstBin, dataSink)) {
 		qWarning() << "Failed to link data source bin to appsink";
-		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sink, nullptr);
+		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, dataSink, nullptr);
 		return;
 	}
 
 	// Connect "new-sample" to our static callback
 	// userData = this, we will parse sensor_id out of JSON
-	g_signal_connect(sink, "new-sample", G_CALLBACK(&SessionController::onDataNewSampleStatic), this);
+	g_signal_connect(dataSink, "new-sample", G_CALLBACK(&SessionController::onDataNewSampleStatic), this);
 }
 
 void SessionController::closePipeline()

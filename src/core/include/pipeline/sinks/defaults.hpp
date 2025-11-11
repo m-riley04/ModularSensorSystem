@@ -83,6 +83,52 @@ inline GstElement* createDefaultAudioVisualizerSink(guintptr windowId, const cha
 	return bin;
 }
 
+inline GstElement* createDefaultDataVisualizerSink(guintptr windowId, const char* binName = nullptr) {
+
+	const char* sinkName = getVideoSinkFactoryName();
+
+	// Initialize elements
+	GstElement* bin = gst_bin_new(binName);
+	GstElement* textov = gst_element_factory_make("textrender", nullptr);
+	GstElement* conv = gst_element_factory_make("videoconvert", nullptr);
+	GstElement* queue = gst_element_factory_make("queue", nullptr);
+	GstElement* sink = gst_element_factory_make(sinkName, nullptr);
+
+	// Check validity of each
+	if (!bin || !textov || !conv || !queue || !sink) {
+		qWarning() << "Failed to create one or more elements";
+		if (bin) gst_object_unref(bin);
+		if (textov) gst_object_unref(textov);
+		if (conv) gst_object_unref(conv);
+		if (queue) gst_object_unref(queue);
+		if (sink) gst_object_unref(sink);
+		return nullptr;
+	}
+
+	// Add elements to pipeline
+	gst_bin_add_many(GST_BIN(bin), textov, conv, queue, sink, nullptr);
+
+	// Link source bin to elements
+	if (!gst_element_link_many(textov, conv, queue, sink, nullptr)) {
+		qWarning() << "Failed to link source bin to elements.";
+		gst_object_unref(bin);
+		return nullptr;
+	}
+
+	// Add input ghost pad
+	GstPad* inputPad = gst_element_get_static_pad(textov, "sink");
+	GstPad* ghostPad = gst_ghost_pad_new("sink", inputPad);
+	gst_object_unref(inputPad);
+	gst_element_add_pad(bin, ghostPad);
+
+	// Set the video sink for overlay
+	if (windowId != 0 && GST_IS_VIDEO_OVERLAY(sink)) {
+		gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(sink), windowId);
+	}
+
+	return bin;
+}
+
 /**
  * @brief Creates a default video sink element.
  * @param windowId The window ID for the video sink.
