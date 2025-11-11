@@ -78,9 +78,11 @@ void SessionController::createSourceElements(Source* source)
 
 void SessionController::createVideoSourceElements(Source* source)
 {
+	const char* sinkName = getVideoSinkFactoryName();
+
 	// Initialize elements
 	GstElement* gstBin = source->gstBin();
-	GstElement* sink = gst_element_factory_make("d3dvideosink", NULL); // TODO: make this dynamic
+	GstElement* sink = gst_element_factory_make(sinkName, NULL); // TODO: make this dynamic
 	guintptr windowId = static_cast<guintptr>(source->windowId());
 
 	// Check validity of each
@@ -109,23 +111,25 @@ void SessionController::createVideoSourceElements(Source* source)
 void SessionController::createAudioSourceElements(Source* source)
 {
 	/** Multiple differet visualizers could be used here.
-	 * - goom
-	 * - monoscope
-	 * - spacescope
-	 * - specrtascope
-	 * - synaescope
-	 * - wavescope
+	 * - monoscope (best one by far)
+	 * - goom (cool visuals, but not really good for real visualization)
+	 * - audiovisualizations (these are a set of visualizers, but are not very good and pretty buggy on some systems)
+	 *     - spacescope
+	 *     - specrtascope
+	 *     - synaescope
+	 *     - wavescope
 	 * - libvisual(?)
-	 * - 
-	 * TODO: implement a way to choose between them.*/
-
+	 * 
+	 * TODO: implement a way to choose between them. */
+	const char* visualizerFactoryName = "monoscope";
+	const char* sinkName = getVideoSinkFactoryName();
 
 	// Initialize elements
 	GstElement* gstBin = source->gstBin();
-	GstElement* wavescope = gst_element_factory_make("goom", NULL);
+	GstElement* wavescope = gst_element_factory_make(visualizerFactoryName, NULL);
 	GstElement* conv = gst_element_factory_make("videoconvert", NULL);
 	GstElement* queue = gst_element_factory_make("queue", NULL);
-	GstElement* sink = gst_element_factory_make("d3dvideosink", NULL); // TODO: make this dynamic
+	GstElement* sink = gst_element_factory_make(sinkName, NULL);
 	guintptr windowId = static_cast<guintptr>(source->windowId());
 
 	// Check validity of each
@@ -304,4 +308,18 @@ GstFlowReturn SessionController::onDataNewSample(GstAppSink* sink)
 	}
 
 	return GST_FLOW_OK;
+}
+
+const char* getVideoSinkFactoryName()
+{
+	// TODO: Make this better and more flexible?
+	const char* sinkName;
+#ifdef Q_OS_WINDOWS
+	sinkName = "d3dvideosink";
+#elif Q_OS_LINUX
+	sinkName = "v4l2sink";
+#else
+	sinkName = "autovideosink"; // need to change this probs
+#endif
+	return sinkName;
 }
