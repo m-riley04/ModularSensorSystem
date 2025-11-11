@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QDebug>
-#include <bins/sourcebin.hpp>
+#include <pipeline/bins/sourcebin.hpp>
 #include <gst/video/videooverlay.h>
 
 class USBVideoSourceBin : public SourceBin {

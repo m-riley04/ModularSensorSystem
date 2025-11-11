@@ -2,7 +2,7 @@
 
 #include <gst/video/videooverlay.h>
 #include <gst/gst.h>
-#include <bins/sourcebin.hpp>
+#include <pipeline/bins/sourcebin.hpp>
 #include <utils/boost_qt_conversions.hpp>
 
 class TestDataSourceBin : public SourceBin {

@@ -78,12 +78,11 @@ void SessionController::createSourceElements(Source* source)
 
 void SessionController::createVideoSourceElements(Source* source)
 {
-	const char* sinkName = getVideoSinkFactoryName();
+	guintptr windowId = static_cast<guintptr>(source->windowId());
 
 	// Initialize elements
 	GstElement* gstBin = source->gstBin();
-	GstElement* sink = gst_element_factory_make(sinkName, NULL); // TODO: make this dynamic
-	guintptr windowId = static_cast<guintptr>(source->windowId());
+	GstElement* sink = createDefaultVideoSink(windowId);
 
 	// Check validity of each
 	if (!gstBin || !sink) {
@@ -93,68 +92,40 @@ void SessionController::createVideoSourceElements(Source* source)
 	}
 
 	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
+	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sink, nullptr);
 
 	// Link source bin to sink
 	if (!gst_element_link(gstBin, sink)) {
 		qWarning() << "Failed to link source bin to sink.";
-		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sink, NULL);
+		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sink, nullptr);
 		return;
-	}
-
-	// Set the video sink for overlay
-	if (windowId != 0 && GST_IS_VIDEO_OVERLAY(sink)) {
-		gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(sink), windowId);
 	}
 }
 
 void SessionController::createAudioSourceElements(Source* source)
 {
-	/** Multiple differet visualizers could be used here.
-	 * - monoscope (best one by far)
-	 * - goom (cool visuals, but not really good for real visualization)
-	 * - audiovisualizers (these are a set of visualizers, but are not very good and pretty buggy on some systems)
-	 *     - spacescope
-	 *     - specrtascope
-	 *     - synaescope
-	 *     - wavescope
-	 * - libvisual(?)
-	 * 
-	 * TODO: implement a way to choose between them. */
-	const char* visualizerFactoryName = "monoscope";
-	const char* sinkName = getVideoSinkFactoryName();
-
-	// Initialize elements
-	GstElement* gstBin = source->gstBin();
-	GstElement* wavescope = gst_element_factory_make(visualizerFactoryName, NULL);
-	GstElement* conv = gst_element_factory_make("videoconvert", NULL);
-	GstElement* queue = gst_element_factory_make("queue", NULL);
-	GstElement* sink = gst_element_factory_make(sinkName, NULL);
 	guintptr windowId = static_cast<guintptr>(source->windowId());
 
+	// Init elements
+	GstElement* gstBin = source->gstBin();
+	GstElement* sinkBin = createDefaultAudioVisualizerSink(windowId);
+
 	// Check validity of each
-	if (!gstBin || !sink || !wavescope || !conv || !queue) {
+	if (!gstBin || !sinkBin) {
 		qWarning() << "Failed to create one or more elements";
-		if (sink) gst_object_unref(sink);
-		if (wavescope) gst_object_unref(wavescope);
-		if (conv) gst_object_unref(conv);
-		if (queue) gst_object_unref(queue);
+		if (gstBin) gst_object_unref(gstBin);
+		if (sinkBin) gst_object_unref(sinkBin);
 		return;
 	}
 
 	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, wavescope, conv, queue, sink, NULL);
+	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sinkBin, nullptr);
 
 	// Link source bin to elements
-	if (!gst_element_link_many(gstBin, wavescope, conv, queue, sink, NULL)) {
+	if (!gst_element_link(gstBin, sinkBin)) {
 		qWarning() << "Failed to link source bin to elements.";
-		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, wavescope, conv, queue, sink, NULL);
+		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sinkBin, nullptr);
 		return;
-	}
-
-	// Set the video sink for overlay
-	if (windowId != 0 && GST_IS_VIDEO_OVERLAY(sink)) {
-		gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(sink), windowId);
 	}
 }
 
@@ -308,18 +279,4 @@ GstFlowReturn SessionController::onDataNewSample(GstAppSink* sink)
 	}
 
 	return GST_FLOW_OK;
-}
-
-const char* getVideoSinkFactoryName()
-{
-	// TODO: Make this better and more flexible?
-	const char* sinkName;
-#ifdef Q_OS_WINDOWS
-	sinkName = "d3dvideosink";
-#elif Q_OS_LINUX
-	sinkName = "v4l2sink";
-#else
-	sinkName = "autovideosink"; // need to change this probs
-#endif
-	return sinkName;
 }

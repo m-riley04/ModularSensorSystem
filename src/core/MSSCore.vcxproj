@@ -109,9 +109,10 @@
     <ClCompile Include="src\controllers\sessioncontroller.cpp" />
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
     <QtMoc Include="include\controllers\sessioncontroller.hpp" />
-    <ClInclude Include="include\bins\binbase.hpp" />
-    <ClInclude Include="include\bins\sourcebin.hpp" />
+    <ClInclude Include="include\pipeline\bins\binbase.hpp" />
+    <ClInclude Include="include\pipeline\bins\sourcebin.hpp" />
     <ClInclude Include="include\interfaces\capability\iapisource.hpp" />
+    <ClInclude Include="include\pipeline\sinks\defaults.hpp" />
     <ClInclude Include="include\utils\boost_qt_conversions.hpp" />
     <QtMoc Include="include\features\ielement.hpp" />
     <ClInclude Include="include\sdk\plugins\pluginloader.hpp" />

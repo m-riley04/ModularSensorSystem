@@ -13,15 +13,11 @@
 #include "controllers/mountcontroller.hpp"
 #include "features/sources/source.hpp"
 #include "interfaces/capability/ianalogsource.hpp"
+#include "pipeline/sinks/defaults.hpp"
 
 using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
-
-/**
- * Gets the name of the video sink factory to use based on the operating system.
- */
-static const char* getVideoSinkFactoryName();
 
 class SessionController : public BackendControllerBase
 {

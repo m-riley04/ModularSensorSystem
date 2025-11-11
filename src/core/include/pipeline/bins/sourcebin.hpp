@@ -1,7 +1,7 @@
 #pragma once
 
 #include "features/sources/source.hpp"
-#include "bins/binbase.hpp"
+#include "pipeline/bins/binbase.hpp"
 
 class SourceBin : public BinBase {
 public:

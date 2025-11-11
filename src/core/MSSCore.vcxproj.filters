@@ -68,13 +68,16 @@
     <ClInclude Include="include\utils\boost_qt_conversions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\bins\binbase.hpp">
+    <ClInclude Include="include\pipeline\bins\binbase.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\bins\sourcebin.hpp">
+    <ClInclude Include="include\pipeline\bins\sourcebin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\interfaces\capability\iapisource.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pipeline\sinks\defaults.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

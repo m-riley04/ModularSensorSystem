@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QDebug>
-#include <bins/sourcebin.hpp>
+#include <pipeline/bins/sourcebin.hpp>
 
 class USBAudioSourceBin : public SourceBin {
 public:
