@@ -34,8 +34,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="tools\make_element" />
-    <None Include="meson.build" />
     <None Include=".gitignore" />
   </ItemGroup>
 </Project>
