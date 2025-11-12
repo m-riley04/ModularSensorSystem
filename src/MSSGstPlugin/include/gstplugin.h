@@ -47,7 +47,10 @@
 #ifndef __GST_PLUGIN_TEMPLATE_H__
 #define __GST_PLUGIN_TEMPLATE_H__
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
+
 #include <gst/gst.h>
 
 G_BEGIN_DECLS

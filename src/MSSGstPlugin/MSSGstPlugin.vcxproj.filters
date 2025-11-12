@@ -18,12 +18,18 @@
     <ClCompile Include="src\gstplugin.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\jsonconvert.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\gstplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\jsonconvert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
