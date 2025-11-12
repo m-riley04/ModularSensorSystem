@@ -29,10 +29,10 @@
 ### Environment Variables
 The project uses the following (manually-set) environment variables to locate plugins:
 
-- `GST_DEBUG_DUMP_DOT_DIR`
+- `GST_DEBUG_DUMP_DOT_DIR` - This is the directory where GStreamer will dump debug dot files. This is mainly useful for development and debugging of GStreamer pipelines.
 - `GST_PLUGIN_PATH` - The directory where GStreamer plugins are located. This will be the `plugins/gstreamer` folder in the vcpkg installation directory.
 
-To make this easier, a property sheet named `EnvVariables.props` has been created. You can add this property sheet to any project that requires these environment variables to be set.
+To make this easier, a property sheet named `MSSEnvVars.props` has been created. This is mainly only for the frontend/runtime environment.
 
 ### Known Issues
 
