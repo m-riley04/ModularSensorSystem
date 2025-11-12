@@ -92,6 +92,7 @@ inline GstElement* createDefaultDataVisualizerSink(guintptr windowId, const char
 	GstElement* text_rend = gst_element_factory_make("textrender", "text_rend");
 	GstElement* conv = gst_element_factory_make("videoconvert", "conv");
 	GstElement* video_sink = gst_element_factory_make(sinkName, "video_sink");
+	GstElement* jsonconvert = gst_element_factory_make("jsonconvert", "json_conv");
 
 	if (!bin || !queue || !text_rend || !conv || !video_sink) {
 		qWarning() << "Failed to create one or more elements in data-visualizer bin";
