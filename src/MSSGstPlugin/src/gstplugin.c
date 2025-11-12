@@ -57,7 +57,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+#include "config.h"
 #endif
 
 #include <gst/gst.h>
@@ -231,7 +231,8 @@ gst_plugin_template_sink_event (GstPad * pad, GstObject * parent,
   return ret;
 }
 
-/* chain function
+/**
+ * chain function
  * this function does the actual processing
  */
 static GstFlowReturn

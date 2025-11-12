@@ -15,21 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\gstaudiofilter.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\gstplugin.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gsttransform.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\gstplugin.h">
+    <ClInclude Include="include\gstplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\gsttransform.h">
+    <ClInclude Include="include\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
