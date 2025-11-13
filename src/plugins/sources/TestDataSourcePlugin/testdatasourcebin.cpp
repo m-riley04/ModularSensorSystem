@@ -1,4 +1,6 @@
 #include "testdatasourcebin.hpp"
+#include <gst/app/app.h>
+#include <gst/gstbuffer.h>
 
 TestDataSourceBin::TestDataSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
     : SourceBin(uuid, id, Source::Type::DATA, "src")
@@ -8,26 +10,14 @@ TestDataSourceBin::TestDataSourceBin(const boost::uuids::uuid& uuid, const std::
 
 void TestDataSourceBin::pushRandomSample(uint64_t seq, double value)
 {
-    if (!m_appsrc)
-        return;
-
-    // Build JSON: {"uuid":".......","sensor_id":"random_test","seq":N,"value":X.YYYYYY}
-    QByteArray json = QByteArray("{\"uuid\":\"")
-        + QByteArray::fromStdString(boost::uuids::to_string(m_uuid))
-        + QByteArray("\",\"sensor_id\":\"")
-        + QByteArray::fromStdString(m_id)
-        + "\",\"seq\":" + QByteArray::number(seq)
-        + ",\"value\":" + QByteArray::number(value, 'f', 6)
-        + "}";
-
-    if (!json.endsWith('\n'))
-        json.append('\n');
+    if (!m_appsrc) return;
 
     // Create buffer and copy payload
-    GstBuffer* buf = gst_buffer_new_allocate(nullptr, json.size(), nullptr);
+	gdouble val = value;
+    GstBuffer* buf = gst_buffer_new_allocate(nullptr, sizeof(gdouble), nullptr);
     GstMapInfo map;
     gst_buffer_map(buf, &map, GST_MAP_WRITE);
-    memcpy(map.data, json.constData(), json.size());
+    memcpy(map.data, &val, sizeof(gdouble));
     gst_buffer_unmap(buf, &map);
 
     // No explicit PTS/DTS: appsrc will timestamp for us
@@ -50,9 +40,7 @@ bool TestDataSourceBin::build() {
     GstElement* q = gst_element_factory_make("queue", ("rand_q_" + binName).c_str());
     if (!m_appsrc || !q) return false;
 
-    GstCaps* caps = gst_caps_new_simple("application/x-mss-random-ndjson",
-        "sensor_id", G_TYPE_STRING, binName.c_str(),
-        nullptr);
+    GstCaps* caps = gst_caps_new_simple("application/x-double", nullptr);
 
     g_object_set(G_OBJECT(m_appsrc),
         "caps", caps,
@@ -70,6 +58,7 @@ bool TestDataSourceBin::build() {
         return false;
     }
 
+    // Expose the source ghost pad directly from the queue src pad
     if (!createSrcGhostPad(q, "src")) {
         return false;
     }

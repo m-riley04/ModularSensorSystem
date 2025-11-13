@@ -1,4 +1,5 @@
 #include "controllers/sessioncontroller.hpp"
+#include <utils/debug.hpp>
 
 SessionController::SessionController(SourceController* sourceController, ProcessingController* processingController, 
 	MountController* mountController, QObject* parent)
@@ -137,46 +138,64 @@ void SessionController::createDataSourceElements(Source* source)
 		return;
 	}
 
-	// Create appsink for data
-	GstElement* sink = gst_element_factory_make("appsink", nullptr);
-	if (!sink) {
-		qWarning() << "Failed to create appsink for data source";
+	GstElement* gstBin = source->gstBin();
+	if (!gstBin) {
+		qWarning() << "Data source has no Gst bin";
 		return;
 	}
 
-	// Configure appsink: emit signals, don't sync to clock, bounded queue
-	g_object_set(G_OBJECT(sink),
-		"emit-signals", TRUE,
-		"sync", TRUE,
-		"max-buffers", 100u,
-		"drop", TRUE,
-		nullptr);
+	// Visualize doubles using our custom element and a videosink
+	GstElement* visualizerBin = createDefaultDataVisualizerSink(static_cast<guintptr>(source->windowId()));
+	if (!visualizerBin) {
+		qWarning() << "Failed to create data visualizer bin (is the custom plugin registered and a video sink available?)";
+		return;
+	}
+
+	// Debug visualize
+	//qDebug() << "Dotfile output for source bin: " + debugDisplayGstBin(gstBin, true);
+
+	//qDebug() << "Dotfile output for visualizer: " + debugDisplayGstBin(visualizerBin, true);
 
 	// Optionally restrict caps to your NDJSON if you like:
-	// GstCaps* caps = gst_caps_from_string("application/x-mss-random-ndjson");
+	// GstCaps* caps = gst_caps_from_string("application/x-double");
 	// g_object_set(G_OBJECT(sink), "caps", caps, nullptr);
 	// gst_caps_unref(caps);
 
-	GstElement* gstBin = source->gstBin();
-	GstElement* dataSink = createDefaultDataVisualizerSink(source->windowId());
-	if (!gstBin) {
-		qWarning() << "Data source has no Gst bin";
-		gst_object_unref(sink);
-		return;
+	// Add both to pipeline before linking
+	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, visualizerBin, nullptr);
+
+	//qDebug() << "Dotfile output for visualizer: " + debugDisplayGstBin(GST_ELEMENT(m_pipeline.get()), true);
+
+	GstPad* qsrc = gst_element_get_static_pad(gstBin, "src");
+	GstPad* vsink = gst_element_get_static_pad(visualizerBin, "sink");
+
+	GstPadLinkReturn ret = gst_pad_link(qsrc, vsink);
+	if (ret != GST_PAD_LINK_OK) {
+		qWarning () << "queue->visual pad link failed: %s\n" << gst_pad_link_get_name(ret);
 	}
 
-	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, dataSink, nullptr);
+	// Optional: print caps on both sides
+	GstCaps* src_caps = gst_pad_query_caps(qsrc, nullptr);
+	GstCaps* sink_caps = gst_pad_query_caps(vsink, nullptr);
+
+	g_printerr("queue src caps:  %" GST_PTR_FORMAT "\n", src_caps);
+	g_printerr("visual sink caps:%" GST_PTR_FORMAT "\n", sink_caps);
+
+	gst_caps_unref(src_caps);
+	gst_caps_unref(sink_caps);
+	gst_object_unref(qsrc);
+	gst_object_unref(vsink);
 
 	// Link source bin to appsink's sink pad
-	if (!gst_element_link(gstBin, dataSink)) {
+	/*if (!gst_element_link(gstBin, visualizerBin)) {
 		qWarning() << "Failed to link data source bin to appsink";
-		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, dataSink, nullptr);
+		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, visualizerBin, nullptr);
 		return;
-	}
+	}*/
 
 	// Connect "new-sample" to our static callback
 	// userData = this, we will parse sensor_id out of JSON
-	g_signal_connect(dataSink, "new-sample", G_CALLBACK(&SessionController::onDataNewSampleStatic), this);
+	g_signal_connect(visualizerBin, "new-sample", G_CALLBACK(&SessionController::onDataNewSampleStatic), this);
 }
 
 void SessionController::closePipeline()

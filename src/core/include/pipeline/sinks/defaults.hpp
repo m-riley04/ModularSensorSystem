@@ -88,40 +88,41 @@ inline GstElement* createDefaultDataVisualizerSink(guintptr windowId, const char
 	const char* sinkName = getVideoSinkFactoryName();
 
 	GstElement* bin = gst_bin_new(binName);
-	GstElement* queue = gst_element_factory_make("queue", "queue");
-	GstElement* text_rend = gst_element_factory_make("textrender", "text_rend");
+	GstElement* visualizer = gst_element_factory_make("analogvisualizer", "visual");
 	GstElement* conv = gst_element_factory_make("videoconvert", "conv");
+	GstElement* queue = gst_element_factory_make("queue", "queue");
 	GstElement* video_sink = gst_element_factory_make(sinkName, "video_sink");
 
-	if (!bin || !queue || !text_rend || !conv || !video_sink) {
+	if (!bin || !queue || !visualizer || !conv || !video_sink) {
 		qWarning() << "Failed to create one or more elements in data-visualizer bin";
 		if (bin)         gst_object_unref(bin);
-		if (queue)       gst_object_unref(queue);
-		if (text_rend)   gst_object_unref(text_rend);
+		if (visualizer)   gst_object_unref(visualizer);
 		if (conv)        gst_object_unref(conv);
+		if (queue)       gst_object_unref(queue);
 		if (video_sink)  gst_object_unref(video_sink);
 		return nullptr;
 	}
 
 	// Add elements
 	gst_bin_add_many(GST_BIN(bin),
-		queue,
-		text_rend,
+		visualizer,
 		conv,
+		queue,
 		video_sink,
 		nullptr);
 
-	// Link the chain: queue → textrender → videoconvert → video_sink
-	if (!gst_element_link_many(queue, text_rend, conv, video_sink, nullptr)) {
+	// Link the chain: visualzier -> videoconvert -> queue -> video_sink
+	if (!gst_element_link_many(visualizer, conv, queue, video_sink, nullptr)) {
 		qWarning() << "Failed to link elements in data-visualizer bin";
 		gst_object_unref(bin);
 		return nullptr;
 	}
 
 	// Expose a sink ghost pad on the bin for upstream linking
-	GstPad* pad_queue_sink = gst_element_get_static_pad(queue, "sink");
-	GstPad* ghost_sink = gst_ghost_pad_new("sink", pad_queue_sink);
-	gst_object_unref(pad_queue_sink);
+	GstPad* pad_visualizer_sink = gst_element_get_static_pad(visualizer, "sink");
+	GstPad* ghost_sink = gst_ghost_pad_new("sink", pad_visualizer_sink);
+	gst_object_unref(pad_visualizer_sink);
+	gst_pad_set_active(ghost_sink, TRUE);
 	gst_element_add_pad(bin, ghost_sink);
 
 	// Set sink window handle if needed

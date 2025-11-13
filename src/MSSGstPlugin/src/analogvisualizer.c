@@ -143,11 +143,9 @@ gst_analog_visualizer_init(GstAnalogVisualizer* self)
     self->sinkpad = gst_pad_new_from_static_template(&sink_template, "sink");
     gst_pad_set_event_function(self->sinkpad, GST_DEBUG_FUNCPTR(gst_analog_visualizer_sink_event));
     gst_pad_set_chain_function(self->sinkpad, GST_DEBUG_FUNCPTR(gst_analog_visualizer_chain));
-    GST_PAD_SET_PROXY_CAPS(self->sinkpad);
     gst_element_add_pad(GST_ELEMENT(self), self->sinkpad);
 
     self->srcpad = gst_pad_new_from_static_template(&src_template, "src");
-    GST_PAD_SET_PROXY_CAPS(self->srcpad);
     gst_element_add_pad(GST_ELEMENT(self), self->srcpad);
 }
 
