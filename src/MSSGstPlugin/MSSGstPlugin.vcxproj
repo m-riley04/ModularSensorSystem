@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\analogvisualizer.c" />
-    <ClCompile Include="src\gstplugin.c">
+    <ClCompile Include="src\config.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsC</CompileAs>
     </ClCompile>
     <ClCompile Include="src\jsonconvert.c">

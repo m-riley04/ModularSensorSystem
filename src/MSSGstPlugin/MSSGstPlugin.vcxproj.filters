@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\gstplugin.c">
+    <ClCompile Include="src\config.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\jsonconvert.c">

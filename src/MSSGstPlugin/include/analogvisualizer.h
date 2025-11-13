@@ -50,21 +50,32 @@
 
 G_BEGIN_DECLS
 
-typedef struct _GstAnalogVisualizer {
-	GstElement element;
-	GstPad *sinkpad, *srcpad;
-	gboolean silent;
-} GstAnalogVisualizer;
-
-typedef struct _GstAnalogVisualizerClass {
-	GstElementClass parent_class;
-} GstAnalogVisualizerClass;
-
 #define GST_TYPE_ANALOG_VISUALIZER (gst_analog_visualizer_get_type())
 #define GST_ANALOG_VISUALIZER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), GST_TYPE_ANALOG_VISUALIZER, GstAnalogVisualizer))
 #define GST_ANALOG_VISUALIZER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), GST_TYPE_ANALOG_VISUALIZER, GstAnalogVisualizerClass))
 #define GST_IS_ANALOG_VISUALIZER(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), GST_TYPE_ANALOG_VISUALIZER))
 #define GST_IS_ANALOG_VISUALIZER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GST_TYPE_ANALOG_VISUALIZER))
+
+typedef struct _GstAnalogVisualizer GstAnalogVisualizer;
+typedef struct _GstAnalogVisualizerClass GstAnalogVisualizerClass;
+
+struct _GstAnalogVisualizer{
+	GstElement element;
+
+	GstPad* sinkpad, * srcpad;
+
+	gboolean silent;
+
+	gint width;
+	gint height;
+	gint fps_n, fps_d;
+
+	GstClockTime next_ts;
+};
+
+struct _GstAnalogVisualizerClass {
+	GstElementClass parent_class;
+};
 
 GType gst_analog_visualizer_get_type(void);
 
