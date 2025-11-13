@@ -103,6 +103,12 @@ inline GstElement* createDefaultDataVisualizerSink(guintptr windowId, const char
 		return nullptr;
 	}
 
+	// Set video sink to fastest rendering mode
+	g_object_set(video_sink,
+		"async", FALSE,   // don't wait for preroll to complete
+		"sync", FALSE,    // render as fast as buffers arrive
+		NULL);
+
 	// Add elements
 	gst_bin_add_many(GST_BIN(bin),
 		visualizer,

@@ -66,11 +66,23 @@ struct _GstAnalogVisualizer{
 
 	gboolean silent;
 
+	GstSegment   segment;
+	gboolean     segment_pending;
+
 	gint width;
 	gint height;
 	gint fps_n, fps_d;
+	guint outsize;
 
-	GstClockTime next_ts;
+	guint64 next_ts; /* expected timestamp of the next frame */
+	guint64 frame_duration;      /* video frame duration    */
+	gint rate;                /* sample rate             */
+	guint bps;                 /* bytes per sample        */
+	guint spf;                 /* samples per video frame */
+	GstBufferPool* pool;
+
+	gdouble proportion;
+	GstClockTime earliest_time; 
 };
 
 struct _GstAnalogVisualizerClass {

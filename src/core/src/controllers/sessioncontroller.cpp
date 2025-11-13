@@ -56,6 +56,17 @@ void SessionController::buildPipeline()
 	}
 
 	emit sessionStarted();
+
+	GstState current, pending;
+	GstStateChangeReturn sret = gst_element_get_state(
+		GST_ELEMENT(m_pipeline.get()), &current, &pending, 5 * GST_SECOND);
+
+	qDebug() << "Pipeline state change result:"
+		<< sret
+		<< "current:"
+		<< gst_element_state_get_name(current)
+		<< "pending:"
+		<< gst_element_state_get_name(pending);
 }
 
 void SessionController::createSourceElements(Source* source)
@@ -151,11 +162,6 @@ void SessionController::createDataSourceElements(Source* source)
 		return;
 	}
 
-	// Debug visualize
-	//qDebug() << "Dotfile output for source bin: " + debugDisplayGstBin(gstBin, true);
-
-	//qDebug() << "Dotfile output for visualizer: " + debugDisplayGstBin(visualizerBin, true);
-
 	// Optionally restrict caps to your NDJSON if you like:
 	// GstCaps* caps = gst_caps_from_string("application/x-double");
 	// g_object_set(G_OBJECT(sink), "caps", caps, nullptr);
@@ -164,38 +170,12 @@ void SessionController::createDataSourceElements(Source* source)
 	// Add both to pipeline before linking
 	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, visualizerBin, nullptr);
 
-	//qDebug() << "Dotfile output for visualizer: " + debugDisplayGstBin(GST_ELEMENT(m_pipeline.get()), true);
-
-	GstPad* qsrc = gst_element_get_static_pad(gstBin, "src");
-	GstPad* vsink = gst_element_get_static_pad(visualizerBin, "sink");
-
-	GstPadLinkReturn ret = gst_pad_link(qsrc, vsink);
-	if (ret != GST_PAD_LINK_OK) {
-		qWarning () << "queue->visual pad link failed: %s\n" << gst_pad_link_get_name(ret);
-	}
-
-	// Optional: print caps on both sides
-	GstCaps* src_caps = gst_pad_query_caps(qsrc, nullptr);
-	GstCaps* sink_caps = gst_pad_query_caps(vsink, nullptr);
-
-	g_printerr("queue src caps:  %" GST_PTR_FORMAT "\n", src_caps);
-	g_printerr("visual sink caps:%" GST_PTR_FORMAT "\n", sink_caps);
-
-	gst_caps_unref(src_caps);
-	gst_caps_unref(sink_caps);
-	gst_object_unref(qsrc);
-	gst_object_unref(vsink);
-
 	// Link source bin to appsink's sink pad
-	/*if (!gst_element_link(gstBin, visualizerBin)) {
+	if (!gst_element_link(gstBin, visualizerBin)) {
 		qWarning() << "Failed to link data source bin to appsink";
 		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, visualizerBin, nullptr);
 		return;
-	}*/
-
-	// Connect "new-sample" to our static callback
-	// userData = this, we will parse sensor_id out of JSON
-	g_signal_connect(visualizerBin, "new-sample", G_CALLBACK(&SessionController::onDataNewSampleStatic), this);
+	}
 }
 
 void SessionController::closePipeline()
