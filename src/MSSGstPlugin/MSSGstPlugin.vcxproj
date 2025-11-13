@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\analogvisualizer.c" />
     <ClCompile Include="src\gstplugin.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsC</CompileAs>
     </ClCompile>
@@ -27,6 +28,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\analogvisualizer.h" />
     <ClInclude Include="include\config.h" />
     <ClInclude Include="include\jsonconvert.h" />
   </ItemGroup>

@@ -44,31 +44,30 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#pragma once
 
 #include <gst/gst.h>
-#include "jsonconvert.h"
 
-static gboolean plugin_init (GstPlugin * plugin)
-{
-    gboolean ret = GST_ELEMENT_REGISTER(json_convert, plugin);
+G_BEGIN_DECLS
 
-    return ret;
-}
+typedef struct _GstAnalogVisualizer {
+	GstElement element;
+	GstPad *sinkpad, *srcpad;
+	gboolean silent;
+} GstAnalogVisualizer;
 
-#ifndef PACKAGE
-#define PACKAGE "mssgstplugin"
-#endif
+typedef struct _GstAnalogVisualizerClass {
+	GstElementClass parent_class;
+} GstAnalogVisualizerClass;
 
-GST_PLUGIN_DEFINE (
-    GST_VERSION_MAJOR,
-    GST_VERSION_MINOR,
-    mssgstplugin,
-    "MSS GStreamer elements",
-    plugin_init,
-    PACKAGE_VERSION,
-    GST_LICENSE,
-    GST_PACKAGE_NAME,
-    GST_PACKAGE_ORIGIN)
+#define GST_TYPE_ANALOG_VISUALIZER (gst_analog_visualizer_get_type())
+#define GST_ANALOG_VISUALIZER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), GST_TYPE_ANALOG_VISUALIZER, GstAnalogVisualizer))
+#define GST_ANALOG_VISUALIZER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), GST_TYPE_ANALOG_VISUALIZER, GstAnalogVisualizerClass))
+#define GST_IS_ANALOG_VISUALIZER(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), GST_TYPE_ANALOG_VISUALIZER))
+#define GST_IS_ANALOG_VISUALIZER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GST_TYPE_ANALOG_VISUALIZER))
+
+GType gst_analog_visualizer_get_type(void);
+
+GST_ELEMENT_REGISTER_DECLARE(analog_visualizer)
+
+G_END_DECLS

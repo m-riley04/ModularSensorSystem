@@ -21,12 +21,18 @@
     <ClCompile Include="src\jsonconvert.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\analogvisualizer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\jsonconvert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\analogvisualizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

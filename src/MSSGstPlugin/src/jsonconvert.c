@@ -44,6 +44,21 @@
  * Boston, MA 02111-1307, USA.
  */
 
+ /**
+   * SECTION:element-json-convert
+   * @title: jsonconvert
+   *
+   * TODO: add description
+   *
+   * TODO: Add example launch line
+   *
+   * ## Example launch line
+   * |[
+   * gst-launch-1.0 -v audiotestsrc ! audioconvert ! monoscope ! videoconvert ! ximagesink
+   * ]|
+   *
+   */
+
 #include "jsonconvert.h"
 
 GST_DEBUG_CATEGORY_STATIC (gst_json_convert_debug);
