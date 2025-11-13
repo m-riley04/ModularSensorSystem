@@ -108,6 +108,7 @@
   <ItemGroup>
     <ClCompile Include="src\controllers\sessioncontroller.cpp" />
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
+    <ClInclude Include="include\utils\debug.hpp" />
     <QtMoc Include="include\controllers\sessioncontroller.hpp" />
     <ClInclude Include="include\pipeline\bins\binbase.hpp" />
     <ClInclude Include="include\pipeline\bins\sourcebin.hpp" />

@@ -80,6 +80,9 @@
     <ClInclude Include="include\pipeline\sinks\defaults.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\utils\debug.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">
