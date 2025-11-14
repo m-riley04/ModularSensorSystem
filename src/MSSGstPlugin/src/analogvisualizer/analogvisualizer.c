@@ -359,9 +359,9 @@ gst_analog_visualizer_chain(GstPad* pad, GstObject* parent, GstBuffer* inbuf)
     gchar text[64];
     g_snprintf(text, sizeof(text), "%.6f", value);
 
-    /* Draw bar and overlay the numeric value */
-    //draw_bar_value(outmap.data, self->width, self->height, value);
-    draw_text_value(outmap.data, self->width, self->height, text);
+    // Draw text
+	GlyphSize glyph_size = { self->width, self->height, 4 };
+    draw_text_value(outmap.data, glyph_size, text);
 
     gst_buffer_unmap(outbuf, &outmap);
 
