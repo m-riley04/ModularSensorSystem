@@ -76,12 +76,11 @@ struct _GstAnalogVisualizer{
 
 	guint64 next_ts; /* expected timestamp of the next frame */
 	guint64 frame_duration;      /* video frame duration    */
-	gint rate;                /* sample rate             */
+	gint rate;                /* sample rate */
 	guint bps;                 /* bytes per sample        */
 	guint spf;                 /* samples per video frame */
 	GstBufferPool* pool;
 
-	gdouble proportion;
 	GstClockTime earliest_time; 
 };
 

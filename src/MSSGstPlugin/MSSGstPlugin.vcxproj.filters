@@ -18,10 +18,10 @@
     <ClCompile Include="src\config.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\jsonconvert.c">
+    <ClCompile Include="src\jsonconvert\jsonconvert.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\analogvisualizer.c">
+    <ClCompile Include="src\analogvisualizer\analogvisualizer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,10 +29,16 @@
     <ClInclude Include="include\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\jsonconvert.h">
+    <ClInclude Include="include\jsonconvert\jsonconvert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\analogvisualizer.h">
+    <ClInclude Include="include\analogvisualizer\analogvisualizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\glyphs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\analogvisualizer\analogvisualizerhandlers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

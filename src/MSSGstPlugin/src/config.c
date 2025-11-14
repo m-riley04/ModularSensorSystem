@@ -49,8 +49,8 @@
 #endif
 
 #include <gst/gst.h>
-#include "jsonconvert.h"
-#include "analogvisualizer.h"
+#include "jsonconvert/jsonconvert.h"
+#include "analogvisualizer/analogvisualizer.h"
 
 static gboolean plugin_init (GstPlugin * plugin)
 {

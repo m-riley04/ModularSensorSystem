@@ -25,7 +25,7 @@ void setupConsole()
 int main(int argc, char *argv[])
 {
 	#ifdef Q_OS_WINDOWS
-	setupConsole();
+	if (IsDebuggerPresent()) setupConsole();
 	#endif
 
 	// Create application

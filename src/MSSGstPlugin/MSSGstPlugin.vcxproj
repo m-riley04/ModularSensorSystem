@@ -19,18 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\analogvisualizer.c" />
+    <ClCompile Include="src\analogvisualizer\analogvisualizer.c" />
     <ClCompile Include="src\config.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsC</CompileAs>
     </ClCompile>
-    <ClCompile Include="src\jsonconvert.c">
+    <ClCompile Include="src\jsonconvert\jsonconvert.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsC</CompileAs>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\analogvisualizer.h" />
+    <ClInclude Include="include\analogvisualizer\analogvisualizer.h" />
+    <ClInclude Include="include\analogvisualizer\analogvisualizerhandlers.h" />
     <ClInclude Include="include\config.h" />
-    <ClInclude Include="include\jsonconvert.h" />
+    <ClInclude Include="include\glyphs.h" />
+    <ClInclude Include="include\jsonconvert\jsonconvert.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
