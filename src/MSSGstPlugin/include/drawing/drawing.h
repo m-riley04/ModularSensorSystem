@@ -27,27 +27,27 @@ draw_bar_value(guint8* data, gdouble value, Size size, ColorFormat format)
 }
 
 static void
-draw_text_value(guint8* data, const gchar* text, Size size, ColorFormat format)
+draw_text_value(Canvas canvas, const gchar* text, gint scale, ColorFormat format)
 {
     /* Render using a small bitmap font, scaled up for readability */
     if (!text) return;
 
-    const gint padding = size.scale;    /* spacing between glyphs */
+    const gint padding = scale;    /* spacing between glyphs */
 
     gint len = (gint)strlen(text);
     if (len <= 0) return;
 
-	gint scaled_glyph_w = GLYPH_W * size.scale;
-	gint scaled_glyph_h = GLYPH_H * size.scale;
+	gint scaled_glyph_w = GLYPH_W * scale;
+	gint scaled_glyph_h = GLYPH_H * scale;
 
     gint total_w = len * scaled_glyph_w + (len - 1) * padding;
-    gint x0 = (size.width - total_w) / 2;
-    gint y0 = size.height - scaled_glyph_h - (size.height / 20); /* near bottom */
+    gint x0 = (canvas.size.width - total_w) / 2;
+    gint y0 = canvas.size.height - scaled_glyph_h - (canvas.size.height / 20); /* near bottom */
 
     for (gint i = 0; i < len; i++) {
         Glyph gph = glyph_get(text[i]);
         gint x_start = x0 + i * (scaled_glyph_w + padding);
         Position pos = { x_start, y0 };
-        draw_glyph(data, size, pos, gph, COLOR_WHITE, format);
+        draw_glyph(canvas, scale, pos, gph, COLOR_WHITE, format);
     }
 }

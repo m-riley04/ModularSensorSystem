@@ -8,5 +8,9 @@
 typedef struct {
 	guint width;
 	guint height;
-	gint scale;
 } Size;
+
+typedef struct {
+	guint8* data;
+	Size size;
+} Canvas;

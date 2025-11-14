@@ -360,8 +360,10 @@ gst_analog_visualizer_chain(GstPad* pad, GstObject* parent, GstBuffer* inbuf)
     g_snprintf(text, sizeof(text), "%.6f", value);
 
     // Draw text
-	Size glyph_size = { self->width, self->height, 3 };
-    draw_text_value(outmap.data, text, glyph_size, RGB_ORDER);
+    gint scale = 3;
+	Size canvas_size = { self->width, self->height };
+	Canvas canvas = { outmap.data, canvas_size };
+    draw_text_value(canvas, text, scale, RGB_ORDER);
 
     gst_buffer_unmap(outbuf, &outmap);
 

@@ -5,17 +5,15 @@
 #include "pixels.h"
 #include "size.h"
 
-#define DEFAULT_GLYPH_SCALE 3 // scaling factor
-#define DEFAULT_GLYPH_SPACING (1 * DEFAULT_GLYPH_SCALE) // spacing between glyphs
 #define GLYPH_W 5 // the unscaled width in bits
 #define GLYPH_H 7 // the unscaled height in bits
-#define GLYPH_W_SCALED (GLYPH_W * DEFAULT_GLYPH_SCALE) // scaled width
-#define GLYPH_H_SCALED (GLYPH_H * DEFAULT_GLYPH_SCALE) // scaled height
+#define DEFAULT_GLYPH_SCALE 3 // scaling factor
+#define DEFAULT_GLYPH_SPACING (1 * DEFAULT_GLYPH_SCALE) // spacing between glyphs
 #define NUM_GLYPHS 16 // total number of glyphs including punctuation and spaces
 
 typedef struct { guint8 rows[GLYPH_H]; } Glyph; /* each row uses low 5 bits */
 
-const Size DEFAULT_GLYPH_SIZE = { GLYPH_W, GLYPH_H, DEFAULT_GLYPH_SCALE };
+const Size DEFAULT_GLYPH_SIZE = { GLYPH_W, GLYPH_H };
 
 /**
  * @brief Gets the glyph for the given character.
@@ -48,28 +46,28 @@ glyph_get(gchar c)
 
 /**
  * @brief Draws a single glyph onto the given data buffer at the specified position.
- * @param data The data buffer to draw on.
- * @param size The size of the buffer.
+ * @param canvas_data The data buffer of the canvas to draw on.
+ * @param canvas_size The size of the canvas being drawn to.
  * @param pos The position to draw the glyph at.
  * @param glyph The glyph to draw.
  * @param color The color to draw the glyph with.
  */
 static void
-draw_glyph(guint8* data, Size size, Position pos, Glyph glyph, Color color, ColorFormat format)
+draw_glyph(Canvas canvas, gint scale, Position pos, Glyph glyph, Color color, ColorFormat format)
 {
     for (gint row = 0; row < GLYPH_H; ++row) {
-        if (pos.y + row * size.scale >= size.height) break;
+        if (pos.y + row * scale >= canvas.size.height) break;
         guint8 rowbits = glyph.rows[row] & 0x1F; /* 5 bits */
         for (gint col = 0; col < GLYPH_W; ++col) {
             if (rowbits & (1 << (GLYPH_W - 1 - col))) {
-                for (gint sy = 0; sy < size.scale; ++sy) {
-                    gint py = pos.y + row * size.scale + sy;
-                    if (py < 0 || py >= size.height) continue;
-                    for (gint sx = 0; sx < size.scale; ++sx) {
-                        gint px = pos.x + col * size.scale + sx;
-                        if (px < 0 || px >= size.width) continue;
+                for (gint sy = 0; sy < scale; ++sy) {
+                    gint py = pos.y + row * scale + sy;
+                    if (py < 0 || py >= canvas.size.height) continue;
+                    for (gint sx = 0; sx < scale; ++sx) {
+                        gint px = pos.x + col * scale + sx;
+                        if (px < 0 || px >= canvas.size.width) continue;
                         Position gp = { px, py };
-                        set_px(data, size, gp, color, format);
+                        set_px(canvas, gp, color, format);
                     }
                 }
             }
