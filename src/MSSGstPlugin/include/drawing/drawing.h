@@ -37,13 +37,16 @@ draw_text_value(guint8* data, const gchar* text, Size size, ColorFormat format)
     gint len = (gint)strlen(text);
     if (len <= 0) return;
 
-    gint total_w = len * GLYPH_W + (len - 1) * padding;
+	gint scaled_glyph_w = GLYPH_W * size.scale;
+	gint scaled_glyph_h = GLYPH_H * size.scale;
+
+    gint total_w = len * scaled_glyph_w + (len - 1) * padding;
     gint x0 = (size.width - total_w) / 2;
-    gint y0 = size.height - GLYPH_H - (size.height / 20); /* near bottom */
+    gint y0 = size.height - scaled_glyph_h - (size.height / 20); /* near bottom */
 
     for (gint i = 0; i < len; i++) {
         Glyph gph = glyph_get(text[i]);
-        gint x_start = x0 + i * (GLYPH_W + padding);
+        gint x_start = x0 + i * (scaled_glyph_w + padding);
         Position pos = { x_start, y0 };
         draw_glyph(data, size, pos, gph, COLOR_WHITE, format);
     }
