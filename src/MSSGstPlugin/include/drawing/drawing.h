@@ -33,11 +33,26 @@ draw_bar_value(Canvas* canvas, gdouble value)
     guint x0 = (canvas->size.width - bar_w) / 2;
     guint y0 = canvas->size.height - bar_h;  /* bottom-aligned */
 
+    // Color based on value
+	Color color = COLOR_WHITE;
+    if (value < 0.60) {
+        color = COLOR_GREEN;
+    }
+    else if (value < 0.75) {
+        color = COLOR_YELLOW;
+    }
+    else if (value < 0.90) {
+        color = COLOR_ORANGE;
+    }
+    else {
+        color = COLOR_RED;
+	}
+
     for (guint y = y0; y < canvas->size.height; y++) {
         guint8* row = canvas->data + y * canvas->size.width * COLOR_SIZE_BYTES;
         for (guint x = x0; x < x0 + bar_w; x++) {
             guint8* px = row + x * COLOR_SIZE_BYTES;
-            set_color(px, COLOR_WHITE, canvas->format);
+            set_color(px, color, canvas->format);
         }
     }
 }
@@ -60,14 +75,10 @@ draw_text_value(Canvas* canvas, const gchar* text, gint scale)
     gint x0 = (canvas->size.width - total_w) / 2;
     gint y0 = canvas->size.height - scaled_glyph_h - (canvas->size.height / 20); /* near bottom */
 
-	g_print("Drawing text: '%s' at (%d, %d)\n", text, x0, y0);
-	g_print("Canvas size: %ux%u\n", canvas->size.width, canvas->size.height);
-	g_print("Color format: %s\n", canvas->format);
-
     for (gint i = 0; i < len; i++) {
         Glyph gph = glyph_get(text[i]);
         gint x_start = x0 + i * (scaled_glyph_w + padding);
         Position pos = { x_start, y0 };
-        draw_glyph(canvas, scale, pos, gph, COLOR_RED);
+        draw_glyph(canvas, scale, pos, gph, COLOR_WHITE);
     }
 }

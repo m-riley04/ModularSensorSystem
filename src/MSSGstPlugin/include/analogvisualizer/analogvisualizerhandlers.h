@@ -2,6 +2,7 @@
 
 #include <gst/gst.h>
 #include "analogvisualizer.h"
+#include "drawing/drawing.h"
 
 #if G_BYTE_ORDER == G_BIG_ENDIAN
 #define RGB_ORDER "xRGB"
@@ -74,4 +75,70 @@ static gboolean handle_event_qos(GstAnalogVisualizer* visualizer, GstEvent* even
     GST_OBJECT_UNLOCK(visualizer);
 
     return gst_pad_push_event(visualizer->sinkpad, event);
+}
+
+static GstFlowReturn handle_input_buf(GstBuffer* inbuf, gdouble* value) {
+    GstMapInfo inmap;
+
+    /* Expect exactly one gdouble in the buffer */
+    if (!gst_buffer_map(inbuf, &inmap, GST_MAP_READ)) {
+        return GST_FLOW_ERROR;
+    }
+
+    if (inmap.size >= sizeof(gdouble)) {
+        memcpy(value, inmap.data, sizeof(gdouble));
+    }
+    else {
+        GST_WARNING_OBJECT(self, "Input buffer too small (%" G_GSIZE_FORMAT
+            "), expected at least %zu",
+            inmap.size, sizeof(gdouble));
+    }
+
+    gst_buffer_unmap(inbuf, &inmap);
+}
+
+static GstFlowReturn handle_frame(GstAnalogVisualizer* self, GstBuffer* outbuf, gdouble value) {
+    /* Fill frame */
+    GstMapInfo outmap;
+    if (!gst_buffer_map(outbuf, &outmap, GST_MAP_WRITE)) {
+        gst_buffer_unref(outbuf);
+        return GST_FLOW_ERROR;
+    }
+
+    // Create canvas frame
+    gint scale = 3;
+    Size canvas_size = { self->width, self->height };
+    ColorFormat format = parse_color_format(RGB_ORDER);
+    Canvas canvas = { outmap.data, canvas_size, format };
+
+    // Clear canvas
+    clear_canvas(&canvas);
+
+    // Load analog value into string
+    gchar text[64]; // TODO: define size macro
+    g_snprintf(text, sizeof(text), "%.6f", value);
+
+    // Draw text
+    draw_bar_value(&canvas, value);
+    draw_text_value(&canvas, text, scale);
+
+    // Clean up map
+    gst_buffer_unmap(outbuf, &outmap);
+}
+
+static GstFlowReturn handle_output_buf(GstAnalogVisualizer* self, GstBuffer* outbuf, gdouble value) {
+    /* Timestamps: use own running clock */
+    GST_BUFFER_PTS(outbuf) = self->next_ts;
+    GST_BUFFER_DTS(outbuf) = GST_CLOCK_TIME_NONE;
+    GST_BUFFER_DURATION(outbuf) =
+        gst_util_uint64_scale_int(GST_SECOND,
+            self->fps_d,
+            self->fps_n);
+    self->next_ts += GST_BUFFER_DURATION(outbuf);
+
+	/* Fill frame */
+	handle_frame(self, outbuf, value);
+
+    /* Push video frame downstream */
+    return gst_pad_push(self->srcpad, outbuf);
 }

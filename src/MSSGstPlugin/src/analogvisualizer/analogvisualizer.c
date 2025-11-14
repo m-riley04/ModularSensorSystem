@@ -308,27 +308,15 @@ gst_analog_visualizer_chain(GstPad* pad, GstObject* parent, GstBuffer* inbuf)
         self->segment_pending = FALSE;
     }
 
-    GstMapInfo inmap;
-    gdouble value = 0.0;
-
-    /* Expect exactly one gdouble in the buffer */
-    if (!gst_buffer_map(inbuf, &inmap, GST_MAP_READ)) {
+    // Handle the input buffer
+    gdouble value = 0.0; // container for the analog value
+    if (handle_input_buf(inbuf, &value) != GST_FLOW_OK) {
         gst_buffer_unref(inbuf);
         return GST_FLOW_ERROR;
-    }
+	}
+    gst_buffer_unref(inbuf); // unref buf in caller
 
-    if (inmap.size >= sizeof(gdouble)) {
-        memcpy(&value, inmap.data, sizeof(gdouble));
-    }
-    else {
-        GST_WARNING_OBJECT(self, "Input buffer too small (%" G_GSIZE_FORMAT
-            "), expected at least %zu",
-            inmap.size, sizeof(gdouble));
-    }
-
-    gst_buffer_unmap(inbuf, &inmap);
-    gst_buffer_unref(inbuf); /* we’re done with the input buffer */
-
+    // Log
     if (!self->silent) {
         GST_LOG_OBJECT(self, "Received value: %f", value);
     }
@@ -339,44 +327,8 @@ gst_analog_visualizer_chain(GstPad* pad, GstObject* parent, GstBuffer* inbuf)
     if (!outbuf) {
         return GST_FLOW_ERROR;
     }
-
-    /* Timestamps: use own running clock */
-    GST_BUFFER_PTS(outbuf) = self->next_ts;
-    GST_BUFFER_DTS(outbuf) = GST_CLOCK_TIME_NONE;
-    GST_BUFFER_DURATION(outbuf) =
-        gst_util_uint64_scale_int(GST_SECOND,
-            self->fps_d,
-            self->fps_n);
-    self->next_ts += GST_BUFFER_DURATION(outbuf);
-
-    /* Fill frame */
-    GstMapInfo outmap;
-    if (!gst_buffer_map(outbuf, &outmap, GST_MAP_WRITE)) {
-        gst_buffer_unref(outbuf);
-        return GST_FLOW_ERROR;
-    }
-
-    // Create canvas frame
-    gint scale = 3;
-    Size canvas_size = { self->width, self->height };
-	ColorFormat format = parse_color_format(RGB_ORDER);
-    Canvas canvas = { outmap.data, canvas_size, format };
-
-    // Clear canvas
-	clear_canvas(&canvas);
-
-    // Load analog value into string
-    gchar text[ANALOG_TEXT_BUF_SIZE];
-    g_snprintf(text, sizeof(text), "%.6f", value);
-
-    // Draw text
-    draw_text_value(&canvas, text, scale);
-
-    // Clean up map
-    gst_buffer_unmap(outbuf, &outmap);
-
-    /* Push video frame downstream */
-    return gst_pad_push(self->srcpad, outbuf);
+    
+	return handle_output_buf(self, outbuf, value);
 }
 
 static GstStateChangeReturn
