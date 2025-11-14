@@ -26,6 +26,7 @@
     <ClCompile Include="src\jsonconvert\jsonconvert.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsC</CompileAs>
     </ClCompile>
+    <ClCompile Include="src\analogtestsrc\analogtestsrc.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\analogvisualizer\analogvisualizer.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="include\drawing\canvas.h" />
     <ClInclude Include="include\drawing\text.h" />
     <ClInclude Include="include\jsonconvert\jsonconvert.h" />
+    <ClInclude Include="include\analogtestsrc\analogtestsrc.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

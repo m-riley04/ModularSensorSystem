@@ -64,7 +64,7 @@
  *
  * ## Example launch line
  * |[
- * gst-launch-1.0 -v audiotestsrc ! audioconvert ! visualizer ! videoconvert ! ximagesink
+ * gst-launch-1.0 -v testanalogsrc ! analogvisualizer ! videoconvert ! ximagesink
  * ]|
  *
  */
@@ -84,6 +84,7 @@ GST_DEBUG_CATEGORY_STATIC(gst_analog_visualizer_debug);
 #define DEFAULT_HEIGHT  480
 #define DEFAULT_FPS_N   30
 #define DEFAULT_FPS_D   1
+#define VIDEO_BLOCK_SIZE 4
 
 #define ANALOG_TEXT_BUF_SIZE 64
 
@@ -224,7 +225,7 @@ gst_analog_visualizer_src_setcaps(GstAnalogVisualizer* visualizer, GstCaps* caps
     gst_structure_get_fraction(structure, "framerate", &visualizer->fps_n,
         &visualizer->fps_d);
 
-    visualizer->outsize = visualizer->width * visualizer->height * 4;
+    visualizer->outsize = visualizer->width * visualizer->height * VIDEO_BLOCK_SIZE;
     visualizer->frame_duration = gst_util_uint64_scale_int(GST_SECOND,
         visualizer->fps_d, visualizer->fps_n);
     visualizer->spf =
@@ -322,7 +323,7 @@ gst_analog_visualizer_chain(GstPad* pad, GstObject* parent, GstBuffer* inbuf)
     }
 
     /* Create output video buffer */
-    gsize size = (gsize)self->width * self->height * 4;
+    gsize size = (gsize)self->width * self->height * VIDEO_BLOCK_SIZE;
     GstBuffer* outbuf = gst_buffer_new_and_alloc(size);
     if (!outbuf) {
         return GST_FLOW_ERROR;
