@@ -2,10 +2,11 @@
 
 /**
  * @brief Represents a position with x and y coordinates.
+ * Cannot be negative.
  */
 typedef struct {
     gint x;
     gint y;
 } Position;
 
-const Position POSITION_DEFAULT = { 0, 0 };
+static const Position POSITION_DEFAULT = { 0, 0 };

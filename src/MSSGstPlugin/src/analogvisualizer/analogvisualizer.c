@@ -85,6 +85,8 @@ GST_DEBUG_CATEGORY_STATIC(gst_analog_visualizer_debug);
 #define DEFAULT_FPS_N   30
 #define DEFAULT_FPS_D   1
 
+#define ANALOG_TEXT_BUF_SIZE 64
+
 /* Pad templates: keep it generic for now */
 static GstStaticPadTemplate
 sink_template = GST_STATIC_PAD_TEMPLATE(
@@ -325,7 +327,7 @@ gst_analog_visualizer_chain(GstPad* pad, GstObject* parent, GstBuffer* inbuf)
     }
 
     gst_buffer_unmap(inbuf, &inmap);
-    gst_buffer_unref(inbuf);   /* we’re done with the input buffer */
+    gst_buffer_unref(inbuf); /* we’re done with the input buffer */
 
     if (!self->silent) {
         GST_LOG_OBJECT(self, "Received value: %f", value);
@@ -354,17 +356,23 @@ gst_analog_visualizer_chain(GstPad* pad, GstObject* parent, GstBuffer* inbuf)
         return GST_FLOW_ERROR;
     }
 
-    memset(outmap.data, 0x00, size);  /* black background */
+    // Create canvas frame
+    gint scale = 3;
+    Size canvas_size = { self->width, self->height };
+	ColorFormat format = parse_color_format(RGB_ORDER);
+    Canvas canvas = { outmap.data, canvas_size, format };
 
-    gchar text[64];
+    // Clear canvas
+	clear_canvas(&canvas);
+
+    // Load analog value into string
+    gchar text[ANALOG_TEXT_BUF_SIZE];
     g_snprintf(text, sizeof(text), "%.6f", value);
 
     // Draw text
-    gint scale = 3;
-	Size canvas_size = { self->width, self->height };
-	Canvas canvas = { outmap.data, canvas_size };
-    draw_text_value(canvas, text, scale, RGB_ORDER);
+    draw_text_value(&canvas, text, scale);
 
+    // Clean up map
     gst_buffer_unmap(outbuf, &outmap);
 
     /* Push video frame downstream */

@@ -7,6 +7,7 @@
 /**
  * @brief Represents a colors with red, green, blue, and alpha components.
  * Can represent both xRGB and BGRx formats.
+ * TODO/CONSIDER: instead of 'a', use 'x'?
  */
 typedef struct {
     guint8 r;
@@ -20,15 +21,19 @@ typedef struct {
  * Really, only "BGRx" and "xRGB" are supported.
  * Basically big endian vs little endian.
  */
-typedef const char* ColorFormat;
+typedef enum {
+    COLOR_FORMAT_BGRX,
+    COLOR_FORMAT_XRGB
+} ColorFormat;
 
 /* Predefined constant colors */
-const Color COLOR_WHITE = { 0xFF, 0xFF, 0xFF, 0xFF };
-const Color COLOR_BLACK = { 0x00, 0x00, 0x00, 0xFF };
-const Color COLOR_RED = { 0xFF, 0x00, 0x00, 0xFF };
-const Color COLOR_GREEN = { 0x00, 0xFF, 0x00, 0xFF };
-const Color COLOR_BLUE = { 0x00, 0x00, 0xFF, 0xFF };
-const Color COLOR_YELLOW = { 0xFF, 0xFF, 0x00, 0xFF };
+// TODO: maybe make these clearer that they're RGBA?
+static const Color COLOR_WHITE = { 0xFF, 0xFF, 0xFF, 0xFF };
+static const Color COLOR_BLACK = { 0x00, 0x00, 0x00, 0xFF };
+static const Color COLOR_RED = { 0xFF, 0x00, 0x00, 0xFF };
+static const Color COLOR_GREEN = { 0x00, 0xFF, 0x00, 0xFF };
+static const Color COLOR_BLUE = { 0x00, 0x00, 0xFF, 0xFF };
+static const Color COLOR_YELLOW = { 0xFF, 0xFF, 0x00, 0xFF };
 
 /**
  * @brief Loads a color into a destination buffer in BGRx format.
@@ -62,11 +67,29 @@ static void set_color_xrgb(guint8* dest, Color color)
  * @param color The color to load.
  * @param format The format string ("BGRx" or "xRGB").
  */
-static void set_color(guint8* dest, Color color, const char* format)
+static void set_color(guint8* dest, Color color, ColorFormat format)
 {
-    if (g_strcmp0(format, "BGRx") == 0) {
-        set_color_bgrx(dest, color);
-    } else if (g_strcmp0(format, "xRGB") == 0) {
-        set_color_xrgb(dest, color);
-	}
+    switch (format) {
+		case COLOR_FORMAT_XRGB:
+			return set_color_xrgb(dest, color);
+        case COLOR_FORMAT_BGRX:
+            return set_color_bgrx(dest, color);
+        default:
+            g_warning("Unsupported color format: %d", format);
+			return set_color_xrgb(dest, color); // default to BGRx - lil endian
+    }
+}
+
+static ColorFormat parse_color_format(const char* formatStr)
+{
+    if (g_strcmp0(formatStr, "BGRx") == 0) {
+        return COLOR_FORMAT_BGRX;
+    }
+    else if (g_strcmp0(formatStr, "xRGB") == 0) {
+        return COLOR_FORMAT_XRGB;
+    }
+    else {
+        g_warning("Unknown color format string: %s. Defaulting to BGRx.", formatStr);
+        return COLOR_FORMAT_BGRX;
+    }
 }

@@ -36,7 +36,7 @@
     <ClInclude Include="include\drawing\glyphs.h" />
     <ClInclude Include="include\drawing\pixels.h" />
     <ClInclude Include="include\drawing\position.h" />
-    <ClInclude Include="include\drawing\size.h" />
+    <ClInclude Include="include\drawing\canvas.h" />
     <ClInclude Include="include\jsonconvert\jsonconvert.h" />
   </ItemGroup>
   <ItemGroup>
