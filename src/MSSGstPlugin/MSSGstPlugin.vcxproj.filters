@@ -35,10 +35,25 @@
     <ClInclude Include="include\analogvisualizer\analogvisualizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\glyphs.h">
+    <ClInclude Include="include\drawing\glyphs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\analogvisualizer\analogvisualizerhandlers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\drawing\colors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\drawing\drawing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\drawing\position.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\drawing\pixels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\drawing\size.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

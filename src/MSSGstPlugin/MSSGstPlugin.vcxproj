@@ -31,7 +31,12 @@
     <ClInclude Include="include\analogvisualizer\analogvisualizer.h" />
     <ClInclude Include="include\analogvisualizer\analogvisualizerhandlers.h" />
     <ClInclude Include="include\config.h" />
-    <ClInclude Include="include\glyphs.h" />
+    <ClInclude Include="include\drawing\colors.h" />
+    <ClInclude Include="include\drawing\drawing.h" />
+    <ClInclude Include="include\drawing\glyphs.h" />
+    <ClInclude Include="include\drawing\pixels.h" />
+    <ClInclude Include="include\drawing\position.h" />
+    <ClInclude Include="include\drawing\size.h" />
     <ClInclude Include="include\jsonconvert\jsonconvert.h" />
   </ItemGroup>
   <ItemGroup>

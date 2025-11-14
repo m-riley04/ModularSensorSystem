@@ -50,7 +50,7 @@
 
 #include "analogvisualizer/analogvisualizer.h"
 #include "analogvisualizer/analogvisualizerhandlers.h"
-#include "glyphs.h"
+#include "drawing/drawing.h"
 #include <gst/video/video.h>
 #include <string.h>
 
@@ -360,8 +360,8 @@ gst_analog_visualizer_chain(GstPad* pad, GstObject* parent, GstBuffer* inbuf)
     g_snprintf(text, sizeof(text), "%.6f", value);
 
     // Draw text
-	GlyphSize glyph_size = { self->width, self->height, 4 };
-    draw_text_value(outmap.data, glyph_size, text);
+	Size glyph_size = { self->width, self->height, 3 };
+    draw_text_value(outmap.data, text, glyph_size, RGB_ORDER);
 
     gst_buffer_unmap(outbuf, &outmap);
 
