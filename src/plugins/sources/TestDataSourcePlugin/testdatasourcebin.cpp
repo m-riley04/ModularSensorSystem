@@ -1,6 +1,7 @@
 #include "testdatasourcebin.hpp"
 #include <gst/app/app.h>
 #include <gst/gstbuffer.h>
+#include <pipeline/mime_types.hpp>
 
 TestDataSourceBin::TestDataSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
     : SourceBin(uuid, id, Source::Type::DATA, "src")
@@ -40,7 +41,9 @@ bool TestDataSourceBin::build() {
     GstElement* q = gst_element_factory_make("queue", ("rand_q_" + binName).c_str());
     if (!m_appsrc || !q) return false;
 
-    GstCaps* caps = gst_caps_new_simple("application/x-double", nullptr);
+    GstCaps* caps = gst_caps_new_simple(MIME_RAW_DATA, 
+        "format", G_TYPE_STRING, "double",
+        nullptr);
 
     g_object_set(G_OBJECT(m_appsrc),
         "caps", caps,

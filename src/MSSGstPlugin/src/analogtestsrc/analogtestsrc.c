@@ -61,7 +61,8 @@ static GstStaticPadTemplate src_template = GST_STATIC_PAD_TEMPLATE(
     "src",
     GST_PAD_SRC,
     GST_PAD_ALWAYS,
-    GST_STATIC_CAPS("analog/x-double")
+    GST_STATIC_CAPS("application/x-raw, "
+        "format=(string)double")
 );
 
 /* Forward decls */
