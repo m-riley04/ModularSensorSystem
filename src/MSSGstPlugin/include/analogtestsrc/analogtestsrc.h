@@ -47,6 +47,7 @@
 #pragma once
 
 #include <gst/gst.h>
+#include <gst/base/gstpushsrc.h>
 
 G_BEGIN_DECLS
 
@@ -59,19 +60,15 @@ G_BEGIN_DECLS
 typedef struct _GstAnalogTestSrc GstAnalogTestSrc;
 typedef struct _GstAnalogTestSrcClass GstAnalogTestSrcClass;
 
+/* Subclass GstPushSrc so we get a streaming thread automatically */
 struct _GstAnalogTestSrc {
-	GstElement element;
+    GstPushSrc parent; /* we subclass pushsrc */
 
-	GstPad* srcpad;
-
-	gboolean silent;
-
-	GstClockTime earliest_time; 
-	GstBufferPool* pool;
+    gboolean silent;      /* property: log generation */
 };
 
 struct _GstAnalogTestSrcClass {
-	GstElementClass parent_class;
+    GstPushSrcClass parent_class;
 };
 
 GType gst_analog_test_src_get_type(void);

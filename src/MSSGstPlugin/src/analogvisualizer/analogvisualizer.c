@@ -64,7 +64,7 @@
  *
  * ## Example launch line
  * |[
- * gst-launch-1.0 -v testanalogsrc ! analogvisualizer ! videoconvert ! ximagesink
+ * gst-launch-1.0 -v analogtestsrc ! analogvisualizer ! videoconvert ! ximagesink
  * ]|
  *
  */
@@ -94,7 +94,7 @@ sink_template = GST_STATIC_PAD_TEMPLATE(
     "sink",
     GST_PAD_SINK,
     GST_PAD_ALWAYS,
-    GST_STATIC_CAPS("application/x-double"));
+    GST_STATIC_CAPS("analog/x-double"));
 
 static GstStaticPadTemplate
 src_template = GST_STATIC_PAD_TEMPLATE("src",

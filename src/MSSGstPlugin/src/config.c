@@ -51,10 +51,12 @@
 #include <gst/gst.h>
 #include "jsonconvert/jsonconvert.h"
 #include "analogvisualizer/analogvisualizer.h"
+#include "analogtestsrc/analogtestsrc.h"
 
 static gboolean plugin_init (GstPlugin * plugin)
 {
-    gboolean ret = GST_ELEMENT_REGISTER(json_convert, plugin) && 
+    gboolean ret = GST_ELEMENT_REGISTER(json_convert, plugin) &&
+        GST_ELEMENT_REGISTER(analog_test_src, plugin) &&
 		GST_ELEMENT_REGISTER(analog_visualizer, plugin);
 
     return ret;

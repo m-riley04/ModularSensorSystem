@@ -26,6 +26,8 @@ static gboolean handle_event_segment(GstAnalogVisualizer* visualizer, GstEvent* 
      * send the segment event before the caps event */
     visualizer->segment_pending = TRUE;
 
+    /* We consume the upstream segment event now; it will be re-emitted later */
+    gst_event_unref(event);
     return TRUE;
 }
 
@@ -52,6 +54,8 @@ static gboolean handle_event_caps(GstAnalogVisualizer* visualizer, GstEvent* eve
     gst_pad_push_event(visualizer->srcpad, gst_event_new_caps(out_caps));
 
     gst_caps_unref(out_caps);
+
+    /* Consume the upstream CAPS event */
     gst_event_unref(event);
     return TRUE;
 }
@@ -87,14 +91,13 @@ static GstFlowReturn handle_input_buf(GstBuffer* inbuf, gdouble* value) {
 
     if (inmap.size >= sizeof(gdouble)) {
         memcpy(value, inmap.data, sizeof(gdouble));
-    }
-    else {
-        GST_WARNING_OBJECT(self, "Input buffer too small (%" G_GSIZE_FORMAT
-            "), expected at least %zu",
-            inmap.size, sizeof(gdouble));
+    } else {
+        /* Not enough data; default to 0.0 */
+        *value = 0.0;
     }
 
     gst_buffer_unmap(inbuf, &inmap);
+    return GST_FLOW_OK;
 }
 
 static GstFlowReturn handle_frame(GstAnalogVisualizer* self, GstBuffer* outbuf, gdouble value) {
@@ -115,15 +118,15 @@ static GstFlowReturn handle_frame(GstAnalogVisualizer* self, GstBuffer* outbuf, 
     clear_canvas(&canvas);
 
     // Load analog value into string
-    gchar text[64]; // TODO: define size macro
+    gchar text[64];
     g_snprintf(text, sizeof(text), "%.6f", value);
 
-    // Draw text
+    // Draw
     draw_bar_value(&canvas, value);
     draw_text_value(&canvas, text, scale);
 
-    // Clean up map
     gst_buffer_unmap(outbuf, &outmap);
+    return GST_FLOW_OK;
 }
 
 static GstFlowReturn handle_output_buf(GstAnalogVisualizer* self, GstBuffer* outbuf, gdouble value) {
@@ -136,8 +139,11 @@ static GstFlowReturn handle_output_buf(GstAnalogVisualizer* self, GstBuffer* out
             self->fps_n);
     self->next_ts += GST_BUFFER_DURATION(outbuf);
 
-	/* Fill frame */
-	handle_frame(self, outbuf, value);
+    /* Fill frame */
+    if (handle_frame(self, outbuf, value) != GST_FLOW_OK) {
+        gst_buffer_unref(outbuf);
+        return GST_FLOW_ERROR;
+    }
 
     /* Push video frame downstream */
     return gst_pad_push(self->srcpad, outbuf);
