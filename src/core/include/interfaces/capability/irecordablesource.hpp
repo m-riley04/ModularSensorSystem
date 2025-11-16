@@ -14,5 +14,23 @@ public:
 	 * @brief Method to retrieve the custom recorder sink.
 	 * @return A pointer to the custom recorder bin/sink.
 	 */
-	virtual GstElement* recorderSink() = 0;
+	virtual GstElement* recorderSinkBin() = 0;
+
+	/**
+	 * @brief Retrieves the sink bin's element name.
+	 * @return The element name as a string.
+	 */
+	virtual std::string recorderSinkElementName() const = 0;
+
+	/**
+	 * @brief Opens the recording valve to start recording data.
+	 * @return TRUE on success, FALSE on failure.
+	 */
+	virtual gboolean openRecordingValve() = 0;
+
+	/**
+	 * @brief Closes the recording valve to stop recording data.
+	 * @return TRUE on success, FALSE on failure.
+	 */
+	virtual gboolean closeRecordingValve() = 0;
 };

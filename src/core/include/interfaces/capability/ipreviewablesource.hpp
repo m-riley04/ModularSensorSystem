@@ -17,6 +17,12 @@ public:
 	virtual GstElement* previewSinkBin() = 0;
 
 	/**
+	 * @brief Retrieves the sink bin's element name.
+	 * @return The element name as a string.
+	 */
+	virtual std::string previewSinkElementName() const = 0;
+
+	/**
 	 * @brief The window ID where the source's preview should be rendered.
 	 * @return The window ID.
 	 */

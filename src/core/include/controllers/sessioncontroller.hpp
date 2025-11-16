@@ -56,13 +56,14 @@ private:
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
 
-	void createSourceElements(Source* source);
-	void createVideoSourceElements(Source* source);
-	void createAudioSourceElements(Source* source);
-	void createDataSourceElements(Source* source);
-
+	gboolean createSourceElements(Source* source);
 	gboolean createAndLinkPreviewBin(Source* src, GstElement* srcBin);
 	gboolean createAndLinkRecordBin(Source* src, GstElement* srcBin);
+
+	gboolean openRecordingValves();
+	gboolean closeRecordingValves();
+	gboolean openRecordingValveForSource(Source* source);
+	gboolean closeRecordingValveForSource(Source* source);
 
 	static GstFlowReturn onDataNewSampleStatic(GstAppSink* sink, gpointer userData);
 	GstFlowReturn onDataNewSample(GstAppSink* sink);

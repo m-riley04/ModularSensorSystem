@@ -36,6 +36,7 @@ public:
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
 	GstElement* previewSinkBin() override { return nullptr; } // Use default sink
+	std::string previewSinkElementName() const override { return "preview_" + boost::uuids::to_string(uuid()); }
 
 
 public slots:

@@ -38,7 +38,7 @@ public:
 	/// CAPABILITY INTERFACES ///
 
 	virtual IPreviewableSource* asPreviewable() { return dynamic_cast<IPreviewableSource*>(this); }
-	virtual IPreviewableSource* asRecordable() { return dynamic_cast<IPreviewableSource*>(this); }
+	virtual IRecordableSource* asRecordable() { return dynamic_cast<IRecordableSource*>(this); }
 
 	/// OVERRIDES ///
 
