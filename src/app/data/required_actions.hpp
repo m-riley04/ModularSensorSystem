@@ -18,3 +18,12 @@ struct ElementTreeActions {
 	QAction* removeProcessor;
 	QAction* editProcessor;
 };
+
+/**
+ * The required actions for the session controls.
+ */
+struct SessionControlsActions {
+	QAction* startStopSession;
+	QAction* recordSession;
+	QAction* restartSession;
+};

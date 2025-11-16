@@ -41,7 +41,6 @@ void MainWindow::syncViewActionChecks()
     // Initialize checkable actions to reflect current widget visibility
     ui.actionViewPresetsList->setChecked(ui.groupPresets->isVisible());
     ui.actionViewControls->setChecked(ui.sessionControls->isVisible());
-    ui.actionViewEntireRow->setChecked(ui.frameControls->isVisible());
 
     ui.actionViewMenuBar->setChecked(ui.menuBar->isVisible());
     ui.actionViewToolbar->setChecked(ui.toolBar->isVisible());
@@ -56,7 +55,12 @@ void MainWindow::initWidgets()
     updateToolbarButtonsState();
 
     // Init session controls widget
-    ui.sessionControls->setController(pController);
+    SessionControlsActions sessionActions{
+		.startStopSession = ui.actionStartStopSession,
+		.recordSession = ui.actionRecord,
+		.restartSession = ui.actionRestartSession
+	};
+    ui.sessionControls->setSessionControlActions(sessionActions);
 
     // Init preview container widget
     ui.devicePreviewWidget->setController(pController);
@@ -81,6 +85,16 @@ void MainWindow::initActionSignals()
         // TODO: implement this
 		});
 
+    // Session
+    connect(ui.actionStartStopSession, &QAction::triggered, [this](bool checked) {
+		if (checked) pController->sessionController()->startSession();
+		else pController->sessionController()->stopSession();
+        });
+    connect(ui.actionRecord, &QAction::triggered, [this](bool checked) {
+        if (checked) pController->sessionController()->startRecording();
+		else pController->sessionController()->stopRecording();
+        });
+
     // Mounts
 	connect(ui.actionAddMount, &QAction::triggered, this, &MainWindow::openAddMountDialog);
 	connect(ui.actionRemoveMount, &QAction::triggered, this, &MainWindow::openRemoveMountDialog);
@@ -102,9 +116,6 @@ void MainWindow::initActionSignals()
         });
     connect(ui.actionViewControls, &QAction::triggered, [this](bool checked) {
         ui.sessionControls->setVisible(checked);
-        });
-    connect(ui.actionViewEntireRow, &QAction::triggered, [this](bool checked) {
-        ui.frameControls->setVisible(checked);
         });
 
     connect(ui.actionViewMenuBar, &QAction::triggered, [this](bool checked) {
@@ -449,8 +460,6 @@ void MainWindow::updateToolbarButtonsState()
     bool hasSources = !pController->sourceController()->sources().isEmpty();
     ui.actionRemoveSource->setEnabled(hasSources && m_selectedElement->kind == ElementTreeNode::Kind::Source);
     ui.actionConfigureSource->setEnabled(hasSources && m_selectedElement->kind == ElementTreeNode::Kind::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
-	ui.actionOpenCloseSources->setEnabled(hasSources);
-	ui.actionStartStopSources->setEnabled(hasSources && ui.actionOpenCloseSources->isChecked());
 
     /// PROCESSING
     bool hasProcessors = !pController->processingController()->processors().isEmpty();
@@ -462,6 +471,10 @@ void MainWindow::updateToolbarButtonsState()
     bool hasMounts = !pController->mountController()->mounts().isEmpty();
 	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
 	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
+
+    /// SESSION
+    ui.actionStartStopSession->setEnabled(hasSources);
+    ui.actionRecord->setEnabled(hasSources);
 
     /// DEBUG
 	ui.actionDebugPipelineDiagram->setEnabled(pController->sessionController()->isPipelineBuilt());

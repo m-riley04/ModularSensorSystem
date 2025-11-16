@@ -165,6 +165,8 @@ gboolean SessionController::createAndLinkPreviewBin(Source* src, GstElement* tee
 	guintptr windowId = static_cast<guintptr>(prevSrc->windowId());
 	GstElement* sink = prevSrc->previewSinkBin();
 
+	// TODO/CONSIDER: similar to recording, maybe include a valve mechanism to enable/disable previewing?
+
 	// Check validity of each
 	if (!sink) {
 		qWarning() << "Failed to create custom sink element for '" << src->displayName() << "'; creating default sink";
@@ -300,6 +302,34 @@ QList<const Processor*> SessionController::getProcessorsBySource(QUuid sourceId)
 		processors.push_back(source);
 	}
 	return processors;
+}
+
+void SessionController::startSession()
+{
+	buildPipeline();
+}
+
+void SessionController::stopSession()
+{
+	closePipeline();
+}
+
+void SessionController::startRecording()
+{
+	if (!openRecordingValves()) {
+		return;
+	}
+
+	emit recordingStarted();
+}
+
+void SessionController::stopRecording()
+{
+	if (!closeRecordingValves()) {
+		return;
+	}
+
+	emit recordingStopped();
 }
 
 GstFlowReturn SessionController::onDataNewSampleStatic(GstAppSink* sink, gpointer userData)

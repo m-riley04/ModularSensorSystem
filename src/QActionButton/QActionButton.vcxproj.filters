@@ -23,38 +23,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
+    <None Include="qactionbuttonplugin.json">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="qactionbutton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qactionbuttonplugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="qactionbutton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\QDynamicGridWidget\qdynamicgridwidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h">
+    <ClInclude Include="qactionbuttonplugin.h">
       <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\QDynamicGridWidget\qdynamicgridwidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="widgets\QDynamicGridWidget\qdynamicgridwidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -422,17 +422,13 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
       <string>Control Row</string>
      </property>
      <addaction name="actionViewPresetsList"/>
-     <addaction name="actionViewSourcesList"/>
-     <addaction name="actionViewProcessorsList"/>
      <addaction name="actionViewControls"/>
      <addaction name="separator"/>
-     <addaction name="actionViewEntireRow"/>
     </widget>
     <addaction name="menuControl_Row"/>
     <addaction name="separator"/>
     <addaction name="actionViewMenuBar"/>
     <addaction name="actionViewToolbar"/>
-    <addaction name="actionViewCustomWindowHandle"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -499,6 +495,9 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <addaction name="menuDebug"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -535,13 +534,14 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <addaction name="actionAddSource"/>
    <addaction name="actionRemoveSource"/>
    <addaction name="actionConfigureSource"/>
-   <addaction name="actionOpenCloseSources"/>
-   <addaction name="actionStartStopSources"/>
+   <addaction name="actionStartStopSession"/>
    <addaction name="separator"/>
    <addaction name="actionAddProcessor"/>
    <addaction name="actionRemoveProcessor"/>
    <addaction name="actionConfigureProcessor"/>
+   <addaction name="separator"/>
    <addaction name="actionToggleProcessing"/>
+   <addaction name="actionRecord"/>
   </widget>
   <widget class="DockableElementsManagerWidget" name="dockWidget">
    <attribute name="dockWidgetArea">
@@ -569,6 +569,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
   </action>
   <action name="actionRecord">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::MediaRecord"/>
+   </property>
    <property name="text">
     <string>Record</string>
    </property>
@@ -771,28 +777,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionViewSourcesList">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Sources List</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::NoRole</enum>
-   </property>
-  </action>
-  <action name="actionViewProcessorsList">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Processors List</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::NoRole</enum>
-   </property>
-  </action>
   <action name="actionViewToolbar">
    <property name="checkable">
     <bool>true</bool>
@@ -821,22 +805,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::TextHeuristicRole</enum>
-   </property>
-  </action>
-  <action name="actionViewEntireRow">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Entire Row</string>
-   </property>
-  </action>
-  <action name="actionViewCustomWindowHandle">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Custom Window Handle</string>
    </property>
   </action>
   <action name="actionAddMount">
@@ -878,24 +846,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionOpenCloseSources">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::GoUp"/>
-   </property>
-   <property name="text">
-    <string>Open/Close Sources</string>
-   </property>
-   <property name="toolTip">
-    <string>Opens or closes the current sources</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::NoRole</enum>
-   </property>
-  </action>
-  <action name="actionStartStopSources">
+  <action name="actionStartStopSession">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -903,10 +854,10 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <iconset theme="QIcon::ThemeIcon::MediaPlaybackStart"/>
    </property>
    <property name="text">
-    <string>Start/Stop Sources</string>
+    <string>Start/Stop Session</string>
    </property>
    <property name="toolTip">
-    <string>Stops or starts all sources</string>
+    <string>Starts or stops the session</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -918,6 +869,17 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="toolTip">
     <string>Uses GraphViz to translate the GStreamer pipeline dotfile to a PNG</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionRestartSession">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ViewRestore"/>
+   </property>
+   <property name="text">
+    <string>Restart Session</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

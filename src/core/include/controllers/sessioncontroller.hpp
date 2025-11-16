@@ -29,22 +29,18 @@ public:
 		MountController* mountController, QObject* parent);
 	~SessionController();
 
-	/**
-	 * Builds the main data pipeline through GStreamer.
-	 */
-	void buildPipeline();
-
-	/**
-	 * Closes the main data pipeline and releases resources.
-	 */
-	void closePipeline();
-
 	GstPipeline* pipeline() const { return m_pipeline.get(); }
-
 	bool isPipelineBuilt() const { return m_pipeline != nullptr; }
 
 	QList<const Source*> getSourcesByMount(QUuid mountId) const;
 	QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
+
+public slots:
+	void startSession();
+	void stopSession();
+
+	void startRecording();
+	void stopRecording();
 
 private:
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
@@ -55,6 +51,16 @@ private:
 
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
+
+	/**
+	 * Builds the main data pipeline through GStreamer.
+	 */
+	void buildPipeline();
+
+	/**
+	 * Closes the main data pipeline and releases resources.
+	 */
+	void closePipeline();
 
 	gboolean createSourceElements(Source* source);
 	gboolean createAndLinkPreviewBin(Source* src, GstElement* srcBin);
@@ -71,6 +77,9 @@ private:
 signals:
 	void sessionStarted();
 	void sessionStopped();
+
+	void recordingStarted();
+	void recordingStopped();
 
 	void dataSampleReceived(AnalogDataSample sample);
 };

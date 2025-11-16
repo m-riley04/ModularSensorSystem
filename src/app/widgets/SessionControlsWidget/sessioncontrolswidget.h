@@ -4,6 +4,7 @@
 #include "ui_sessioncontrolswidget.h"
 #include "controllers/maincontroller.hpp"
 #include "dialogs/SessionPropertiesDialog/sessionpropertiesdialog.h"
+#include <data/required_actions.hpp>
 
 class SessionControlsWidget : public QWidget
 {
@@ -13,9 +14,8 @@ public:
 	SessionControlsWidget(QWidget *parent = nullptr);
 	~SessionControlsWidget();
 
-	void setController(MainController* controller) { 
-		if (pController == controller) return;
-		pController = controller;
+	void setSessionControlActions(SessionControlsActions actions) {
+		m_actions = std::move(actions); // TODO: is move necessary here?
 		initSignals();
 		updateUi();
 	}
@@ -23,7 +23,7 @@ public:
 private:
 	Ui::SessionControlsWidgetClass ui;
 
-	MainController* pController = nullptr;
+	SessionControlsActions m_actions{};
 
 	void initSignals();
 	

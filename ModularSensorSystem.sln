@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "USBAudioPlugin", "src\plugi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSGstPlugin", "src\MSSGstPlugin\MSSGstPlugin.vcxproj", "{4AD1DDDA-4E6E-491D-AB08-571CA4FB17FF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QActionButton", "src\QActionButton\QActionButton.vcxproj", "{3EC3A569-AC72-4D8F-895C-631D231A99A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -73,6 +75,10 @@ Global
 		{4AD1DDDA-4E6E-491D-AB08-571CA4FB17FF}.Debug|x64.Build.0 = Debug|x64
 		{4AD1DDDA-4E6E-491D-AB08-571CA4FB17FF}.Release|x64.ActiveCfg = Release|x64
 		{4AD1DDDA-4E6E-491D-AB08-571CA4FB17FF}.Release|x64.Build.0 = Release|x64
+		{3EC3A569-AC72-4D8F-895C-631D231A99A2}.Debug|x64.ActiveCfg = Debug|x64
+		{3EC3A569-AC72-4D8F-895C-631D231A99A2}.Debug|x64.Build.0 = Debug|x64
+		{3EC3A569-AC72-4D8F-895C-631D231A99A2}.Release|x64.ActiveCfg = Release|x64
+		{3EC3A569-AC72-4D8F-895C-631D231A99A2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
