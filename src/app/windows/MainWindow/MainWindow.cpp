@@ -343,12 +343,12 @@ void MainWindow::openConfigureSourceDialog()
     // TODO: check this implementation
 	Source* source = pController->sourceController()->byId(m_selectedElement->id);
     if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
-        QWidget* w = cfg->createConfigWidget(this);
+       /* QWidget* w = cfg->createConfigWidget(this);
         QDialog dlg(this);
         dlg.setWindowTitle(QString::fromStdString(source->name()) + " Properties");
         QVBoxLayout lay(&dlg);
         lay.addWidget(w);
-        dlg.exec();
+        dlg.exec();*/
     }
     else {
         // fallback: show generic property inspector

@@ -4,12 +4,14 @@
 #include <features/sources/source.hpp>
 #include "testdatasourcebin.hpp"
 #include <sdk/plugins/isourceplugin.hpp>
+#include <interfaces/capability/ipreviewablesource.hpp>
 #include "testdatasourcepluginutils.hpp"
 #include <QTimer>
 #include <QRandomGenerator>
 #include <QDebug>
 
 class TestDataSource : public Source
+	, public IPreviewableSource
 {
 	Q_OBJECT
 
@@ -33,10 +35,13 @@ public:
 	void setName(const std::string& newName) override { m_name = newName; }
 	std::string pluginId() const override { return m_pluginId; }
 	Source::Type type() const override { return m_sourceType; }
+
+	GstElement* srcBin() override;
+
+	/// IPreviewableSource interface
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
-
-	GstElement* gstBin() override;
+	GstElement* previewSinkBin() override { return nullptr; } // Use default sink
 
 public slots:
 	void onSessionStart() override;

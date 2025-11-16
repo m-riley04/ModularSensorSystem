@@ -8,7 +8,7 @@
 #include "features/sources/source.hpp"
 #include "controllers/sourcecontroller.hpp"
 #include "presets/preset.hpp"
-#include "features/sources/iconfigurablesource.hpp"
+#include "interfaces/capability/iconfigurablesource.hpp"
 #include "controllers/backendcontrollerbase.hpp"
 
 class PresetsController : public BackendControllerBase

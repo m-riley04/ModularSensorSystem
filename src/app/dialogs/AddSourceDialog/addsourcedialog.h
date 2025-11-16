@@ -5,6 +5,7 @@
 #include "ui_addsourcedialog.h"
 #include <sdk/plugins/isourceplugin.hpp>
 #include <controllers/plugincontroller.hpp>
+#include <QPointer>
 
 class AddSourceDialog : public QDialog
 {

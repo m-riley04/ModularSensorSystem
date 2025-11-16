@@ -5,6 +5,7 @@
 #include "ui_addmountdialog.h"
 #include <sdk/plugins/imountplugin.hpp>
 #include <controllers/plugincontroller.hpp>
+#include <QPointer>
 
 class AddMountDialog : public QDialog
 {

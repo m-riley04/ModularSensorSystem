@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include <qmessagebox.h>
+#include <QPointer>
 #include "ui_addprocessordialog.h"
 #include "controllers/plugincontroller.hpp"
 

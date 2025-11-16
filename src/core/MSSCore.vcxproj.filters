@@ -53,7 +53,7 @@
     <ClInclude Include="include\sdk\plugins\imountplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\features\sources\iconfigurablesource.hpp">
+    <ClInclude Include="include\interfaces\capability\iconfigurablesource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\sdk\plugins\iplugin.hpp">
@@ -84,6 +84,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\pipeline\mime_types.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\interfaces\capability\irecordablesource.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -133,9 +142,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\features\sources\source.hpp">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="include\features\sources\sourcemetadata.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\features\processors\processor.hpp">

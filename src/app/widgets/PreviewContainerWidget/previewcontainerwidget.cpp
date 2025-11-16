@@ -70,15 +70,15 @@ void PreviewContainerWidget::setController(MainController* controller) {
 
 void PreviewContainerWidget::addSourceWidget(Source* source)
 {
-	if (source == nullptr) {
-		qDebug() << "Cannot add source widget: source is null";
+	if (!source) {
+		qWarning() << "Cannot add source widget: source is null";
 		return;
 	}
 
 	// Create new source preview widget
 	auto* widget = new SourcePreviewWidget(source, this);
-	if (widget == nullptr) {
-		qDebug() << "Failed to create widget for source";
+	if (!widget) {
+		qWarning() << "Failed to create widget for source";
 		return;
 	}
 

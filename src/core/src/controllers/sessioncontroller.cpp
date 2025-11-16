@@ -69,114 +69,6 @@ void SessionController::buildPipeline()
 		<< gst_element_state_get_name(pending);
 }
 
-void SessionController::createSourceElements(Source* source)
-{
-	// Check source
-	if (!source) {
-		qWarning() << "Cannot create source elements: source is null";
-		return;
-	}
-
-	switch (source->type()) {
-	case Source::Type::AUDIO:
-		return createAudioSourceElements(source);
-	case Source::Type::VIDEO:
-		return createVideoSourceElements(source);
-	case Source::Type::DATA:
-	default:
-		return createDataSourceElements(source);
-	}
-}
-
-void SessionController::createVideoSourceElements(Source* source)
-{
-	guintptr windowId = static_cast<guintptr>(source->windowId());
-
-	// Initialize elements
-	GstElement* gstBin = source->gstBin();
-	GstElement* sink = createDefaultVideoSink(windowId);
-
-	// Check validity of each
-	if (!gstBin || !sink) {
-		qWarning() << "Failed to create one or more elements";
-		if (sink) gst_object_unref(sink);
-		return;
-	}
-
-	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sink, nullptr);
-
-	// Link source bin to sink
-	if (!gst_element_link(gstBin, sink)) {
-		qWarning() << "Failed to link source bin to sink.";
-		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sink, nullptr);
-		return;
-	}
-}
-
-void SessionController::createAudioSourceElements(Source* source)
-{
-	guintptr windowId = static_cast<guintptr>(source->windowId());
-
-	// Init elements
-	GstElement* gstBin = source->gstBin();
-	GstElement* sinkBin = createDefaultAudioVisualizerSink(windowId);
-
-	// Check validity of each
-	if (!gstBin || !sinkBin) {
-		qWarning() << "Failed to create one or more elements";
-		if (gstBin) gst_object_unref(gstBin);
-		if (sinkBin) gst_object_unref(sinkBin);
-		return;
-	}
-
-	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, sinkBin, nullptr);
-
-	// Link source bin to elements
-	if (!gst_element_link(gstBin, sinkBin)) {
-		qWarning() << "Failed to link source bin to elements.";
-		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, sinkBin, nullptr);
-		return;
-	}
-}
-
-void SessionController::createDataSourceElements(Source* source)
-{
-	// Check source
-	if (!source) {
-		qWarning() << "Cannot create data source elements: source is null";
-		return;
-	}
-
-	GstElement* gstBin = source->gstBin();
-	if (!gstBin) {
-		qWarning() << "Data source has no Gst bin";
-		return;
-	}
-
-	// Visualize doubles using our custom element and a videosink
-	GstElement* visualizerBin = createDefaultDataVisualizerSink(static_cast<guintptr>(source->windowId()));
-	if (!visualizerBin) {
-		qWarning() << "Failed to create data visualizer bin (is the custom plugin registered and a video sink available?)";
-		return;
-	}
-
-	// Optionally restrict caps to your NDJSON if you like:
-	// GstCaps* caps = gst_caps_from_string("application/x-double");
-	// g_object_set(G_OBJECT(sink), "caps", caps, nullptr);
-	// gst_caps_unref(caps);
-
-	// Add both to pipeline before linking
-	gst_bin_add_many(GST_BIN(m_pipeline.get()), gstBin, visualizerBin, nullptr);
-
-	// Link source bin to appsink's sink pad
-	if (!gst_element_link(gstBin, visualizerBin)) {
-		qWarning() << "Failed to link data source bin to appsink";
-		gst_bin_remove_many(GST_BIN(m_pipeline.get()), gstBin, visualizerBin, nullptr);
-		return;
-	}
-}
 
 void SessionController::closePipeline()
 {
@@ -187,6 +79,81 @@ void SessionController::closePipeline()
 
 	// Should go after emit to allow sources to clean up
 	m_pipeline.reset(nullptr);
+}
+
+void SessionController::createSourceElements(Source* source)
+{
+	// Check source
+	if (!source) {
+		qWarning() << "Cannot create source elements: source is null";
+		return;
+	}
+
+	// Initialize src bin
+	GstElement* srcBin = source->srcBin();
+
+	// Check src bin
+	if (!srcBin) {
+		qWarning() << "Video source has no Gst bin";
+		return;
+	}
+
+	// Add source bin to pipeline
+	if (!gst_bin_add(GST_BIN(m_pipeline.get()), srcBin)) {
+		qWarning() << "Failed to add source bin to pipeline.";
+		return;
+	}
+
+	// Attempt to add/link preview
+	if (!createAndLinkPreviewBin(source, srcBin)) {
+		qWarning() << "Failed to create and link preview bin for source:"
+			<< QString::fromStdString(source->name());
+	}
+}
+
+gboolean SessionController::createAndLinkPreviewBin(Source* src, GstElement* tee)
+{
+	if (!src) {
+		qWarning() << "Cannot create and link the source and preview bins for '" << src->displayName() << "': source is null";
+		return FALSE;
+	}
+
+	IPreviewableSource* prevSrc = dynamic_cast<IPreviewableSource*>(src);
+
+	if (!prevSrc) {
+		qWarning() << "Cannot create and link the source and preview bins for '" << src->displayName() << "': source is not previewable";
+		return FALSE;
+	}
+
+	// Init elemets
+	guintptr windowId = static_cast<guintptr>(prevSrc->windowId());
+	GstElement* sink = prevSrc->previewSinkBin();
+
+	// Check validity of each
+	if (!sink) {
+		qWarning() << "Failed to create custom sink element for '" << src->displayName() << "'; creating default sink";
+		sink = createDefaultSink(src->type(), windowId);
+	}
+
+	// Add preview element(s) to pipeline
+	if (!gst_bin_add(GST_BIN(m_pipeline.get()), sink)) {
+		qWarning() << "Failed to add preview sink for '" << src->displayName() << "' to pipeline.";
+		return FALSE;
+	}
+
+	// Link source bin to sink
+	if (!gst_element_link(tee, sink)) {
+		qWarning() << "Failed to link source bin to preview sink for '" << src->displayName() << "'.";
+		gst_bin_remove(GST_BIN(m_pipeline.get()), sink);
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+gboolean SessionController::createAndLinkRecordBin(Source* src, GstElement* srcBin)
+{
+	return TRUE;
 }
 
 QList<const Source*> SessionController::getSourcesByMount(QUuid mountId) const

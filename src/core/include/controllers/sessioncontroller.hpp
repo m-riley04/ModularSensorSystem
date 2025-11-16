@@ -14,6 +14,7 @@
 #include "features/sources/source.hpp"
 #include "interfaces/capability/ianalogsource.hpp"
 #include "pipeline/sinks/defaults.hpp"
+#include <interfaces/capability/ipreviewablesource.hpp>
 
 using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
@@ -59,6 +60,9 @@ private:
 	void createVideoSourceElements(Source* source);
 	void createAudioSourceElements(Source* source);
 	void createDataSourceElements(Source* source);
+
+	gboolean createAndLinkPreviewBin(Source* src, GstElement* srcBin);
+	gboolean createAndLinkRecordBin(Source* src, GstElement* srcBin);
 
 	static GstFlowReturn onDataNewSampleStatic(GstAppSink* sink, gpointer userData);
 	GstFlowReturn onDataNewSample(GstAppSink* sink);

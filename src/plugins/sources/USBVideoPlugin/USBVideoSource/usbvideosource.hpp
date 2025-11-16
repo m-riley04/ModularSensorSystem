@@ -10,8 +10,10 @@
 #include <utils/boost_qt_conversions.hpp>
 #include "utils.hpp"
 #include "usbvideosourcebin.hpp"
+#include <interfaces/capability/ipreviewablesource.hpp>
 
 class USBVideoSource : public Source
+	, public IPreviewableSource
 {
 	Q_OBJECT
 
@@ -27,10 +29,14 @@ public:
 	void setName(const std::string& newName) override { m_name = newName; }
 	std::string pluginId() const override { return m_pluginId; }
 	Source::Type type() const override { return m_sourceType; }
+
+	GstElement* srcBin() override;
+
+	/// IPreviewableSource interface
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
+	GstElement* previewSinkBin() override { return nullptr; } // Use default sink
 
-	GstElement* gstBin() override;
 
 public slots:
 	void onSessionStart() override;

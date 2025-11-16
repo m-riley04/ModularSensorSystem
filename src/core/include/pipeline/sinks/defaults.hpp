@@ -166,3 +166,24 @@ inline GstElement* createDefaultVideoSink(guintptr windowId, const char* binName
 
 	return sink;
 }
+
+/**
+ * @brief Creates a default sink based on the source type.
+ * @param type 
+ * @param windowId 
+ * @param binName 
+ * @return 
+ */
+inline GstElement* createDefaultSink(Source::Type type, guintptr windowId = 0, const char* binName = nullptr) {
+	switch (type) {
+	case Source::Type::VIDEO:
+		return createDefaultVideoSink(windowId, binName);
+	case Source::Type::AUDIO:
+		return createDefaultAudioVisualizerSink(windowId, binName);
+	case Source::Type::DATA:
+		return createDefaultDataVisualizerSink(windowId, binName);
+	default:
+		qWarning() << "No default sink available for the given source type.";
+		return nullptr;
+	}
+}

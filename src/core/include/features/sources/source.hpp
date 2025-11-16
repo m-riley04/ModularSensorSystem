@@ -1,10 +1,8 @@
 #pragma once
 
 #include <QObject>
-#include <quuid.h>
-#include <QPointer>
 #include "features/ielement.hpp"
-#include <QUuid>
+#include "interfaces/capability/ipreviewablesource.hpp"
 #include <gst/gst.h>
 
 /**
@@ -16,6 +14,9 @@ class Source : public IElement
 	Q_OBJECT
 
 public:
+	/**
+	 * @brief The type of source.
+	 */
 	enum Type {
 		VIDEO,
 		AUDIO,
@@ -23,6 +24,52 @@ public:
 		OTHER
 	};
 
+public:
+	Source(QObject* parent = nullptr) : IElement(parent) {}
+	virtual ~Source() = default;
+
+	/**
+	 * Gets the GStreamer bin element representing this source.
+	 * @return
+	 */
+	virtual GstElement* srcBin() = 0;
+
+	/// CAPABILITY INTERFACES ///
+
+	virtual IPreviewableSource* asPreviewable() { return dynamic_cast<IPreviewableSource*>(this); }
+
+	/// OVERRIDES ///
+
+	/**
+	 * The hardware ID for the device.
+	 * Different APIs have different names for this, including:
+	 * - "id" (QtMultimedia)
+	 * - "device_name" (FFmpeg)
+	 * - "device-name" (GStreamer)
+	 * @return hardware ID string
+	 */
+	virtual std::string id() const override = 0;
+
+	/**
+	 * The name of the device from the system.
+	 * Different APIs have different names for this, including:
+	 * - "description" (QtMultimedia)
+	 * - "device_description" (FFmpeg)
+	 * - "device-id" or "device-path" (GStreamer)
+	 * @return user-friendly name of the device from the hardware.
+	 */
+	virtual std::string name() const override = 0;
+	virtual void setName(const std::string& newName) override = 0;
+	virtual std::string pluginId() const override = 0;
+
+	/**
+	 * The type of device.
+	 * @return the type of a device as Source::Type enum.
+	 */
+	virtual Source::Type type() const { return Source::Type::OTHER; }
+
+/// STATIC HELPERS ///
+public:
 	static bool isVideo(Source* src) {
 		return src->type() == Source::Type::VIDEO;
 	}
@@ -50,43 +97,5 @@ public:
 		default: return "Unknown";
 		}
 	}
-
-public:
-	Source(QObject* parent = nullptr) : IElement(parent) {}
-	virtual ~Source() = default;
-
-	/**
-	 * The hardware ID for the device
-	 * @return hardware ID string
-	 */
-	virtual std::string id() const override { return "src_unknown"; }
-
-	/**
-	 * The name of the device from the system.
-	 * Sometimes this is called "description", other times "device-id", and even "device-path".
-	 * @return user-friendly name of the device from the hardware.
-	 */
-	virtual std::string name() const override { return "New Source"; }
-	virtual void setName(const std::string& newName) override = 0;
-	virtual std::string pluginId() const override { return "plugin_unknown"; }
-
-	/**
-	 * The type of device.
-	 * @return the type of a device as Source::Type enum.
-	 */
-	virtual Source::Type type() const { return Source::Type::OTHER; }
-
-	/**
-	 * @brief The window ID where the source's video output should be rendered.
-	 * @return The window ID.
-	 */
-	virtual quintptr windowId() const { return 0; }
-	virtual void setWindowId(quintptr newId) = 0;
-
-	/**
-	 * Gets the GStreamer bin element representing this source.
-	 * @return 
-	 */
-	virtual GstElement* gstBin() = 0;
 
 };

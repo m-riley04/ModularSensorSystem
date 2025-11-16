@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <qcameradevice.h>
+#include <QPointer>
 #include "controllers/backendcontrollerbase.hpp"
 #include "controllers/plugincontroller.hpp"
 #include "features/sources/source.hpp"
