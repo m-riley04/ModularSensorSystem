@@ -28,10 +28,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="qactionbutton.cpp">
+    <ClCompile Include="qactionbuttonplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="qactionbuttonplugin.cpp">
+    <ClCompile Include="..\widgets\widgets\QActionButton\qactionbutton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -39,7 +39,7 @@
     <QtMoc Include="qactionbuttonplugin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="qactionbutton.h">
+    <QtMoc Include="..\widgets\widgets\QActionButton\qactionbutton.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

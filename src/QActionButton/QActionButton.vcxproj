@@ -72,11 +72,18 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\widgets\widgets\QActionButton</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>COPY /Y "$(SolutionDir)$(Platform)\$(Configuration)\lib\designer\$(TargetName).dll" "$(QTDIR)\plugins\designer\$(TargetName).dll"</Command>
       <Message>copies the plugin to the Qt Widgets Designer plugins folder</Message>
     </PostBuildEvent>
+    <QtMoc>
+      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSFrontendWidgets.lib;</AdditionalDependencies>
+    </QtMoc>
+    <Link>
+      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSFrontendWidgets.lib;</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -107,13 +114,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\widgets\widgets\QActionButton\qactionbutton.cpp" />
     <ClCompile Include="qactionbuttonplugin.cpp" />
-    <ClCompile Include="qactionbutton.cpp" />
     <None Include="qactionbuttonplugin.json" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="qactionbutton.h" />
     <QtMoc Include="qactionbuttonplugin.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="..\widgets\widgets\QActionButton\qactionbutton.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\widgets\MSSFrontendWidgets.vcxproj">
+      <Project>{c19648ca-6ce4-47af-9d2d-37197198a1eb}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
