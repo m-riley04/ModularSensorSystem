@@ -36,11 +36,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="qactionbutton.h">
+    <QtMoc Include="qactionbuttonplugin.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="qactionbuttonplugin.h">
+    </QtMoc>
+    <QtMoc Include="qactionbutton.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
+    </QtMoc>
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 #include "qactionbutton.h"
 
+
 QActionButton::QActionButton(QWidget *parent)
 	: QPushButton(parent)
 {}

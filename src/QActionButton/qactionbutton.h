@@ -1,7 +1,8 @@
 #pragma once
 
-#include <QWidget>
+#include <QtWidgets/QWidget>
 #include <QPushButton>
+#include <QAction>
 
 /**
  * @brief An extremely simple button that wraps a QAction and updates its state accordingly.
@@ -24,7 +25,6 @@ public slots:
 
 private slots:
 	void initUi();
-	void initSignals();
 	void updateUi();
 
 private:

@@ -1,8 +1,13 @@
 #include "qactionbuttonplugin.h"
+#include "qactionbutton.h"
+
+#include <QtCore/QtPlugin>
 
 QActionButtonPlugin::QActionButtonPlugin(QObject* parent)
     : QObject(parent)
-{}
+{
+    initialized = false;
+}
 
 void QActionButtonPlugin::initialize(QDesignerFormEditorInterface* /* core */)
 {
@@ -24,27 +29,27 @@ QWidget* QActionButtonPlugin::createWidget(QWidget* parent)
 
 QString QActionButtonPlugin::name() const
 {
-    return QStringLiteral("QActionButton");
+    return "QActionButton";
 }
 
 QString QActionButtonPlugin::group() const
 {
-    return QStringLiteral("Display Widgets [Examples]");
+    return "Display Widgets [Examples]";
 }
 
 QIcon QActionButtonPlugin::icon() const
 {
-    return {};
+    return QIcon();
 }
 
 QString QActionButtonPlugin::toolTip() const
 {
-    return {};
+    return QString();
 }
 
 QString QActionButtonPlugin::whatsThis() const
 {
-    return {};
+    return QString();
 }
 
 bool QActionButtonPlugin::isContainer() const
@@ -54,7 +59,7 @@ bool QActionButtonPlugin::isContainer() const
 
 QString QActionButtonPlugin::domXml() const
 {
-    return QString(
+    return
         "<ui language=\"c++\">\n"
         "  <widget class=\"QActionButton\" name=\"actionButton\">\n"
         "    <property name=\"geometry\">\n"
@@ -72,11 +77,10 @@ QString QActionButtonPlugin::domXml() const
         "      <string></string>\n"
         "    </property>\n"
         "  </widget>\n"
-        "</ui>\n"
-    );
+        "</ui>\n";
 }
 
 QString QActionButtonPlugin::includeFile() const
 {
-    return QStringLiteral("qactionbutton.h");
+    return "qactionbutton.h";
 }
