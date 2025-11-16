@@ -49,6 +49,7 @@ void QActionButton::setAction(QAction* action) {
 		initUi();
 		return;
 	}
+	connect(this, &QPushButton::clicked, m_action, &QAction::trigger);
 	connect(m_action, &QAction::changed, this, &QActionButton::updateUi);
 
 	updateUi();

@@ -5,8 +5,9 @@
 #include <QAction>
 
 /**
- * @brief An extremely simple button that wraps a QAction and updates its state accordingly.
+ * @brief An extremely simple button that wraps a QAction and updates its state automatically.
  * The button does not own the action.
+ * This kinda exists in toolbars, but there's not much control.
  * Seriously, why doesn't this already exist???
  */
 class QActionButton : public QPushButton

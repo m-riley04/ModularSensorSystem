@@ -16,17 +16,17 @@ public:
 
 	void setSessionControlActions(SessionControlsActions actions) {
 		m_actions = std::move(actions); // TODO: is move necessary here?
-		initSignals();
-		updateUi();
+		
+		ui.buttonStartStop->setAction(m_actions.startStopSession);
+		ui.buttonRestart->setAction(m_actions.restartSession);
+		ui.buttonRecord->setAction(m_actions.recordSession);
+		//ui.buttonClip->setAction(m_actions.clipSession);
+		//ui.buttonProperties->setAction(m_actions.openSessionProperties);
 	}
 
 private:
 	Ui::SessionControlsWidgetClass ui;
 
 	SessionControlsActions m_actions{};
-
-	void initSignals();
 	
-private slots:
-	void updateUi();
 };
