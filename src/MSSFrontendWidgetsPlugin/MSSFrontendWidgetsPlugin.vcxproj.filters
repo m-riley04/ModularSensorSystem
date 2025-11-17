@@ -38,6 +38,12 @@
     <QtMoc Include="qactionbuttonplugin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="qdirectorypickerwidgetplugin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\widgets\widgets\QDirectoryPickerWidget\qdirectorypickerwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qactionbuttonplugin.cpp">
@@ -46,8 +52,19 @@
     <ClCompile Include="..\widgets\widgets\QActionButton\qactionbutton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="qdirectorypickerwidgetplugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\widgets\widgets\QDirectoryPickerWidget\qdirectorypickerwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="qactionbuttonplugin.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="..\widgets\widgets\QDirectoryPickerWidget\qdirectorypickerwidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

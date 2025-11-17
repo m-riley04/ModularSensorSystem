@@ -118,8 +118,6 @@
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
-    <ClCompile Include="widgets\SessionPropertiesWidget\sessionpropertieswidget.cpp" />
-    <ClCompile Include="widgets\SourcePropertiesWidget\sourcepropertieswidget.cpp" />
     <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
@@ -128,7 +126,6 @@
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
-    <QtUic Include="widgets\SessionPropertiesWidget\sessionpropertieswidget.ui" />
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui" />
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
@@ -192,11 +189,7 @@
     <QtMoc Include="models\ElementTreeModel\elementtreemodel.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="widgets\SourcePropertiesWidget\sourcepropertieswidget.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="data\required_actions.hpp" />
-    <QtMoc Include="widgets\SessionPropertiesWidget\sessionpropertieswidget.h" />
     <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
