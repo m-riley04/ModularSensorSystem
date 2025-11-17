@@ -26,9 +26,6 @@
     <ClInclude Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="widgets\QDirectoryPickerWidget\qdirectorypickerwidget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp">
@@ -55,6 +52,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\QActionButton\qactionbutton.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\QDirectoryPickerWidget\qdirectorypickerwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

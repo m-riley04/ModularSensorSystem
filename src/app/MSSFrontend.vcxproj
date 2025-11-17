@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\app;$(SolutionDir)src\core\include;$(SolutionDir)src\widgets;$(SolutionDir)src\widgets\$(QtIntDir)uic\;$(SolutionDir)src\widgets\widgets\QActionButton;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\app;$(SolutionDir)src\core\include;$(SolutionDir)src\widgets;$(SolutionDir)src\widgets\$(QtIntDir)uic\;$(SolutionDir)src\widgets\widgets\QActionButton;$(SolutionDir)src\widgets\widgets\QDirectoryPickerWidget;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSFrontendWidgets.lib;%(AdditionalDependencies)</AdditionalDependencies>

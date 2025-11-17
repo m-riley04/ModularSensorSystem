@@ -8,7 +8,7 @@
 class QDirectoryPickerWidgetPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
-        Q_INTERFACES(QDesignerCustomWidgetInterface)
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
     explicit QDirectoryPickerWidgetPlugin(QObject* parent = nullptr);
