@@ -29,7 +29,7 @@ QWidget* QDirectoryPickerWidgetPlugin::createWidget(QWidget* parent)
 
 QString QDirectoryPickerWidgetPlugin::name() const
 {
-    return "QActionButton";
+    return "QDirectoryPickerWidget";
 }
 
 QString QDirectoryPickerWidgetPlugin::group() const
@@ -61,7 +61,7 @@ QString QDirectoryPickerWidgetPlugin::domXml() const
 {
     return
         "<ui language=\"c++\">\n"
-        "  <widget class=\"QActionButton\" name=\"actionButton\">\n"
+        "  <widget class=\"QDirectoryPickerWidget\" name=\"directoryPicker\">\n"
         "    <property name=\"geometry\">\n"
         "      <rect>\n"
         "        <x>0</x>\n"

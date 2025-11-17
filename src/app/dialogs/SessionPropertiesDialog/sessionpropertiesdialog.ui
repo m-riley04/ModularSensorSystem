@@ -181,7 +181,25 @@
       <attribute name="title">
        <string>Recording</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_4"/>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="1">
+        <widget class="QDirectoryPickerWidget" name="dirPickerRecording">
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="whatsThis">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Recording Directory</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -206,6 +224,13 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QDirectoryPickerWidget</class>
+   <extends>QWidget</extends>
+   <header>qdirectorypickerwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
