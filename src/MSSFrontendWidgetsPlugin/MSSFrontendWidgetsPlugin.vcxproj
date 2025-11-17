@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3EC3A569-AC72-4D8F-895C-631D231A99A2}</ProjectGuid>
+    <ProjectGuid>{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
@@ -37,13 +37,13 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.8.3_msvc2022_64</QtInstall>
-    <QtModules>core;gui;widgets;designer;uitools;uiplugin</QtModules>
+    <QtModules>core;gui;uiplugin;uitools;widgets;designer</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtPlugin>true</QtPlugin>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.8.3_msvc2022_64</QtInstall>
-    <QtModules>core;gui;widgets;designer</QtModules>
+    <QtModules>core;gui;uiplugin;uitools;widgets;designer</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtPlugin>true</QtPlugin>
   </PropertyGroup>
@@ -66,25 +66,25 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
-  <PropertyGroup Label="Vcpkg">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\widgets\widgets\QActionButton</AdditionalIncludeDirectories>
-    </ClCompile>
-    <PostBuildEvent>
-      <Command>COPY /Y "$(SolutionDir)$(Platform)\$(Configuration)\lib\designer\$(TargetName).dll" "$(QTDIR)\plugins\designer\$(TargetName).dll"</Command>
-      <Message>copies the plugin to the Qt Widgets Designer plugins folder</Message>
-    </PostBuildEvent>
     <QtMoc>
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSFrontendWidgets.lib;</AdditionalDependencies>
     </QtMoc>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\widgets\widgets\QActionButton</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
     <Link>
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSFrontendWidgets.lib;</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>COPY /Y "$(SolutionDir)$(Platform)\$(Configuration)\lib\designer\$(TargetName).dll" "$(QTDIR)\plugins\designer\$(TargetName).dll"</Command>
+      <Message>Copying the plugin to the designer's location</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -114,15 +114,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="qactionbuttonplugin.json" />
+    <QtMoc Include="mssfrontendwidgetsplugin.h" />
     <ClCompile Include="..\widgets\widgets\QActionButton\qactionbutton.cpp" />
     <ClCompile Include="qactionbuttonplugin.cpp" />
-    <None Include="qactionbuttonplugin.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="qactionbuttonplugin.h" />
+    <ClCompile Include="mssfrontendwidgetsplugin.cpp" />
+    <None Include="mssfrontendwidgetsplugin.json" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\widgets\widgets\QActionButton\qactionbutton.h" />
+    <QtMoc Include="qactionbuttonplugin.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\widgets\MSSFrontendWidgets.vcxproj">

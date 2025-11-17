@@ -157,11 +157,6 @@ void MainWindow::initSignals() {
             qDebug() << "[Data]" << sample.sourceUuid << "value:" << sample.value << "t_ns:" << sample.tNs;
         });
 
-    /*connect(pController->sessionController(), &SessionController::dataSampleReceived,
-        this, [](QUuid uuid, double value, quint64 tNs) {
-            qDebug() << "[Data]" << uuid << "value:" << value << "t_ns:" << tNs;
-        });*/
-
     // Init toolbar and actions
     initActionSignals();
 }

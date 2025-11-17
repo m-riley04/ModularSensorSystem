@@ -23,9 +23,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="qactionbuttonplugin.json">
+    <QtMoc Include="mssfrontendwidgetsplugin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClCompile Include="mssfrontendwidgetsplugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <None Include="mssfrontendwidgetsplugin.json">
       <Filter>Resource Files</Filter>
     </None>
+    <QtMoc Include="..\widgets\widgets\QActionButton\qactionbutton.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="qactionbuttonplugin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qactionbuttonplugin.cpp">
@@ -36,11 +48,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="qactionbuttonplugin.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="..\widgets\widgets\QActionButton\qactionbutton.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
+    <None Include="qactionbuttonplugin.json" />
   </ItemGroup>
 </Project>

@@ -34,7 +34,7 @@ QString QActionButtonPlugin::name() const
 
 QString QActionButtonPlugin::group() const
 {
-    return "Display Widgets [Examples]";
+    return "ModularSensorSystem";
 }
 
 QIcon QActionButtonPlugin::icon() const
