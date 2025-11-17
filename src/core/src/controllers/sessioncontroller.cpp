@@ -5,16 +5,113 @@ SessionController::SessionController(SourceController* sourceController, Process
 	MountController* mountController, QObject* parent)
 	: BackendControllerBase("SessionController", parent), m_pipeline(nullptr, &gst_object_unref), 
 	m_sourceController(sourceController), m_processingController(processingController), 
-	m_mountController(mountController)
+	m_mountController(mountController), m_sessionProperties(new SessionProperties())
 {
 	if (!gst_is_initialized()) {
 		gst_init(nullptr, nullptr);
 	}
+
+	// Create sessions directory if it doesn't exist
+	QDir sessionsDir = QDir(QCoreApplication::applicationDirPath() + DEFAULT_SESSIONS_DIRECTORY);
+	if (!sessionsDir.exists()) {
+		if (!QDir().mkpath(sessionsDir.absolutePath())) {
+			qWarning() << "Failed to create sessions directory:" << sessionsDir.absolutePath() << "\nUsing application directory instead.";
+			sessionsDir = QDir(QCoreApplication::applicationDirPath());
+		}
+	}
+
+	// TODO: in the future, load the session properties from a saved state
+	// For right now, just initialize with defaults
+	*m_sessionProperties = {
+		.generalProperties = {},
+		.clippingProperties = {
+			.enabled = false,
+		},
+		.recordingProperties = {
+			.outputDirectory = sessionsDir,
+			.outputPrefix = DEFAULT_SESSION_PREFIX,
+		},
+		.processingProperties = {
+			.enabled = false,
+		},
+	};
 }
 
 SessionController::~SessionController()
 {
 	closePipeline();
+	delete m_sessionProperties;
+}
+
+long long SessionController::generateSessionTimestamp()
+{
+	// Get the current time point from the high-resolution clock
+	std::chrono::time_point<std::chrono::high_resolution_clock> now =
+		std::chrono::high_resolution_clock::now();
+
+	// Get the duration since the clock's epoch
+	auto duration_since_epoch = now.time_since_epoch();
+
+	// Cast the duration to nanoseconds
+	std::chrono::nanoseconds nanoseconds_duration =
+		std::chrono::duration_cast<std::chrono::nanoseconds>(duration_since_epoch);
+
+	// Get the count of nanoseconds
+	long long nanoseconds_count = nanoseconds_duration.count();
+
+	return nanoseconds_count;
+}
+
+QString SessionController::generateSessionDirectoryPath()
+{
+	const QString outputDir = m_sessionProperties->recordingProperties.outputDirectory.absolutePath();
+
+	// Check output directory
+	if (!QDir(outputDir).exists()) {
+		if (!QDir().mkpath(outputDir)) {
+			qWarning() << "Failed to create base output directory:" << outputDir;
+			return QString();
+		}
+	}
+
+	const QString outputFolderPrefix = m_sessionProperties->recordingProperties.outputPrefix + QString::fromStdString(std::to_string(m_lastSessionTimestamp));
+	const QString outputFolderPath = outputDir + "/" + outputFolderPrefix;
+
+	// Check output directory
+	if (!QDir(outputFolderPath).exists()) {
+		if (!QDir().mkpath(outputFolderPath)) {
+			qWarning() << "Failed to create session output directory:" << outputFolderPath;
+			return QString();
+		}
+	}
+
+	return outputFolderPath;
+}
+
+QString SessionController::generateSessionSourcePath(Source* src)
+{
+	auto recordableSrc = src->asRecordable();
+	if (!src->asRecordable()) {
+		qWarning() << "Cannot generate session source path: source is not recordable:" << QString::fromStdString(src->name());
+		return QString();
+	}
+
+	const QString outputFolderPath = generateSessionDirectoryPath();
+
+	// Check output folder path
+	if (outputFolderPath.isEmpty()) {
+		qWarning() << "Cannot generate session source path: output folder path is empty for source:" << QString::fromStdString(src->name());
+		return QString();
+	}
+
+	const QString outputFilePath = outputFolderPath + "/" + QString::fromStdString(src->name()) + QString::fromStdString(recordableSrc->recorderFileExtension());
+
+	if (outputFilePath.isEmpty()) {
+		qWarning() << "Cannot generate session source path: output file path is empty for source:" << QString::fromStdString(src->name());
+		return QString();
+	}
+
+	return outputFilePath;
 }
 
 void SessionController::buildPipeline()
@@ -28,6 +125,9 @@ void SessionController::buildPipeline()
 		qWarning() << "Failed to create GStreamer pipeline";
 		return;
 	}
+
+	// Generate a new session timestamp
+	m_lastSessionTimestamp = generateSessionTimestamp();
 
 	// Iterate over all sources and add them
 	for (auto& src : m_sourceController->sources()) {
@@ -68,7 +168,6 @@ void SessionController::buildPipeline()
 		<< "pending:"
 		<< gst_element_state_get_name(pending);
 }
-
 
 void SessionController::closePipeline()
 {
@@ -212,6 +311,15 @@ gboolean SessionController::createAndLinkRecordBin(Source* src, GstElement* tee)
 		return FALSE;
 	}
 
+	// Set sink's output directory and prefix from session properties
+	// Recordings are stored in a folder that contains a file for each source
+	const QString outputFilePath = generateSessionSourcePath(src);
+	if (outputFilePath.isEmpty()) {
+		qWarning() << "Cannot set recording file path: output file path is empty for source:" << QString::fromStdString(src->name());
+		return FALSE;
+	}
+	recSrc->setRecordingFilePath(outputFilePath.toStdString());
+
 	// Add preview element(s) to pipeline
 	if (!gst_bin_add(GST_BIN(m_pipeline.get()), sink)) {
 		qWarning() << "Failed to add preview sink for '" << src->displayName() << "' to pipeline.";
@@ -304,14 +412,30 @@ QList<const Processor*> SessionController::getProcessorsBySource(QUuid sourceId)
 	return processors;
 }
 
+void SessionController::setSessionProperties(SessionProperties properties)
+{
+	*m_sessionProperties = properties;
+
+	emit sessionPropertiesChanged(properties);
+}
+
+void SessionController::restartSession()
+{
+	closePipeline();
+	buildPipeline();
+	emit sessionRestarted();
+}
+
 void SessionController::startSession()
 {
 	buildPipeline();
+	emit sessionStarted();
 }
 
 void SessionController::stopSession()
 {
 	closePipeline();
+	emit sessionStopped();
 }
 
 void SessionController::startRecording()

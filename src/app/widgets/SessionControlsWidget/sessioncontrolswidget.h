@@ -20,8 +20,8 @@ public:
 		ui.buttonStartStop->setAction(m_actions.startStopSession);
 		ui.buttonRestart->setAction(m_actions.restartSession);
 		ui.buttonRecord->setAction(m_actions.recordSession);
-		//ui.buttonClip->setAction(m_actions.clipSession);
-		//ui.buttonProperties->setAction(m_actions.openSessionProperties);
+		ui.buttonClip->setAction(m_actions.clipSession);
+		ui.buttonProperties->setAction(m_actions.openSessionProperties);
 	}
 
 private:

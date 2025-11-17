@@ -7,17 +7,17 @@ QDirectoryPickerWidget::QDirectoryPickerWidget(QWidget *parent)
 
 	connect(ui.buttonSelectDirectory, &QPushButton::clicked, this, &QDirectoryPickerWidget::onSelectDirectoryClicked);
 	connect(ui.buttonOpenDirectory, &QPushButton::clicked, this, &QDirectoryPickerWidget::onOpenDirectoryClicked);
-	connect(ui.lineDirectory, &QLineEdit::textChanged, this, [this](const QString& newText) {
+	/*connect(ui.lineDirectory, &QLineEdit::textChanged, this, [this](const QString& newText) {
 		this->setSelectedDirectory(QDir(newText));
-		});
+		});*/
 }
 
 QDirectoryPickerWidget::~QDirectoryPickerWidget() {}
 
 void QDirectoryPickerWidget::onOpenDirectoryClicked()
 {
-	if (m_selectedDirectory.isEmpty()) {
-		QMessageBox::warning(this, tr("No Directory Selected"), tr("Please select a directory first."));
+	if (!m_selectedDirectory.exists()) {
+		QMessageBox::warning(this, tr("Directory Does Not Exist"), tr("Please select a directory that exists."));
 		return;
 	}
 
@@ -32,14 +32,13 @@ void QDirectoryPickerWidget::onSelectDirectoryClicked()
 		return;
 	}
 
-	m_selectedDirectory = QDir(dir);
-	ui.lineDirectory->setText(m_selectedDirectory.path());
-	emit directoryChanged(m_selectedDirectory);
+	setSelectedDirectory(QDir(dir));
 }
 
 void QDirectoryPickerWidget::setSelectedDirectory(const QDir& directory)
 {
-	m_selectedDirectory = directory;
+	m_selectedDirectory = QDir(directory);
 	ui.lineDirectory->setText(m_selectedDirectory.path());
+	emit directoryChanged(m_selectedDirectory);
 }
 

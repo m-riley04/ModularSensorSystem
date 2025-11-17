@@ -541,7 +541,10 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <addaction name="actionConfigureProcessor"/>
    <addaction name="separator"/>
    <addaction name="actionToggleProcessing"/>
+   <addaction name="actionRestartSession"/>
    <addaction name="actionRecord"/>
+   <addaction name="actionSessionProperties"/>
+   <addaction name="actionClipSession"/>
   </widget>
   <widget class="DockableElementsManagerWidget" name="dockWidget">
    <attribute name="dockWidgetArea">
@@ -880,6 +883,28 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="text">
     <string>Restart Session</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionSessionProperties">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+   </property>
+   <property name="text">
+    <string>Session Properties</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionClipSession">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditCut"/>
+   </property>
+   <property name="text">
+    <string>clipSession</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

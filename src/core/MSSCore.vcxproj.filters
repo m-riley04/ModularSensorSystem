@@ -95,6 +95,9 @@
     <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\models\session_properties.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">

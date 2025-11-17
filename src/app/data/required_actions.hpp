@@ -26,4 +26,6 @@ struct SessionControlsActions {
 	QAction* startStopSession;
 	QAction* recordSession;
 	QAction* restartSession;
+	QAction* clipSession;
+	QAction* openSessionProperties;
 };

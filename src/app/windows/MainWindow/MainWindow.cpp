@@ -58,7 +58,9 @@ void MainWindow::initWidgets()
     SessionControlsActions sessionActions{
 		.startStopSession = ui.actionStartStopSession,
 		.recordSession = ui.actionRecord,
-		.restartSession = ui.actionRestartSession
+		.restartSession = ui.actionRestartSession,
+		.clipSession = ui.actionClipSession,
+		.openSessionProperties = ui.actionSessionProperties
 	};
     ui.sessionControls->setSessionControlActions(sessionActions);
 
@@ -90,9 +92,22 @@ void MainWindow::initActionSignals()
 		if (checked) pController->sessionController()->startSession();
 		else pController->sessionController()->stopSession();
         });
+    connect(ui.actionRestartSession, &QAction::triggered, pController->sessionController(), &SessionController::restartSession);
     connect(ui.actionRecord, &QAction::triggered, [this](bool checked) {
         if (checked) pController->sessionController()->startRecording();
 		else pController->sessionController()->stopRecording();
+        });
+    connect(ui.actionSessionProperties, &QAction::triggered, [this]() {
+        // Create new session properties dialog
+        SessionPropertiesDialog* dialog = new SessionPropertiesDialog(pController, &pController->sessionController()->sessionProperties(), this);
+        connect(dialog, &SessionPropertiesDialog::settingsChanged,
+            this, [this](SessionProperties data) {
+                pController->sessionController()->setSessionProperties(data);
+			});
+        dialog->show();
+        });
+    connect(ui.actionClipSession, &QAction::triggered, [this]() {
+		// TODO: implement this
         });
 
     // Mounts
