@@ -15,10 +15,12 @@ public:
 	QDirectoryPickerWidget(QWidget *parent = nullptr);
 	~QDirectoryPickerWidget();
 
+public slots:
+	void setSelectedDirectory(const QDir& directory);
+
 private slots:
 	void onOpenDirectoryClicked();
 	void onSelectDirectoryClicked();
-	void setSelectedDirectory(const QDir& directory);
 
 private:
 	Ui::QDirectoryPickerWidgetClass ui;
