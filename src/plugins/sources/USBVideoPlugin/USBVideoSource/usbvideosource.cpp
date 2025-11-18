@@ -45,9 +45,54 @@ void USBVideoSource::createBinIfNeeded()
 	}
 }
 
+void USBVideoSource::createRecorderBinIfNeeded()
+{
+	if (!m_recorderBin) {
+		m_recorderBin = std::make_unique<USBVideoSourceRecorderBin>(this->uuid(), m_id);
+	}
+}
+
 GstElement* USBVideoSource::srcBin()
 {
 	// lazy creation; note m_bin must be mutable
 	createBinIfNeeded();
 	return m_bin->bin();
+}
+
+GstElement* USBVideoSource::recorderSinkBin()
+{
+	createRecorderBinIfNeeded();
+	return m_recorderBin->bin();
+}
+
+std::string USBVideoSource::recorderFileExtension() const
+{
+	return "mp4";
+}
+
+void USBVideoSource::setRecordingFilePath(const std::string& filePath)
+{
+	m_recordingFilePath = filePath;
+}
+
+gboolean USBVideoSource::openRecordingValve()
+{
+	auto valve = m_recorderBin->valveElement();
+	if (!valve) {
+		qWarning() << "Cannot open recording valve: valve element is null";
+		return FALSE;
+	}
+	g_object_set(valve, "drop", false, nullptr);
+	return TRUE;
+}
+
+gboolean USBVideoSource::closeRecordingValve()
+{
+	auto valve = m_recorderBin->valveElement();
+	if (!valve) {
+		qWarning() << "Cannot close recording valve: valve element is null";
+		return FALSE;
+	}
+	g_object_set(valve, "drop", true, nullptr);
+	return TRUE;
 }

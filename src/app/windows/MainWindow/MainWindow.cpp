@@ -182,7 +182,7 @@ void MainWindow::openSavePresetDialog()
 
     // Get the preset name from the user
     bool ok;
-    QString presetName = QInputDialog::getText(this, "Save Preset", "Preset name:", QLineEdit::Normal, QString(), &ok);
+    QString presetName = QInputDialog::getText(this, tr("Save Preset"), tr("Preset name:"), QLineEdit::Normal, QString(), &ok);
     if (ok && !presetName.isEmpty()) {
         // Check if the preset name already exists
         // If so, ask to overwrite
@@ -213,7 +213,7 @@ void MainWindow::onLoadPresetClicked()
     
 	// Check selected item
     if (!pSelectedPresetItem) {
-        QMessageBox::warning(this, "No Preset Selected", "Please select a preset to load.");
+        QMessageBox::warning(this, tr("No Preset Selected"), tr("Please select a preset to load."));
         return;
     }
 
@@ -239,7 +239,7 @@ void MainWindow::openDeletePresetDialog()
 
 	// Check selected item
     if (!pSelectedPresetItem) {
-        QMessageBox::warning(this, "No Preset Selected", "Please select a preset to remove.");
+        QMessageBox::warning(this, tr("No Preset Selected"), tr("Please select a preset to remove."));
         return;
 	}
 
@@ -303,11 +303,11 @@ void MainWindow::openRemoveMountDialog()
 
     // Check selected item
     if (m_selectedElement->kind != ElementTreeNode::Kind::Mount) {
-        QMessageBox::warning(this, "No Mount Selected", "Please select a mount to remove.");
+        QMessageBox::warning(this, tr("No Mount Selected"), tr("Please select a mount to remove."));
         return;
     }
 
-    auto response = QMessageBox::question(this, "Remove Mount", "Are you sure you want to remove the selected mount?", QMessageBox::Yes | QMessageBox::No);
+    auto response = QMessageBox::question(this, tr("Remove Mount"), tr("Are you sure you want to remove the selected mount?"), QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
         pController->mountController()->removeMount(m_selectedElement->id);
     }
@@ -339,11 +339,11 @@ void MainWindow::openRemoveSourceDialog()
 
     // Check selected item
     if (m_selectedElement->kind != ElementTreeNode::Kind::Source) {
-        QMessageBox::warning(this, "No Source Selected", "Please select a source to remove.");
+        QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to remove."));
         return;
 	}
 
-    auto response = QMessageBox::question(this, "Remove Source", "Are you sure you want to remove the selected source?", QMessageBox::Yes | QMessageBox::No);
+    auto response = QMessageBox::question(this, tr("Remove Source"), tr("Are you sure you want to remove the selected source?"), QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
         pController->sourceController()->removeSource(m_selectedElement->id);
     }
@@ -356,7 +356,7 @@ void MainWindow::openConfigureSourceDialog()
 
     // Check selected item
     if (m_selectedElement->kind != ElementTreeNode::Kind::Source) {
-        QMessageBox::warning(this, "No Source Selected", "Please select a source to configure.");
+        QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to configure."));
         return;
     }
 
@@ -374,7 +374,7 @@ void MainWindow::openConfigureSourceDialog()
     else {
         // fallback: show generic property inspector
         //showGenericPropertyDialog(source);
-        QMessageBox::information(this, "Properties", "No properties available for this source.");
+        QMessageBox::information(this, tr("Properties"), tr("No properties available for this source."));
     }
 }
 
@@ -402,11 +402,11 @@ void MainWindow::openRemoveProcessorDialog()
 
     // Check selected item
     if (m_selectedElement->kind != ElementTreeNode::Kind::Processor) {
-        QMessageBox::warning(this, "No Processor Selected", "Please select a processor to remove.");
+        QMessageBox::warning(this, tr("No Processor Selected"), tr("Please select a processor to remove."));
         return;
     }
 
-    auto response = QMessageBox::question(this, "Remove Processor", "Are you sure you want to remove the selected processor?", QMessageBox::Yes | QMessageBox::No);
+    auto response = QMessageBox::question(this, tr("Remove Processor"), tr("Are you sure you want to remove the selected processor?"), QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
 		// Get the processor from the selected element
         // TODO: implement this
@@ -419,14 +419,14 @@ void MainWindow::openRemoveProcessorDialog()
 
 void MainWindow::openConfigureProcessorDialog()
 {
-    QMessageBox::warning(this, "Feature Not Implemted", "This feature has not been implemented yet.");
+    QMessageBox::warning(this, tr("Feature Not Implemted"), tr("This feature has not been implemented yet."));
 }
 
 void MainWindow::openGithubRepository()
 {
     QString repoLink = "https://github.com/m-riley04/ModularSensorSystem"; // TODO: Make this configurable or in a top-level file
     if (!QDesktopServices::openUrl(repoLink)) {
-        QMessageBox::warning(this, "Link Error", "Could not open the GitHub repository.");
+        QMessageBox::warning(this, tr("Link Error"), tr("Could not open the GitHub repository."));
     }
 }
 
@@ -494,14 +494,14 @@ void MainWindow::onPrintPipelineDebugClicked()
 {
 	GstPipeline* pipeline = pController->sessionController()->pipeline();
     if (!pipeline) {
-        QMessageBox::warning(this, "Pipeline Not Built", "The GStreamer pipeline is not built yet.");
+        QMessageBox::warning(this, tr("Pipeline Not Built"), tr("The GStreamer pipeline is not built yet."));
         return;
 	}
 
     QString output = debugDisplayGstBin(GST_ELEMENT(pipeline));
 
     if (!output.isEmpty()) {
-        QMessageBox::warning(this, "Error", output);
+        QMessageBox::warning(this, tr("Error"), output);
         return;
     }
 }

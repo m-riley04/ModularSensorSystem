@@ -17,12 +17,6 @@ public:
 	virtual GstElement* recorderSinkBin() = 0;
 
 	/**
-	 * @brief Retrieves the sink bin's element name.
-	 * @return The element name as a string.
-	 */
-	virtual std::string recorderSinkElementName() const = 0;
-
-	/**
 	 * @brief The file extension used for recordings from this source.
 	 * @return 
 	 */

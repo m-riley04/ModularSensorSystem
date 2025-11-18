@@ -10,10 +10,11 @@
 #include <utils/boost_qt_conversions.hpp>
 #include "utils.hpp"
 #include "usbvideosourcebin.hpp"
-#include <interfaces/capability/ipreviewablesource.hpp>
+#include "usbvideosourcerecorderbin.hpp"
 
 class USBVideoSource : public Source
 	, public IPreviewableSource
+	, public IRecordableSource
 {
 	Q_OBJECT
 
@@ -38,6 +39,13 @@ public:
 	GstElement* previewSinkBin() override { return nullptr; } // Use default sink
 	std::string previewSinkElementName() const override { return "preview_" + boost::uuids::to_string(uuid()); }
 
+	/// IRecordableSource interface
+	GstElement* recorderSinkBin() override;
+	std::string recorderFileExtension() const override;
+	void setRecordingFilePath(const std::string& filePath) override;
+	gboolean openRecordingValve() override;
+	gboolean closeRecordingValve() override;
+
 
 public slots:
 	void onSessionStart() override;
@@ -45,6 +53,7 @@ public slots:
 
 private:
 	void createBinIfNeeded();
+	void createRecorderBinIfNeeded();
 
 	std::string m_id;
 	std::string m_name;
@@ -52,4 +61,7 @@ private:
 	Source::Type m_sourceType = Source::Type::VIDEO;
 	quintptr m_windowId = 0;
 	std::unique_ptr<USBVideoSourceBin> m_bin;
+	std::unique_ptr<USBVideoSourceRecorderBin> m_recorderBin;
+
+	std::string m_recordingFilePath;
 };

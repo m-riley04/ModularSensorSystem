@@ -118,7 +118,9 @@
   <ItemGroup>
     <ClCompile Include="USBVideoSource\usbvideosource.cpp" />
     <ClCompile Include="USBVideoSource\usbvideosourcebin.cpp" />
+    <ClCompile Include="USBVideoSource\usbvideosourcerecorderbin.cpp" />
     <ClInclude Include="USBVideoSource\usbvideosourcebin.hpp" />
+    <ClInclude Include="USBVideoSource\usbvideosourcerecorderbin.hpp" />
     <ClInclude Include="utils.hpp" />
     <QtMoc Include="USBVideoSource\usbvideosource.hpp" />
     <ClInclude Include="usbvideoplugin.hpp" />

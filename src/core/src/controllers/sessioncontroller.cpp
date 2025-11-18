@@ -104,7 +104,7 @@ QString SessionController::generateSessionSourcePath(Source* src)
 		return QString();
 	}
 
-	const QString outputFilePath = outputFolderPath + "/" + QString::fromStdString(src->name()) + QString::fromStdString(recordableSrc->recorderFileExtension());
+	const QString outputFilePath = outputFolderPath + "/" + QString::fromStdString(src->name()) + "." + QString::fromStdString(recordableSrc->recorderFileExtension());
 
 	if (outputFilePath.isEmpty()) {
 		qWarning() << "Cannot generate session source path: output file path is empty for source:" << QString::fromStdString(src->name());

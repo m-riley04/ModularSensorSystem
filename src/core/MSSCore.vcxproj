@@ -112,6 +112,7 @@
     <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp" />
     <ClInclude Include="include\interfaces\capability\irecordablesource.hpp" />
     <ClInclude Include="include\models\session_properties.hpp" />
+    <ClInclude Include="include\pipeline\bins\recorderbin.hpp" />
     <ClInclude Include="include\pipeline\mime_types.hpp" />
     <ClInclude Include="include\utils\debug.hpp" />
     <QtMoc Include="include\controllers\sessioncontroller.hpp" />
