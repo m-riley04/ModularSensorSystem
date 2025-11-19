@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <VcpkgTriplet>x64-windows</VcpkgTriplet>
-    <GST_PLUGIN_PATH>$(VcpkgManifestRoot)\vcpkg_installed\$(VcpkgTriplet)\$(VcpkgTriplet)\plugins\gstreamer</GST_PLUGIN_PATH>
+    <GST_PLUGIN_PATH>$(_ZVcpkgCurrentInstalledDir)\plugins\gstreamer</GST_PLUGIN_PATH>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />

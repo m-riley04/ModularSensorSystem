@@ -42,9 +42,9 @@ public:
 	/// IRecordableSource interface
 	GstElement* recorderSinkBin() override;
 	std::string recorderFileExtension() const override;
-	void setRecordingFilePath(const std::string& filePath) override;
-	gboolean openRecordingValve() override;
-	gboolean closeRecordingValve() override;
+	bool setRecordingFilePath(const std::string& filePath) override;
+	bool openRecordingValve() override;
+	bool closeRecordingValve() override;
 
 
 public slots:

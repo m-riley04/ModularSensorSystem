@@ -70,29 +70,17 @@ std::string USBVideoSource::recorderFileExtension() const
 	return "mp4";
 }
 
-void USBVideoSource::setRecordingFilePath(const std::string& filePath)
+bool USBVideoSource::setRecordingFilePath(const std::string& filePath)
 {
-	m_recordingFilePath = filePath;
+	return m_recorderBin->setRecordingFilePath("C:/gstreamer/test.mp4");
 }
 
-gboolean USBVideoSource::openRecordingValve()
+bool USBVideoSource::openRecordingValve()
 {
-	auto valve = m_recorderBin->valveElement();
-	if (!valve) {
-		qWarning() << "Cannot open recording valve: valve element is null";
-		return FALSE;
-	}
-	g_object_set(valve, "drop", false, nullptr);
-	return TRUE;
+	return m_recorderBin->setRecordingEnabled(true);
 }
 
-gboolean USBVideoSource::closeRecordingValve()
+bool USBVideoSource::closeRecordingValve()
 {
-	auto valve = m_recorderBin->valveElement();
-	if (!valve) {
-		qWarning() << "Cannot close recording valve: valve element is null";
-		return FALSE;
-	}
-	g_object_set(valve, "drop", true, nullptr);
-	return TRUE;
+	return m_recorderBin->setRecordingEnabled(false);
 }

@@ -25,18 +25,19 @@ public:
 	/**
 	 * @brief Sets the file path where recordings will be saved.
 	 * @param filePath The file path as a string.
+	 * @return True on success, False on failure.
 	 */
-	virtual void setRecordingFilePath(const std::string& filePath) = 0;
+	virtual bool setRecordingFilePath(const std::string& filePath) = 0;
 
 	/**
 	 * @brief Opens the recording valve to start recording data.
 	 * @return TRUE on success, FALSE on failure.
 	 */
-	virtual gboolean openRecordingValve() = 0;
+	virtual bool openRecordingValve() = 0;
 
 	/**
 	 * @brief Closes the recording valve to stop recording data.
 	 * @return TRUE on success, FALSE on failure.
 	 */
-	virtual gboolean closeRecordingValve() = 0;
+	virtual bool closeRecordingValve() = 0;
 };

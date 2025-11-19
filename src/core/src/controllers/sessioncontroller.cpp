@@ -1,5 +1,6 @@
 #include "controllers/sessioncontroller.hpp"
 #include <utils/debug.hpp>
+#include <QRegularExpression>
 
 SessionController::SessionController(SourceController* sourceController, ProcessingController* processingController, 
 	MountController* mountController, QObject* parent)
@@ -62,6 +63,29 @@ long long SessionController::generateSessionTimestamp()
 	return nanoseconds_count;
 }
 
+static QString sanitizeFileName(const QString& name)
+{
+	// Replace characters that are invalid on Windows file systems
+	// Invalid: \ / : * ? " < > |
+	QString cleaned;
+	cleaned.reserve(name.size());
+	for (QChar ch : name) {
+		if (ch == '\\' || ch == '/' || ch == ':' || ch == '*' || ch == '?' || ch == '"' || ch == '<' || ch == '>' || ch == '|') {
+			cleaned.append('_');
+		} else {
+			cleaned.append(ch);
+		}
+	}
+	// Remove trailing dots and spaces which are not allowed for filenames on Windows
+	while (!cleaned.isEmpty() && (cleaned.endsWith('.') || cleaned.endsWith(' '))) {
+		cleaned.chop(1);
+	}
+	if (cleaned.isEmpty()) {
+		cleaned = QStringLiteral("source");
+	}
+	return cleaned;
+}
+
 QString SessionController::generateSessionDirectoryPath()
 {
 	const QString outputDir = m_sessionProperties->recordingProperties.outputDirectory.absolutePath();
@@ -96,7 +120,7 @@ QString SessionController::generateSessionSourcePath(Source* src)
 		return QString();
 	}
 
-	const QString outputFolderPath = generateSessionDirectoryPath();
+	const QString outputFolderPath = QDir::cleanPath(generateSessionDirectoryPath());
 
 	// Check output folder path
 	if (outputFolderPath.isEmpty()) {
@@ -104,14 +128,46 @@ QString SessionController::generateSessionSourcePath(Source* src)
 		return QString();
 	}
 
-	const QString outputFilePath = outputFolderPath + "/" + QString::fromStdString(src->name()) + "." + QString::fromStdString(recordableSrc->recorderFileExtension());
+	// Sanitize the file name derived from the source display/name to avoid invalid characters
+	QString baseName = sanitizeFileName(QString::fromStdString(src->name())).replace(" ", "_");
 
-	if (outputFilePath.isEmpty()) {
+	// Avoid reserved DOS device names
+	static const QStringList reserved = {
+		QStringLiteral("CON"), QStringLiteral("PRN"), QStringLiteral("AUX"), QStringLiteral("NUL"),
+		QStringLiteral("COM1"), QStringLiteral("COM2"), QStringLiteral("COM3"), QStringLiteral("COM4"),
+		QStringLiteral("COM5"), QStringLiteral("COM6"), QStringLiteral("COM7"), QStringLiteral("COM8"), QStringLiteral("COM9"),
+		QStringLiteral("LPT1"), QStringLiteral("LPT2"), QStringLiteral("LPT3"), QStringLiteral("LPT4"),
+		QStringLiteral("LPT5"), QStringLiteral("LPT6"), QStringLiteral("LPT7"), QStringLiteral("LPT8"), QStringLiteral("LPT9")
+	};
+	if (reserved.contains(baseName.toUpper())) {
+		baseName.prepend('_');
+	}
+
+	QString extension = QString::fromStdString(recordableSrc->recorderFileExtension());
+	if (extension.startsWith('.')) {
+		extension.remove(0, 1);
+	}
+
+	// Conservative MAX_PATH handling: keep full path well below 260
+	const int maxFull = 250; // leave headroom
+	QString sep = QStringLiteral("/");
+	QString suffix = extension.isEmpty() ? QString() : QStringLiteral(".") + extension;
+	QString candidate = outputFolderPath + sep + baseName + suffix;
+	if (candidate.size() > maxFull) {
+		int budget = maxFull - (outputFolderPath.size() + 1 + suffix.size());
+		if (budget < 8) budget = 8; // minimum reasonable
+		baseName = baseName.left(budget);
+		candidate = outputFolderPath + sep + baseName + suffix;
+	}
+
+	const QString cleanedOutputFilePath = candidate.trimmed();
+
+	if (cleanedOutputFilePath.isEmpty()) {
 		qWarning() << "Cannot generate session source path: output file path is empty for source:" << QString::fromStdString(src->name());
 		return QString();
 	}
 
-	return outputFilePath;
+	return cleanedOutputFilePath;
 }
 
 void SessionController::buildPipeline()
@@ -137,6 +193,9 @@ void SessionController::buildPipeline()
 		connect(this, &SessionController::sessionStarted, src, &Source::onSessionStart);
 		connect(this, &SessionController::sessionStopped, src, &Source::onSessionStop);
 	}
+
+	// DEBUG: export pipeline graph
+	debugDisplayGstBin(GST_ELEMENT(m_pipeline.get()), true);
 	
 	// Step through states to surface problems earlier
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_READY) == GST_STATE_CHANGE_FAILURE) {
@@ -312,23 +371,32 @@ gboolean SessionController::createAndLinkRecordBin(Source* src, GstElement* tee)
 	}
 
 	// Set sink's output directory and prefix from session properties
-	// Recordings are stored in a folder that contains a file for each source
 	const QString outputFilePath = generateSessionSourcePath(src);
 	if (outputFilePath.isEmpty()) {
 		qWarning() << "Cannot set recording file path: output file path is empty for source:" << QString::fromStdString(src->name());
 		return FALSE;
 	}
-	recSrc->setRecordingFilePath(outputFilePath.toStdString());
+	// Use UTF-8 when passing path strings into GStreamer properties
+	const std::string utf8Path = outputFilePath.toUtf8().toStdString();
 
-	// Add preview element(s) to pipeline
-	if (!gst_bin_add(GST_BIN(m_pipeline.get()), sink)) {
-		qWarning() << "Failed to add preview sink for '" << src->displayName() << "' to pipeline.";
+	if (!recSrc->setRecordingFilePath(utf8Path)) {
+		qWarning() << "Failed to set recording file path for source '"
+			<< QString::fromStdString(src->displayName())
+			<< "' to '"
+			<< outputFilePath
+			<< "'";
 		return FALSE;
 	}
 
-	// Link source bin to sink
+	// Add recorder bin to pipeline
+	if (!gst_bin_add(GST_BIN(m_pipeline.get()), sink)) {
+		qWarning() << "Failed to add recorder sink for '" << src->displayName() << "' to pipeline.";
+		return FALSE;
+	}
+
+	// Tee branches must have queues; the recorder bin now begins with a queue
 	if (!gst_element_link(tee, sink)) {
-		qWarning() << "Failed to link source bin to preview sink for '" << src->displayName() << "'.";
+		qWarning() << "Failed to link source bin tee to recorder bin for '" << src->displayName() << "'.";
 		gst_bin_remove(GST_BIN(m_pipeline.get()), sink);
 		return FALSE;
 	}

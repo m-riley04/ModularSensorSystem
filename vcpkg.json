@@ -8,6 +8,8 @@
         "plugins-good",
         "plugins-bad",
         "plugins-ugly",
+        "x264",
+        "x265",
         "jpeg",
         "pango"
       ],
