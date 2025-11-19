@@ -154,8 +154,13 @@ void MainWindow::initActionSignals()
 void MainWindow::initSignals() {
     if (!pController->checkIfControllersAreOk()) return;
 	SourceController* pSourceController = pController->sourceController();
+	SessionController* pSessionController = pController->sessionController();
 
-    // TODO: Error message propagation
+    // Error message propagation
+    connect(pSessionController, &SessionController::pipelineErrorOccurred,
+        this, [this](const QString& errorMessage) {
+            QMessageBox::critical(this, tr("Pipeline Error"), tr("An error occurred in the data pipeline:\n%1").arg(errorMessage));
+		});
 
     // Connect preset widget signals
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);

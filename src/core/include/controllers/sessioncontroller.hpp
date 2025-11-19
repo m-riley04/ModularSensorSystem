@@ -50,8 +50,12 @@ public slots:
 	void startRecording();
 	void stopRecording();
 
+	void notifyPipelineEOS();
+	void notifyPipelineError(const QString& errorMessage);
+
 private:
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
+	guint m_pipelineBusWatchId = 0;
 
 	SessionProperties* m_sessionProperties = nullptr;
 
@@ -99,6 +103,9 @@ signals:
 
 	void recordingStarted();
 	void recordingStopped();
+
+	void pipelineEOSReached();
+	void pipelineErrorOccurred(QString errorMessage);
 
 	void dataSampleReceived(AnalogDataSample sample);
 };

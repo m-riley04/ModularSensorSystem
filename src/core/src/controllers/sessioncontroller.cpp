@@ -170,6 +170,54 @@ QString SessionController::generateSessionSourcePath(Source* src)
 	return cleanedOutputFilePath;
 }
 
+static gboolean
+bus_call(GstBus* bus,
+	GstMessage* msg,
+	gpointer    data)
+{
+	SessionController* sessionController = (SessionController*)data;
+
+	switch (GST_MESSAGE_TYPE(msg)) {
+
+	case GST_MESSAGE_EOS:
+		g_print("End of stream\n");
+		sessionController->notifyPipelineEOS();
+		sessionController->stopSession();
+		break;
+
+	case GST_MESSAGE_WARNING: {
+		gchar* debug;
+		GError* error;
+		gst_message_parse_warning(msg, &error, &debug);
+		g_free(debug);
+		QMessageLogger().warning("GStreamer Warning: %s", error->message);
+		g_error_free(error);
+		break;
+	}
+	case GST_MESSAGE_UNKNOWN:
+		g_print("Received unknown message.\n");
+		break;
+	case GST_MESSAGE_ERROR: {
+		gchar* debug;
+		GError* error;
+
+		gst_message_parse_error(msg, &error, &debug);
+		g_free(debug);
+
+		// Notify session controller of the error
+		sessionController->notifyPipelineError(QString::fromUtf8(error->message));
+		g_error_free(error);
+
+		break;
+	}
+	default:
+		break;
+	}
+
+	return TRUE;
+}
+
+
 void SessionController::buildPipeline()
 {
 	// Cleanly tear down any existing pipeline first
@@ -185,6 +233,12 @@ void SessionController::buildPipeline()
 	// Generate a new session timestamp
 	m_lastSessionTimestamp = generateSessionTimestamp();
 
+	// Add bus watch
+	GstBus* bus;
+	bus = gst_pipeline_get_bus(m_pipeline.get());
+	m_pipelineBusWatchId = gst_bus_add_watch(bus, bus_call, this);
+	gst_object_unref(bus);
+
 	// Iterate over all sources and add them
 	for (auto& src : m_sourceController->sources()) {
 		createSourceElements(src);
@@ -195,7 +249,7 @@ void SessionController::buildPipeline()
 	}
 
 	// DEBUG: export pipeline graph
-	debugDisplayGstBin(GST_ELEMENT(m_pipeline.get()), true);
+	//debugDisplayGstBin(GST_ELEMENT(m_pipeline.get()), true);
 	
 	// Step through states to surface problems earlier
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_READY) == GST_STATE_CHANGE_FAILURE) {
@@ -232,6 +286,8 @@ void SessionController::closePipeline()
 {
 	if (!m_pipeline) return;
 	gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_NULL);
+	g_source_remove(m_pipelineBusWatchId);
+	m_pipelineBusWatchId = 0;
 
 	emit sessionStopped();
 
@@ -426,7 +482,12 @@ gboolean SessionController::closeRecordingValves()
 			continue; // Skip non-recordable sources
 		}
 
-		closeRecordingValveForSource(src);
+		bool r = closeRecordingValveForSource(src);
+		if (!r) {
+			qWarning() << "Failed to close recording valve for source '"
+				<< QString::fromStdString(src->displayName())
+				<< "'";
+		}
 	}
 
 	return TRUE;
@@ -522,6 +583,16 @@ void SessionController::stopRecording()
 	}
 
 	emit recordingStopped();
+}
+
+void SessionController::notifyPipelineEOS()
+{
+	emit pipelineEOSReached();
+}
+
+void SessionController::notifyPipelineError(const QString& errorMessage)
+{
+	emit pipelineErrorOccurred(errorMessage);
 }
 
 GstFlowReturn SessionController::onDataNewSampleStatic(GstAppSink* sink, gpointer userData)

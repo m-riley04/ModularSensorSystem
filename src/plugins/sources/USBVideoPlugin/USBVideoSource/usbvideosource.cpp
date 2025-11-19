@@ -72,7 +72,7 @@ std::string USBVideoSource::recorderFileExtension() const
 
 bool USBVideoSource::setRecordingFilePath(const std::string& filePath)
 {
-	return m_recorderBin->setRecordingFilePath("C:/gstreamer/test.mp4");
+	return m_recorderBin->setRecordingFilePath(filePath);
 }
 
 bool USBVideoSource::openRecordingValve()
