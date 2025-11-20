@@ -43,12 +43,14 @@ public:
 public slots:
 	void startSession();
 	void stopSession();
+	void requestStopSession();
 	void restartSession();
 
 	void setSessionProperties(SessionProperties properties);
 
 	void startRecording();
 	void stopRecording();
+	void requestStopRecording();
 
 	void notifyPipelineEOS();
 	void notifyPipelineError(const QString& errorMessage);
@@ -56,6 +58,10 @@ public slots:
 private:
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
 	guint m_pipelineBusWatchId = 0;
+
+	QList<GstElement*> m_sourceBins;
+	QList<GstElement*> m_previewBins;
+	QList<GstElement*> m_recordBins;
 
 	SessionProperties* m_sessionProperties = nullptr;
 

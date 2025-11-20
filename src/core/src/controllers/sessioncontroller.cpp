@@ -182,7 +182,9 @@ bus_call(GstBus* bus,
 	case GST_MESSAGE_EOS:
 		g_print("End of stream\n");
 		sessionController->notifyPipelineEOS();
-		sessionController->stopSession();
+
+		// Don't stop entire pipeline, just stop recording.
+		sessionController->stopRecording();
 		break;
 
 	case GST_MESSAGE_WARNING: {
@@ -275,16 +277,19 @@ void SessionController::closePipeline()
 {
 	if (!m_pipeline) return;
 
-	//gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos());
-
 	gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_NULL);
-	g_source_remove(m_pipelineBusWatchId);
-	m_pipelineBusWatchId = 0;
 
 	emit sessionStopped();
 
 	// Should go after emit to allow sources to clean up
 	m_pipeline.reset(nullptr);
+
+	// Reset values
+	g_source_remove(m_pipelineBusWatchId);
+	m_pipelineBusWatchId = 0;
+	m_sourceBins.clear();
+	m_previewBins.clear();
+	m_recordBins.clear();
 }
 
 gboolean SessionController::createSourceElements(Source* source)
@@ -333,6 +338,9 @@ gboolean SessionController::createSourceElements(Source* source)
 		gst_bin_remove(GST_BIN(m_pipeline.get()), tee);
 		return FALSE;
 	}
+
+	// If we succeed all paths above, add to our tracking list
+	m_sourceBins.append(srcBin);
 
 	// Attempt to add/link preview
 	if (source->asPreviewable() != nullptr) {
@@ -392,6 +400,9 @@ gboolean SessionController::createAndLinkPreviewBin(Source* src, GstElement* tee
 		return FALSE;
 	}
 
+	// If we succeed all paths above, add to our tracking list
+	m_previewBins.append(sink);
+
 	return TRUE;
 }
 
@@ -448,6 +459,9 @@ gboolean SessionController::createAndLinkRecordBin(Source* src, GstElement* tee)
 		gst_bin_remove(GST_BIN(m_pipeline.get()), sink);
 		return FALSE;
 	}
+
+	// If we succeed all paths above, add to our tracking list
+	m_recordBins.append(sink);
 
 	return TRUE;
 }
@@ -559,6 +573,11 @@ void SessionController::stopSession()
 	emit sessionStopped();
 }
 
+void SessionController::requestStopSession()
+{
+	//gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos());
+}
+
 void SessionController::startRecording()
 {
 	if (!openRecordingValves()) {
@@ -575,6 +594,12 @@ void SessionController::stopRecording()
 	}
 
 	emit recordingStopped();
+}
+
+void SessionController::requestStopRecording()
+{
+	// Send EOS event to recording branches
+	gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos());
 }
 
 void SessionController::notifyPipelineEOS()

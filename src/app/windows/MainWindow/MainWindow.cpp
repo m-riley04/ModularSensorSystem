@@ -95,7 +95,7 @@ void MainWindow::initActionSignals()
     connect(ui.actionRestartSession, &QAction::triggered, pController->sessionController(), &SessionController::restartSession);
     connect(ui.actionRecord, &QAction::triggered, [this](bool checked) {
         if (checked) pController->sessionController()->startRecording();
-		else pController->sessionController()->stopRecording();
+		else pController->sessionController()->requestStopRecording(); // use request to allow graceful stopping
         });
     connect(ui.actionSessionProperties, &QAction::triggered, [this]() {
         // Create new session properties dialog
