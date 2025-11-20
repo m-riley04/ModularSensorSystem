@@ -24,7 +24,7 @@ protected:
 
 	virtual bool build() = 0;
 
-	GstPad* createSrcGhostPad(GstElement* tailElement, const char* elementPadName = "sink")
+	GstPad* createSinkGhostPad(GstElement* tailElement, const char* elementPadName = "sink")
 	{
 		return makeGhostPad(m_sinkPadName.c_str(), tailElement, elementPadName);
 	}

@@ -1,7 +1,7 @@
 #include "usbvideosourcerecorderbin.hpp"
 
 USBVideoSourceRecorderBin::USBVideoSourceRecorderBin(const boost::uuids::uuid& uuid, const std::string& id)
-   : RecorderBin(uuid, id, Source::Type::VIDEO, "recorder_")
+   : RecorderBin(uuid, id, Source::Type::VIDEO, "sink")
 {
     build();
 }
@@ -20,21 +20,6 @@ bool USBVideoSourceRecorderBin::build()
     m_muxer           = gst_element_factory_make("mp4mux",    ("usb_vid_mp4mux_"      + deviceUuid).c_str());
     m_filesinkElement = gst_element_factory_make("filesink",  ("usb_vid_writer_"      + deviceUuid).c_str());
 
-    // Basic properties
-    if (m_valveElement) {
-        g_object_set(m_valveElement, "drop", true, nullptr);
-    }
-    if (m_encoder) {
-        // Reasonable defaults for live capture
-        g_object_set(m_encoder,
-            "tune", 0x00000004 /* zerolatency */,  // GStreamer x264enc uses flags bitfield
-            nullptr);
-    }
-    if (m_muxer) {
-        // Make finalized MP4 seekable earlier (optional)
-        g_object_set(m_muxer, "faststart", TRUE, nullptr);
-    }
-
     // Validate elements
     if (!m_inputQueue || !m_valveElement || !m_encoder || !m_parse || !m_muxer || !m_filesinkElement) {
         qWarning() << "USBVideoSourceRecorderBin: Failed to create one or more elements";
@@ -46,6 +31,20 @@ bool USBVideoSourceRecorderBin::build()
         if (m_filesinkElement) { gst_object_unref(m_filesinkElement); m_filesinkElement = nullptr; }
         return false;
     }
+
+    // Close valve immediately
+    g_object_set(m_valveElement, "drop", true, nullptr);
+
+    // Reasonable defaults for live capture
+    g_object_set(m_encoder,
+        "tune", 0x00000004 /* zerolatency */,  // GStreamer x264enc uses flags bitfield
+        nullptr);
+
+    // Make finalized MP4 seekable earlier (optional)
+    g_object_set(m_muxer, "faststart", TRUE, nullptr);
+
+    // Make filesink async to avoid preroll
+    g_object_set(m_filesinkElement, "async", FALSE, nullptr);
 
     // Add to bin
     if (!this->addMany(m_inputQueue, m_valveElement, m_encoder, m_parse, m_muxer, m_filesinkElement)) {
@@ -62,7 +61,7 @@ bool USBVideoSourceRecorderBin::build()
     }
 
     // Create bin sink ghost pad from the input queue's sink pad
-    if (!this->createSrcGhostPad(m_inputQueue, "sink")) {
+    if (!this->createSinkGhostPad(m_inputQueue, "sink")) {
         qWarning() << "USBVideoSourceRecorderBin: Failed to create sink ghost pad";
         gst_element_unlink_many(m_inputQueue, m_valveElement, m_encoder, m_parse, m_muxer, m_filesinkElement, NULL);
         gst_bin_remove_many(GST_BIN(m_bin), m_inputQueue, m_valveElement, m_encoder, m_parse, m_muxer, m_filesinkElement, NULL);

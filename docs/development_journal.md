@@ -11,7 +11,10 @@ In each project, check each of these places in Properties:
 - 
 
 ### GStreamer
+
 Ensure the following first and foremost:
+
 1. Both the developer build and release build of GStreamer is installed via MSI on your system
 2. Ensure that your environment variables are correctly set up, specifically:
-  - MAKE SURE THAT GST/GLIB DLLS AREN'T BEING SHADOWED IN PATH!!! This is specifically an issue with GraphViz, since GStreamer uses it for debugging.
+    - MAKE SURE THAT GST/GLIB DLLS AREN'T BEING SHADOWED IN PATH!!! This is specifically an issue with GraphViz, since GStreamer uses it for debugging.
+    - 

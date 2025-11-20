@@ -269,22 +269,14 @@ void SessionController::buildPipeline()
 	}
 
 	emit sessionStarted();
-
-	GstState current, pending;
-	GstStateChangeReturn sret = gst_element_get_state(
-		GST_ELEMENT(m_pipeline.get()), &current, &pending, 5 * GST_SECOND);
-
-	qDebug() << "Pipeline state change result:"
-		<< sret
-		<< "current:"
-		<< gst_element_state_get_name(current)
-		<< "pending:"
-		<< gst_element_state_get_name(pending);
 }
 
 void SessionController::closePipeline()
 {
 	if (!m_pipeline) return;
+
+	//gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos());
+
 	gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_NULL);
 	g_source_remove(m_pipelineBusWatchId);
 	m_pipelineBusWatchId = 0;
