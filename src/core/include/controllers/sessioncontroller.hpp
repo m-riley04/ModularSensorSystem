@@ -21,7 +21,6 @@
 #include <utils/session_utils.hpp>
 #include <QRegularExpression>
 
-
 #define DEFAULT_SESSION_PREFIX "session_"
 #define DEFAULT_SESSIONS_DIRECTORY "/sessions"
 
@@ -42,6 +41,9 @@ public:
 	bool isPipelineBuilt() const { return m_pipeline != nullptr; }
 	SessionProperties& sessionProperties() const { return *m_sessionProperties; }
 
+	bool isStoppingRecording() const { return m_isRecordingStopping; }
+	bool isStoppingSession() const { return m_isSessionStopping; }
+
 	QList<const Source*> getSourcesByMount(QUuid mountId) const;
 	QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
 
@@ -51,22 +53,25 @@ public slots:
 	void requestStopSession();
 	void restartSession();
 
-	void setSessionProperties(SessionProperties properties);
-
 	void startRecording();
 	void stopRecording();
 	void requestStopRecording();
 
 	void setPipelineError(const QString& errorMessage);
+	void setSessionProperties(SessionProperties properties);
 
 private:
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
 	guint m_pipelineBusWatchId = 0;
 	ns m_lastSessionTimestamp = 0;
+	ns m_lastRecordingTimestamp = 0;
+	bool m_isRecordingStopping = false;
+	bool m_isSessionStopping = false;
 
 	QList<GstElement*> m_sourceBins;
 	QList<GstElement*> m_previewBins;
 	QList<GstElement*> m_recordBins;
+	QList<GstElement*> m_recordableSources;
 
 	SessionProperties* m_sessionProperties = nullptr;
 
@@ -77,14 +82,7 @@ private:
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
 
-	/**
-	 * Builds the main data pipeline through GStreamer.
-	 */
 	void buildPipeline();
-
-	/**
-	 * Closes the main data pipeline and releases resources.
-	 */
 	void closePipeline();
 
 	gboolean createSourceElements(Source* source);
@@ -98,12 +96,17 @@ private:
 
 signals:
 	void sessionStarted();
+	void sessionStopping();
 	void sessionStopped();
 	void sessionRestarted();
 
+	void pipelineEosReached();
+
 	void sessionPropertiesChanged(SessionProperties properties);
+	void errorOccurred(QString errorMessage);
 
 	void recordingStarted();
+	void recordingStopping();
 	void recordingStopped();
 
 };

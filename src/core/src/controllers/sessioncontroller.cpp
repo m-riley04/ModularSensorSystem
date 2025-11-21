@@ -19,6 +19,13 @@ SessionController::SessionController(SourceController* sourceController, Process
 		}
 	}
 
+	// Connect internal signals
+	connect(this, &SessionController::pipelineEosReached, [this]() {
+		// Check if we are stopping the session or recording
+		if (this->isStoppingSession()) this->stopSession();
+		if (this->isStoppingRecording()) this->stopRecording();
+		});
+
 	// TODO: in the future, load the session properties from a saved state
 	// For right now, just initialize with defaults
 	*m_sessionProperties = {
@@ -42,6 +49,59 @@ SessionController::~SessionController()
 	delete m_sessionProperties;
 }
 
+/**
+ * The callback function for GStreamer bus messages for the session pipeline.
+ * Logic should not go here. Instead, it should be forwarded as Qt signals to the SessionController.
+ * @param bus 
+ * @param msg 
+ * @param data 
+ * @return 
+ */
+static gboolean session_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
+{
+	SessionController* sessionController = (SessionController*)data;
+
+	switch (GST_MESSAGE_TYPE(msg)) {
+
+	case GST_MESSAGE_EOS:
+		emit sessionController->pipelineEosReached();
+		break;
+
+	case GST_MESSAGE_WARNING: {
+		gchar* debug;
+		GError* error;
+
+		gst_message_parse_warning(msg, &error, &debug);
+		g_free(debug);
+
+		// Notify session controller of the warning/error
+		emit sessionController->errorOccurred(QString::fromUtf8(error->message));
+		g_error_free(error);
+		break;
+	}
+	case GST_MESSAGE_UNKNOWN:
+		g_print("Received unknown message.\n");
+		break;
+	case GST_MESSAGE_ERROR: {
+		gchar* debug;
+		GError* error;
+
+		gst_message_parse_error(msg, &error, &debug);
+		g_free(debug);
+
+		// Notify session controller of the error
+		emit sessionController->errorOccurred(QString::fromUtf8(error->message));
+		g_error_free(error);
+
+		break;
+	}
+	default:
+		break;
+	}
+
+	return TRUE;
+}
+
 void SessionController::buildPipeline()
 {
 	// Cleanly tear down any existing pipeline first
@@ -55,7 +115,7 @@ void SessionController::buildPipeline()
 	}
 
 	// Generate a new session timestamp
-	m_lastSessionTimestamp = generateTimestampNs(); // TODO: make a separate one for recording.
+	m_lastSessionTimestamp = generateTimestampNs();
 
 	// Add bus watch
 	GstBus* bus;
@@ -321,7 +381,7 @@ gboolean SessionController::closeRecordingValves()
 gboolean SessionController::openRecordingValveForSource(Source* src)
 {
 	if (IRecordableSource* recSrc = src->asRecordable()) {
-		recSrc->openRecordingValve();
+		recSrc->startRecording();
 		return TRUE;
 	}
 
@@ -334,7 +394,7 @@ gboolean SessionController::openRecordingValveForSource(Source* src)
 gboolean SessionController::closeRecordingValveForSource(Source* src)
 {
 	if (IRecordableSource* recSrc = src->asRecordable()) {
-		recSrc->closeRecordingValve();
+		recSrc->stopRecording();
 		return TRUE;
 	}
 
@@ -390,15 +450,20 @@ void SessionController::stopSession()
 {
 	closePipeline();
 	emit sessionStopped();
+
+	m_isSessionStopping = false;
 }
 
 void SessionController::requestStopSession()
 {
-	//gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos());
+	m_isSessionStopping = true;
+	gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos());
 }
 
 void SessionController::startRecording()
 {
+	m_lastRecordingTimestamp = generateTimestampNs();
+
 	if (!openRecordingValves()) {
 		return;
 	}
@@ -413,17 +478,20 @@ void SessionController::stopRecording()
 	}
 
 	emit recordingStopped();
+	m_isRecordingStopping = false;
 }
 
 void SessionController::requestStopRecording()
 {
 	// Send EOS event to recording branches
+	m_isRecordingStopping = true;
 	gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos());
 }
 
 void SessionController::setPipelineError(const QString& errorMessage)
 {
 	qWarning() << "Pipeline error occurred:" << errorMessage;
-	// For now, just stop the session
-	stopSession();
+	emit errorOccurred(errorMessage);
+	//stopSession(); // TODO/CONSIDER: decide whether to stop session on error
 }
+

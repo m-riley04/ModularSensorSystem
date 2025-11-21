@@ -157,10 +157,10 @@ void MainWindow::initSignals() {
 	SessionController* pSessionController = pController->sessionController();
 
     // Error message propagation
-    /*connect(pSessionController, &SessionController::pipelineErrorOccurred,
+    connect(pSessionController, &SessionController::errorOccurred,
         this, [this](const QString& errorMessage) {
-            QMessageBox::critical(this, tr("Pipeline Error"), tr("An error occurred in the data pipeline:\n%1").arg(errorMessage));
-		});*/
+            QMessageBox::critical(this, tr("Session Error"), tr("An error occurred in the session:\n%1").arg(errorMessage));
+		});
 
     // Connect preset widget signals
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);

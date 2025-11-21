@@ -7,6 +7,17 @@ SourceController::SourceController(PluginController* pluginController, QObject *
 SourceController::~SourceController()
 {}
 
+QList<IRecordableSource*> SourceController::recordableSources() const
+{
+	QList<IRecordableSource*> recordableSourcesList;
+	for (Source* source : mSources) {
+		if (!source) continue;
+		if (!source->asRecordable()) continue;
+		recordableSourcesList.append(source->asRecordable());
+	}
+	return recordableSourcesList;
+}
+
 Source* SourceController::byId(const QUuid & id) const
 {
 	return mSourcesById.value(id);

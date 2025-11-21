@@ -40,6 +40,13 @@ public:
 		return true;
 	}
 
+	void finalizeRecording() override {
+		// Send EOS to the muxer to finalize the file
+		if (m_muxer) {
+			gst_element_send_event(m_muxer, gst_event_new_eos());
+		}
+	}
+
 protected:
 	virtual bool build() override;
 

@@ -15,6 +15,8 @@ public:
 	 */
 	const char* sinkPadName() const { return m_sinkPadName.c_str(); }
 
+	virtual void finalizeRecording() = 0;
+
 protected:
 	RecorderBin(const boost::uuids::uuid& uuid, const std::string& id, Source::Type sourceType, std::string sinkPadName)
 		: BinBase(uuid, id),

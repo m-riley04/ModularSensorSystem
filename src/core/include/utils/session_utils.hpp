@@ -9,8 +9,6 @@ typedef unsigned long long ns;
 struct SessionProperties;
 class Source;
 
-gboolean session_bus_call(GstBus* bus, GstMessage* msg, gpointer data);
-
 QString generateSessionDirectoryPath(const SessionProperties& props, QString suffix);
 
 QString generateSessionSourcePath(Source* src, const SessionProperties& props, ns timestamp);

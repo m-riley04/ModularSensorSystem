@@ -17,6 +17,7 @@ public:
 	~SourceController();
 
 	QList<Source*> sources() const { return mSources; }
+	QList<IRecordableSource*> recordableSources() const;
 
 	PluginController* pluginController() const { return pPluginController; }
 

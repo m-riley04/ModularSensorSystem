@@ -43,8 +43,8 @@ public:
 	GstElement* recorderSinkBin() override;
 	std::string recorderFileExtension() const override;
 	bool setRecordingFilePath(const std::string& filePath) override;
-	bool openRecordingValve() override;
-	bool closeRecordingValve() override;
+	bool startRecording() override;
+	bool stopRecording() override;
 
 
 public slots:

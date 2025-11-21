@@ -33,11 +33,11 @@ public:
 	 * @brief Opens the recording valve to start recording data.
 	 * @return TRUE on success, FALSE on failure.
 	 */
-	virtual bool openRecordingValve() = 0;
+	virtual bool startRecording() = 0;
 
 	/**
-	 * @brief Closes the recording valve to stop recording data.
+	 * @brief Closes the recording valve and sends EOS to stop/finalize recording data.
 	 * @return TRUE on success, FALSE on failure.
 	 */
-	virtual bool closeRecordingValve() = 0;
+	virtual bool stopRecording() = 0;
 };

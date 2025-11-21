@@ -75,12 +75,13 @@ bool USBVideoSource::setRecordingFilePath(const std::string& filePath)
 	return m_recorderBin->setRecordingFilePath(filePath);
 }
 
-bool USBVideoSource::openRecordingValve()
+bool USBVideoSource::startRecording()
 {
 	return m_recorderBin->setRecordingEnabled(true);
 }
 
-bool USBVideoSource::closeRecordingValve()
+bool USBVideoSource::stopRecording()
 {
+	m_recorderBin->finalizeRecording();
 	return m_recorderBin->setRecordingEnabled(false);
 }

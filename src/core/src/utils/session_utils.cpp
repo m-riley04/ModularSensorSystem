@@ -1,52 +1,6 @@
 #include "utils/session_utils.hpp"
-#include "controllers/sessioncontroller.hpp"
 #include "models/session_properties.hpp"
 #include "features/sources/source.hpp"
-
-gboolean session_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
-{
-	SessionController* sessionController = (SessionController*)data;
-
-	switch (GST_MESSAGE_TYPE(msg)) {
-
-	case GST_MESSAGE_EOS:
-		g_print("End of stream\n");
-
-		// Don't stop entire pipeline, just stop recording.
-		sessionController->stopRecording();
-		break;
-
-	case GST_MESSAGE_WARNING: {
-		gchar* debug;
-		GError* error;
-		gst_message_parse_warning(msg, &error, &debug);
-		g_free(debug);
-		QMessageLogger().warning("GStreamer Warning: %s", error->message);
-		g_error_free(error);
-		break;
-	}
-	case GST_MESSAGE_UNKNOWN:
-		g_print("Received unknown message.\n");
-		break;
-	case GST_MESSAGE_ERROR: {
-		gchar* debug;
-		GError* error;
-
-		gst_message_parse_error(msg, &error, &debug);
-		g_free(debug);
-
-		// Notify session controller of the error
-		sessionController->setPipelineError(QString::fromUtf8(error->message));
-		g_error_free(error);
-
-		break;
-	}
-	default:
-		break;
-	}
-
-	return TRUE;
-}
 
 QString generateSessionDirectoryPath(const SessionProperties& props, QString suffix)
 {
