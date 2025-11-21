@@ -1,6 +1,4 @@
 #include "controllers/sessioncontroller.hpp"
-#include <utils/debug.hpp>
-#include <QRegularExpression>
 
 SessionController::SessionController(SourceController* sourceController, ProcessingController* processingController, 
 	MountController* mountController, QObject* parent)
@@ -44,182 +42,6 @@ SessionController::~SessionController()
 	delete m_sessionProperties;
 }
 
-long long SessionController::generateSessionTimestamp()
-{
-	// Get the current time point from the high-resolution clock
-	std::chrono::time_point<std::chrono::high_resolution_clock> now =
-		std::chrono::high_resolution_clock::now();
-
-	// Get the duration since the clock's epoch
-	auto duration_since_epoch = now.time_since_epoch();
-
-	// Cast the duration to nanoseconds
-	std::chrono::nanoseconds nanoseconds_duration =
-		std::chrono::duration_cast<std::chrono::nanoseconds>(duration_since_epoch);
-
-	// Get the count of nanoseconds
-	long long nanoseconds_count = nanoseconds_duration.count();
-
-	return nanoseconds_count;
-}
-
-static QString sanitizeFileName(const QString& name)
-{
-	// Replace characters that are invalid on Windows file systems
-	// Invalid: \ / : * ? " < > |
-	QString cleaned;
-	cleaned.reserve(name.size());
-	for (QChar ch : name) {
-		if (ch == '\\' || ch == '/' || ch == ':' || ch == '*' || ch == '?' || ch == '"' || ch == '<' || ch == '>' || ch == '|') {
-			cleaned.append('_');
-		} else {
-			cleaned.append(ch);
-		}
-	}
-	// Remove trailing dots and spaces which are not allowed for filenames on Windows
-	while (!cleaned.isEmpty() && (cleaned.endsWith('.') || cleaned.endsWith(' '))) {
-		cleaned.chop(1);
-	}
-	if (cleaned.isEmpty()) {
-		cleaned = QStringLiteral("source");
-	}
-	return cleaned;
-}
-
-QString SessionController::generateSessionDirectoryPath()
-{
-	const QString outputDir = m_sessionProperties->recordingProperties.outputDirectory.absolutePath();
-
-	// Check output directory
-	if (!QDir(outputDir).exists()) {
-		if (!QDir().mkpath(outputDir)) {
-			qWarning() << "Failed to create base output directory:" << outputDir;
-			return QString();
-		}
-	}
-
-	const QString outputFolderPrefix = m_sessionProperties->recordingProperties.outputPrefix + QString::fromStdString(std::to_string(m_lastSessionTimestamp));
-	const QString outputFolderPath = outputDir + "/" + outputFolderPrefix;
-
-	// Check output directory
-	if (!QDir(outputFolderPath).exists()) {
-		if (!QDir().mkpath(outputFolderPath)) {
-			qWarning() << "Failed to create session output directory:" << outputFolderPath;
-			return QString();
-		}
-	}
-
-	return outputFolderPath;
-}
-
-QString SessionController::generateSessionSourcePath(Source* src)
-{
-	auto recordableSrc = src->asRecordable();
-	if (!src->asRecordable()) {
-		qWarning() << "Cannot generate session source path: source is not recordable:" << QString::fromStdString(src->name());
-		return QString();
-	}
-
-	const QString outputFolderPath = QDir::cleanPath(generateSessionDirectoryPath());
-
-	// Check output folder path
-	if (outputFolderPath.isEmpty()) {
-		qWarning() << "Cannot generate session source path: output folder path is empty for source:" << QString::fromStdString(src->name());
-		return QString();
-	}
-
-	// Sanitize the file name derived from the source display/name to avoid invalid characters
-	QString baseName = sanitizeFileName(QString::fromStdString(src->name())).replace(" ", "_");
-
-	// Avoid reserved DOS device names
-	static const QStringList reserved = {
-		QStringLiteral("CON"), QStringLiteral("PRN"), QStringLiteral("AUX"), QStringLiteral("NUL"),
-		QStringLiteral("COM1"), QStringLiteral("COM2"), QStringLiteral("COM3"), QStringLiteral("COM4"),
-		QStringLiteral("COM5"), QStringLiteral("COM6"), QStringLiteral("COM7"), QStringLiteral("COM8"), QStringLiteral("COM9"),
-		QStringLiteral("LPT1"), QStringLiteral("LPT2"), QStringLiteral("LPT3"), QStringLiteral("LPT4"),
-		QStringLiteral("LPT5"), QStringLiteral("LPT6"), QStringLiteral("LPT7"), QStringLiteral("LPT8"), QStringLiteral("LPT9")
-	};
-	if (reserved.contains(baseName.toUpper())) {
-		baseName.prepend('_');
-	}
-
-	QString extension = QString::fromStdString(recordableSrc->recorderFileExtension());
-	if (extension.startsWith('.')) {
-		extension.remove(0, 1);
-	}
-
-	// Conservative MAX_PATH handling: keep full path well below 260
-	const int maxFull = 250; // leave headroom
-	QString sep = QStringLiteral("/");
-	QString suffix = extension.isEmpty() ? QString() : QStringLiteral(".") + extension;
-	QString candidate = outputFolderPath + sep + baseName + suffix;
-	if (candidate.size() > maxFull) {
-		int budget = maxFull - (outputFolderPath.size() + 1 + suffix.size());
-		if (budget < 8) budget = 8; // minimum reasonable
-		baseName = baseName.left(budget);
-		candidate = outputFolderPath + sep + baseName + suffix;
-	}
-
-	const QString cleanedOutputFilePath = candidate.trimmed();
-
-	if (cleanedOutputFilePath.isEmpty()) {
-		qWarning() << "Cannot generate session source path: output file path is empty for source:" << QString::fromStdString(src->name());
-		return QString();
-	}
-
-	return cleanedOutputFilePath;
-}
-
-static gboolean
-bus_call(GstBus* bus,
-	GstMessage* msg,
-	gpointer    data)
-{
-	SessionController* sessionController = (SessionController*)data;
-
-	switch (GST_MESSAGE_TYPE(msg)) {
-
-	case GST_MESSAGE_EOS:
-		g_print("End of stream\n");
-		sessionController->notifyPipelineEOS();
-
-		// Don't stop entire pipeline, just stop recording.
-		sessionController->stopRecording();
-		break;
-
-	case GST_MESSAGE_WARNING: {
-		gchar* debug;
-		GError* error;
-		gst_message_parse_warning(msg, &error, &debug);
-		g_free(debug);
-		QMessageLogger().warning("GStreamer Warning: %s", error->message);
-		g_error_free(error);
-		break;
-	}
-	case GST_MESSAGE_UNKNOWN:
-		g_print("Received unknown message.\n");
-		break;
-	case GST_MESSAGE_ERROR: {
-		gchar* debug;
-		GError* error;
-
-		gst_message_parse_error(msg, &error, &debug);
-		g_free(debug);
-
-		// Notify session controller of the error
-		sessionController->notifyPipelineError(QString::fromUtf8(error->message));
-		g_error_free(error);
-
-		break;
-	}
-	default:
-		break;
-	}
-
-	return TRUE;
-}
-
-
 void SessionController::buildPipeline()
 {
 	// Cleanly tear down any existing pipeline first
@@ -233,12 +55,12 @@ void SessionController::buildPipeline()
 	}
 
 	// Generate a new session timestamp
-	m_lastSessionTimestamp = generateSessionTimestamp();
+	m_lastSessionTimestamp = generateTimestampNs(); // TODO: make a separate one for recording.
 
 	// Add bus watch
 	GstBus* bus;
 	bus = gst_pipeline_get_bus(m_pipeline.get());
-	m_pipelineBusWatchId = gst_bus_add_watch(bus, bus_call, this);
+	m_pipelineBusWatchId = gst_bus_add_watch(bus, session_bus_call, this);
 	gst_object_unref(bus);
 
 	// Iterate over all sources and add them
@@ -249,9 +71,6 @@ void SessionController::buildPipeline()
 		connect(this, &SessionController::sessionStarted, src, &Source::onSessionStart);
 		connect(this, &SessionController::sessionStopped, src, &Source::onSessionStop);
 	}
-
-	// DEBUG: export pipeline graph
-	//debugDisplayGstBin(GST_ELEMENT(m_pipeline.get()), true);
 	
 	// Step through states to surface problems earlier
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_READY) == GST_STATE_CHANGE_FAILURE) {
@@ -430,7 +249,7 @@ gboolean SessionController::createAndLinkRecordBin(Source* src, GstElement* tee)
 	}
 
 	// Set sink's output directory and prefix from session properties
-	const QString outputFilePath = generateSessionSourcePath(src);
+	const QString outputFilePath = generateSessionSourcePath(src, *m_sessionProperties, m_lastSessionTimestamp);
 	if (outputFilePath.isEmpty()) {
 		qWarning() << "Cannot set recording file path: output file path is empty for source:" << QString::fromStdString(src->name());
 		return FALSE;
@@ -602,82 +421,9 @@ void SessionController::requestStopRecording()
 	gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos());
 }
 
-void SessionController::notifyPipelineEOS()
+void SessionController::setPipelineError(const QString& errorMessage)
 {
-	emit pipelineEOSReached();
-}
-
-void SessionController::notifyPipelineError(const QString& errorMessage)
-{
-	emit pipelineErrorOccurred(errorMessage);
-}
-
-GstFlowReturn SessionController::onDataNewSampleStatic(GstAppSink* sink, gpointer userData)
-{
-	auto* self = static_cast<SessionController*>(userData);
-	return self ? self->onDataNewSample(sink) : GST_FLOW_ERROR;
-}
-
-GstFlowReturn SessionController::onDataNewSample(GstAppSink* sink)
-{
-	GstSample* sample = gst_app_sink_pull_sample(sink);
-	if (!sample)
-		return GST_FLOW_ERROR;
-
-	GstBuffer* buffer = gst_sample_get_buffer(sample);
-	if (!buffer) {
-		gst_sample_unref(sample);
-		return GST_FLOW_ERROR;
-	}
-
-	GstMapInfo map;
-	if (!gst_buffer_map(buffer, &map, GST_MAP_READ)) {
-		gst_sample_unref(sample);
-		return GST_FLOW_ERROR;
-	}
-
-	QByteArray payload(reinterpret_cast<const char*>(map.data),
-		static_cast<int>(map.size));
-
-	gst_buffer_unmap(buffer, &map);
-
-	// Optional: running-time PTS in ns (if appsink caps/format support it)
-	GstClockTime pts = GST_BUFFER_PTS(buffer);
-	quint64 tNs = (pts == GST_CLOCK_TIME_NONE) ? 0 : static_cast<quint64>(pts);
-
-	gst_sample_unref(sample);
-
-	// Our TestDataSourceBin emits NDJSON, possibly with multiple lines
-	const auto lines = payload.split('\n');
-	for (const QByteArray& line : lines) {
-		const QByteArray trimmed = line.trimmed();
-		if (trimmed.isEmpty())
-			continue;
-
-		QJsonParseError err{};
-		QJsonDocument doc = QJsonDocument::fromJson(trimmed, &err);
-		if (err.error != QJsonParseError::NoError || !doc.isObject())
-			continue;
-
-		QJsonObject obj = doc.object();
-		const QString uuidStr = obj.value(QStringLiteral("uuid")).toString();
-		QUuid uuid(uuidStr);
-		const double value = obj.value(QStringLiteral("value")).toDouble(
-			std::numeric_limits<double>::quiet_NaN());
-
-		// Forward into Qt world
-		QMetaObject::invokeMethod(
-			this,
-			[this, uuid, value, tNs]() {
-				AnalogDataSample sample = {
-					uuid,
-					value,
-					tNs
-				};
-				emit dataSampleReceived(sample);
-			},
-			Qt::QueuedConnection);
-	}
-
-	return GST_FLOW_OK;
+	qWarning() << "Pipeline error occurred:" << errorMessage;
+	// For now, just stop the session
+	stopSession();
 }

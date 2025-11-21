@@ -16,6 +16,11 @@
 #include "pipeline/sinks/defaults.hpp"
 #include <interfaces/capability/ipreviewablesource.hpp>
 #include "models/session_properties.hpp"
+#include <utils/debug.hpp>
+#include <utils/utils.hpp>
+#include <utils/session_utils.hpp>
+#include <QRegularExpression>
+
 
 #define DEFAULT_SESSION_PREFIX "session_"
 #define DEFAULT_SESSIONS_DIRECTORY "/sessions"
@@ -52,12 +57,12 @@ public slots:
 	void stopRecording();
 	void requestStopRecording();
 
-	void notifyPipelineEOS();
-	void notifyPipelineError(const QString& errorMessage);
+	void setPipelineError(const QString& errorMessage);
 
 private:
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
 	guint m_pipelineBusWatchId = 0;
+	ns m_lastSessionTimestamp = 0;
 
 	QList<GstElement*> m_sourceBins;
 	QList<GstElement*> m_previewBins;
@@ -71,12 +76,6 @@ private:
 
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
-
-	long long m_lastSessionTimestamp = 0;
-	static long long generateSessionTimestamp();
-
-	QString generateSessionDirectoryPath();
-	QString generateSessionSourcePath(Source* src);
 
 	/**
 	 * Builds the main data pipeline through GStreamer.
@@ -97,9 +96,6 @@ private:
 	gboolean openRecordingValveForSource(Source* source);
 	gboolean closeRecordingValveForSource(Source* source);
 
-	static GstFlowReturn onDataNewSampleStatic(GstAppSink* sink, gpointer userData);
-	GstFlowReturn onDataNewSample(GstAppSink* sink);
-
 signals:
 	void sessionStarted();
 	void sessionStopped();
@@ -110,8 +106,4 @@ signals:
 	void recordingStarted();
 	void recordingStopped();
 
-	void pipelineEOSReached();
-	void pipelineErrorOccurred(QString errorMessage);
-
-	void dataSampleReceived(AnalogDataSample sample);
 };

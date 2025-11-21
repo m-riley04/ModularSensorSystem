@@ -108,6 +108,8 @@
   <ItemGroup>
     <ClCompile Include="src\controllers\sessioncontroller.cpp" />
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
+    <ClCompile Include="src\utils\session_utils.cpp" />
+    <ClCompile Include="src\utils\utils.cpp" />
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp" />
     <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp" />
     <ClInclude Include="include\interfaces\capability\irecordablesource.hpp" />
@@ -115,6 +117,8 @@
     <ClInclude Include="include\pipeline\bins\recorderbin.hpp" />
     <ClInclude Include="include\pipeline\mime_types.hpp" />
     <ClInclude Include="include\utils\debug.hpp" />
+    <ClInclude Include="include\utils\session_utils.hpp" />
+    <ClInclude Include="include\utils\utils.hpp" />
     <QtMoc Include="include\controllers\sessioncontroller.hpp" />
     <ClInclude Include="include\pipeline\bins\binbase.hpp" />
     <ClInclude Include="include\pipeline\bins\sourcebin.hpp" />

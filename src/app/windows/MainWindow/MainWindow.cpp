@@ -157,10 +157,10 @@ void MainWindow::initSignals() {
 	SessionController* pSessionController = pController->sessionController();
 
     // Error message propagation
-    connect(pSessionController, &SessionController::pipelineErrorOccurred,
+    /*connect(pSessionController, &SessionController::pipelineErrorOccurred,
         this, [this](const QString& errorMessage) {
             QMessageBox::critical(this, tr("Pipeline Error"), tr("An error occurred in the data pipeline:\n%1").arg(errorMessage));
-		});
+		});*/
 
     // Connect preset widget signals
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
@@ -170,12 +170,6 @@ void MainWindow::initSignals() {
     connect(pController->sourceController(), &SourceController::sourceRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
     connect(pController->mountController(), &MountController::mountRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
     connect(pController->processingController(), &ProcessingController::processorRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
-
-    // Init debug signals
-    connect(pController->sessionController(), &SessionController::dataSampleReceived,
-        this, [](AnalogDataSample sample) {
-            qDebug() << "[Data]" << sample.sourceUuid << "value:" << sample.value << "t_ns:" << sample.tNs;
-        });
 
     // Init toolbar and actions
     initActionSignals();
