@@ -1,4 +1,4 @@
-#include "controllers/sessioncontroller.hpp"
+﻿#include "controllers/sessioncontroller.hpp"
 
 SessionController::SessionController(SourceController* sourceController, ProcessingController* processingController, 
 	MountController* mountController, QObject* parent)
@@ -63,6 +63,9 @@ static gboolean session_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 
 	switch (GST_MESSAGE_TYPE(msg)) {
 
+	case GST_MESSAGE_EOS:
+		sessionController->stopSession();
+		break;
 	case GST_MESSAGE_WARNING: {
 		gchar* debug;
 		GError* error;
@@ -483,13 +486,15 @@ void SessionController::requestStopRecording()
 {
 	// Send EOS event to recording branches
 	m_isRecordingStopping = true;
-	gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos());
+	for (auto& src : m_sourceController->recordableSources()) {
+		src->stopRecording();
+	}
 }
 
 void SessionController::setPipelineError(const QString& errorMessage)
 {
 	qWarning() << "Pipeline error occurred:" << errorMessage;
 	emit errorOccurred(errorMessage);
-	//stopSession(); // TODO/CONSIDER: decide whether to stop session on error
+	//requestStopSession(); // TODO/CONSIDER: decide whether to stop session on error
 }
 

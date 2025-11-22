@@ -77,11 +77,14 @@ bool USBVideoSource::setRecordingFilePath(const std::string& filePath)
 
 bool USBVideoSource::startRecording()
 {
+	if (!m_recorderBin) return false;
+
 	return m_recorderBin->setRecordingEnabled(true);
 }
 
 bool USBVideoSource::stopRecording()
 {
+	if (!m_recorderBin) return false;
 	// Close the valve FIRST, THEN send the EOS to finalize the file
 	return m_recorderBin->setRecordingEnabled(false) && m_recorderBin->finalizeRecording();
 }
