@@ -441,24 +441,64 @@ void SessionController::restartSession()
 	emit sessionRestarted();
 }
 
+void SessionController::setState(State newState)
+{
+	if (m_state == newState) {
+		return;
+	}
+
+	switch (newState) {
+	case State::STOPPING:
+		emit sessionStopping();
+		break;
+	case State::STARTING:
+		emit sessionStarting();
+		break;
+	case State::STARTED:
+		if (m_state == State::STOPPING_RECORDING) { // If we are transitioning from stopping recording to started, emit recording stopped
+			emit recordingStopped();
+			break;
+		}
+
+		emit sessionStarted();
+		break;
+	case State::STOPPED:
+		emit sessionStopped();
+		break;
+	case State::RECORDING:
+		emit recordingStarted();
+		break;
+	case State::STOPPING_RECORDING:
+		emit recordingStopping();
+		break;
+	case State::ERROR:
+		// Handled elsewhere
+		break;
+	default:
+		qWarning() << "Invalid session state transition attempted.";
+		return;
+	}
+
+	m_state = newState;
+	emit stateChanged(newState);
+}
+
 void SessionController::startSession()
 {
 	buildPipeline();
-	emit sessionStarted();
+	setState(State::STARTED);
+}
+
+void SessionController::requestStopSession()
+{
+	setState(State::STOPPING);
+	gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos()); // This will close recording valves as well
 }
 
 void SessionController::stopSession()
 {
 	closePipeline();
-	emit sessionStopped();
-
-	m_isSessionStopping = false;
-}
-
-void SessionController::requestStopSession()
-{
-	m_isSessionStopping = true;
-	gst_element_send_event(GST_ELEMENT(m_pipeline.get()), gst_event_new_eos());
+	setState(State::STOPPED);
 }
 
 void SessionController::startRecording()
@@ -469,32 +509,30 @@ void SessionController::startRecording()
 		return;
 	}
 
-	emit recordingStarted();
+	setState(State::RECORDING);
 }
 
 void SessionController::stopRecording()
 {
 	if (!closeRecordingValves()) {
+		qWarning() << "Failed to close recording valves during stopRecording.";
 		return;
 	}
 
-	emit recordingStopped();
-	m_isRecordingStopping = false;
+	setState(State::STARTED);
 }
 
 void SessionController::requestStopRecording()
 {
-	// Send EOS event to recording branches
-	m_isRecordingStopping = true;
-	for (auto& src : m_sourceController->recordableSources()) {
-		src->stopRecording();
-	}
+	setState(State::STOPPING_RECORDING);
+	stopRecording(); // For now, just call stopRecording directly since I found a way to do it synchronously.
 }
 
 void SessionController::setPipelineError(const QString& errorMessage)
 {
 	qWarning() << "Pipeline error occurred:" << errorMessage;
 	emit errorOccurred(errorMessage);
+	// TODO/CONSIDER: set state to ERROR? Or maybe just leave it to the user to decide what to do next
 	//requestStopSession(); // TODO/CONSIDER: decide whether to stop session on error
 }
 

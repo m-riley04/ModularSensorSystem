@@ -17,18 +17,23 @@ SourcePreviewWidget::SourcePreviewWidget(Source* source, QWidget *parent)
 	ui.labelSource->setText(QString::fromStdString(m_source->name()));
 
 	// Check if source is previewable
+	auto previewable = m_source->asPreviewable();
 	if (!m_source->asPreviewable()) {
 		qWarning() << "Source is not previewable, cannot create preview widget:" << QString::fromStdString(m_source->name());
 		return;
 	}
 
 	// Set the source's window ID to this widget
-	m_source->asPreviewable()->setWindowId(ui.sinkWidget->winId());
+	previewable->setWindowId(ui.sinkWidget->winId());
 }
 
 SourcePreviewWidget::~SourcePreviewWidget()
 {
 	// Reset window ID
 	// TODO: Is this best practice? This feels weird.
-	m_source->asPreviewable()->setWindowId(0);
+	// UPDATED TODO: commented this out because the source is destroyed befroe this widget in normal app flow, causing a crash.
+	/*if (!m_source) return;
+	auto previewable = m_source->asPreviewable();
+	if (!previewable) return;
+	previewable->setWindowId(0);*/
 }

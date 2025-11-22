@@ -33,6 +33,17 @@ class SessionController : public BackendControllerBase
 	Q_OBJECT
 
 public:
+	enum class State {
+		STARTING,
+		STARTED,
+		STOPPING,
+		STOPPED,
+		RECORDING,
+		STOPPING_RECORDING,
+		ERROR
+	};
+
+public:
 	SessionController(SourceController* sourceController, ProcessingController* processingController, 
 		MountController* mountController, QObject* parent);
 	~SessionController();
@@ -40,23 +51,30 @@ public:
 	GstPipeline* pipeline() const { return m_pipeline.get(); }
 	bool isPipelineBuilt() const { return m_pipeline != nullptr; }
 	SessionProperties& sessionProperties() const { return *m_sessionProperties; }
-
-	bool isStoppingRecording() const { return m_isRecordingStopping; }
-	bool isStoppingSession() const { return m_isSessionStopping; }
-
+	
 	QList<const Source*> getSourcesByMount(QUuid mountId) const;
 	QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
 
+	// States
+	State state() const { return m_state; }
+	bool isStarting() const { return m_state == State::STARTING; }
+	bool isStarted() const { return m_state == State::STARTED; }
+	bool isStoppingSession() const { return m_state == State::STOPPING; }
+	bool isStopped() const { return m_state == State::STOPPED; }
+	bool isRecording() const { return m_state == State::RECORDING; }
+	bool isStoppingRecording() const { return m_state == State::STOPPING_RECORDING; }
+
 public slots:
 	void startSession();
-	void stopSession();
 	void requestStopSession();
+	void stopSession();
 	void restartSession();
 
 	void startRecording();
-	void stopRecording();
 	void requestStopRecording();
-
+	void stopRecording();
+	
+	void setState(State newState);
 	void setPipelineError(const QString& errorMessage);
 	void setSessionProperties(SessionProperties properties);
 
@@ -65,8 +83,7 @@ private:
 	guint m_pipelineBusWatchId = 0;
 	ns m_lastSessionTimestamp = 0;
 	ns m_lastRecordingTimestamp = 0;
-	bool m_isRecordingStopping = false;
-	bool m_isSessionStopping = false;
+	State m_state = State::STOPPED;
 
 	QList<GstElement*> m_sourceBins;
 	QList<GstElement*> m_previewBins;
@@ -95,10 +112,12 @@ private:
 	gboolean closeRecordingValveForSource(Source* source);
 
 signals:
+	void sessionStarting();
 	void sessionStarted();
 	void sessionStopping();
 	void sessionStopped();
 	void sessionRestarted();
+	void stateChanged(SessionController::State newState);
 
 	void pipelineEosReached();
 
