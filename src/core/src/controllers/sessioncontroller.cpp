@@ -63,10 +63,6 @@ static gboolean session_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 
 	switch (GST_MESSAGE_TYPE(msg)) {
 
-	case GST_MESSAGE_EOS:
-		emit sessionController->pipelineEosReached();
-		break;
-
 	case GST_MESSAGE_WARNING: {
 		gchar* debug;
 		GError* error;
@@ -79,9 +75,6 @@ static gboolean session_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 		g_error_free(error);
 		break;
 	}
-	case GST_MESSAGE_UNKNOWN:
-		g_print("Received unknown message.\n");
-		break;
 	case GST_MESSAGE_ERROR: {
 		gchar* debug;
 		GError* error;
@@ -95,6 +88,9 @@ static gboolean session_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 
 		break;
 	}
+	case GST_MESSAGE_UNKNOWN:
+		g_print("Received unknown message.\n");
+		break;
 	default:
 		break;
 	}
@@ -161,6 +157,7 @@ void SessionController::closePipeline()
 	emit sessionStopped();
 
 	// Should go after emit to allow sources to clean up
+	// TODO: is this fine? I feel like it should be before the emit...
 	m_pipeline.reset(nullptr);
 
 	// Reset values
@@ -169,6 +166,7 @@ void SessionController::closePipeline()
 	m_sourceBins.clear();
 	m_previewBins.clear();
 	m_recordBins.clear();
+	m_recordableSources.clear();
 }
 
 gboolean SessionController::createSourceElements(Source* source)

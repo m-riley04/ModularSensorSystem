@@ -483,7 +483,8 @@ void MainWindow::updateToolbarButtonsState()
 
     /// SESSION
     ui.actionStartStopSession->setEnabled(hasSources);
-    ui.actionRecord->setEnabled(hasSources);
+    ui.actionRecord->setEnabled(pController->sessionController()->isPipelineBuilt());
+    ui.actionClipSession->setEnabled(pController->sessionController()->isPipelineBuilt());
 
     /// DEBUG
 	ui.actionDebugPipelineDiagram->setEnabled(pController->sessionController()->isPipelineBuilt());

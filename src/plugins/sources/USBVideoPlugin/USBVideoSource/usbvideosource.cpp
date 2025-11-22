@@ -82,6 +82,6 @@ bool USBVideoSource::startRecording()
 
 bool USBVideoSource::stopRecording()
 {
-	m_recorderBin->finalizeRecording();
-	return m_recorderBin->setRecordingEnabled(false);
+	// Close the valve FIRST, THEN send the EOS to finalize the file
+	return m_recorderBin->setRecordingEnabled(false) && m_recorderBin->finalizeRecording();
 }
