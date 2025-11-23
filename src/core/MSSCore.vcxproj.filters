@@ -107,6 +107,9 @@
     <ClInclude Include="include\utils\utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\features\ielement.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">
@@ -165,13 +168,13 @@
     <QtMoc Include="include\features\processors\processor.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\features\ielement.hpp">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="include\features\mounts\mount.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\controllers\sessioncontroller.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\features\element.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

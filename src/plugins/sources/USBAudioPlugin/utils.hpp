@@ -16,7 +16,16 @@ static std::vector<SourceInfo> getUsbAudioDevices()
     // Also, it was way slower.
     std::vector<SourceInfo> list;
     for (const QAudioDevice& mic : QMediaDevices::audioInputs()) {
-        SourceInfo info{ mic.id().toStdString(), mic.description().toStdString(), Source::Type::AUDIO };
+        ElementInfo elementInfo{
+            .id = mic.id().toStdString(),
+            .name = mic.description().toStdString(),
+            .displayName = mic.description().toStdString(),
+            .pluginId = "usb_audio_plugin",
+        };
+        SourceInfo info{
+			.elementInfo = elementInfo,
+            .type = Source::Type::AUDIO
+        };
         list.push_back(info);
     }
     return list;

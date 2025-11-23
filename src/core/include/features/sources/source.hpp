@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "features/ielement.hpp"
+#include "features/element.hpp"
 #include "interfaces/capability/ipreviewablesource.hpp"
 #include "interfaces/capability/irecordablesource.hpp"
 #include <gst/gst.h>
@@ -10,7 +10,7 @@
  * Represents a data source (e.g., video, audio, data).
  * TODO: rename this to ISource (since I've been working on making this a more pure interface)
  */
-class Source : public IElement
+class Source : public Element
 {
 	Q_OBJECT
 
@@ -26,7 +26,7 @@ public:
 	};
 
 public:
-	Source(QObject* parent = nullptr) : IElement(parent) {}
+	Source(ElementInfo& element, QObject* parent = nullptr) : Element(element, parent) {}
 	virtual ~Source() = default;
 
 	/**
@@ -50,7 +50,7 @@ public:
 	 * - "device-name" (GStreamer)
 	 * @return hardware ID string
 	 */
-	virtual std::string id() const override = 0;
+	//virtual std::string id() const override = 0;
 
 	/**
 	 * The name of the device from the system.
@@ -60,9 +60,7 @@ public:
 	 * - "device-id" or "device-path" (GStreamer)
 	 * @return user-friendly name of the device from the hardware.
 	 */
-	virtual std::string name() const override = 0;
-	virtual void setName(const std::string& newName) override = 0;
-	virtual std::string pluginId() const override = 0;
+	//virtual std::string name() const override = 0;
 
 	/**
 	 * The type of device.

@@ -1,7 +1,7 @@
 #include "yoloobjectdetectionprocessor.hpp"
 
-YoloObjectDetectionProcessor::YoloObjectDetectionProcessor(Source* src, QObject *parent)
-	: Processor(src, parent)
+YoloObjectDetectionProcessor::YoloObjectDetectionProcessor(ElementInfo& element, Source* src, QObject *parent)
+	: Processor(element, src, parent)
 {}
 
 YoloObjectDetectionProcessor::~YoloObjectDetectionProcessor()

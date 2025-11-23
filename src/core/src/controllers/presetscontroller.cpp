@@ -123,10 +123,15 @@ void PresetsController::loadPreset(const QString& path, SourceController* source
 		}
 
 		// Create SourceInfo object for the source
-		SourceInfo sourceInfo;
-		sourceInfo.id = sourcePreset.sourceId;
-		sourceInfo.displayName = sourcePreset.sourceName.toStdString();
-		sourceInfo.type = sourcePreset.sourceType;
+		SourceInfo sourceInfo{
+			.elementInfo = ElementInfo{
+				.id = sourcePreset.sourceId.toStdString(),
+				.name = sourcePreset.sourceName.toStdString(),
+				.displayName = sourcePreset.sourceName.toStdString(),
+				.pluginId = sourcePreset.pluginId.toStdString(),
+			},
+			.type = sourcePreset.sourceType
+		};
 
 		// Create the source
 		Source* source = sourceController->addSource(plugin, sourceInfo);

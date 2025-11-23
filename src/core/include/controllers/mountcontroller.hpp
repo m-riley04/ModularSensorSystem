@@ -21,7 +21,7 @@ public:
 	const Mount* byId(const QUuid& id) const;
 
 public slots:
-	Mount* addMount(IMountPlugin* plugin, MountInfo mount);
+	Mount* addMount(IMountPlugin* plugin, ElementInfo mount);
 	void removeMount(Mount* mount);
 	void removeMount(const QUuid& id);
 

@@ -5,9 +5,10 @@ USBAudioSource::USBAudioSource(const std::string& hardwareId, QObject* parent)
 {}
 
 USBAudioSource::USBAudioSource(SourceInfo sourceInfo, QObject* parent)
-	: Source(parent), m_id(sourceInfo.id), m_name(sourceInfo.displayName),
-	m_bin(std::make_unique<USBAudioSourceBin>(this->uuid(), sourceInfo.id))
-{}
+	: Source(sourceInfo.elementInfo, parent)
+{
+	m_bin = std::make_unique<USBAudioSourceBin>(this->uuid(), sourceInfo.elementInfo.id);
+}
 
 USBAudioSource::~USBAudioSource()
 {
@@ -18,7 +19,7 @@ SourceInfo USBAudioSource::getSourceInfo(const std::string& id) const
 {
 	// Get the camera source from the id
 	for (const auto& sourceInfo : getUsbAudioDevices()) {
-		if (sourceInfo.id == id) {
+		if (sourceInfo.elementInfo.id == id) {
 			return sourceInfo;
 		}
 	}
@@ -41,7 +42,7 @@ void USBAudioSource::onSessionStop()
 void USBAudioSource::createBinIfNeeded()
 {
 	if (!m_bin) {
-		m_bin = std::make_unique<USBAudioSourceBin>(this->uuid(), m_id);
+		m_bin = std::make_unique<USBAudioSourceBin>(this->uuid(), this->id());
 	}
 }
 

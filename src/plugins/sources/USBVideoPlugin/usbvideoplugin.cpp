@@ -1,20 +1,17 @@
 #include "usbvideoplugin.hpp"
 
-std::vector<SourceInfo> USBVideoPlugin::availableSources() const
+std::vector<SourceInfo> USBVideoPlugin::discover() const
 { 
     return getUsbVideoDevices();
 }
 
 Source* USBVideoPlugin::createSource(const std::string& id, QObject* parent)
 {
-	std::vector<SourceInfo> sources = availableSources();
-    SourceInfo selected;
+	std::vector<SourceInfo> sources = discover();
     for (const SourceInfo& cam : sources) {
-        if (cam.id == id) { selected = cam; break; }
-    }
-
-	if (selected.id != "") { // TODO: better check
-        return new USBVideoSource(selected, parent);  // create the concrete source
+        if (cam.elementInfo.id == id && cam.elementInfo.id != "") {
+			return new USBVideoSource(cam, parent);
+        }
     }
     return nullptr;
 }

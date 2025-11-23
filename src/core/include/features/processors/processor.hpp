@@ -3,27 +3,20 @@
 #include <QObject>
 #include "features/sources/source.hpp"
 #include "sdk/plugins/iprocessorplugin.hpp"
-#include "features/ielement.hpp"
+#include "features/element.hpp"
 
 /**
  * An element that processes data from a source.
  * This class serves as a base for all processors that handle data from a specific source.
  */
-class Processor : public IElement
+class Processor : public Element
 {
     Q_OBJECT
 
 public:
-    Processor(Source* source, QObject* parent = nullptr) : IElement(parent), m_source(source) {}
+    Processor(ElementInfo& element, QObject* parent = nullptr) : Element(element, parent), m_source(nullptr) {}
+    Processor(ElementInfo& element, Source* source, QObject* parent = nullptr) : Element(element, parent), m_source(source) {}
     virtual ~Processor() = default;
-
-    std::string id() const override {
-		// TODO: implement a better ID system for processors
-        return "unknown_processor";
-	}
-
-    std::string name() const override { return m_name; }
-    void setName(const std::string& newName) override { m_name = newName; }
     
     /**
      * The source that this processor is attached to.
@@ -41,7 +34,6 @@ public:
 
 protected:
     Source* m_source;
-	std::string m_name = "Processor";
 
 signals:
 	void sourceChanged(Source*);

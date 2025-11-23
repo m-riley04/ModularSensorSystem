@@ -15,7 +15,7 @@ class USBVideoPlugin : public ISourcePlugin
 {
 
 public:
-	std::vector<SourceInfo> availableSources() const override;
+	std::vector<SourceInfo> discover() const override;
 	Source* createSource(const std::string& id, QObject* parent) override;
 	std::string name() const override { return PLUGIN_NAME; }
 	uint32_t version() const override { return MSS_API;  }

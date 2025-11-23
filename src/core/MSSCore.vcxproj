@@ -110,6 +110,7 @@
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
     <ClCompile Include="src\utils\session_utils.cpp" />
     <ClCompile Include="src\utils\utils.cpp" />
+    <QtMoc Include="include\features\element.hpp" />
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp" />
     <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp" />
     <ClInclude Include="include\interfaces\capability\irecordablesource.hpp" />
@@ -125,7 +126,7 @@
     <ClInclude Include="include\interfaces\capability\iapisource.hpp" />
     <ClInclude Include="include\pipeline\sinks\defaults.hpp" />
     <ClInclude Include="include\utils\boost_qt_conversions.hpp" />
-    <QtMoc Include="include\features\ielement.hpp" />
+    <ClInclude Include="include\features\ielement.hpp" />
     <ClInclude Include="include\sdk\plugins\pluginloader.hpp" />
     <QtMoc Include="include\controllers\backendcontrollerbase.hpp" />
     <QtMoc Include="include\features\mounts\mount.hpp" />

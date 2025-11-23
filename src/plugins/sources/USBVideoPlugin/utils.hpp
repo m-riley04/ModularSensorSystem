@@ -16,7 +16,15 @@ static std::vector<SourceInfo> getUsbVideoDevices()
     // Also, it was way slower.
     std::vector<SourceInfo> list;
     for (const QCameraDevice& cam : QMediaDevices::videoInputs()) {
-        SourceInfo info{ cam.id().toStdString(), cam.description().toStdString(), Source::Type::VIDEO };
+        SourceInfo info {
+            .elementInfo = {
+				.id = cam.id().toStdString(),
+				.name = cam.description().toStdString(),
+				.displayName = cam.description().toStdString(),
+				.pluginId = "usb_video_source_plugin",
+            },  
+            .type = Source::Type::VIDEO
+        };
         list.push_back(info);
     }
     return list;

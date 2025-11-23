@@ -5,10 +5,10 @@ TestDataSource::TestDataSource(const std::string& hardwareId, QObject* parent)
 {}
 
 TestDataSource::TestDataSource(SourceInfo sourceInfo, QObject* parent)
-	: Source(parent), m_id(sourceInfo.id), m_name(sourceInfo.displayName), 
-	m_bin(std::make_unique<TestDataSourceBin>(this->uuid(), sourceInfo.id))
+	: Source(sourceInfo.elementInfo, parent),
+	m_bin(std::make_unique<TestDataSourceBin>(this->uuid(), sourceInfo.elementInfo.id))
 {
-	m_cfg.sensorId = sourceInfo.id;
+	m_cfg.sensorId = sourceInfo.elementInfo.id;
 
 	connect(&m_timer, &QTimer::timeout, this, &TestDataSource::onTimerTimeout);
 }
@@ -20,7 +20,7 @@ SourceInfo TestDataSource::getSourceInfo(const std::string& id) const
 {
 	// Get the camera source from the id
 	for (const auto& sourceInfo : getAvailableTestDataSources()) {
-		if (sourceInfo.id == id) {
+		if (sourceInfo.elementInfo.id == id) {
 			return sourceInfo;
 		}
 	}
@@ -32,7 +32,7 @@ SourceInfo TestDataSource::getSourceInfo(const std::string& id) const
 void TestDataSource::createBinIfNeeded()
 {
 	if (!m_bin) {
-		m_bin = std::make_unique<TestDataSourceBin>(this->uuid(), m_id);
+		m_bin = std::make_unique<TestDataSourceBin>(this->uuid(), this->id());
 	}
 }
 

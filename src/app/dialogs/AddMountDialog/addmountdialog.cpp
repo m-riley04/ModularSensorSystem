@@ -24,7 +24,7 @@ AddMountDialog::AddMountDialog(PluginController* pluginController, QWidget *pare
 
 	connect(ui.dropdownMount, &QComboBox::currentIndexChanged, this, [this](int index) {
 		if (index >= 0) {
-			MountInfo mountInfo = ui.dropdownMount->itemData(index).value<MountInfo>();
+			ElementInfo mountInfo = ui.dropdownMount->itemData(index).value<ElementInfo>();
 			m_selectedMountInfo = mountInfo;
 			emit mountSelected(m_selectedMountPlugin, m_selectedMountInfo);
 		}
@@ -34,7 +34,7 @@ AddMountDialog::AddMountDialog(PluginController* pluginController, QWidget *pare
 		// Get the selected mount
 		int mountIndex = ui.dropdownMount->currentIndex();
 		if (mountIndex >= 0) {
-			MountInfo mountInfo = ui.dropdownMount->itemData(mountIndex).value<MountInfo>();
+			ElementInfo mountInfo = ui.dropdownMount->itemData(mountIndex).value<ElementInfo>();
 			emit mountConfirmed(m_selectedMountPlugin, mountInfo);
 		}
 		else {
@@ -78,9 +78,6 @@ void AddMountDialog::populateMountDropdown()
 
 	// Check if a mount plugin is selected
 	if (!m_selectedMountPlugin) return;
-
-	// Get the selected mount type from the dropdown
-	Mount::Kind selectedType = static_cast<Mount::Kind>(ui.dropdownMountType->currentData().toInt());
 
 	// Populate the mount dropdown with available mounts of the selected type
 	for (auto mount : m_selectedMountPlugin->discover()) {

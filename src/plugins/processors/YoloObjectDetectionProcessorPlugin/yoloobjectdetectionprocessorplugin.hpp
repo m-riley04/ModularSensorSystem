@@ -3,7 +3,6 @@
 #include <QObject>
 #include "sdk/plugins/iprocessorplugin.hpp"
 #include "features/sources/source.hpp"
-#include "YoloObjectDetectionProcessor/yoloobjectdetectionprocessor.hpp"
 #include "interfaces/capability/ivideosource.hpp"
 #include <boost/dll/alias.hpp>
 
@@ -11,18 +10,13 @@ namespace {
     constexpr uint32_t MSS_API = 0x00010000; // 1.0.0
 }
 
-class YoloObjectDetectionProcessor;
-
 class YoloObjectDetectionProcessorPlugin : public IProcessorPlugin {
 
 public:
     Source::Type supportedSourceType() const override { return Source::Type::VIDEO; }
     std::string name() const override { return "YOLO Object Detection"; }
     uint32_t version() const override { return 0x00010000; }
-    Processor* createProcessor(Source* src, QObject* parent = nullptr) override
-    {
-        return new YoloObjectDetectionProcessor(src, parent);
-    }
+    Processor* createProcessor(Source* src, QObject* parent = nullptr) override;
 };
 
 static YoloObjectDetectionProcessorPlugin* make_impl() { return new YoloObjectDetectionProcessorPlugin(); }

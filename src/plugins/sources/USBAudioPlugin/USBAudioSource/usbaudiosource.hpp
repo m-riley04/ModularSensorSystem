@@ -20,13 +20,7 @@ public:
 	~USBAudioSource();
 
 	SourceInfo getSourceInfo(const std::string& id) const;
-
-	std::string id() const override { return m_id; }
-	std::string name() const override { return m_name; }
-	void setName(const std::string& newName) override { m_name = newName; }
-	std::string pluginId() const override { return m_pluginId; }
 	Source::Type type() const override { return m_sourceType; }
-
 	GstElement* srcBin() override;
 
 	/// IPreviewableSource interface
@@ -41,10 +35,6 @@ public slots:
 
 private:
 	void createBinIfNeeded();
-
-	std::string m_id;
-	std::string m_name;
-	std::string m_pluginId = "plugin_usb_audio";
 	Source::Type m_sourceType = Source::Type::AUDIO;
 	quintptr m_windowId = 0;
 	std::unique_ptr<USBAudioSourceBin> m_bin;

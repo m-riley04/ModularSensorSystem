@@ -29,7 +29,7 @@ Source* SourceController::addSource(ISourcePlugin* plugin, SourceInfo info) {
 		return nullptr;
 	}
 	
-	auto source = plugin->createSource(info.id, this);
+	auto source = plugin->createSource(info.elementInfo.id, this);
 
 	mSources.append(source);
 	QUuid uid = boostUuidToQUuid(source->uuid());

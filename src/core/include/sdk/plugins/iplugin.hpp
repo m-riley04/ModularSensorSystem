@@ -3,9 +3,9 @@
 #include <string>
 
 enum class PluginType {
-    Source,
-    Processor,
-    Mount
+    SOURCE,
+    PROCESSOR,
+    MOUNT
 };
 
 class IPlugin {

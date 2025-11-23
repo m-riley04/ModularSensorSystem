@@ -20,13 +20,13 @@ private:
 
 	QPointer<PluginController> m_pluginController = nullptr;
 	IMountPlugin* m_selectedMountPlugin = nullptr;
-	MountInfo m_selectedMountInfo{};
+	ElementInfo m_selectedMountInfo{};
 
 	void populateMountTypeDropdown();
 	void populateMountDropdown();
 
 signals:
 	void mountTypeSelected(IMountPlugin* plugin);
-	void mountSelected(IMountPlugin* plugin, MountInfo mount);
-	void mountConfirmed(IMountPlugin* plugin, MountInfo mount);
+	void mountSelected(IMountPlugin* plugin, ElementInfo mount);
+	void mountConfirmed(IMountPlugin* plugin, ElementInfo mount);
 };

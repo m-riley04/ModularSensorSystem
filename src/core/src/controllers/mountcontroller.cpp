@@ -12,7 +12,7 @@ const Mount* MountController::byId(const QUuid& id) const
 	return mMountsById.value(id, nullptr);
 }
 
-Mount* MountController::addMount(IMountPlugin* plugin, MountInfo info)
+Mount* MountController::addMount(IMountPlugin* plugin, ElementInfo info)
 {
 	if (!plugin) {
 		return nullptr;

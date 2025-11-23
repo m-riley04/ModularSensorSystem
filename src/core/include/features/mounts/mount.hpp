@@ -2,12 +2,12 @@
 
 #include <string>
 #include <optional>
-#include "features/ielement.hpp"
+#include "features/element.hpp"
 
 /**
  * @brief Mounts represent the physical "mount" that physical sources sit on. They provide data
  */
-class Mount : public IElement
+class Mount : public Element
 {
 	Q_OBJECT
 
@@ -18,7 +18,7 @@ public:
 	};
 
 public:
-	Mount(QObject* parent) : IElement(parent) {}
+	Mount(ElementInfo& element, QObject* parent) : Element(element, parent) {}
 	virtual ~Mount() = default;
 
 	/**
