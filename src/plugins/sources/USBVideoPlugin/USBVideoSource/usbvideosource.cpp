@@ -34,8 +34,9 @@ void USBVideoSource::onSessionStart()
 
 void USBVideoSource::onSessionStop()
 {
-	// Reset bin
+	// Reset bins
 	m_bin.reset(nullptr);
+	m_recorderBin.reset(nullptr);
 }
 
 void USBVideoSource::createBinIfNeeded()
@@ -72,6 +73,8 @@ std::string USBVideoSource::recorderFileExtension() const
 
 bool USBVideoSource::setRecordingFilePath(const std::string& filePath)
 {
+	if (!m_recorderBin) return false;
+
 	return m_recorderBin->setRecordingFilePath(filePath);
 }
 

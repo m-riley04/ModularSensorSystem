@@ -22,8 +22,7 @@ SessionController::SessionController(SourceController* sourceController, Process
 	// Connect internal signals
 	connect(this, &SessionController::pipelineEosReached, [this]() {
 		// Check if we are stopping the session or recording
-		if (this->isStoppingSession()) this->stopSession();
-		if (this->isStoppingRecording()) this->stopRecording();
+		this->stopSession();
 		});
 
 	// TODO: in the future, load the session properties from a saved state
@@ -64,7 +63,7 @@ static gboolean session_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 	switch (GST_MESSAGE_TYPE(msg)) {
 
 	case GST_MESSAGE_EOS:
-		sessionController->stopSession();
+		sessionController->pipelineEosReached();
 		break;
 	case GST_MESSAGE_WARNING: {
 		gchar* debug;
@@ -497,6 +496,10 @@ void SessionController::requestStopSession()
 
 void SessionController::stopSession()
 {
+	if (isRecording()) {
+		requestStopRecording(); // TODO: right now, this is fine. But if async stopping is implemented, need to wait for that to finish first
+	}
+
 	closePipeline();
 	setState(State::STOPPED);
 }
