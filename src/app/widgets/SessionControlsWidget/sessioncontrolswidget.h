@@ -2,7 +2,9 @@
 
 #include <QWidget>
 #include "ui_sessioncontrolswidget.h"
-#include <Controllers/MainController/maincontroller.h>
+#include "controllers/maincontroller.hpp"
+#include "dialogs/SessionPropertiesDialog/sessionpropertiesdialog.h"
+#include <data/required_actions.hpp>
 
 class SessionControlsWidget : public QWidget
 {
@@ -12,20 +14,19 @@ public:
 	SessionControlsWidget(QWidget *parent = nullptr);
 	~SessionControlsWidget();
 
-	void setController(MainController* controller) { 
-		if (pController == controller) return;
-		pController = controller;
-		initSignals();
-		updateUi();
+	void setSessionControlActions(SessionControlsActions actions) {
+		m_actions = std::move(actions); // TODO: is move necessary here?
+		
+		ui.buttonStartStop->setAction(m_actions.startStopSession);
+		ui.buttonRestart->setAction(m_actions.restartSession);
+		ui.buttonRecord->setAction(m_actions.recordSession);
+		ui.buttonClip->setAction(m_actions.clipSession);
+		ui.buttonProperties->setAction(m_actions.openSessionProperties);
 	}
 
 private:
 	Ui::SessionControlsWidgetClass ui;
 
-	MainController* pController = nullptr;
-
-	void initSignals();
+	SessionControlsActions m_actions{};
 	
-private slots:
-	void updateUi();
 };

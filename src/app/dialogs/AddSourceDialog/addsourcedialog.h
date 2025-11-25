@@ -1,10 +1,11 @@
 #pragma once
 
 #include <QDialog>
-#include "ui_addsourcedialog.h"
-#include <interfaces/plugins/isourceplugin.h>
-#include <controllers/PluginController/plugincontroller.h>
 #include <QMessageBox>
+#include "ui_addsourcedialog.h"
+#include <sdk/plugins/isourceplugin.hpp>
+#include <controllers/plugincontroller.hpp>
+#include <QPointer>
 
 class AddSourceDialog : public QDialog
 {

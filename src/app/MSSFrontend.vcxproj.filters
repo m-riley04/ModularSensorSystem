@@ -31,9 +31,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pages\MainPage\mainpage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -41,9 +38,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp">
@@ -58,16 +52,16 @@
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\ProcessorsWidget\processorswidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\SourcesWidget\sourceswidget.cpp">
+    <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp">
+    <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dialogs\AddMountDialog\addmountdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,19 +75,10 @@
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="pages\MainPage\mainpage.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\ProcessorsWidget\processorswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogs\AddProcessorDialog\addprocessordialog.h">
@@ -102,20 +87,20 @@
     <QtMoc Include="dialogs\AddSourceDialog\addsourcedialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\SourcesWidget\sourceswidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="widgets\SourcePreviewWidget\sourcepreviewwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h">
+    <QtMoc Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="models\ElementTreeModel\elementtreemodel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="pages\MainPage\mainpage.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -125,16 +110,10 @@
     <QtUic Include="widgets\SessionControlsWidget\sessioncontrolswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="windows\MainWindow\MainWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="widgets\SourcesWidget\sourceswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui">
@@ -143,13 +122,13 @@
     <QtUic Include="dialogs\AddSourceDialog\addsourcedialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="widgets\ProcessorsWidget\processorswidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="dialogs\AddProcessorDialog\addprocessordialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui">
+    <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -157,7 +136,7 @@
     <None Include="styles\styles.qss" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="media\mss_template_icon.png">
+    <Image Include="media\icons\mss_template_icon.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="media\icons\airplane.ico">
@@ -208,5 +187,10 @@
     <Image Include="media\icons\maximize.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="data\required_actions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

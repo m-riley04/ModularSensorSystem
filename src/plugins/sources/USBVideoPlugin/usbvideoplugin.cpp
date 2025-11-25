@@ -1,24 +1,17 @@
-#include "usbvideoplugin.h"
+#include "usbvideoplugin.hpp"
 
-QList<SourceInfo> USBVideoPlugin::availableSources() const
-{
-    QList<SourceInfo> list;
-    for (const QCameraDevice& cam : QMediaDevices::videoInputs()) {
-        SourceInfo info{ cam.id(), cam.description() };
-        list.append(info);
-    }
-    return list;
+std::vector<SourceInfo> USBVideoPlugin::discover() const
+{ 
+    return getUsbVideoDevices();
 }
 
-Source* USBVideoPlugin::createSource(const QByteArray& id, QObject* parent)
+Source* USBVideoPlugin::createSource(const std::string& id, QObject* parent)
 {
-    // Find the QCameraDevice by id from QMediaDevices
-    QCameraDevice selected;
-    for (const QCameraDevice& cam : QMediaDevices::videoInputs()) {
-        if (cam.id() == id) { selected = cam; break; }
-    }
-    if (!selected.isNull()) {
-        return new USBVideoSource(selected, parent);  // create the concrete source
+	std::vector<SourceInfo> sources = discover();
+    for (const SourceInfo& cam : sources) {
+        if (cam.elementInfo.id == id && cam.elementInfo.id != "") {
+			return new USBVideoSource(cam, parent);
+        }
     }
     return nullptr;
 }

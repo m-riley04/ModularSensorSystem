@@ -1,16 +1,43 @@
 #include "Windows/MainWindow/MainWindow.h"
 #include <QtWidgets/QApplication>
-#include <sources/Source/SourceError/sourceerror.h>
+
+#ifdef Q_OS_WINDOWS
+#include <windows.h>
+#include <cstdio>
+
+/**
+ * Sets up the console for debug output on Windows.
+ * Qt applications on Windows do not have a console by default, and
+ * g_print was being ignored in the normal debug console.
+ */
+void setupConsole()
+{
+	AllocConsole();
+
+	FILE* fpOut = nullptr;
+	FILE* fpErr = nullptr;
+
+	freopen_s(&fpOut, "CONOUT$", "w", stdout);
+	freopen_s(&fpErr, "CONOUT$", "w", stderr);
+}
+#endif
 
 int main(int argc, char *argv[])
 {
-	// Register metatypes
-	qRegisterMetaType<SourceError>("SourceError");
+	#ifdef Q_OS_WINDOWS
+	if (IsDebuggerPresent()) setupConsole();
+	#endif
 
 	// Create application
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
+
+	// Initialize core app
+	QCoreApplication::setApplicationName("ModularSensorSystem");
+	QCoreApplication::setApplicationVersion("1.0.0");
+	QCoreApplication::setOrganizationName("Riley Meyerkorth");
+	QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
 
 	// Execute the application and handle exceptions
     int ret;

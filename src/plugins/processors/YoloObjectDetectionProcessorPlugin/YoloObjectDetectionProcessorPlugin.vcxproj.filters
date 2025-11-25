@@ -23,22 +23,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="yoloobjectdetectionprocessorplugin.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <ClCompile Include="yoloobjectdetectionprocessorplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <QtMoc Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.h">
+    <QtMoc Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="yoloobjectdetectionprocessorplugin.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="yoloobjectdetectionprocessorplugin.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

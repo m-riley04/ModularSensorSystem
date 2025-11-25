@@ -2,17 +2,12 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include <QVideoFrame>
-#include <QVideoWidget>
-#include "controllers/MainController/maincontroller.h"
-#include "controllers/ClipController/clipcontroller.h"
-#include "widgets/SimultaneousMediaPlayer/simultaneousmediaplayer.h"
-#include "widgets/CustomTitleBar/customtitlebar.h"
-#include "pages/MainPage/mainpage.h"
+#include "controllers/maincontroller.hpp"
+#include "controllers/mountcontroller.hpp"
+#include "data/required_actions.hpp"
 
-#ifdef Q_OS_WIN
-#include <windows.h>
-#endif
+// Forward declaration for element tree node
+struct ElementTreeNode;
 
 class MainWindow : public QMainWindow
 {
@@ -22,20 +17,51 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-protected:
-    bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override; // TODO: Make this cross-platform and implement other platforms
+private slots:
+    void openSavePresetDialog();
+    void onLoadPresetClicked();
+    void openDeletePresetDialog();
+    void openConfigurePresetDialog();
+    void onRefreshPresetClicked();
 
-private:
-    Ui::MainWindowClass ui;
-    std::unique_ptr<MainController> pController;
+    void openAddMountDialog();
+    void openRemoveMountDialog();
+    void openEditMountDialog();
 
-    void initStyles();
-    void initPages();
-    void initWidgets();
-    void initActions();
-    void initSignals();
+    void openAddSourceDialog();
+    void openRemoveSourceDialog();
+    void openConfigureSourceDialog();
+
+    void openAddProcessorDialog();
+    void openRemoveProcessorDialog();
+    void openConfigureProcessorDialog();
+
+    void onSelectedElementChanged(ElementTreeNode* node);
+    void onSelectedElementRemoved();
+
+    void openGithubRepository();
+
+    void onSelectedPresetItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+    void updateToolbarButtonsState();
+
+	void onPrintPipelineDebugClicked();
 
 public slots:
     void quit();
     void restart();
+
+private:
+    void initWidgets();
+    void initSignals();
+    void initActionSignals();
+
+    ElementTreeActions getElementTreeActions() const;
+
+    void syncViewActionChecks();
+
+    Ui::MainWindowClass ui;
+    MainController* pController;
+
+    QListWidgetItem* pSelectedPresetItem = nullptr;
+	ElementTreeNode* m_selectedElement = nullptr;
 };

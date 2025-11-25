@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <GST_PATH>C:\Program Files\gstreamer\1.0\msvc_x86_64\</GST_PATH>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(_ZVcpkgCurrentInstalledDir)/lib/gstreamer-1.0/include;$(_ZVcpkgCurrentInstalledDir)/include/gstreamer-1.0;$(_ZVcpkgCurrentInstalledDir)/include/glib-2.0;$(_ZVcpkgCurrentInstalledDir)/lib/glib-2.0/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="GST_PATH">
+      <Value>$(GST_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

@@ -36,8 +36,8 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>6.9.0_msvc2022_64</QtInstall>
-    <QtModules>core;gui;testlib;widgets;concurrent;multimedia;multimediawidgets;sensors;serialbus;serialport;positioning</QtModules>
+    <QtInstall>6.8.3_msvc2022_64</QtInstall>
+    <QtModules>core;concurrent;multimedia</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtPlugin>true</QtPlugin>
   </PropertyGroup>
@@ -54,14 +54,17 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
+    <Import Project="..\..\..\MSSPlugin.props" />
+    <Import Project="..\..\..\GStreamerProps.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
+    <Import Project="..\..\..\MSSPlugin.props" />
+    <Import Project="..\..\..\GStreamerProps.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <IncludePath>$(SolutionDir)src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\plugins\processors\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -72,11 +75,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <QtMoc />
     <QtMoc>
-      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalIncludeDirectories>$(SolutionDir)/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </QtMoc>
     <Link>
@@ -116,14 +117,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.cpp" />
-    <QtMoc Include="yoloobjectdetectionprocessorplugin.h" />
+    <ClInclude Include="yoloobjectdetectionprocessorplugin.hpp" />
     <ClCompile Include="yoloobjectdetectionprocessorplugin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="yoloobjectdetectionprocessorplugin.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.h" />
+    <QtMoc Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\core\MSSCore.vcxproj">

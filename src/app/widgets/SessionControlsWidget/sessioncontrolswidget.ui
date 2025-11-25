@@ -6,86 +6,110 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>133</width>
-    <height>199</height>
+    <width>436</width>
+    <height>26</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>SessionControlsWidget</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
-    <widget class="QPushButton" name="buttonOpenCloseDevices">
+    <widget class="QActionButton" name="buttonStartStop">
      <property name="toolTip">
-      <string>Opens or closes all of the devices in the session</string>
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
      </property>
      <property name="text">
-      <string>Open Devices</string>
+      <string>Start Session</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="buttonStartStopDevices">
+    <widget class="QActionButton" name="buttonRestart">
      <property name="toolTip">
-      <string>Starts or stops all sources in the session</string>
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
      </property>
      <property name="text">
-      <string>Start Devices</string>
+      <string>Restart Session</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="buttonRestartDevices">
+    <widget class="QActionButton" name="buttonProperties">
      <property name="toolTip">
-      <string>Restarts all sources in the session</string>
+      <string/>
      </property>
-     <property name="text">
-      <string>Restart Devices</string>
-     </property>
-     <property name="icon">
-      <iconset theme="QIcon::ThemeIcon::SystemReboot"/>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="buttonRecord">
-     <property name="toolTip">
-      <string>Starts recording of all sources</string>
-     </property>
-     <property name="text">
-      <string>Start Recording</string>
-     </property>
-     <property name="icon">
-      <iconset theme="QIcon::ThemeIcon::MediaRecord"/>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="buttonClip">
-     <property name="toolTip">
-      <string>Captures a clip of the current sources</string>
-     </property>
-     <property name="text">
-      <string>Capture Clip</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="buttonProperties">
-     <property name="toolTip">
-      <string>Opens the session's properties</string>
+     <property name="whatsThis">
+      <string/>
      </property>
      <property name="text">
       <string>Properties</string>
      </property>
-     <property name="icon">
-      <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+    </widget>
+   </item>
+   <item>
+    <widget class="QActionButton" name="buttonClip">
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Clip</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QActionButton" name="buttonRecord">
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Start Recording</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QActionButton</class>
+   <extends>QPushButton</extends>
+   <header>qactionbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -36,9 +36,11 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>6.9.0_msvc2022_64</QtInstall>
-    <QtModules>core;gui;testlib;widgets;concurrent;multimedia;multimediawidgets;sensors;serialbus;serialport;positioning</QtModules>
+    <QtInstall>6.8.3_msvc2022_64</QtInstall>
+    <QtModules>core;gui;testlib;widgets;concurrent;multimedia;multimediawidgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
+    <QtHeaderSearchPath>
+    </QtHeaderSearchPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.9.0_msvc2022_64</QtInstall>
@@ -53,10 +55,14 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
+    <Import Project="..\MSSEnvVars.props" />
+    <Import Project="..\GStreamerProps.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
+    <Import Project="..\MSSEnvVars.props" />
+    <Import Project="..\GStreamerProps.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
@@ -69,13 +75,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\app;$(SolutionDir)src\core;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\app;$(SolutionDir)src\core\include;$(SolutionDir)src\widgets;$(SolutionDir)src\widgets\$(QtIntDir)uic\;$(SolutionDir)src\widgets\widgets\QActionButton;$(SolutionDir)src\widgets\widgets\QDirectoryPickerWidget;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSFrontendWidgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <QtMoc>
-      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSFrontendWidgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -107,28 +113,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="dialogs\AddMountDialog\addmountdialog.cpp" />
     <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp" />
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
-    <ClCompile Include="pages\MainPage\mainpage.cpp" />
-    <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
-    <ClCompile Include="widgets\SourcesWidget\sourceswidget.cpp" />
+    <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
+    <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
     <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
-    <ClCompile Include="widgets\ProcessorsWidget\processorswidget.cpp" />
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
-    <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
-    <QtUic Include="pages\MainPage\mainpage.ui" />
-    <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui" />
-    <QtUic Include="widgets\SourcesWidget\sourceswidget.ui" />
-    <QtUic Include="widgets\ProcessorsWidget\processorswidget.ui" />
+    <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
+    <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui" />
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
     <QtUic Include="widgets\SessionControlsWidget\sessioncontrolswidget.ui" />
-    <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />
     <QtUic Include="dialogs\AddSourceDialog\addsourcedialog.ui" />
     <QtUic Include="dialogs\AddProcessorDialog\addprocessordialog.ui" />
     <QtUic Include="windows\MainWindow\MainWindow.ui" />
@@ -143,28 +144,24 @@
     <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="widgets\ProcessorsWidget\processorswidget.h" />
     <QtMoc Include="dialogs\AddProcessorDialog\addprocessordialog.h" />
     <QtMoc Include="dialogs\AddSourceDialog\addsourcedialog.h" />
     <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h" />
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h" />
-    <QtMoc Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />
-    <QtMoc Include="widgets\SourcesWidget\sourceswidget.h" />
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />
-    <QtMoc Include="pages\MainPage\mainpage.h" />
     <QtMoc Include="widgets\SourcePreviewWidget\sourcepreviewwidget.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core\MSSCore.vcxproj">
       <Project>{90004517-cea0-493d-bc67-b07f996c62b8}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\widgets\MSSFrontendWidgets.vcxproj">
+      <Project>{c19648ca-6ce4-47af-9d2d-37197198a1eb}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="styles\styles.qss" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="media\icons\airplane.ico" />
@@ -183,7 +180,17 @@
     <Image Include="media\icons\star.ico" />
     <Image Include="media\icons\thermometer.ico" />
     <Image Include="media\icons\video.ico" />
-    <Image Include="media\mss_template_icon.png" />
+    <Image Include="media\icons\mss_template_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="models\ElementTreeModel\elementtreemodel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="data\required_actions.hpp" />
+    <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

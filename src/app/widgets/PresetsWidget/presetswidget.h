@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "ui_presetswidget.h"
-#include <controllers/MainController/maincontroller.h>
+#include "controllers/maincontroller.hpp"
 #include <QtWidgets>
 
 class PresetsWidget : public QWidget
@@ -12,6 +12,8 @@ class PresetsWidget : public QWidget
 public:
 	PresetsWidget(QWidget *parent = nullptr);
 	~PresetsWidget();
+
+	QListWidget* listWidget() const { return ui.listPresets; }
 
 	void setController(MainController* controller) {
 		if (pController == controller) return;
@@ -33,7 +35,11 @@ private:
 	Ui::PresetsWidgetClass ui;
 	MainController* pController = nullptr;
 	QListWidgetItem* pSelectedItem = nullptr;
+	bool mControlsVisible = false;
 
 	void initWidgets();
 	void initSignals();
+
+signals:
+	void selectedPresetChanged(QListWidgetItem* current, QListWidgetItem* previous);
 };

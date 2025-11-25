@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>626</width>
-    <height>513</height>
+    <width>978</width>
+    <height>658</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,6 +47,18 @@ QWidget
 QWidget#titleBar, QWidget#titleBar *
 {
 	background-color: rgb(40, 40, 40)
+}
+
+/*-----MainWindow title buttons-----*/
+QWidget#titleBar &gt; QFrame &gt; QPushButton:hover
+{
+	background-color: rgb(63, 63, 63);
+	border-radius: 0px;
+}
+QWidget#titleBar &gt; QFrame &gt; QPushButton:!hover
+{
+	background-color: rgb(40, 40, 40);
+	border-radius: 0px;
 }
 
 /*-----QLabel-----*/
@@ -265,93 +277,117 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
 </string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <property name="spacing">
-     <number>0</number>
-    </property>
-    <item row="1" column="0">
-     <widget class="QFrame" name="frameNav">
-      <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
+   <layout class="QGridLayout" name="gridLayout" columnstretch="0,0">
+    <item row="0" column="1">
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+      <property name="opaqueResize">
+       <bool>false</bool>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="spacing">
-        <number>0</number>
+      <property name="childrenCollapsible">
+       <bool>true</bool>
+      </property>
+      <widget class="QFrame" name="frameViews">
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
-       <property name="leftMargin">
-        <number>0</number>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
-       <property name="topMargin">
-        <number>0</number>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="PreviewContainerWidget" name="devicePreviewWidget" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QFrame" name="frameControls">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>300</height>
+        </size>
        </property>
-       <property name="rightMargin">
-        <number>0</number>
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
-       <property name="bottomMargin">
-        <number>0</number>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
-       <item>
-        <widget class="QPushButton" name="buttonHome">
-         <property name="toolTip">
-          <string>Navigates to the home page</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset theme="QIcon::ThemeIcon::GoHome"/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonPlayback">
-         <property name="toolTip">
-          <string>Navigates to the playback page</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset theme="QIcon::ThemeIcon::Computer"/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="SessionControlsWidget" name="sessionControls" native="true"/>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupPresets">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="title">
+           <string>Presets</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="PresetsWidget" name="presetsWidget" native="true"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QStackedWidget" name="pagesStack"/>
-    </item>
-    <item row="0" column="0">
-     <widget class="CustomTitleBar" name="titleBar" native="true"/>
     </item>
    </layout>
   </widget>
@@ -360,7 +396,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>626</width>
+     <width>978</width>
      <height>21</height>
     </rect>
    </property>
@@ -381,6 +417,18 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <property name="title">
      <string>View</string>
     </property>
+    <widget class="QMenu" name="menuControl_Row">
+     <property name="title">
+      <string>Control Row</string>
+     </property>
+     <addaction name="actionViewPresetsList"/>
+     <addaction name="actionViewControls"/>
+     <addaction name="separator"/>
+    </widget>
+    <addaction name="menuControl_Row"/>
+    <addaction name="separator"/>
+    <addaction name="actionViewMenuBar"/>
+    <addaction name="actionViewToolbar"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -399,7 +447,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
      </property>
      <addaction name="actionAddSource"/>
      <addaction name="actionRemoveSource"/>
-     <addaction name="actionOpenProperties"/>
+     <addaction name="actionConfigureSource"/>
     </widget>
     <widget class="QMenu" name="menuProcessors">
      <property name="title">
@@ -426,16 +474,35 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
      <string>Plugins</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuDebug">
+    <property name="title">
+     <string>Debug</string>
+    </property>
+    <addaction name="actionDebugPipelineDiagram"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuSession"/>
    <addaction name="menuPlugins"/>
    <addaction name="menuAbout"/>
+   <addaction name="menuHelp"/>
+   <addaction name="menuDebug"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>toolBar</string>
+   </property>
+   <property name="movable">
+    <bool>true</bool>
    </property>
    <property name="orientation">
     <enum>Qt::Orientation::Horizontal</enum>
@@ -458,16 +525,32 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <addaction name="actionSavePreset"/>
    <addaction name="actionLoadPreset"/>
    <addaction name="actionRefreshPresets"/>
-   <addaction name="actionRemovePreset"/>
+   <addaction name="actionDeletePreset"/>
+   <addaction name="separator"/>
+   <addaction name="actionAddMount"/>
+   <addaction name="actionRemoveMount"/>
+   <addaction name="actionEditMount"/>
    <addaction name="separator"/>
    <addaction name="actionAddSource"/>
    <addaction name="actionRemoveSource"/>
-   <addaction name="actionOpenProperties"/>
+   <addaction name="actionConfigureSource"/>
+   <addaction name="actionStartStopSession"/>
    <addaction name="separator"/>
    <addaction name="actionAddProcessor"/>
    <addaction name="actionRemoveProcessor"/>
    <addaction name="actionConfigureProcessor"/>
+   <addaction name="separator"/>
    <addaction name="actionToggleProcessing"/>
+   <addaction name="actionRestartSession"/>
+   <addaction name="actionRecord"/>
+   <addaction name="actionSessionProperties"/>
+   <addaction name="actionClipSession"/>
+  </widget>
+  <widget class="DockableElementsManagerWidget" name="dockWidget">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents"/>
   </widget>
   <action name="actionQuit">
    <property name="icon">
@@ -475,6 +558,9 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="text">
     <string>Quit</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::QuitRole</enum>
    </property>
   </action>
   <action name="actionRestart">
@@ -486,6 +572,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
   </action>
   <action name="actionRecord">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::MediaRecord"/>
+   </property>
    <property name="text">
     <string>Record</string>
    </property>
@@ -569,12 +661,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionRemovePreset">
+  <action name="actionDeletePreset">
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::EditDelete"/>
    </property>
    <property name="text">
-    <string>Remove Preset</string>
+    <string>Delete Preset</string>
    </property>
    <property name="toolTip">
     <string>Delete preset</string>
@@ -653,15 +745,15 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionOpenProperties">
+  <action name="actionConfigureSource">
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
    </property>
    <property name="text">
-    <string>Open Source Properties</string>
+    <string>Configure Source</string>
    </property>
    <property name="toolTip">
-    <string>Open source properties</string>
+    <string>Open source configuration menu</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -677,13 +769,172 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Options</string>
    </property>
   </action>
+  <action name="actionViewPresetsList">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Preset List</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionViewToolbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Toolbar</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionViewMenuBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Menu Bar</string>
+   </property>
+  </action>
+  <action name="actionViewControls">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Controls</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::TextHeuristicRole</enum>
+   </property>
+  </action>
+  <action name="actionAddMount">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+   </property>
+   <property name="text">
+    <string>Add Mount</string>
+   </property>
+   <property name="toolTip">
+    <string>Adds a new mount</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionRemoveMount">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ListRemove"/>
+   </property>
+   <property name="text">
+    <string>Remove Mount</string>
+   </property>
+   <property name="toolTip">
+    <string>Removes the selected mount</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionEditMount">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+   </property>
+   <property name="text">
+    <string>Edit Mount</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionStartStopSession">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::MediaPlaybackStart"/>
+   </property>
+   <property name="text">
+    <string>Start/Stop Session</string>
+   </property>
+   <property name="toolTip">
+    <string>Starts or stops the session</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionDebugPipelineDiagram">
+   <property name="text">
+    <string>Show Pipeline Diagram</string>
+   </property>
+   <property name="toolTip">
+    <string>Uses GraphViz to translate the GStreamer pipeline dotfile to a PNG</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionRestartSession">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ViewRestore"/>
+   </property>
+   <property name="text">
+    <string>Restart Session</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionSessionProperties">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+   </property>
+   <property name="text">
+    <string>Session Properties</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionClipSession">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditCut"/>
+   </property>
+   <property name="text">
+    <string>clipSession</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>CustomTitleBar</class>
+   <class>PreviewContainerWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/CustomTitleBar/customtitlebar.h</header>
+   <header>widgets/PreviewContainerWidget/previewcontainerwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PresetsWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/PresetsWidget/presetswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SessionControlsWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/SessionControlsWidget/sessioncontrolswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DockableElementsManagerWidget</class>
+   <extends>QDockWidget</extends>
+   <header>widgets/DockableElementsManagerWidget/dockableelementsmanagerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -1,9 +1,10 @@
 #pragma once
 
 #include <QDialog>
-#include "ui_addprocessordialog.h"
-#include <controllers/PluginController/plugincontroller.h>
 #include <qmessagebox.h>
+#include <QPointer>
+#include "ui_addprocessordialog.h"
+#include "controllers/plugincontroller.hpp"
 
 class AddProcessorDialog : public QDialog
 {

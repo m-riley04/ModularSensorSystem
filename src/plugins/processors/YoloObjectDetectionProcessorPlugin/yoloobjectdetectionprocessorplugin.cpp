@@ -1,15 +1,13 @@
-#include "yoloobjectdetectionprocessorplugin.h"
+#include "yoloobjectdetectionprocessorplugin.hpp"
+#include "YoloObjectDetectionProcessor/yoloobjectdetectionprocessor.hpp"
 
-ProcessorBase* createProcessor(Source* source, QObject* parent)
+Processor* YoloObjectDetectionProcessorPlugin::createProcessor(Source* src, QObject* parent)
 {
-    auto p = new YoloObjectDetectionProcessor(source, parent);
-
-    // Connect device frames to processor
-    if (auto vs = qobject_cast<IVideoSource*>(source)) {
-        QObject::connect(vs->asQObject(), 
-            SIGNAL(frameReady(QVideoFrame)), 
-            p, 
-            SLOT(processFrame(QVideoFrame)));
-    }
-    return p;
+    ElementInfo info{
+        .id = "yolo_object_detection_processor",
+        .name = "YOLO Object Detection Processor",
+        .displayName = "YOLO Object Detection Processor",
+        .pluginId = "yolo_object_detection_processor_plugin",
+    };
+    return new YoloObjectDetectionProcessor(info, src, parent);
 }
