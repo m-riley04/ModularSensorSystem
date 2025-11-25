@@ -14,12 +14,12 @@ inline GstElement* createDefaultVideoRecordingSink(const char* binName = nullptr
 	GstElement* bin = gst_bin_new(binName);
 
 	// Elements: queue (from tee) -> valve -> x264enc -> h264parse -> mp4mux -> filesink
-	GstElement* queue = gst_element_factory_make("queue", nullptr);
-	GstElement* valve = gst_element_factory_make("valve", nullptr);
-	GstElement* enc = gst_element_factory_make("x264enc", nullptr); // TODO: consider changing encoder/parser/muxer based on source capabilities
-	GstElement* parse = gst_element_factory_make("h264parse", nullptr);
-	GstElement* muxer = gst_element_factory_make("mp4mux", nullptr);
-	GstElement* filesink = gst_element_factory_make("filesink", nullptr);
+	GstElement* queue = gst_element_factory_make("queue", "queue");
+	GstElement* valve = gst_element_factory_make("valve", "valve");
+	GstElement* enc = gst_element_factory_make("x264enc", "encoder"); // TODO: consider changing encoder/parser/muxer based on source capabilities
+	GstElement* parse = gst_element_factory_make("h264parse", "parser");
+	GstElement* muxer = gst_element_factory_make("mp4mux", "muxer");
+	GstElement* filesink = gst_element_factory_make("filesink", "filesink");
 
 	// Validate elements
 	if (!queue || !valve || !enc || !parse || !muxer || !filesink) {
@@ -30,7 +30,7 @@ inline GstElement* createDefaultVideoRecordingSink(const char* binName = nullptr
 		if (parse) { gst_object_unref(parse);           parse = nullptr; }
 		if (muxer) { gst_object_unref(muxer);           muxer = nullptr; }
 		if (filesink) { gst_object_unref(filesink); filesink = nullptr; }
-		return false;
+		return nullptr;
 	}
 
 	// Close valve immediately
@@ -87,7 +87,7 @@ inline GstElement* createDefaultAudioRecordingSink(const char* binName = nullptr
 		if (valve) { gst_object_unref(valve);    valve = nullptr; }
 		if (enc) { gst_object_unref(enc);         enc = nullptr; }
 		if (filesink) { gst_object_unref(filesink); filesink = nullptr; }
-		return false;
+		return nullptr;
 	}
 
 	// Close valve immediately
@@ -135,7 +135,7 @@ inline GstElement* createDefaultDataRecordingSink(const char* binName = nullptr)
 		if (queue) { gst_object_unref(queue);      queue = nullptr; }
 		if (valve) { gst_object_unref(valve);    valve = nullptr; }
 		if (filesink) { gst_object_unref(filesink); filesink = nullptr; }
-		return false;
+		return nullptr;
 	}
 
 	// Close valve immediately
