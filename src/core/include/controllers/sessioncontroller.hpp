@@ -4,9 +4,6 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <gst/gst.h>
-#include <gst/video/videooverlay.h>
-#include <gst/app/gstappsink.h>
 #include "controllers/backendcontrollerbase.hpp"
 #include "controllers/sourcecontroller.hpp"
 #include "controllers/processingcontroller.hpp"
@@ -16,79 +13,44 @@
 #include "pipeline/sinks/preview_defaults.hpp"
 #include <interfaces/capability/ipreviewablesource.hpp>
 #include "models/session_properties.hpp"
-#include <utils/debug.hpp>
-#include <utils/utils.hpp>
 #include <utils/session_utils.hpp>
-#include <QRegularExpression>
+#include <QThread>
+#include "pipeline/sessionpipeline.hpp"
 
 #define DEFAULT_SESSION_PREFIX "session_"
 #define DEFAULT_SESSIONS_DIRECTORY "/sessions"
 
 using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
-constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
-
 class SessionController : public BackendControllerBase
 {
 	Q_OBJECT
-
-public:
-	enum class State {
-		STARTING,
-		STARTED,
-		STOPPING,
-		STOPPED,
-		RECORDING,
-		STOPPING_RECORDING,
-		ERROR
-	};
 
 public:
 	SessionController(SourceController* sourceController, ProcessingController* processingController, 
 		MountController* mountController, QObject* parent);
 	~SessionController();
 
-	GstPipeline* pipeline() const { return m_pipeline.get(); }
-	bool isPipelineBuilt() const { return m_pipeline != nullptr; }
+	SessionPipeline* pipeline() const { return m_pipeline.get(); }
 	SessionProperties& sessionProperties() const { return *m_sessionProperties; }
-
 	QList<const Source*> getSourcesByMount(QUuid mountId) const;
 	QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
 
-	// States
-	State state() const { return m_state; }
-	bool isStarting() const { return m_state == State::STARTING; }
-	bool isStarted() const { return m_state == State::STARTED; }
-	bool isStoppingSession() const { return m_state == State::STOPPING; }
-	bool isStopped() const { return m_state == State::STOPPED; }
-	bool isRecording() const { return m_state == State::RECORDING; }
-	bool isStoppingRecording() const { return m_state == State::STOPPING_RECORDING; }
-
 public slots:
 	void startSession();
-	void requestStopSession();
 	void stopSession();
 	void restartSession();
 
 	void startRecording();
-	void requestStopRecording();
 	void stopRecording();
 	
-	void setState(State newState);
-	void setPipelineError(const QString& errorMessage);
 	void setSessionProperties(SessionProperties properties);
 
 private:
-	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
-	guint m_pipelineBusWatchId = 0;
+	std::unique_ptr<SessionPipeline> m_pipeline;
 	ns m_lastSessionTimestamp = 0;
-	ns m_lastRecordingTimestamp = 0;
-	State m_state = State::STOPPED;
 
-	QList<GstElement*> m_sourceBins;
-	QList<GstElement*> m_previewBins;
-	QList<GstElement*> m_recordBins;
-	QList<GstElement*> m_recordableSources;
+	QThread* m_pipelineThread;
 
 	std::unique_ptr<SessionProperties> m_sessionProperties = nullptr;
 
@@ -99,35 +61,15 @@ private:
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
 
-	bool buildPipeline();
-	bool closePipeline();
-	bool startPipeline();
-	bool stopPipeline();
-
-	bool createSourceElements(Source* source);
-	bool createAndLinkPreviewBin(Source* src, GstElement* srcBin);
-	bool createAndLinkRecordBin(Source* src, GstElement* srcBin);
-
-	bool openRecordingValves();
-	bool closeRecordingValves();
-	bool openRecordingValveForSource(IRecordableSource* source);
-	bool closeRecordingValveForSource(IRecordableSource* source);
-
 signals:
-	void sessionStarting();
 	void sessionStarted();
-	void sessionStopping();
 	void sessionStopped();
 	void sessionRestarted();
-	void stateChanged(SessionController::State newState);
 
-	void pipelineEosReached();
+	void recordingStarted();
+	void recordingStopped();
 
 	void sessionPropertiesChanged(SessionProperties properties);
 	void errorOccurred(QString errorMessage);
-
-	void recordingStarted();
-	void recordingStopping();
-	void recordingStopped();
 
 };

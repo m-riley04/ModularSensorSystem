@@ -142,6 +142,9 @@
     <ClCompile Include="src\utils\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\pipeline\sessionpipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="include\controllers\maincontroller.hpp">
@@ -178,6 +181,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\features\element.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\pipeline\sessionpipeline.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

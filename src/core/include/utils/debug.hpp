@@ -5,6 +5,7 @@
 #include <qdesktopservices.h>
 #include <QUrl>
 #include <chrono>
+#include <QFile>
 
 static inline QString debugDisplayGstBin(GstElement* element, bool useUniqueName = false) {
     // Run Graphviz to generate the PNG

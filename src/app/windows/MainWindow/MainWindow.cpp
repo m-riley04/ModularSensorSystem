@@ -95,7 +95,7 @@ void MainWindow::initActionSignals()
     connect(ui.actionRestartSession, &QAction::triggered, pController->sessionController(), &SessionController::restartSession);
     connect(ui.actionRecord, &QAction::triggered, [this](bool checked) {
         if (checked) pController->sessionController()->startRecording();
-		else pController->sessionController()->requestStopRecording(); // use request to allow graceful stopping
+		else pController->sessionController()->stopRecording(); // use request to allow graceful stopping
         });
     connect(ui.actionSessionProperties, &QAction::triggered, [this]() {
         // Create new session properties dialog
@@ -483,22 +483,22 @@ void MainWindow::updateToolbarButtonsState()
 
     /// SESSION
     ui.actionStartStopSession->setEnabled(hasSources);
-    ui.actionRecord->setEnabled(pController->sessionController()->isPipelineBuilt());
-    ui.actionClipSession->setEnabled(pController->sessionController()->isPipelineBuilt());
+    ui.actionRecord->setEnabled(pController->sessionController()->pipeline()->isBuilt());
+    ui.actionClipSession->setEnabled(pController->sessionController()->pipeline()->isBuilt());
 
     /// DEBUG
-	ui.actionDebugPipelineDiagram->setEnabled(pController->sessionController()->isPipelineBuilt());
+	ui.actionDebugPipelineDiagram->setEnabled(pController->sessionController()->pipeline()->isBuilt());
 }
 
 void MainWindow::onPrintPipelineDebugClicked()
 {
-	GstPipeline* pipeline = pController->sessionController()->pipeline();
+	GstElement* pipeline = pController->sessionController()->pipeline()->bin();
     if (!pipeline) {
         QMessageBox::warning(this, tr("Pipeline Not Built"), tr("The GStreamer pipeline is not built yet."));
         return;
 	}
 
-    QString output = debugDisplayGstBin(GST_ELEMENT(pipeline));
+    QString output = debugDisplayGstBin(pipeline);
 
     if (!output.isEmpty()) {
         QMessageBox::warning(this, tr("Error"), output);
