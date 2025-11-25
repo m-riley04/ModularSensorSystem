@@ -1,39 +1,39 @@
 #include "sourcepreviewwidget.h"
 
-SourcePreviewWidget::SourcePreviewWidget(SourcePreview* preview, QWidget *parent)
-	: QWidget(parent), pPreview(preview)
+SourcePreviewWidget::SourcePreviewWidget(Source* source, QWidget *parent)
+	: QWidget(parent), m_source(source)
 {
 	ui.setupUi(this);
-	bool ok = connect(preview, &SourcePreview::frameReady, this, &SourcePreviewWidget::setFrame);
-
-	qDebug() << "connect ok:" << ok
-             << "widget uses preview:" << preview;
-
+	this->setAttribute(Qt::WA_NativeWindow); // Ensure the widget has a native window handle for video rendering
 	setAutoFillBackground(true);
-}
 
-SourcePreviewWidget::~SourcePreviewWidget()
-{}
-
-void SourcePreviewWidget::setFrame(const QImage& img)
-{
-	if (img.isNull()) {
-		qDebug() << "Received null image";
+	// Check source null
+	if (!m_source) {
+		qWarning() << "SourcePreviewWidget initialized with null source.";
 		return;
 	}
 
-	mFrame = img;
-	update(); // schedule repaint (GUI thread)
+	// Set widget components
+	ui.labelSource->setText(QString::fromStdString(m_source->name()));
+
+	// Check if source is previewable
+	auto previewable = m_source->asPreviewable();
+	if (!m_source->asPreviewable()) {
+		qWarning() << "Source is not previewable, cannot create preview widget:" << QString::fromStdString(m_source->name());
+		return;
+	}
+
+	// Set the source's window ID to this widget
+	previewable->setWindowId(ui.sinkWidget->winId());
 }
 
-void SourcePreviewWidget::paintEvent(QPaintEvent* e)
+SourcePreviewWidget::~SourcePreviewWidget()
 {
-    QPainter p(this);
-    if (mFrame.isNull()) return;
-
-    // keep aspect ratio
-    QRect target = QRect(QPoint(0, 0), size()).adjusted(0, 0, -1, -1);
-    QImage scaled = mFrame.scaled(target.size(), Qt::KeepAspectRatio,
-        Qt::SmoothTransformation);
-    p.drawImage(QPoint{ (width() - scaled.width()) / 2, (height() - scaled.height()) / 2 }, scaled);
+	// Reset window ID
+	// TODO: Is this best practice? This feels weird.
+	// UPDATED TODO: commented this out because the source is destroyed befroe this widget in normal app flow, causing a crash.
+	/*if (!m_source) return;
+	auto previewable = m_source->asPreviewable();
+	if (!previewable) return;
+	previewable->setWindowId(0);*/
 }

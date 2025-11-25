@@ -1,16 +1,25 @@
 #pragma once
 
+#include <QVariant>
 #include <QAbstractItemModel>
-#include <controllers/MountController/mountcontroller.h>
-#include <controllers/SourceController/sourcecontroller.h>
-#include <controllers/ProcessingController/processingcontroller.h>
-#include <features/mounts/Mount/mount.h>
+#include "controllers/mountcontroller.hpp"
+#include "controllers/sourcecontroller.hpp"
+#include "controllers/processingcontroller.hpp"
+#include "features/mounts/mount.hpp"
+#include "controllers/maincontroller.hpp"
+#include "controllers/sessioncontroller.hpp"
+#include "utils/boost_qt_conversions.hpp"
 
-struct Node {
-    enum class Kind { Mount, Source, Processor };
-    Kind kind;
-    QUuid id;                  // the controller's primary key
-    int parentIndex;         // index in m_nodes (-1 for root)
+struct ElementTreeNode {
+    enum class Kind { 
+        None = -1,
+        Mount,
+        Source,
+        Processor
+    };
+    Kind kind = Kind::None;
+    QUuid id; // the controller's primary key
+    int parentIndex; // index in m_nodes (-1 for root)
 };
 
 class ElementTreeModel : public QAbstractItemModel
@@ -18,7 +27,7 @@ class ElementTreeModel : public QAbstractItemModel
 	Q_OBJECT
 
 public:
-	ElementTreeModel(MountController* mc, SourceController* sc, ProcessingController* pc, QObject* parent = nullptr);
+	ElementTreeModel(MainController*, QObject* parent = nullptr);
 	~ElementTreeModel();
 
     // --- mandatory overrides ---
@@ -28,18 +37,25 @@ public:
     int columnCount(const QModelIndex&)   const override { return 2; }
     QVariant data(const QModelIndex&, int role) const override;
 
+    // helpers for management
+    ElementTreeNode* findNode(QUuid uuid);
+
 public slots:
-    void rebuild();                          // quick & dirty first
-    //void onMountAdded(Mount*);
-    //void onSourceAdded(Source*);
-    //void onProcessorAdded(ProcessorBase*);
+    void rebuild(bool isFlat = true); // quick & dirty first
+    void removeNode(QUuid uuid);
+	// TODO: incremental updates instead of complete rebuilds
+    /*void onMountAdded(Mount*);
+    void onSourceAdded(Source*);
+    void onProcessorAdded(ProcessorBase*);*/
 
 private:
-    QVector<Node> mNodes;
-    MountController* mMountController;
-    SourceController* mSourceController;
-    ProcessingController* mProcessingController;
+    QVector<ElementTreeNode> mNodes;
+    MainController* m_mainController;
+
+	void buildFlat();
+	void buildHierarchical();
 
     //static QVariant iconFor(Node::Kind k);
 };
 
+Q_DECLARE_METATYPE(ElementTreeModel*)

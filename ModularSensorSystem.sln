@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		ATTRIBUTIONS.md = ATTRIBUTIONS.md
 		README.md = README.md
+		docs\development_journal.md = docs\development_journal.md
 		vcpkg-configuration.json = vcpkg-configuration.json
 		vcpkg.json = vcpkg.json
 	EndProjectSection
@@ -21,11 +22,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "USBVideoPlugin", "src\plugi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YoloObjectDetectionProcessorPlugin", "src\plugins\processors\YoloObjectDetectionProcessorPlugin\YoloObjectDetectionProcessorPlugin.vcxproj", "{24C440F3-B6A2-476E-BEAA-8C172CCFED74}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		architecture_overview.md = architecture_overview.md
-		naming_conventions.md = naming_conventions.md
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TripodMountPlugin", "src\plugins\mounts\TripodMountPlugin\TripodMountPlugin.vcxproj", "{35A0CEE6-2CEB-4559-8F68-003AB0EB7440}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDataSourcePlugin", "src\plugins\sources\TestDataSourcePlugin\TestDataSourcePlugin.vcxproj", "{AF72BA6D-2843-429F-BD57-FA7B184F8307}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSFrontendWidgets", "src\widgets\MSSFrontendWidgets.vcxproj", "{C19648CA-6CE4-47AF-9D2D-37197198A1EB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "USBAudioPlugin", "src\plugins\sources\USBAudioPlugin\USBAudioPlugin.vcxproj", "{FB72DF6B-B4D7-4378-B63B-E4F6F4E3EDA8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSGstPlugin", "src\MSSGstPlugin\MSSGstPlugin.vcxproj", "{4AD1DDDA-4E6E-491D-AB08-571CA4FB17FF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSFrontendWidgetsPlugin", "src\MSSFrontendWidgetsPlugin\MSSFrontendWidgetsPlugin.vcxproj", "{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +56,30 @@ Global
 		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Debug|x64.Build.0 = Debug|x64
 		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Release|x64.ActiveCfg = Release|x64
 		{24C440F3-B6A2-476E-BEAA-8C172CCFED74}.Release|x64.Build.0 = Release|x64
+		{35A0CEE6-2CEB-4559-8F68-003AB0EB7440}.Debug|x64.ActiveCfg = Debug|x64
+		{35A0CEE6-2CEB-4559-8F68-003AB0EB7440}.Debug|x64.Build.0 = Debug|x64
+		{35A0CEE6-2CEB-4559-8F68-003AB0EB7440}.Release|x64.ActiveCfg = Release|x64
+		{35A0CEE6-2CEB-4559-8F68-003AB0EB7440}.Release|x64.Build.0 = Release|x64
+		{AF72BA6D-2843-429F-BD57-FA7B184F8307}.Debug|x64.ActiveCfg = Debug|x64
+		{AF72BA6D-2843-429F-BD57-FA7B184F8307}.Debug|x64.Build.0 = Debug|x64
+		{AF72BA6D-2843-429F-BD57-FA7B184F8307}.Release|x64.ActiveCfg = Release|x64
+		{AF72BA6D-2843-429F-BD57-FA7B184F8307}.Release|x64.Build.0 = Release|x64
+		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Debug|x64.ActiveCfg = Debug|x64
+		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Debug|x64.Build.0 = Debug|x64
+		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Release|x64.ActiveCfg = Release|x64
+		{C19648CA-6CE4-47AF-9D2D-37197198A1EB}.Release|x64.Build.0 = Release|x64
+		{FB72DF6B-B4D7-4378-B63B-E4F6F4E3EDA8}.Debug|x64.ActiveCfg = Debug|x64
+		{FB72DF6B-B4D7-4378-B63B-E4F6F4E3EDA8}.Debug|x64.Build.0 = Debug|x64
+		{FB72DF6B-B4D7-4378-B63B-E4F6F4E3EDA8}.Release|x64.ActiveCfg = Release|x64
+		{FB72DF6B-B4D7-4378-B63B-E4F6F4E3EDA8}.Release|x64.Build.0 = Release|x64
+		{4AD1DDDA-4E6E-491D-AB08-571CA4FB17FF}.Debug|x64.ActiveCfg = Debug|x64
+		{4AD1DDDA-4E6E-491D-AB08-571CA4FB17FF}.Debug|x64.Build.0 = Debug|x64
+		{4AD1DDDA-4E6E-491D-AB08-571CA4FB17FF}.Release|x64.ActiveCfg = Release|x64
+		{4AD1DDDA-4E6E-491D-AB08-571CA4FB17FF}.Release|x64.Build.0 = Release|x64
+		{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}.Debug|x64.ActiveCfg = Debug|x64
+		{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}.Debug|x64.Build.0 = Debug|x64
+		{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}.Release|x64.ActiveCfg = Release|x64
+		{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

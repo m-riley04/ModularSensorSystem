@@ -37,12 +37,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.8.3_msvc2022_64</QtInstall>
-    <QtModules>core;gui;testlib;widgets;concurrent;multimedia;multimediawidgets;sensors;serialbus;serialport;positioning</QtModules>
+    <QtModules>core;gui;testlib;widgets;concurrent;multimedia</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.9.0_msvc2022_64</QtInstall>
-    <QtModules>core</QtModules>
+    <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -53,10 +53,12 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
+    <Import Project="..\GStreamerProps.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
+    <Import Project="..\GStreamerProps.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
@@ -66,8 +68,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <PropertyGroup Label="Vcpkg">
@@ -104,53 +106,56 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="controllers\BackendControllerBase\backendcontrollerbase.cpp" />
-    <ClCompile Include="controllers\MountController\mountcontroller.cpp" />
-    <ClCompile Include="features\mounts\Mount\mount.cpp" />
-    <ClCompile Include="features\processors\ProcessorBase\processorbase.cpp" />
-    <ClCompile Include="features\sources\IClippableSource\ClipBufferBase\clipbufferbase.cpp" />
-    <ClCompile Include="features\sources\Source\source.cpp" />
-    <ClCompile Include="features\sources\Source\SourceMetadata\sourcemetadata.cpp" />
-    <ClCompile Include="features\sources\Source\SourcePreview\sourcepreview.cpp" />
-    <ClCompile Include="features\sources\Source\SourcePropertiesWidget\sourcepropertieswidget.cpp" />
-    <QtMoc Include="controllers\BackendControllerBase\backendcontrollerbase.h" />
-    <QtMoc Include="features\mounts\Mount\mount.h" />
-    <QtMoc Include="controllers\MountController\mountcontroller.h" />
-    <ClInclude Include="interfaces\plugins\imountplugin.h" />
-    <ClInclude Include="presets\Preset\preset.h" />
-    <ClInclude Include="presets\SourcePreset\sourcepreset.h" />
-    <ClInclude Include="features\sources\IClippableSource\iclippablesource.h" />
-    <ClInclude Include="features\sources\IConfigurableSource\iconfigurablesource.h" />
-    <QtMoc Include="features\sources\Source\source.h" />
-    <ClInclude Include="features\sources\Source\SourceError\sourceerror.h" />
-    <QtMoc Include="features\sources\Source\SourcePropertiesWidget\sourcepropertieswidget.h" />
-    <QtMoc Include="features\sources\Source\SourcePreview\sourcepreview.h" />
-    <QtMoc Include="features\sources\Source\SourceMetadata\sourcemetadata.h" />
-    <QtMoc Include="features\sources\IClippableSource\ClipBufferBase\clipbufferbase.h" />
-    <QtMoc Include="features\processors\ProcessorBase\processorbase.h" />
-    <QtMoc Include="controllers\ClipController\clipcontroller.h" />
-    <QtMoc Include="controllers\MainController\maincontroller.h" />
-    <QtMoc Include="controllers\PluginController\plugincontroller.h" />
-    <QtMoc Include="controllers\PresetsController\presetscontroller.h" />
-    <QtMoc Include="controllers\ProcessingController\processingcontroller.h" />
-    <QtMoc Include="controllers\RecordingController\recordingcontroller.h" />
-    <QtMoc Include="controllers\RecordingSession\recordingsession.h" />
-    <QtMoc Include="controllers\SourceController\sourcecontroller.h" />
-    <ClInclude Include="interfaces\capability\ianalogsource.h" />
-    <ClInclude Include="interfaces\capability\iaudiosource.h" />
-    <ClInclude Include="interfaces\capability\idatasource.h" />
-    <ClInclude Include="interfaces\capability\igpssource.h" />
-    <ClInclude Include="interfaces\capability\ivideosource.h" />
-    <ClInclude Include="interfaces\plugins\iprocessorplugin.h" />
-    <ClInclude Include="interfaces\plugins\isourceplugin.h" />
-    <ClCompile Include="controllers\ClipController\clipcontroller.cpp" />
-    <ClCompile Include="controllers\MainController\maincontroller.cpp" />
-    <ClCompile Include="controllers\PluginController\plugincontroller.cpp" />
-    <ClCompile Include="controllers\PresetsController\presetscontroller.cpp" />
-    <ClCompile Include="controllers\ProcessingController\processingcontroller.cpp" />
-    <ClCompile Include="controllers\RecordingController\recordingcontroller.cpp" />
-    <ClCompile Include="controllers\RecordingSession\recordingsession.cpp" />
-    <ClCompile Include="controllers\SourceController\sourcecontroller.cpp" />
+    <ClCompile Include="src\controllers\sessioncontroller.cpp" />
+    <ClCompile Include="src\controllers\mountcontroller.cpp" />
+    <ClCompile Include="src\utils\session_utils.cpp" />
+    <ClCompile Include="src\utils\utils.cpp" />
+    <QtMoc Include="include\features\element.hpp" />
+    <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp" />
+    <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp" />
+    <ClInclude Include="include\interfaces\capability\irecordablesource.hpp" />
+    <ClInclude Include="include\models\session_properties.hpp" />
+    <ClInclude Include="include\pipeline\bins\recorderbin.hpp" />
+    <ClInclude Include="include\pipeline\mime_types.hpp" />
+    <ClInclude Include="include\utils\debug.hpp" />
+    <ClInclude Include="include\utils\session_utils.hpp" />
+    <ClInclude Include="include\utils\utils.hpp" />
+    <QtMoc Include="include\controllers\sessioncontroller.hpp" />
+    <ClInclude Include="include\pipeline\bins\binbase.hpp" />
+    <ClInclude Include="include\pipeline\bins\sourcebin.hpp" />
+    <ClInclude Include="include\interfaces\capability\iapisource.hpp" />
+    <ClInclude Include="include\pipeline\sinks\defaults.hpp" />
+    <ClInclude Include="include\utils\boost_qt_conversions.hpp" />
+    <ClInclude Include="include\features\ielement.hpp" />
+    <ClInclude Include="include\sdk\plugins\pluginloader.hpp" />
+    <QtMoc Include="include\controllers\backendcontrollerbase.hpp" />
+    <QtMoc Include="include\features\mounts\mount.hpp" />
+    <QtMoc Include="include\controllers\mountcontroller.hpp" />
+    <ClInclude Include="include\sdk\plugins\factory.hpp" />
+    <ClInclude Include="include\sdk\plugins\imountplugin.hpp" />
+    <ClInclude Include="include\presets\preset.hpp" />
+    <ClInclude Include="include\presets\sourcepreset.hpp" />
+    <ClInclude Include="include\interfaces\capability\iconfigurablesource.hpp" />
+    <QtMoc Include="include\features\sources\source.hpp" />
+    <QtMoc Include="include\features\processors\processor.hpp" />
+    <QtMoc Include="include\controllers\maincontroller.hpp" />
+    <QtMoc Include="include\controllers\plugincontroller.hpp" />
+    <QtMoc Include="include\controllers\presetscontroller.hpp" />
+    <QtMoc Include="include\controllers\processingcontroller.hpp" />
+    <QtMoc Include="include\controllers\sourcecontroller.hpp" />
+    <ClInclude Include="include\interfaces\capability\ianalogsource.hpp" />
+    <ClInclude Include="include\interfaces\capability\iaudiosource.hpp" />
+    <ClInclude Include="include\interfaces\capability\idatasource.hpp" />
+    <ClInclude Include="include\interfaces\capability\igpssource.hpp" />
+    <ClInclude Include="include\interfaces\capability\ivideosource.hpp" />
+    <ClInclude Include="include\sdk\plugins\iplugin.hpp" />
+    <ClInclude Include="include\sdk\plugins\iprocessorplugin.hpp" />
+    <ClInclude Include="include\sdk\plugins\isourceplugin.hpp" />
+    <ClCompile Include="src\controllers\maincontroller.cpp" />
+    <ClCompile Include="src\controllers\plugincontroller.cpp" />
+    <ClCompile Include="src\controllers\presetscontroller.cpp" />
+    <ClCompile Include="src\controllers\processingcontroller.cpp" />
+    <ClCompile Include="src\controllers\sourcecontroller.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -63,7 +63,7 @@ void AddSourceDialog::populateSourceTypeDropdown()
 	// Populate the source type dropdown with available source types
 	for (const auto& plugin : pPluginController->sourcePlugins()) {
 		if (plugin) {
-			ui.dropdownSourceType->addItem(plugin->pluginName(), QVariant::fromValue(plugin));
+			ui.dropdownSourceType->addItem(QString::fromStdString(plugin->name()), QVariant::fromValue(plugin));
 		}
 	}
 
@@ -86,9 +86,9 @@ void AddSourceDialog::populateSourceDropdown()
 	Source::Type selectedType = static_cast<Source::Type>(ui.dropdownSourceType->currentData().toInt());
 
 	// Populate the source dropdown with available sources of the selected type
-	for (auto source : pSelectedSourcePlugin->availableSources()) {
+	for (auto source : pSelectedSourcePlugin->discover()) {
 		// Add the source to the dropdown
-		ui.dropdownSource->addItem(source.displayName, QVariant::fromValue(source));
+		ui.dropdownSource->addItem(QString::fromStdString(source.elementInfo.displayName), QVariant::fromValue(source));
 	}
 
 	// Set the default selection to the first item

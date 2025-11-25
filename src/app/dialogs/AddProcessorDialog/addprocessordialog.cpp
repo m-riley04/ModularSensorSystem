@@ -34,7 +34,7 @@ void AddProcessorDialog::populateProcessorsDropdown()
 	// Populate the source type dropdown with available source types
 	for (const auto& plugin : pPluginController->processorPlugins()) {
 		if (plugin) {
-			ui.dropdownProcessor->addItem(plugin->name(), QVariant::fromValue(plugin));
+			ui.dropdownProcessor->addItem(QString::fromStdString(plugin->name()), QVariant::fromValue(plugin));
 		}
 	}
 

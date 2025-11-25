@@ -38,7 +38,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.8.3_msvc2022_64</QtInstall>
-    <QtModules>core;gui;testlib;widgets;concurrent;multimedia;multimediawidgets;sensors;serialbus;serialport;positioning</QtModules>
+    <QtModules>core;concurrent;multimedia</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtPlugin>true</QtPlugin>
   </PropertyGroup>
@@ -55,14 +55,18 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
+    <Import Project="..\..\..\MSSPlugin.props" />
+    <Import Project="..\..\..\GStreamerProps.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
+    <Import Project="..\..\..\MSSPlugin.props" />
+    <Import Project="..\..\..\..\..\..\..\AppData\Local\Microsoft\VisualStudio\17.0_57551874\Extensions\xeutmgoj.vwp\QtMSBuild\Qt.props" />
+    <Import Project="..\..\..\GStreamerProps.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <IncludePath>$(SolutionDir)src\core;$(SolutionDir)src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\plugins\sources\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -73,17 +77,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\core;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <QtMoc />
     <QtMoc>
-      <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalIncludeDirectories>$(SolutionDir)/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </QtMoc>
-    <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>MSSCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -116,36 +116,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="USBVideoClipBuffer\usbvideoclipbuffer.cpp" />
-    <ClCompile Include="USBVideoClipEncoder\usbvideoclipencoder.cpp" />
-    <ClCompile Include="USBVideoPropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.cpp" />
-    <ClCompile Include="USBVideoPropertiesWidget\usbvideopropertieswidget.cpp" />
-    <ClCompile Include="USBVideoRecordingPropertiesWidget\usbvideorecordingpropertieswidget.cpp" />
     <ClCompile Include="USBVideoSource\usbvideosource.cpp" />
-    <ClCompile Include="USBVideoPreview\usbvideopreview.cpp" />
-    <QtMoc Include="USBVideoSource\usbvideosource.h" />
-    <QtMoc Include="USBVideoClipBuffer\usbvideoclipbuffer.h" />
-    <QtMoc Include="USBVideoPreview\usbvideopreview.h" />
-    <QtMoc Include="usbvideoplugin.h" />
+    <ClCompile Include="USBVideoSource\usbvideosourcebin.cpp" />
+    <ClCompile Include="USBVideoSource\usbvideosourcerecorderbin.cpp" />
+    <ClInclude Include="USBVideoSource\usbvideosourcebin.hpp" />
+    <ClInclude Include="USBVideoSource\usbvideosourcerecorderbin.hpp" />
+    <ClInclude Include="utils.hpp" />
+    <QtMoc Include="USBVideoSource\usbvideosource.hpp" />
+    <ClInclude Include="usbvideoplugin.hpp" />
     <ClCompile Include="usbvideoplugin.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="usbvideoplugin.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\core\MSSCore.vcxproj">
       <Project>{90004517-cea0-493d-bc67-b07f996c62b8}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="USBVideoClipEncoder\usbvideoclipencoder.h" />
-    <ClInclude Include="USBVideoPropertiesWidget\QtCameraFormatTableWidgetItem\qtcameraformatablewidgetitem.h" />
-    <QtMoc Include="USBVideoRecordingPropertiesWidget\usbvideorecordingpropertieswidget.h" />
-    <QtMoc Include="USBVideoPropertiesWidget\usbvideopropertieswidget.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="USBVideoPropertiesWidget\usbvideopropertieswidget.ui" />
-    <QtUic Include="USBVideoRecordingPropertiesWidget\usbvideorecordingpropertieswidget.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -1,11 +1,20 @@
 #include "elementtreemodel.h"
 
-ElementTreeModel::ElementTreeModel(MountController* mc,
-    SourceController* sc,
-    ProcessingController* pc,
+ElementTreeModel::ElementTreeModel(MainController* mc,
     QObject* parent)
-	: QAbstractItemModel(parent)
-{}
+	: QAbstractItemModel(parent), m_mainController(mc)
+{
+	// Connect signals for rebuilds
+    connect(m_mainController->sourceController(), &SourceController::sourceAdded, this, [this]() {
+        this->rebuild();
+		});
+
+    connect(m_mainController->mountController(), &MountController::mountAdded, this, &ElementTreeModel::rebuild);
+
+    connect(m_mainController->processingController(), &ProcessingController::processorAdded, this, &ElementTreeModel::rebuild);
+
+    connect(m_mainController->mountController(), &MountController::mountRemoved, this, &ElementTreeModel::removeNode);
+}
 
 ElementTreeModel::~ElementTreeModel()
 {}
@@ -45,51 +54,104 @@ int ElementTreeModel::rowCount(const QModelIndex& p) const
 {
     int parentRow = p.isValid() ? p.internalId() : -1;
     return std::count_if(mNodes.begin(), mNodes.end(),
-        [=](const Node& n) { return n.parentIndex == parentRow; });
+        [=](const ElementTreeNode& n) { return n.parentIndex == parentRow; });
 }
 
 QVariant ElementTreeModel::data(const QModelIndex& idx, int role) const
 {
     if (!idx.isValid()) return {};
-    const Node& n = mNodes[int(idx.internalId())];
-
-    /*if (role == TreeRoles::TypeRole) return int(n.kind);
-    if (role == TreeRoles::IdRole)   return n.id;*/
-
-    /*if (role == Qt::DecorationRole && idx.column() == 0)
-        return iconFor(n.kind);*/
+    const ElementTreeNode& n = mNodes[int(idx.internalId())];
 
     if (role == Qt::DisplayRole) {
         if (idx.column() == 0) {
             switch (n.kind) {
-            case Node::Kind::Mount: return mMountController->byId(n.id)->name();
-            case Node::Kind::Source: return mSourceController->byId(n.id)->name();
-            //case Node::Kind::Processor: return mProcessingController->byId(n.id)->name();
+            case ElementTreeNode::Kind::Mount: {
+                const Mount* m = m_mainController->mountController()->byId(n.id);
+                return m ? QString::fromStdString(m->name()) : QString("<unknown mount>");
+            }
+            case ElementTreeNode::Kind::Source: return QString::fromStdString(m_mainController->sourceController()->byId(n.id)->name());
+            case ElementTreeNode::Kind::Processor: return QString("Processor");
+            default: break;
             }
         }
         if (idx.column() == 1) { /* status text */ }
     }
+    if (role == Qt::UserRole) {
+		return QVariant::fromValue(n);
+    }
     return {};
 }
 
-void ElementTreeModel::rebuild()
+ElementTreeNode* ElementTreeModel::findNode(QUuid uuid)
+{
+    for (auto& node : mNodes) {
+        if (node.id == uuid) {
+            return &node;
+        }
+    }
+}
+
+void ElementTreeModel::removeNode(QUuid uuid)
+{
+    // Removes a node at a specific UUID
+    mNodes.removeIf([this, uuid](ElementTreeNode node) {
+        return node.id == uuid;
+        });
+}
+
+void ElementTreeModel::buildFlat()
+{
+    for (Mount* m : m_mainController->mountController()->mounts()) {
+        // Use controller-assigned ID
+        QUuid mId = boostUuidToQUuid(m->uuid());
+        mNodes << ElementTreeNode{ ElementTreeNode::Kind::Mount, mId, -1 };
+    }
+
+    for (auto s : m_mainController->sourceController()->sources()) {
+		// Use universal uuid
+		QUuid sId = boostUuidToQUuid(s->uuid());
+        mNodes << ElementTreeNode{ ElementTreeNode::Kind::Source, sId, -1 };
+    }
+
+    for (auto p : m_mainController->processingController()->processors()) {
+		QUuid pId = boostUuidToQUuid(p->uuid());
+        mNodes << ElementTreeNode{ ElementTreeNode::Kind::Processor, pId, -1 };
+    }
+}
+
+void ElementTreeModel::buildHierarchical()
+{
+    // TODO: add this better hierarchical structure instead of simple list of elements
+    // flat list with parent indices
+    for (Mount* m : m_mainController->mountController()->mounts()) {
+        int mRow = mNodes.size();
+        // Use controller-assigned ID
+        QUuid id = boostUuidToQUuid(m->uuid());
+        mNodes << ElementTreeNode{ ElementTreeNode::Kind::Mount, id, -1};
+
+        for (auto s : m_mainController->sessionController()->getSourcesByMount(id)) {
+            int sRow = mNodes.size();
+			QUuid sId = boostUuidToQUuid(s->uuid());
+            mNodes << ElementTreeNode{ ElementTreeNode::Kind::Source, sId, mRow };
+
+            for (auto p : m_mainController->sessionController()->getProcessorsBySource(sId)) {
+                // TODO: use real processor ID
+                mNodes << ElementTreeNode{ ElementTreeNode::Kind::Processor, boostUuidToQUuid(p->uuid()), sRow};
+            }
+        }
+    }
+}
+
+void ElementTreeModel::rebuild(bool isFlat)
 {
     beginResetModel();
     mNodes.clear();
 
-    // flat list with parent indices
-    for (Mount* m : mMountController->mounts()) {
-        int mRow = mNodes.size();
-        mNodes << Node{ Node::Kind::Mount, QUuid(m->id()), -1};
-
-        /*for (auto sId : mMountController->sourcesOf(m->id())) {
-            int sRow = mNodes.size();
-            mNodes << Node{ Node::Kind::Source, sId, mRow };
-
-            for (auto pId : mProcessingController->processorsForSource(sId)) {
-                mNodes << Node{ Node::Kind::Processor, pId, sRow };
-            }
-        }*/
+    if (isFlat) {
+		this->buildFlat();
+    }
+    else {
+        this->buildHierarchical();
     }
     endResetModel();
 }
