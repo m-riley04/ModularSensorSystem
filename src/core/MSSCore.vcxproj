@@ -117,6 +117,7 @@
     <ClInclude Include="include\models\session_properties.hpp" />
     <ClInclude Include="include\pipeline\bins\recorderbin.hpp" />
     <ClInclude Include="include\pipeline\mime_types.hpp" />
+    <ClInclude Include="include\pipeline\sinks\recording_defaults.hpp" />
     <ClInclude Include="include\utils\debug.hpp" />
     <ClInclude Include="include\utils\session_utils.hpp" />
     <ClInclude Include="include\utils\utils.hpp" />
@@ -124,7 +125,7 @@
     <ClInclude Include="include\pipeline\bins\binbase.hpp" />
     <ClInclude Include="include\pipeline\bins\sourcebin.hpp" />
     <ClInclude Include="include\interfaces\capability\iapisource.hpp" />
-    <ClInclude Include="include\pipeline\sinks\defaults.hpp" />
+    <ClInclude Include="include\pipeline\sinks\preview_defaults.hpp" />
     <ClInclude Include="include\utils\boost_qt_conversions.hpp" />
     <ClInclude Include="include\features\ielement.hpp" />
     <ClInclude Include="include\sdk\plugins\pluginloader.hpp" />

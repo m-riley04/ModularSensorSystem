@@ -263,7 +263,7 @@ gboolean SessionController::createAndLinkPreviewBin(Source* src, GstElement* tee
 	// Check validity of each
 	if (!sink) {
 		qWarning() << "Failed to create custom sink element for '" << src->displayName() << "'; creating default sink";
-		sink = createDefaultSink(src->type(), windowId, prevSrc->previewSinkElementName().c_str());
+		sink = createDefaultPreviewSink(src->type(), windowId, prevSrc->previewSinkElementName().c_str());
 	}
 
 	// Add preview element(s) to pipeline

@@ -13,7 +13,7 @@
 #include "controllers/mountcontroller.hpp"
 #include "features/sources/source.hpp"
 #include "interfaces/capability/ianalogsource.hpp"
-#include "pipeline/sinks/defaults.hpp"
+#include "pipeline/sinks/preview_defaults.hpp"
 #include <interfaces/capability/ipreviewablesource.hpp>
 #include "models/session_properties.hpp"
 #include <utils/debug.hpp>
