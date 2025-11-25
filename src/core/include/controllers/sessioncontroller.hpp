@@ -51,7 +51,7 @@ public:
 	GstPipeline* pipeline() const { return m_pipeline.get(); }
 	bool isPipelineBuilt() const { return m_pipeline != nullptr; }
 	SessionProperties& sessionProperties() const { return *m_sessionProperties; }
-	
+
 	QList<const Source*> getSourcesByMount(QUuid mountId) const;
 	QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
 
@@ -90,7 +90,7 @@ private:
 	QList<GstElement*> m_recordBins;
 	QList<GstElement*> m_recordableSources;
 
-	SessionProperties* m_sessionProperties = nullptr;
+	std::unique_ptr<SessionProperties> m_sessionProperties = nullptr;
 
 	SourceController* m_sourceController = nullptr;
 	ProcessingController* m_processingController = nullptr;
@@ -99,17 +99,19 @@ private:
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
 
-	void buildPipeline();
-	void closePipeline();
+	bool buildPipeline();
+	bool closePipeline();
+	bool startPipeline();
+	bool stopPipeline();
 
-	gboolean createSourceElements(Source* source);
-	gboolean createAndLinkPreviewBin(Source* src, GstElement* srcBin);
-	gboolean createAndLinkRecordBin(Source* src, GstElement* srcBin);
+	bool createSourceElements(Source* source);
+	bool createAndLinkPreviewBin(Source* src, GstElement* srcBin);
+	bool createAndLinkRecordBin(Source* src, GstElement* srcBin);
 
-	gboolean openRecordingValves();
-	gboolean closeRecordingValves();
-	gboolean openRecordingValveForSource(Source* source);
-	gboolean closeRecordingValveForSource(Source* source);
+	bool openRecordingValves();
+	bool closeRecordingValves();
+	bool openRecordingValveForSource(IRecordableSource* source);
+	bool closeRecordingValveForSource(IRecordableSource* source);
 
 signals:
 	void sessionStarting();

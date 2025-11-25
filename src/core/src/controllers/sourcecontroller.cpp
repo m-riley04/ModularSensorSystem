@@ -7,13 +7,22 @@ SourceController::SourceController(PluginController* pluginController, QObject *
 SourceController::~SourceController()
 {}
 
+QList<IPreviewableSource*> SourceController::previewableSources() const
+{
+	QList<IPreviewableSource*> previewableSourcesList;
+	for (Source* source : mSources) {
+		if (!source) continue;
+		if (auto s = source->asPreviewable()) previewableSourcesList.append(s);
+	}
+	return previewableSourcesList;
+}
+
 QList<IRecordableSource*> SourceController::recordableSources() const
 {
 	QList<IRecordableSource*> recordableSourcesList;
 	for (Source* source : mSources) {
 		if (!source) continue;
-		if (!source->asRecordable()) continue;
-		recordableSourcesList.append(source->asRecordable());
+		if (auto s = source->asRecordable()) recordableSourcesList.append(s);
 	}
 	return recordableSourcesList;
 }
