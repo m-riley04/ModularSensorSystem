@@ -218,7 +218,7 @@ void MainWindow::onLoadPresetClicked()
         });
     if (it != presets.end()) {
         // Load the preset
-        m_presetsController.loadPreset(it->path, &m_controller.sourceController(), &m_controller.pluginController());
+        m_presetsController.loadPreset(it->path, m_controller.sourceController(), m_controller.pluginController());
     }
 }
 
@@ -302,7 +302,9 @@ void MainWindow::openAddSourceDialog()
     AddSourceDialog* addDeviceDialog = new AddSourceDialog(&m_controller.pluginController(), this);
     addDeviceDialog->setWindowModality(Qt::WindowModal);
 
-    connect(addDeviceDialog, &AddSourceDialog::sourceConfirmed, &m_controller.sourceController(), &SourceController::addSource);
+    connect(addDeviceDialog, &AddSourceDialog::sourceConfirmed, [this](ISourcePlugin* plugin, SourceInfo deviceInfo) {
+		m_controller.sourceController().addSource(plugin, deviceInfo);
+        });
 
     addDeviceDialog->show();
 }
@@ -450,13 +452,13 @@ void MainWindow::updateToolbarButtonsState()
 
 void MainWindow::onPrintPipelineDebugClicked()
 {
-	GstElement* pipeline = m_controller.sessionController().pipeline().bin();
+	const GstElement* pipeline = m_controller.sessionController().pipeline().bin();
     if (!pipeline) {
         QMessageBox::warning(this, tr("Pipeline Not Built"), tr("The GStreamer pipeline is not built yet."));
         return;
 	}
 
-    QString output = debugDisplayGstBin(pipeline);
+    QString output = debugDisplayGstBin(pipeline, true);
 
     if (!output.isEmpty()) {
         QMessageBox::warning(this, tr("Error"), output);

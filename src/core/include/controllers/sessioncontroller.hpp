@@ -32,10 +32,10 @@ public:
 		MountController& mountController, QObject* parent);
 	~SessionController();
 
-	SessionPipeline& pipeline() { return m_pipeline; }
+	const SessionPipeline& pipeline() { return m_pipeline; }
 	SessionProperties& sessionProperties() { return m_sessionProperties; }
-	QList<const Source*>& getSourcesByMount(QUuid mountId) const;
-	QList<const Processor*>& getProcessorsBySource(QUuid sourceId) const;
+	const QList<const Source*> getSourcesByMount(QUuid mountId) const;
+	const QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
 
 public slots:
 	void startSession();
@@ -68,6 +68,6 @@ signals:
 	void recordingStopped();
 
 	void sessionPropertiesChanged(const SessionProperties& properties);
-	void errorOccurred(QString errorMessage);
+	void errorOccurred(QString errorMessage); // TODO: should I use a const ref?
 
 };

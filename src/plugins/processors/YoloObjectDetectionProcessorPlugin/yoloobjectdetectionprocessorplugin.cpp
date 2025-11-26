@@ -3,7 +3,7 @@
 
 Processor* YoloObjectDetectionProcessorPlugin::createProcessor(Source* src, QObject* parent)
 {
-    ElementInfo info{
+    const ElementInfo info{
         .id = "yolo_object_detection_processor",
         .name = "YOLO Object Detection Processor",
         .displayName = "YOLO Object Detection Processor",

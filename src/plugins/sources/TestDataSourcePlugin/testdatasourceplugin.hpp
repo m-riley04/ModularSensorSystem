@@ -15,10 +15,10 @@ class TestDataSourcePlugin : public ISourcePlugin
 {
 
 public:
-	std::vector<SourceInfo> discover() const override;
+	const std::vector<SourceInfo> discover() const override;
 	Source* createSource(const std::string& id, QObject* parent) override;
-	std::string name() const override { return PLUGIN_NAME; }
-	uint32_t version() const override { return MSS_API; }
+	const std::string& name() const override { return PLUGIN_NAME; }
+	const uint32_t version() const override { return MSS_API; }
 	Source::Type sourceType() const override { return Source::Type::DATA; }
 };
 

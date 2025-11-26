@@ -8,7 +8,7 @@
 class IMountPlugin : public IPlugin
 {
 public:
-    virtual std::vector<ElementInfo> discover() const = 0;
+    virtual const std::vector<ElementInfo> discover() const = 0;
     virtual Mount* createMount(const std::string& id, QObject* parent) = 0;
-    PluginType type() const override { return PluginType::MOUNT; }
+    virtual const PluginType type() const override final { return PluginType::MOUNT; }
 };

@@ -30,7 +30,7 @@ public:
 	explicit SessionPipeline(SessionProperties& properties, QObject* parent = nullptr);
 	virtual ~SessionPipeline() = default;
 
-	GstElement* bin() const { return GST_ELEMENT(m_pipeline.get()); }
+	const GstElement* bin() const { return GST_ELEMENT(m_pipeline.get()); }
 
 	State state() const { return m_state; }
 	bool isStarted() const { return m_state == State::STARTED; }
@@ -48,16 +48,8 @@ public slots:
 	bool build(SessionProperties& properties, const QList<Source*>& sources, const QList<IRecordableSource*>& recSources);
 	bool close();
 
-	void onPipelineError(const QString& errorMessage) {
-		qWarning() << "Pipeline error occurred:" << errorMessage;
-		setState(State::ERROR);
-		emit errorOccurred(errorMessage);
-	}
-
-	void onPipelineEos() {
-		qDebug() << "Pipeline EOS reached.";
-		emit eosReached();
-	}
+	void onPipelineError(const QString& errorMessage);
+	void onPipelineEos();
 
 private:
 	bool start();

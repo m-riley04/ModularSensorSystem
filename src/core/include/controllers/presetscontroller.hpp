@@ -23,8 +23,8 @@ public:
 	QList<Preset> presets() const { return mPresets; }
 	QString presetsDir() const { return mPresetsDir; }
 
-	void savePreset(QString name, QList<Source*> activeSources = QList<Source*>(), QString dirPath = QString());
-	void loadPreset(const QString& path, SourceController* sourceController, PluginController* pluginController);
+	void savePreset(const QString& name, const QList<Source*>& activeSources = QList<Source*>(), const QString& dirPath = QString());
+	void loadPreset(const QString& path, SourceController& sourceController, PluginController& pluginController);
 	void removePreset(QString filePath);
 
 	void scanForPresets(QString presetDir = QString());

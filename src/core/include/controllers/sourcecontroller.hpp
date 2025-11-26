@@ -19,9 +19,9 @@ public:
 	SourceController(QObject *parent);
 	~SourceController();
 
-	QList<Source*> sources() const { return mSources; }
-	QList<IPreviewableSource*> previewableSources() const;
-	QList<IRecordableSource*> recordableSources() const;
+	const QList<Source*>& sources() const { return mSources; }
+	const QList<IPreviewableSource*> previewableSources() const;
+	const QList<IRecordableSource*> recordableSources() const;
 
 	bool isEmpty() const { return mSources.isEmpty(); }
 

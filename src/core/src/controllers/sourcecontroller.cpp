@@ -7,7 +7,7 @@ SourceController::SourceController(QObject *parent)
 SourceController::~SourceController()
 {}
 
-QList<IPreviewableSource*> SourceController::previewableSources() const
+const QList<IPreviewableSource*> SourceController::previewableSources() const
 {
 	QList<IPreviewableSource*> previewableSourcesList;
 	for (Source* source : mSources) {
@@ -17,7 +17,7 @@ QList<IPreviewableSource*> SourceController::previewableSources() const
 	return previewableSourcesList;
 }
 
-QList<IRecordableSource*> SourceController::recordableSources() const
+const QList<IRecordableSource*> SourceController::recordableSources() const
 {
 	QList<IRecordableSource*> recordableSourcesList;
 	for (Source* source : mSources) {
@@ -32,13 +32,18 @@ Source* SourceController::byId(const QUuid & id) const
 	return mSourcesById.value(id);
 }
 
+
 Source* SourceController::addSource(ISourcePlugin* plugin, SourceInfo info) {
 	if (!plugin) {
-		qWarning() << "Plugin for source is null";
+		qWarning() << "addSource: plugin is null";
 		return nullptr;
 	}
-	
+
 	auto source = plugin->createSource(info.elementInfo.id, this);
+	if (!source) {
+		qWarning() << "createSource returned null for" << QString::fromStdString(info.elementInfo.id);
+		return nullptr;
+	}
 
 	mSources.append(source);
 	QUuid uid = boostUuidToQUuid(source->uuid());

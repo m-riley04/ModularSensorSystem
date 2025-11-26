@@ -18,7 +18,7 @@ public:
 	};
 
 public:
-	Mount(ElementInfo& element, QObject* parent) : Element(element, parent) {}
+	Mount(const ElementInfo& element, QObject* parent) : Element(element, parent) {}
 	virtual ~Mount() = default;
 
 	/**

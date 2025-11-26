@@ -452,3 +452,14 @@ void SessionPipeline::setState(State newState)
 	m_state = newState;
 	emit stateChanged(newState);
 }
+
+void SessionPipeline::onPipelineError(const QString& errorMessage) {
+	qWarning() << "Pipeline error occurred:" << errorMessage;
+	setState(State::ERROR);
+	emit errorOccurred(errorMessage);
+}
+
+void SessionPipeline::onPipelineEos() {
+	qDebug() << "Pipeline EOS reached.";
+	emit eosReached();
+}
