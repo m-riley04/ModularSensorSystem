@@ -14,7 +14,7 @@ class YoloObjectDetectionProcessorPlugin : public IProcessorPlugin {
 
 public:
     Source::Type supportedSourceType() const override { return Source::Type::VIDEO; }
-    const std::string& name() const override { return "YOLO Object Detection"; }
+    const std::string name() const override { return "YOLO Object Detection"; }
     const uint32_t version() const override { return 0x00010000; }
     Processor* createProcessor(Source* src, QObject* parent = nullptr) override;
 };
