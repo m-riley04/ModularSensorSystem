@@ -27,14 +27,14 @@ class SessionController : public BackendControllerBase
 	Q_OBJECT
 
 public:
-	SessionController(SourceController* sourceController, ProcessingController* processingController, 
-		MountController* mountController, QObject* parent);
+	SessionController(SourceController& sourceController, ProcessingController& processingController, 
+		MountController& mountController, QObject* parent);
 	~SessionController();
 
-	SessionPipeline* pipeline() const { return m_pipeline.get(); }
-	SessionProperties& sessionProperties() const { return *m_sessionProperties; }
-	QList<const Source*> getSourcesByMount(QUuid mountId) const;
-	QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
+	SessionPipeline& pipeline() { return m_pipeline; }
+	SessionProperties& sessionProperties() { return m_sessionProperties; }
+	QList<const Source*>& getSourcesByMount(QUuid mountId) const;
+	QList<const Processor*>& getProcessorsBySource(QUuid sourceId) const;
 
 public slots:
 	void startSession();
@@ -43,20 +43,17 @@ public slots:
 
 	void startRecording();
 	void stopRecording();
-	
-	void setSessionProperties(SessionProperties properties);
+
+	void setSessionProperties(const SessionProperties& properties);
 
 private:
-	std::unique_ptr<SessionPipeline> m_pipeline;
+	SessionPipeline m_pipeline;
+	SessionProperties m_sessionProperties;
 	ns m_lastSessionTimestamp = 0;
 
-	QThread* m_pipelineThread;
-
-	std::unique_ptr<SessionProperties> m_sessionProperties = nullptr;
-
-	SourceController* m_sourceController = nullptr;
-	ProcessingController* m_processingController = nullptr;
-	MountController* m_mountController = nullptr;
+	SourceController& m_sourceController;
+	ProcessingController& m_processingController;
+	MountController& m_mountController;
 
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
@@ -69,7 +66,7 @@ signals:
 	void recordingStarted();
 	void recordingStopped();
 
-	void sessionPropertiesChanged(SessionProperties properties);
+	void sessionPropertiesChanged(const SessionProperties& properties);
 	void errorOccurred(QString errorMessage);
 
 };

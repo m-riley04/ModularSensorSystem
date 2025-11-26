@@ -1,13 +1,6 @@
 ﻿#include "controllers/sessioncontroller.hpp"
 
-SessionController::SessionController(SourceController* sourceController, ProcessingController* processingController, 
-	MountController* mountController, QObject* parent)
-	: BackendControllerBase("SessionController", parent), m_pipeline(new SessionPipeline(this)),
-	m_sourceController(sourceController), m_processingController(processingController), 
-	m_mountController(mountController), m_sessionProperties(new SessionProperties()),
-	m_pipelineThread(new QThread(this))
-{
-
+static SessionProperties initSessionProps() {
 	// Create sessions directory if it doesn't exist
 	QDir sessionsDir = QDir(QCoreApplication::applicationDirPath() + DEFAULT_SESSIONS_DIRECTORY);
 	if (!sessionsDir.exists()) {
@@ -17,12 +10,7 @@ SessionController::SessionController(SourceController* sourceController, Process
 		}
 	}
 
-	// Connect signals for error handling
-	connect(m_pipeline.get(), &SessionPipeline::errorOccurred, this, &SessionController::errorOccurred);
-	
-	// TODO: in the future, load the session properties from a saved state
-	// For right now, just initialize with defaults
-	*m_sessionProperties = {
+	return {
 		.generalProperties = {},
 		.clippingProperties = {
 			.enabled = false,
@@ -35,21 +23,29 @@ SessionController::SessionController(SourceController* sourceController, Process
 			.enabled = false,
 		},
 	};
+}
 
-	// Move pipeline to its own thread
-	m_pipeline->moveToThread(m_pipelineThread);
+SessionController::SessionController(SourceController& sourceController, ProcessingController& processingController, 
+	MountController& mountController, QObject* parent)
+	: BackendControllerBase("SessionController", parent), m_sessionProperties(initSessionProps()),
+	m_pipeline(SessionPipeline(m_sessionProperties, this)), m_sourceController(sourceController), m_processingController(processingController),
+	m_mountController(mountController)
+{
+	// TODO: in the future, load the session properties from a saved state. For right now, they're default.
+
+	// Connect signals for error handling
+	connect(&m_pipeline, &SessionPipeline::errorOccurred, this, &SessionController::errorOccurred);
 }
 
 SessionController::~SessionController()
 {
-	m_pipeline->close();
-	m_pipelineThread->quit();
+	m_pipeline.close();
 }
 
-void SessionController::setSessionProperties(SessionProperties properties)
+void SessionController::setSessionProperties(const SessionProperties& properties)
 {
-	*m_sessionProperties = properties;
-	m_pipeline->setSessionProperties(m_sessionProperties.get());
+	m_sessionProperties = properties;
+	m_pipeline.setSessionProperties(m_sessionProperties);
 
 	emit sessionPropertiesChanged(properties);
 }
@@ -65,42 +61,42 @@ void SessionController::startSession()
 {
 	// Generate a new session timestamp
 	m_lastSessionTimestamp = generateTimestampNs();
-	m_pipeline->setSessionTimestamp(m_lastSessionTimestamp);
-	m_pipeline->build(m_sessionProperties.get(), m_sourceController->sources(), m_sourceController->recordableSources());
+	m_pipeline.setSessionTimestamp(m_lastSessionTimestamp);
+	m_pipeline.build(m_sessionProperties, m_sourceController.sources(), m_sourceController.recordableSources());
 }
 
 void SessionController::stopSession()
 {
-	m_pipeline->close();
+	m_pipeline.close();
 }
 
 void SessionController::startRecording()
 {
-	m_pipeline->startRecording();
+	m_pipeline.startRecording();
 }
 
 void SessionController::stopRecording()
 {
-	m_pipeline->stopRecording();
+	m_pipeline.stopRecording();
 }
 
-QList<const Source*> SessionController::getSourcesByMount(QUuid mountId) const
+QList<const Source*>& SessionController::getSourcesByMount(QUuid mountId) const
 {
 	QList<const Source*> sources;
 	const auto sourceIds = m_mountToSources.value(mountId);
 	for (auto& id : sourceIds) {
-		const Source* source = m_sourceController->byId(id);
+		const Source* source = m_sourceController.byId(id);
 		sources.push_back(source);
 	}
 	return sources;
 }
 
-QList<const Processor*> SessionController::getProcessorsBySource(QUuid sourceId) const
+QList<const Processor*>& SessionController::getProcessorsBySource(QUuid sourceId) const
 {
 	QList<const Processor*> processors;
 	const auto processorIds = m_sourceToProcessors.value(sourceId);
 	for (auto& id : processorIds) {
-		const Processor* source = m_processingController->byId(id);
+		const Processor* source = m_processingController.byId(id);
 		processors.push_back(source);
 	}
 	return processors;

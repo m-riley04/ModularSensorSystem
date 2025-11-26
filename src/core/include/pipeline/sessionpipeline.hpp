@@ -27,7 +27,7 @@ public:
 	};
 
 public:
-	explicit SessionPipeline(QObject* parent = nullptr);
+	explicit SessionPipeline(SessionProperties& properties, QObject* parent = nullptr);
 	virtual ~SessionPipeline() = default;
 
 	GstElement* bin() const { return GST_ELEMENT(m_pipeline.get()); }
@@ -39,14 +39,25 @@ public:
 	bool isBuilt() const { return m_pipeline != nullptr; }
 
 	void setSessionTimestamp(ns timestamp) { m_lastSessionTimestamp = timestamp; }
-	void setSessionProperties(SessionProperties* properties) { m_sessionProperties = properties; }
+	void setSessionProperties(SessionProperties& properties) { m_sessionProperties = &properties; }
 
 public slots:
 	void setState(State newState);
 	void startRecording();
 	void stopRecording();
-	bool build(SessionProperties* properties, QList<Source*> sources, QList<IRecordableSource*> recSources);
+	bool build(SessionProperties& properties, const QList<Source*>& sources, const QList<IRecordableSource*>& recSources);
 	bool close();
+
+	void onPipelineError(const QString& errorMessage) {
+		qWarning() << "Pipeline error occurred:" << errorMessage;
+		setState(State::ERROR);
+		emit errorOccurred(errorMessage);
+	}
+
+	void onPipelineEos() {
+		qDebug() << "Pipeline EOS reached.";
+		emit eosReached();
+	}
 
 private:
 	bool start();
@@ -57,8 +68,8 @@ private:
 	bool createAndLinkPreviewBin(Source* src, GstElement* srcBin);
 	bool createAndLinkRecordBin(Source* src, GstElement* srcBin);
 
-	bool openRecordingValves(QList<IRecordableSource*>);
-	bool closeRecordingValves(QList<IRecordableSource*>);
+	bool openRecordingValves(QList<IRecordableSource*>&);
+	bool closeRecordingValves(QList<IRecordableSource*>&);
 	bool openRecordingValveForSource(IRecordableSource* source);
 	bool closeRecordingValveForSource(IRecordableSource* source);
 

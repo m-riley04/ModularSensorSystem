@@ -1,7 +1,7 @@
 #include "pipeline/sessionpipeline.hpp"
 
-SessionPipeline::SessionPipeline(QObject* parent)
-	: QObject(parent), m_pipeline(nullptr, &gst_object_unref)
+SessionPipeline::SessionPipeline(SessionProperties& properties, QObject* parent)
+	: QObject(parent), m_pipeline(nullptr, &gst_object_unref), m_sessionProperties(&properties)
 {
 	if (!gst_is_initialized()) {
 		gst_init(nullptr, nullptr);
@@ -15,7 +15,7 @@ static gboolean pipeline_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 	switch (GST_MESSAGE_TYPE(msg)) {
 
 	case GST_MESSAGE_EOS:
-		QMetaObject::invokeMethod(sessionPipeline, "pipelineEosReached", Qt::QueuedConnection);
+		QMetaObject::invokeMethod(sessionPipeline, "onPipelineEos", Qt::QueuedConnection);
 		break;
 	case GST_MESSAGE_WARNING: {
 		gchar* debug;
@@ -25,7 +25,7 @@ static gboolean pipeline_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 		g_free(debug);
 
 		// Notify session pipeline of the warning/error
-		QMetaObject::invokeMethod(sessionPipeline, "setPipelineError", Qt::QueuedConnection,
+		QMetaObject::invokeMethod(sessionPipeline, "onPipelineError", Qt::QueuedConnection,
 			Q_ARG(QString, QString::fromUtf8(error->message)));
 		g_error_free(error);
 		break;
@@ -38,7 +38,7 @@ static gboolean pipeline_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 		g_free(debug);
 
 		// Notify session pipeline of the error
-		QMetaObject::invokeMethod(sessionPipeline, "setPipelineError", Qt::QueuedConnection,
+		QMetaObject::invokeMethod(sessionPipeline, "onPipelineError", Qt::QueuedConnection,
 			Q_ARG(QString, QString::fromUtf8(error->message)));
 		g_error_free(error);
 
@@ -54,13 +54,13 @@ static gboolean pipeline_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 	return true;
 }
 
-bool SessionPipeline::build(SessionProperties* properties, QList<Source*> sources, QList<IRecordableSource*> recordableSources)
+bool SessionPipeline::build(SessionProperties& properties, const QList<Source*>& sources, const QList<IRecordableSource*>& recordableSources)
 {
 	// Cleanly tear down any existing pipeline first
 	close();
 
 	// Set session properties
-	m_sessionProperties = properties;
+	m_sessionProperties = &properties;
 	m_recordableSources = recordableSources;
 
 	// Create the main pipeline
@@ -374,7 +374,7 @@ bool SessionPipeline::createAndLinkRecordBin(Source* src, GstElement* tee)
 	return true;
 }
 
-bool SessionPipeline::openRecordingValves(QList<IRecordableSource*> sources)
+bool SessionPipeline::openRecordingValves(QList<IRecordableSource*>& sources)
 {
 	// Iterate over all sources and open their valves
 	for (auto& src : sources) {
@@ -386,7 +386,7 @@ bool SessionPipeline::openRecordingValves(QList<IRecordableSource*> sources)
 	return true;
 }
 
-bool SessionPipeline::closeRecordingValves(QList<IRecordableSource*> sources)
+bool SessionPipeline::closeRecordingValves(QList<IRecordableSource*>& sources)
 {
 	// Iterate over all sources and close their valves
 	for (auto& src : sources) {

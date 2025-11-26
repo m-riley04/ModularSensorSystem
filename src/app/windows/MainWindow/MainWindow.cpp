@@ -483,16 +483,16 @@ void MainWindow::updateToolbarButtonsState()
 
     /// SESSION
     ui.actionStartStopSession->setEnabled(hasSources);
-    ui.actionRecord->setEnabled(pController->sessionController()->pipeline()->isBuilt());
-    ui.actionClipSession->setEnabled(pController->sessionController()->pipeline()->isBuilt());
+    ui.actionRecord->setEnabled(pController->sessionController()->pipeline().isBuilt());
+    ui.actionClipSession->setEnabled(pController->sessionController()->pipeline().isBuilt());
 
     /// DEBUG
-	ui.actionDebugPipelineDiagram->setEnabled(pController->sessionController()->pipeline()->isBuilt());
+	ui.actionDebugPipelineDiagram->setEnabled(pController->sessionController()->pipeline().isBuilt());
 }
 
 void MainWindow::onPrintPipelineDebugClicked()
 {
-	GstElement* pipeline = pController->sessionController()->pipeline()->bin();
+	GstElement* pipeline = pController->sessionController()->pipeline().bin();
     if (!pipeline) {
         QMessageBox::warning(this, tr("Pipeline Not Built"), tr("The GStreamer pipeline is not built yet."));
         return;

@@ -9,7 +9,7 @@ MainController::MainController(QObject *parent)
 	pPresetsController = new PresetsController(QCoreApplication::applicationDirPath() + "/presets", this);
 	pProcessingController = new ProcessingController(this);
 	pMountController = new MountController(this);
-	pSessionController = new SessionController(pSourceController, pProcessingController, pMountController, this);
+	pSessionController = new SessionController(*pSourceController, *pProcessingController, *pMountController, this);
 }
 
 MainController::~MainController()
