@@ -18,11 +18,7 @@ void PreviewContainerWidget::initSignals()
 		return;
 	}
 
-	SourceController* sourceController = m_controller->sourceController();
-	if (sourceController == nullptr) {
-		qDebug() << "Cannot initialize signals: source controller is null";
-		return;
-	}
+	SourceController& sourceController = m_controller->sourceController();
 
 	// Button controls
 	connect(ui.buttonPrevious, &QPushButton::clicked, this, [this]() {
@@ -40,8 +36,8 @@ void PreviewContainerWidget::initSignals()
 		});
 
 	// Source added ui updates
-	connect(sourceController, &SourceController::sourceAdded, this, &PreviewContainerWidget::addSourceWidget);
-	connect(sourceController, &SourceController::sourceRemoved, this, &PreviewContainerWidget::removeSourceWidget);
+	connect(&sourceController, &SourceController::sourceAdded, this, &PreviewContainerWidget::addSourceWidget);
+	connect(&sourceController, &SourceController::sourceRemoved, this, &PreviewContainerWidget::removeSourceWidget);
 	
 	// Page changed ui updates
 	connect(ui.stackedWidget, &QStackedWidget::currentChanged, this, &PreviewContainerWidget::updateButtonControls);

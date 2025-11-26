@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include "features/sources/source.hpp"
 #include "controllers/sourcecontroller.hpp"
+#include "controllers/plugincontroller.hpp"
 #include "presets/preset.hpp"
 #include "interfaces/capability/iconfigurablesource.hpp"
 #include "controllers/backendcontrollerbase.hpp"

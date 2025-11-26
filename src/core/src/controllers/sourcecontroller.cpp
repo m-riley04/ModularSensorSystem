@@ -1,7 +1,7 @@
 #include "controllers/sourcecontroller.hpp"
 
-SourceController::SourceController(PluginController* pluginController, QObject *parent)
-	: BackendControllerBase("SourceController", parent), pPluginController(pluginController)
+SourceController::SourceController(QObject *parent)
+	: BackendControllerBase("SourceController", parent)
 {}
 
 SourceController::~SourceController()

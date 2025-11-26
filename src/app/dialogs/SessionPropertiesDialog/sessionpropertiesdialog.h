@@ -20,7 +20,7 @@ private slots:
 private:
 	Ui::SessionPropertiesDialogClass ui;
 
-	MainController* pController = nullptr;
+	MainController* m_controller = nullptr;
 	SessionProperties* m_currentData = nullptr;
 	SessionProperties m_newData{};
 

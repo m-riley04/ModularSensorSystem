@@ -3,8 +3,11 @@
 #include <QObject>
 #include <qcameradevice.h>
 #include <QPointer>
+#include <QDebug>
+#include <QUuid>
 #include "controllers/backendcontrollerbase.hpp"
-#include "controllers/plugincontroller.hpp"
+#include "features/processors/processor.hpp"
+#include <sdk/plugins/isourceplugin.hpp>
 #include "features/sources/source.hpp"
 #include "utils/boost_qt_conversions.hpp"
 
@@ -13,14 +16,12 @@ class SourceController : public BackendControllerBase
 	Q_OBJECT
 
 public:
-	SourceController(PluginController* pluginController, QObject *parent);
+	SourceController(QObject *parent);
 	~SourceController();
 
 	QList<Source*> sources() const { return mSources; }
 	QList<IPreviewableSource*> previewableSources() const;
 	QList<IRecordableSource*> recordableSources() const;
-
-	PluginController* pluginController() const { return pPluginController; }
 
 	bool isEmpty() const { return mSources.isEmpty(); }
 
@@ -31,8 +32,6 @@ private:
 
 	QHash<QUuid, QList<Processor*>> mProcessorsBySourceId;
 	QHash<QUuid, Source*> mSourcesById;
-
-	QPointer<PluginController> pPluginController;
 
 public slots:
 	Source* addSource(ISourcePlugin* plugin, SourceInfo info);

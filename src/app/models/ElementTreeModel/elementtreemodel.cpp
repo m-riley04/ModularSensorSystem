@@ -5,15 +5,15 @@ ElementTreeModel::ElementTreeModel(MainController* mc,
 	: QAbstractItemModel(parent), m_mainController(mc)
 {
 	// Connect signals for rebuilds
-    connect(m_mainController->sourceController(), &SourceController::sourceAdded, this, [this]() {
+    connect(&m_mainController->sourceController(), &SourceController::sourceAdded, this, [this]() {
         this->rebuild();
 		});
 
-    connect(m_mainController->mountController(), &MountController::mountAdded, this, &ElementTreeModel::rebuild);
+    connect(&m_mainController->mountController(), &MountController::mountAdded, this, &ElementTreeModel::rebuild);
 
-    connect(m_mainController->processingController(), &ProcessingController::processorAdded, this, &ElementTreeModel::rebuild);
+    connect(&m_mainController->processingController(), &ProcessingController::processorAdded, this, &ElementTreeModel::rebuild);
 
-    connect(m_mainController->mountController(), &MountController::mountRemoved, this, &ElementTreeModel::removeNode);
+    connect(&m_mainController->mountController(), &MountController::mountRemoved, this, &ElementTreeModel::removeNode);
 }
 
 ElementTreeModel::~ElementTreeModel()
@@ -66,10 +66,10 @@ QVariant ElementTreeModel::data(const QModelIndex& idx, int role) const
         if (idx.column() == 0) {
             switch (n.kind) {
             case ElementTreeNode::Kind::Mount: {
-                const Mount* m = m_mainController->mountController()->byId(n.id);
+                const Mount* m = m_mainController->mountController().byId(n.id);
                 return m ? QString::fromStdString(m->name()) : QString("<unknown mount>");
             }
-            case ElementTreeNode::Kind::Source: return QString::fromStdString(m_mainController->sourceController()->byId(n.id)->name());
+            case ElementTreeNode::Kind::Source: return QString::fromStdString(m_mainController->sourceController().byId(n.id)->name());
             case ElementTreeNode::Kind::Processor: return QString("Processor");
             default: break;
             }
@@ -101,19 +101,19 @@ void ElementTreeModel::removeNode(QUuid uuid)
 
 void ElementTreeModel::buildFlat()
 {
-    for (Mount* m : m_mainController->mountController()->mounts()) {
+    for (Mount* m : m_mainController->mountController().mounts()) {
         // Use controller-assigned ID
         QUuid mId = boostUuidToQUuid(m->uuid());
         mNodes << ElementTreeNode{ ElementTreeNode::Kind::Mount, mId, -1 };
     }
 
-    for (auto s : m_mainController->sourceController()->sources()) {
+    for (auto s : m_mainController->sourceController().sources()) {
 		// Use universal uuid
 		QUuid sId = boostUuidToQUuid(s->uuid());
         mNodes << ElementTreeNode{ ElementTreeNode::Kind::Source, sId, -1 };
     }
 
-    for (auto p : m_mainController->processingController()->processors()) {
+    for (auto p : m_mainController->processingController().processors()) {
 		QUuid pId = boostUuidToQUuid(p->uuid());
         mNodes << ElementTreeNode{ ElementTreeNode::Kind::Processor, pId, -1 };
     }
@@ -123,18 +123,18 @@ void ElementTreeModel::buildHierarchical()
 {
     // TODO: add this better hierarchical structure instead of simple list of elements
     // flat list with parent indices
-    for (Mount* m : m_mainController->mountController()->mounts()) {
+    for (Mount* m : m_mainController->mountController().mounts()) {
         int mRow = mNodes.size();
         // Use controller-assigned ID
         QUuid id = boostUuidToQUuid(m->uuid());
         mNodes << ElementTreeNode{ ElementTreeNode::Kind::Mount, id, -1};
 
-        for (auto s : m_mainController->sessionController()->getSourcesByMount(id)) {
+        for (auto s : m_mainController->sessionController().getSourcesByMount(id)) {
             int sRow = mNodes.size();
 			QUuid sId = boostUuidToQUuid(s->uuid());
             mNodes << ElementTreeNode{ ElementTreeNode::Kind::Source, sId, mRow };
 
-            for (auto p : m_mainController->sessionController()->getProcessorsBySource(sId)) {
+            for (auto p : m_mainController->sessionController().getProcessorsBySource(sId)) {
                 // TODO: use real processor ID
                 mNodes << ElementTreeNode{ ElementTreeNode::Kind::Processor, boostUuidToQUuid(p->uuid()), sRow};
             }

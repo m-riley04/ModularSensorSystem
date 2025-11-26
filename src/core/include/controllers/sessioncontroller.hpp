@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QThread>
+#include <QCoreApplication>
 #include "controllers/backendcontrollerbase.hpp"
 #include "controllers/sourcecontroller.hpp"
 #include "controllers/processingcontroller.hpp"
@@ -14,7 +16,6 @@
 #include <interfaces/capability/ipreviewablesource.hpp>
 #include "models/session_properties.hpp"
 #include <utils/session_utils.hpp>
-#include <QThread>
 #include "pipeline/sessionpipeline.hpp"
 
 #define DEFAULT_SESSION_PREFIX "session_"

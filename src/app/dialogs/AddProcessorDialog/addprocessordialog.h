@@ -16,7 +16,7 @@ public:
 
 private:
 	Ui::AddProcessorDialogClass ui;
-	QPointer<PluginController> pPluginController;
+	QPointer<PluginController> m_pluginController;
 
 	IProcessorPlugin* pSelectedProcessorPlugin;
 	ProcessorInfo mSelectedProcessor;

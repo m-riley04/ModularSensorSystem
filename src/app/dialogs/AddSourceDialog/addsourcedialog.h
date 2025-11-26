@@ -17,7 +17,7 @@ public:
 
 private:
 	Ui::AddSourceDialogClass ui;
-	QPointer<PluginController> pPluginController;
+	QPointer<PluginController> m_pluginController;
 
 	ISourcePlugin* pSelectedSourcePlugin;
 	SourceInfo mSelectedSourceInfo;
