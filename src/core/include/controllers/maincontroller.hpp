@@ -27,30 +27,18 @@ public:
 	 */
 	QList<BackendControllerBase*> getAllSubcontrollers() const;
 
-	SourceController* sourceController() const { return pSourceController; }
-	PluginController* pluginController() const { return pPluginController; }
-	PresetsController* presetsController() const { return pPresetsController; }
-	ProcessingController* processingController() const { return pProcessingController; }
-	MountController* mountController() const { return pMountController; }
-	SessionController* sessionController() const { return pSessionController; }
-
-	/**
-	 * @brief Checks whether the specified main controller and its associated controllers are in a valid state.
-	 * Logs if any issues are found.
-	 * @param controller: Pointer to the main controller to be checked.
-	 * @return True if all controllers are valid, false otherwise.
-	 */
-	bool checkIfControllersAreOk() const;
+	SourceController& sourceController() { return m_sourceController; }
+	PluginController& pluginController() { return m_pluginController; }
+	PresetsController& presetsController() { return m_presetsController; }
+	ProcessingController& processingController() { return m_processingController; }
+	MountController& mountController() { return m_mountController; }
+	SessionController& sessionController() { return m_sessionController; }
 
 private:
-	// NOTE: These were previously unique_ptrs.
-	// I favored for Qt dealing with object ownership and parent-child relationships.
-	// It was also causing issues with double deletion side-effects.
-	SourceController* pSourceController;
-	PluginController* pPluginController;
-	PresetsController* pPresetsController;
-	ProcessingController* pProcessingController;
-	MountController* pMountController;
-	SessionController* pSessionController;
-
+	SourceController m_sourceController;
+	PluginController m_pluginController;
+	PresetsController m_presetsController;
+	ProcessingController m_processingController;
+	MountController m_mountController;
+	SessionController m_sessionController;
 };

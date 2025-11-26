@@ -15,7 +15,7 @@ public:
 	ProcessingController(QObject *parent);
 	~ProcessingController();
 
-	QList<Processor*> processors() { return mProcessors; }
+	const QList<Processor*>& processors() { return mProcessors; }
 
     void setActive(bool active) {
 		if (active == mActive) return;

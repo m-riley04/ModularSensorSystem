@@ -9,9 +9,9 @@ typedef unsigned long long ns;
 struct SessionProperties;
 class Source;
 
-QString generateSessionDirectoryPath(const SessionProperties& props, QString suffix);
+const QString generateSessionDirectoryPath(const SessionProperties& props, const QString suffix);
 
-QString generateSessionSourcePath(Source* src, const SessionProperties& props, ns timestamp);
+const QString generateSessionSourcePath(Source* src, const SessionProperties& props, const ns timestamp);
 
 /**
  * @brief Sanitizes a file name to be safe for use on Windows file systems.

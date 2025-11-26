@@ -1,6 +1,6 @@
 #include "usbvideoplugin.hpp"
 
-std::vector<SourceInfo> USBVideoPlugin::discover() const
+const std::vector<SourceInfo> USBVideoPlugin::discover() const
 { 
     return getUsbVideoDevices();
 }

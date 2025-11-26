@@ -1,7 +1,7 @@
 #include "sessionpropertiesdialog.h"
 
 SessionPropertiesDialog::SessionPropertiesDialog(MainController* controller, SessionProperties* currentData, QWidget *parent)
-	: QDialog(parent), m_currentData(currentData), m_newData(*currentData), pController(controller)
+	: QDialog(parent), m_currentData(currentData), m_newData(*currentData), m_controller(controller)
 {
 	ui.setupUi(this);
 	updateUIFromData();

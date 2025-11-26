@@ -8,7 +8,7 @@ class TripodMount : public Mount
 	Q_OBJECT
 
 public:
-	TripodMount(ElementInfo& element, QObject* parent);
+	TripodMount(const ElementInfo& element, QObject* parent);
 	~TripodMount() = default;
 
 	bool isDynamic() const override { return false; }

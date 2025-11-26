@@ -15,7 +15,7 @@ TripodMount* TripodPlugin::createMount(const std::string& id, QObject* parent)
     return nullptr;
 }
 
-std::vector<ElementInfo> TripodPlugin::discover() const
+const std::vector<ElementInfo> TripodPlugin::discover() const
 {
     std::vector<ElementInfo> list;
 	ElementInfo standardTripod{

@@ -1,6 +1,6 @@
 #include "testdatasourceplugin.hpp"
 
-std::vector<SourceInfo> TestDataSourcePlugin::discover() const
+const std::vector<SourceInfo> TestDataSourcePlugin::discover() const
 {
 	return getAvailableTestDataSources();
 }

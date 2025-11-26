@@ -29,34 +29,37 @@ void PluginController::loadPlugins(QList<PluginType> pluginTypes)
 ISourcePlugin* PluginController::getSourcePlugin(const QString& pluginId) const
 {
 	for (ISourcePlugin* plugin : m_sourcePlugins) {
-		QString pluginName = QString::fromStdString(plugin->name());
-		if (plugin->name() == pluginId) {
+		if (!plugin) continue;
+		QString name = QString::fromStdString(plugin->name());
+		if (name == pluginId) {
 			return plugin;
 		}
 	}
-	return nullptr;  // Return nullptr if not found
+	return nullptr;
 }
 
 IProcessorPlugin* PluginController::getProcessorPlugin(const QString& pluginId) const
 {
 	for (IProcessorPlugin* plugin : m_processorPlugins) {
-		QString pluginName = QString::fromStdString(plugin->name());
-		if (plugin->name() == pluginId) {
+		if (!plugin) continue;
+		QString name = QString::fromStdString(plugin->name());
+		if (name == pluginId) {
 			return plugin;
 		}
 	}
-	return nullptr;  // Return nullptr if not found
+	return nullptr;
 }
 
 IMountPlugin* PluginController::getMountPlugin(const QString& pluginId) const
 {
 	for (IMountPlugin* plugin : m_mountPlugins) {
-		QString pluginName = QString::fromStdString(plugin->name());
-		if (plugin->name() == pluginId) {
+		if (!plugin) continue;
+		QString name = QString::fromStdString(plugin->name());
+		if (name == pluginId) {
 			return plugin;
 		}
 	}
-	return nullptr;  // Return nullptr if not found
+	return nullptr;
 }
 
 void PluginController::populateSourcePlugins() {

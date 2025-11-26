@@ -1,7 +1,7 @@
 #include "addsourcedialog.h"
 
 AddSourceDialog::AddSourceDialog(PluginController* pluginController, QWidget *parent)
-	: QDialog(parent), pPluginController(pluginController)
+	: QDialog(parent), m_pluginController(pluginController)
 {
 	ui.setupUi(this);
 
@@ -14,7 +14,7 @@ AddSourceDialog::AddSourceDialog(PluginController* pluginController, QWidget *pa
 			
 			QVariant data = ui.dropdownSourceType->itemData(index);
 			ISourcePlugin* plugin = data.value<ISourcePlugin*>();
-			pSelectedSourcePlugin = pPluginController->sourcePlugins().at(index);;
+			pSelectedSourcePlugin = m_pluginController->sourcePlugins().at(index);;
 			emit sourceTypeSelected(plugin);
 
 			// Repopulate with available sources of the selected type
@@ -61,7 +61,7 @@ void AddSourceDialog::populateSourceTypeDropdown()
 	ui.dropdownSourceType->clear();
 
 	// Populate the source type dropdown with available source types
-	for (const auto& plugin : pPluginController->sourcePlugins()) {
+	for (const auto& plugin : m_pluginController->sourcePlugins()) {
 		if (plugin) {
 			ui.dropdownSourceType->addItem(QString::fromStdString(plugin->name()), QVariant::fromValue(plugin));
 		}
@@ -70,7 +70,7 @@ void AddSourceDialog::populateSourceTypeDropdown()
 	// Set the default selection to the first item
 	if (ui.dropdownSourceType->count() > 0) {
 		ui.dropdownSourceType->setCurrentIndex(0);
-		pSelectedSourcePlugin = pPluginController->sourcePlugins().first();
+		pSelectedSourcePlugin = m_pluginController->sourcePlugins().first();
 	}
 }
 

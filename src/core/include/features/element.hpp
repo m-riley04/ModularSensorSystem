@@ -42,13 +42,12 @@ public:
 	virtual ~Element() = default;
 
 	// Interface implementations
-	virtual const boost::uuids::uuid uuid() const noexcept override final { return m_uuid; }
-	virtual std::string id() const override final { return m_id; }
-	virtual std::string name() const override final { return m_name; }
-	virtual std::string displayName() const override final { return m_displayName; }
+	virtual const boost::uuids::uuid& uuid() const noexcept override final { return m_uuid; }
+	virtual const std::string& id() const override final { return m_id; }
+	virtual const std::string& name() const override final { return m_name; }
+	virtual const std::string& displayName() const override final { return m_displayName; }
+	virtual const std::string& pluginId() const override final { return m_pluginId; }
 	virtual void setDisplayName(const std::string& newDisplayName) override final { m_displayName = newDisplayName; }
-	virtual std::string pluginId() const override final { return m_pluginId; }
-	
 
 public slots:
 	virtual void onSessionStart() {}; // nop by default

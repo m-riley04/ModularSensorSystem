@@ -19,7 +19,7 @@ public:
 	 * @brief Returns the name of the specific controller. Initialized in each derived class.
 	 * @return The name as a QString.
 	 */
-	QString name() const { return m_name; }
+	const QString& name() const { return m_name; }
 
 protected:
 	QString m_name = "BackendControllerBase";

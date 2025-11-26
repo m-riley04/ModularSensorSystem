@@ -1,19 +1,28 @@
 #include "controllers/sourcecontroller.hpp"
 
-SourceController::SourceController(PluginController* pluginController, QObject *parent)
-	: BackendControllerBase("SourceController", parent), pPluginController(pluginController)
+SourceController::SourceController(QObject *parent)
+	: BackendControllerBase("SourceController", parent)
 {}
 
 SourceController::~SourceController()
 {}
 
-QList<IRecordableSource*> SourceController::recordableSources() const
+const QList<IPreviewableSource*> SourceController::previewableSources() const
+{
+	QList<IPreviewableSource*> previewableSourcesList;
+	for (Source* source : mSources) {
+		if (!source) continue;
+		if (auto s = source->asPreviewable()) previewableSourcesList.append(s);
+	}
+	return previewableSourcesList;
+}
+
+const QList<IRecordableSource*> SourceController::recordableSources() const
 {
 	QList<IRecordableSource*> recordableSourcesList;
 	for (Source* source : mSources) {
 		if (!source) continue;
-		if (!source->asRecordable()) continue;
-		recordableSourcesList.append(source->asRecordable());
+		if (auto s = source->asRecordable()) recordableSourcesList.append(s);
 	}
 	return recordableSourcesList;
 }
@@ -23,13 +32,18 @@ Source* SourceController::byId(const QUuid & id) const
 	return mSourcesById.value(id);
 }
 
+
 Source* SourceController::addSource(ISourcePlugin* plugin, SourceInfo info) {
 	if (!plugin) {
-		qWarning() << "Plugin for source is null";
+		qWarning() << "addSource: plugin is null";
 		return nullptr;
 	}
-	
+
 	auto source = plugin->createSource(info.elementInfo.id, this);
+	if (!source) {
+		qWarning() << "createSource returned null for" << QString::fromStdString(info.elementInfo.id);
+		return nullptr;
+	}
 
 	mSources.append(source);
 	QUuid uid = boostUuidToQUuid(source->uuid());
