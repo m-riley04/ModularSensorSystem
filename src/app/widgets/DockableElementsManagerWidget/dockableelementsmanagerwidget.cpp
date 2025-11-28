@@ -1,4 +1,5 @@
 #include "dockableelementsmanagerwidget.h"
+#include <qmessagebox.h>
 
 DockableElementsManagerWidget::DockableElementsManagerWidget(QWidget *parent)
 	: QDockWidget(parent), m_actions(ElementTreeActions())
@@ -59,6 +60,9 @@ void DockableElementsManagerWidget::initSignals() {
 	}
 
 	connect(ui.treeElements, &QTreeView::clicked, this, &DockableElementsManagerWidget::handleElementClicked);
+	connect(ui.treeElements, &QTreeView::doubleClicked, [this]() {
+		QMessageBox::information(this, "Info", "Double click action is not implemented yet.");
+		});
 }
 
 void DockableElementsManagerWidget::initContextMenu()
@@ -135,6 +139,7 @@ void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& inde
 
 	// Update the selected node
 	m_selectedNode = nodeData.value<ElementTreeNode*>();
+
 	emit elementSelected(m_selectedNode);
 }
 
