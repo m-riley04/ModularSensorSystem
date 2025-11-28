@@ -280,14 +280,14 @@ void MainWindow::openAddMountDialog()
 void MainWindow::openRemoveMountDialog()
 {
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Mount) {
+    if (m_selectedElement->kind != IElement::Type::Mount) {
         QMessageBox::warning(this, tr("No Mount Selected"), tr("Please select a mount to remove."));
         return;
     }
 
     auto response = QMessageBox::question(this, tr("Remove Mount"), tr("Are you sure you want to remove the selected mount?"), QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
-        m_controller.mountController().removeMount(m_selectedElement->id);
+        m_controller.mountController().removeMount(m_selectedElement->uuid);
     }
 }
 
@@ -312,28 +312,28 @@ void MainWindow::openAddSourceDialog()
 void MainWindow::openRemoveSourceDialog()
 {
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Source) {
+    if (m_selectedElement->kind != IElement::Type::Source) {
         QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to remove."));
         return;
 	}
 
     auto response = QMessageBox::question(this, tr("Remove Source"), tr("Are you sure you want to remove the selected source?"), QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
-        m_controller.sourceController().removeSource(m_selectedElement->id);
+        m_controller.sourceController().removeSource(m_selectedElement->uuid);
     }
 }
 
 void MainWindow::openConfigureSourceDialog()
 {
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Source) {
+    if (m_selectedElement->kind != IElement::Type::Source) {
         QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to configure."));
         return;
     }
 
 	// Get the source from the selected element
     // TODO: check this implementation
-	Source* source = m_controller.sourceController().byId(m_selectedElement->id);
+	Source* source = m_controller.sourceController().byId(m_selectedElement->uuid);
     if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
        /* QWidget* w = cfg->createConfigWidget(this);
         QDialog dlg(this);
@@ -362,7 +362,7 @@ void MainWindow::openAddProcessorDialog()
 void MainWindow::openRemoveProcessorDialog()
 {
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Processor) {
+    if (m_selectedElement->kind != IElement::Type::Processor) {
         QMessageBox::warning(this, tr("No Processor Selected"), tr("Please select a processor to remove."));
         return;
     }
@@ -427,19 +427,19 @@ void MainWindow::updateToolbarButtonsState()
 
     /// SOURCES
     bool hasSources = !m_controller.sourceController().sources().isEmpty();
-    ui.actionRemoveSource->setEnabled(hasSources && m_selectedElement->kind == ElementTreeNode::Kind::Source);
-    ui.actionConfigureSource->setEnabled(hasSources && m_selectedElement->kind == ElementTreeNode::Kind::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
+    ui.actionRemoveSource->setEnabled(hasSources && m_selectedElement->kind == IElement::Type::Source);
+    ui.actionConfigureSource->setEnabled(hasSources && m_selectedElement->kind == IElement::Type::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
 
     /// PROCESSING
     bool hasProcessors = !m_controller.processingController().processors().isEmpty();
-    ui.actionRemoveProcessor->setEnabled(hasProcessors && m_selectedElement->kind == ElementTreeNode::Kind::Processor);
-	ui.actionConfigureProcessor->setEnabled(hasProcessors && m_selectedElement->kind == ElementTreeNode::Kind::Processor);
+    ui.actionRemoveProcessor->setEnabled(hasProcessors && m_selectedElement->kind == IElement::Type::Processor);
+	ui.actionConfigureProcessor->setEnabled(hasProcessors && m_selectedElement->kind == IElement::Type::Processor);
     ui.actionToggleProcessing->setEnabled(hasProcessors);
 
 	/// MOUNTS
     bool hasMounts = !m_controller.mountController().mounts().isEmpty();
-	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
-	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
+	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement->kind == IElement::Type::Mount);
+	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement->kind == IElement::Type::Mount);
 
     /// SESSION
     ui.actionStartStopSession->setEnabled(hasSources);

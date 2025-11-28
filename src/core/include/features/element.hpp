@@ -48,6 +48,7 @@ public:
 	virtual const std::string& displayName() const override final { return m_displayName; }
 	virtual const std::string& pluginId() const override final { return m_pluginId; }
 	virtual void setDisplayName(const std::string& newDisplayName) override final { m_displayName = newDisplayName; }
+	virtual const Type elementType() const noexcept override { return Type::Unknown; }
 
 public slots:
 	virtual void onSessionStart() {}; // nop by default

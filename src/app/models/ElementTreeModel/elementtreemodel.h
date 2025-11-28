@@ -9,17 +9,12 @@
 #include "controllers/maincontroller.hpp"
 #include "controllers/sessioncontroller.hpp"
 #include "utils/boost_qt_conversions.hpp"
+#include "features/ielement.hpp"
 
 struct ElementTreeNode {
-    enum class Kind { 
-        None = -1,
-        Mount,
-        Source,
-        Processor
-    };
-    Kind kind = Kind::None;
-    QUuid id; // the controller's primary key
+    QUuid uuid; // the controller's primary key
     int parentIndex; // index in m_nodes (-1 for root)
+    IElement::Type kind = IElement::Type::Unknown;
 };
 
 class ElementTreeModel : public QAbstractItemModel

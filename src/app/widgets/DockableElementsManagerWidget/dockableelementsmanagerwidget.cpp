@@ -144,16 +144,16 @@ void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& inde
 void DockableElementsManagerWidget::handleRemoveElementClicked()
 {
 	switch (m_selectedNode.kind) {
-	case ElementTreeNode::Kind::Mount:
+	case IElement::Type::Mount:
 		m_actions.removeMount->trigger();
 		break;
-	case ElementTreeNode::Kind::Source:
+	case IElement::Type::Source:
 		m_actions.removeSource->trigger();
 		break;
-	case ElementTreeNode::Kind::Processor:
+	case IElement::Type::Processor:
 		m_actions.removeProcessor->trigger();
 		break;
-	case ElementTreeNode::Kind::None:
+	case IElement::Type::Unknown:
 	default:
 		break;
 	}
@@ -162,16 +162,16 @@ void DockableElementsManagerWidget::handleRemoveElementClicked()
 void DockableElementsManagerWidget::handleEditElementClicked()
 {
 	switch (m_selectedNode.kind) {
-	case ElementTreeNode::Kind::Mount:
+	case IElement::Type::Mount:
 		m_actions.editMount->trigger();
 		break;
-	case ElementTreeNode::Kind::Source:
+	case IElement::Type::Source:
 		m_actions.editSource->trigger();
 		break;
-	case ElementTreeNode::Kind::Processor:
+	case IElement::Type::Processor:
 		m_actions.editProcessor->trigger();
 		break;
-	case ElementTreeNode::Kind::None:
+	case IElement::Type::Unknown:
 	default:
 		break;
 	}
