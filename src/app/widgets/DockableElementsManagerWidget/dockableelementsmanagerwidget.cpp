@@ -21,7 +21,7 @@ void DockableElementsManagerWidget::setController(MainController* c)
 
 void DockableElementsManagerWidget::setActions(ElementTreeActions actions)
 {
-	m_actions = ElementTreeActions(actions);
+	m_actions = actions;
 
 	initContextMenu();
 }
@@ -41,12 +41,15 @@ void DockableElementsManagerWidget::initWidgets()
 	}
 
 	// Create and set new model
-	m_elementModel = new ElementTreeModel(m_mainController, this);
+	m_elementModel = new ElementTreeModel(*m_mainController, this);
 
 	ui.treeElements->setModel(m_elementModel);
 
 	// Set the contents widget
 	this->setWidget(ui.contents);
+
+
+    initSignals();
 }
 
 void DockableElementsManagerWidget::initSignals() {
@@ -100,23 +103,17 @@ void DockableElementsManagerWidget::initContextMenu()
 
 void DockableElementsManagerWidget::handleRebuildClicked()
 {
-	if (m_elementModel) {
-		m_elementModel->rebuild();
-	}
+	m_elementModel->rebuild();
 }
 
 void DockableElementsManagerWidget::handleExpandAllClicked()
 {
-	if (ui.treeElements) {
-		ui.treeElements->expandAll();
-	}
+	ui.treeElements->expandAll();
 }
 
 void DockableElementsManagerWidget::handleCollapseAllClicked()
 {
-	if (ui.treeElements) {
-		ui.treeElements->collapseAll();
-	}
+	ui.treeElements->collapseAll();
 }
 
 void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& index)
@@ -129,7 +126,7 @@ void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& inde
 	}
 	
 	QVariant nodeData = m_elementModel->data(index, Qt::UserRole);
-	if (!nodeData.isValid() || !nodeData.canConvert<ElementTreeNode>()) {
+	if (!nodeData.isValid() || !nodeData.canConvert<ElementTreeNode*>()) {
 		qDebug() << "Invalid node data.";
 		return;
 	}
@@ -137,13 +134,15 @@ void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& inde
 	qDebug() << "Node data:" << nodeData;
 
 	// Update the selected node
-	m_selectedNode = nodeData.value<ElementTreeNode>();
-	emit elementSelected(&m_selectedNode);
+	m_selectedNode = nodeData.value<ElementTreeNode*>();
+	emit elementSelected(m_selectedNode);
 }
 
 void DockableElementsManagerWidget::handleRemoveElementClicked()
 {
-	switch (m_selectedNode.kind) {
+	if (!m_selectedNode) return;
+
+	switch (m_selectedNode->kind) {
 	case IElement::Type::Mount:
 		m_actions.removeMount->trigger();
 		break;
@@ -157,11 +156,17 @@ void DockableElementsManagerWidget::handleRemoveElementClicked()
 	default:
 		break;
 	}
+
+	this->update();
+
+	emit elementRemoved();
 }
 
 void DockableElementsManagerWidget::handleEditElementClicked()
 {
-	switch (m_selectedNode.kind) {
+	if (!m_selectedNode) return;
+
+	switch (m_selectedNode->kind) {
 	case IElement::Type::Mount:
 		m_actions.editMount->trigger();
 		break;
@@ -175,5 +180,7 @@ void DockableElementsManagerWidget::handleEditElementClicked()
 	default:
 		break;
 	}
+
+	this->update();
 }
 

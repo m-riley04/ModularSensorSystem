@@ -63,5 +63,4 @@ private:
     MainController m_controller;
 
     QListWidgetItem* pSelectedPresetItem = nullptr;
-	ElementTreeNode* m_selectedElement = nullptr;
 };

@@ -19,6 +19,8 @@ public:
 	void setController(MainController* c);
 	void setActions(ElementTreeActions actions);
 
+	ElementTreeNode* selectedNode() const { return m_selectedNode; }
+
 private:
 	Ui::DockableElementsManagerWidgetClass ui;
 	QPointer<MainController> m_mainController;
@@ -33,7 +35,7 @@ private:
 
 	QPointer<QMenu> m_contextMenu;
 
-	ElementTreeNode m_selectedNode{};
+	ElementTreeNode* m_selectedNode = nullptr;
 
 	ElementTreeActions m_actions{};
 
@@ -48,5 +50,6 @@ public slots:
 
 signals:
 	void elementSelected(ElementTreeNode* node);
+	void elementRemoved();
 };
 
