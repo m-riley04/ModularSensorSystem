@@ -30,7 +30,7 @@ void PluginController::loadPlugin(const QString& pluginId)
 
 void PluginController::unloadPlugin(const QString& pluginId)
 {
-	// TODO: implement plugin unload by ID
+	// TODO: implement plugin unload by ID	
 }
 
 void PluginController::loadPlugins()

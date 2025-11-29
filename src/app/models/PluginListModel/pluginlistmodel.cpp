@@ -25,7 +25,7 @@ QModelIndex PluginListModel::index(int row, int col, const QModelIndex& p) const
 QModelIndex PluginListModel::parent(const QModelIndex& idx) const
 {
 	// flat list, no parent
-	return idx.parent();
+    return {};
 }
 
 int PluginListModel::rowCount(const QModelIndex& parent) const

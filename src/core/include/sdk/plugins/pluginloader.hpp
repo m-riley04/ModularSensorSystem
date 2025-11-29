@@ -27,20 +27,22 @@ public:
     ~PluginRegistry() { unloadAll(); }
 
     /**
-	 * @brief Scans the specified directories for plugins and loads them if they match the required API version.
+	 * @brief Scans the specified directories for plugins.
      * @param dirs The directories to scan for plugins.
      * @param requiredApi The required API version that the plugins must match.
      */
     void scan(const std::vector<std::filesystem::path>& dirs, uint32_t requiredApi);
 
-    const std::deque<LoadedPlugin>& all() const { return m_all; }
+	const std::deque<std::string>& pluginPaths() const { return m_pluginPaths; }
+    const std::deque<LoadedPlugin>& all() const { return m_loaded; }
     const std::vector<LoadedPlugin*>& sources() const { return byType(IElement::Type::Source); }
     const std::vector<LoadedPlugin*>& processors() const { return byType(IElement::Type::Processor); }
     const std::vector<LoadedPlugin*>& mounts() const { return byType(IElement::Type::Mount); }
 
-    /**
-     * @brief Unloads/frees all loaded plugins.
-     */
+    bool load(const std::string& pluginPath, uint32_t requiredApi);
+    bool unload(const std::string& pluginPath);
+
+    void loadAll();
     void unloadAll();
 
     /**
@@ -50,25 +52,28 @@ public:
      */
     template <typename T> std::vector<T*> as() const {
         std::vector<T*> out;
-        out.reserve(m_all.size());
-        // TODO: fix this cast or something to do with mount plugins
-        for (auto& p : m_all) if (auto cast = dynamic_cast<T*>(p.instance)) out.push_back(cast);
+        out.reserve(m_loaded.size());
+        for (auto& p : m_loaded) if (auto cast = dynamic_cast<T*>(p.instance)) out.push_back(cast);
         return out;
     }
 
 private:
-    std::deque<LoadedPlugin> m_all;
-    std::unordered_map<IElement::Type, std::vector<LoadedPlugin*>> m_byType;
+	std::deque<std::string> m_pluginPaths;
+    std::deque<LoadedPlugin> m_loaded;
+    std::unordered_map<IElement::Type, std::vector<LoadedPlugin*>> m_loadedByType;
+	std::unordered_map<std::string, LoadedPlugin*> m_loadedByPath;
 
     /**
 	 * @brief Gets loaded plugins by type.
-     * @param t 
-     * @return 
+     * @param t The type of elements to filter by.
+     * @return A vector of loaded plugins of the specified type.
      */
-    const std::vector<LoadedPlugin*>& byType(IElement::Type t) const;
+    const std::vector<LoadedPlugin*> byType(IElement::Type t) const;
+
+	const std::vector<LoadedPlugin*> byPath(const std::string& path) const;
 
     /**
-	 * @brief Scans a directory for plugins and loads them if they match the required API version.
+     * @brief Scans a directory for plugins and populates the list of plugin paths.
      * @param dir The directory to scan for plugins.
      * @param requiredApi The required API version that the plugins must match.
      */

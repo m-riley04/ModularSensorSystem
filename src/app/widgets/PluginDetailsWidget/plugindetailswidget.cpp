@@ -23,10 +23,12 @@ void PluginDetailsWidget::updateUi() {
 		ui.labelPluginName->setText("N/A");
 		ui.labelPluginVersion->setText("N/A");
 		ui.labelPluginType->setText("N/A");
+		ui.labelPluginDescription->setText("N/A");
 		return;
 	}
 
 	ui.labelPluginName->setText(QString::fromStdString(m_plugin->name()));
 	ui.labelPluginVersion->setText(QString::number(m_plugin->version()));
 	ui.labelPluginType->setText(QString::fromStdString(elementTypeToString(m_plugin->type())));
+	ui.labelPluginDescription->setText(QString::fromStdString(m_plugin->description()));
 }
