@@ -1,4 +1,5 @@
 #include "plugindetailswidget.h"
+#include <utils/element_utils.hpp>
 
 PluginDetailsWidget::PluginDetailsWidget(QWidget *parent)
 	: QWidget(parent)
@@ -27,5 +28,5 @@ void PluginDetailsWidget::updateUi() {
 
 	ui.labelPluginName->setText(QString::fromStdString(m_plugin->name()));
 	ui.labelPluginVersion->setText(QString::number(m_plugin->version()));
-	ui.labelPluginType->setText(QString::fromStdString(pluginTypeToString(m_plugin->type())));
+	ui.labelPluginType->setText(QString::fromStdString(elementTypeToString(m_plugin->type())));
 }

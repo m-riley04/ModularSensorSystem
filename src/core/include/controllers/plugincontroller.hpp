@@ -8,22 +8,17 @@
 #include "controllers/backendcontrollerbase.hpp"
 #include "sdk/plugins/pluginloader.hpp"
 #include "sdk/plugins/imountplugin.hpp"
+#include <string>
 
 class PluginController : public BackendControllerBase
 {
     Q_OBJECT
 
 public:
-    enum PluginType {
-        SourcePlugin,
-        ProcessorPlugin,
-        MountPlugin
-    };
+    explicit PluginController(const std::string& pluginRoot, QObject* parent = nullptr);
 
-public:
-    explicit PluginController(const QString& pluginRoot, QObject* parent = nullptr);
-
-    void loadPlugins(QList<PluginType> pluginType);
+    void loadPlugins();
+    void unloadPlugins();
 
 	const PluginRegistry& registry() const { return m_pluginRegistry; }
 
@@ -45,13 +40,12 @@ private:
     QList<ISourcePlugin*> m_sourcePlugins;
     QList<IProcessorPlugin*> m_processorPlugins;
     QList<IMountPlugin*> m_mountPlugins;
-    QString m_pluginRoot;
+    std::string m_pluginRoot;
     PluginRegistry m_pluginRegistry;
 
-    void populateSourcePlugins();
-    void populateProcessorPlugins();
-    void populateMountPlugins();
+    void loadSourcePlugins();
+    void loadProcessorPlugins();
+    void loadMountPlugins();
 
-    QString pluginTypeToDirName(PluginType pluginType);
-    std::vector<std::filesystem::path> buildPluginPaths(QList<PluginType> pluginTypes);
+    std::vector<std::filesystem::path> buildPluginPaths();
 };

@@ -1,9 +1,12 @@
 #include "pluginlistmodel.h"
+#include <utils/element_utils.hpp>
 
 PluginListModel::PluginListModel(PluginController& c,
     QObject* parent)
     : QAbstractItemModel(parent), m_pluginController(c)
 {
+    this->rebuild(); // init built
+
     // TODO: connect signals from plugin controller
     //connect(&m_pluginController, &PluginController::pluginsUpdated, this, &PluginListModel::rebuild);
 }
@@ -22,7 +25,7 @@ QModelIndex PluginListModel::index(int row, int col, const QModelIndex& p) const
 QModelIndex PluginListModel::parent(const QModelIndex& idx) const
 {
 	// flat list, no parent
-	return {};
+	return idx.parent();
 }
 
 int PluginListModel::rowCount(const QModelIndex& parent) const
@@ -44,15 +47,13 @@ QVariant PluginListModel::data(const QModelIndex& idx, int role) const
             return QString::number(n->version());
         }
         if (idx.column() == 2) { // author
-            // TODO: add author to plugin metadata
-			return QString("Riley Meyerkorth"); //n->author().c_str();
+            return QString::fromStdString(n->author());
         }
         if (idx.column() == 3) { // type
-            return QString::fromStdString(pluginTypeToString(n->type()));
+            return QString::fromStdString(elementTypeToString(n->type()));
         }
         if (idx.column() == 4) { // isCore
-			// TODO: add isCore to plugin metadata
-            return QString("Yes"); //n->isCore() ? QString("Yes") : QString("No");
+            return n->isCore() ? QString("Yes") : QString("No");
         }
     }
     if (role == Qt::UserRole) {

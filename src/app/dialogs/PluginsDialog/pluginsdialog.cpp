@@ -5,6 +5,7 @@ PluginsDialog::PluginsDialog(PluginController& c, QWidget *parent)
 {
 	ui.setupUi(this);
 
+	initModel();
 	initWidgets();
 	initSignals();
 	initContextMenu();
@@ -13,7 +14,7 @@ PluginsDialog::PluginsDialog(PluginController& c, QWidget *parent)
 PluginsDialog::~PluginsDialog()
 {}
 
-void PluginsDialog::initWidgets()
+void PluginsDialog::initModel()
 {
 	// Clean up old model
 	if (m_model) {
@@ -24,10 +25,11 @@ void PluginsDialog::initWidgets()
 
 	// Create and set new model
 	m_model = new PluginListModel(m_pluginController, this);
-	m_model->rebuild(); // initial build
-
 	ui.listPlugins->setModel(m_model);
+}
 
+void PluginsDialog::initWidgets()
+{
 	// Ensure right-click selects the item under cursor by handling the list view's context menu
 	ui.listPlugins->setContextMenuPolicy(Qt::CustomContextMenu);
 }
@@ -91,7 +93,7 @@ void PluginsDialog::onCustomContextMenuRequested(const QPoint& pos)
 void PluginsDialog::onRescanPlugins()
 {
 	m_pluginController.rescanPlugins();
-	m_model->rebuild();
+	initModel();
 }
 
 void PluginsDialog::onToggleSelectedPlugin()

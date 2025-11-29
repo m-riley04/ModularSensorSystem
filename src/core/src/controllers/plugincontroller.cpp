@@ -1,42 +1,42 @@
 #include "controllers/plugincontroller.hpp"
 
-PluginController::PluginController(const QString& root, QObject* parent)
+PluginController::PluginController(const std::string& root, QObject* parent)
 	: BackendControllerBase("PluginController", parent), m_pluginRoot(root)
 {
-	// Scan for plugins on initialization
-	// TODO: Make this configurable
-	loadPlugins(QList<PluginType>({
-		PluginType::SourcePlugin,
-		PluginType::ProcessorPlugin,
-		PluginType::MountPlugin
-	}));
+	// Scan plugins on initialization
+	loadPlugins();
 }
 
 void PluginController::rescanPlugins() {
-	// TODO: make this configurable, and check if this will actually re-scan? I'd imagine I'll have to clear something first.
-	loadPlugins(QList<PluginType>({
-		PluginType::SourcePlugin,
-		PluginType::ProcessorPlugin,
-		PluginType::MountPlugin
-		}));
+	unloadPlugins();
+	loadPlugins();
 }
 
-void PluginController::loadPlugins(QList<PluginType> pluginTypes)
+void PluginController::unloadPlugins() {
+	// Unload all plugins from registry
+	m_pluginRegistry.unloadAll();
+
+	// Clear plugin lists
+	m_plugins.clear();
+	m_sourcePlugins.clear();
+	m_processorPlugins.clear();
+	m_mountPlugins.clear();
+}
+
+void PluginController::loadPlugins()
 {
 	// Iterate through plugin types
-	QString pluginDirName;
-	std::vector<std::filesystem::path> pluginPaths = buildPluginPaths(pluginTypes);
+	std::vector<std::filesystem::path> pluginPaths = buildPluginPaths();
 
 	m_pluginRegistry.scan(pluginPaths, FACTORY_API_VERSION);
 
 	// Populate plugin lists
-	m_plugins.clear();
-	populateSourcePlugins();
-	populateProcessorPlugins();
-	populateMountPlugins();
+	loadSourcePlugins();
+	loadProcessorPlugins();
+	loadMountPlugins();
 }
 
-void PluginController::populateSourcePlugins() {
+void PluginController::loadSourcePlugins() {
 	// Unload existing plugins using unload mechanism
 	m_sourcePlugins.clear();
 
@@ -49,7 +49,7 @@ void PluginController::populateSourcePlugins() {
 	}
 }
 
-void PluginController::populateProcessorPlugins() {
+void PluginController::loadProcessorPlugins() {
 	// Unload existing plugins using unload mechanism
 	m_processorPlugins.clear();
 
@@ -62,7 +62,7 @@ void PluginController::populateProcessorPlugins() {
 	}
 }
 
-void PluginController::populateMountPlugins()
+void PluginController::loadMountPlugins()
 {
 	// Unload existing plugins using unload mechanism
 	m_mountPlugins.clear();
@@ -112,31 +112,16 @@ IMountPlugin* PluginController::getMountPlugin(const QString& pluginId) const
 	return nullptr;
 }
 
-QString PluginController::pluginTypeToDirName(PluginType pluginType)
-{
-	switch (pluginType) {
-	case PluginType::SourcePlugin:
-		return "sources";
-	case PluginType::ProcessorPlugin:
-		return "processors";
-	case PluginType::MountPlugin:
-		return "mounts";
-	default:
-		return "unknown";
-	}
-}
-
-std::vector<std::filesystem::path> PluginController::buildPluginPaths(QList<PluginType> pluginTypes)
+std::vector<std::filesystem::path> PluginController::buildPluginPaths()
 {
 	std::vector<std::filesystem::path> pluginPaths;
 
 	// Build plugin paths based on types
-	std::string pluginDirName;
-	for (PluginType pluginType : pluginTypes) {
-		pluginDirName = pluginTypeToDirName(pluginType).toStdString();
-		std::filesystem::path pluginPath = QCoreApplication::applicationDirPath().toStdString() + "/plugins/" + pluginDirName;
-		pluginPaths.push_back(pluginPath);
-	}
-
+	std::filesystem::path mountsPluginsPath = m_pluginRoot + "/mounts";
+	std::filesystem::path sourcesPluginsPath = m_pluginRoot + "/sources";
+	std::filesystem::path processorsPluginsPath = m_pluginRoot + "/processors";
+	pluginPaths.push_back(mountsPluginsPath);
+	pluginPaths.push_back(sourcesPluginsPath);
+	pluginPaths.push_back(processorsPluginsPath);
 	return pluginPaths;
 }

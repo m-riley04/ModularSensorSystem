@@ -122,6 +122,7 @@
     <QtMoc Include="include\pipeline\sessionpipeline.hpp" />
     <ClInclude Include="include\pipeline\sinks\recording_defaults.hpp" />
     <ClInclude Include="include\utils\debug.hpp" />
+    <ClInclude Include="include\utils\element_utils.hpp" />
     <ClInclude Include="include\utils\plugins_utils.hpp" />
     <ClInclude Include="include\utils\session_utils.hpp" />
     <ClInclude Include="include\utils\utils.hpp" />

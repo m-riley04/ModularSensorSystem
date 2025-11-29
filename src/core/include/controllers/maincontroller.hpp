@@ -21,12 +21,6 @@ public:
 	MainController(QObject *parent);
 	~MainController();
 
-	/**
-	 * @brief Returns the list of backend controller pointers owned by the main controller.
-	 * @return A QList containing pointers to various BackendControllerBase objects managed by this class.
-	 */
-	QList<BackendControllerBase*> getAllSubcontrollers() const;
-
 	SourceController& sourceController() { return m_sourceController; }
 	PluginController& pluginController() { return m_pluginController; }
 	PresetsController& presetsController() { return m_presetsController; }

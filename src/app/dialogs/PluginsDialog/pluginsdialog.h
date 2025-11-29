@@ -30,6 +30,7 @@ private:
 	QMenu* m_contextMenu = nullptr;
 	QAction* m_actionTogglePlugin = nullptr;
 
+	void initModel();
 	void initWidgets();
 	void initSignals();
 	void initContextMenu();

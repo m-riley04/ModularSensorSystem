@@ -41,21 +41,3 @@ inline static bool looksLikePlugin(const std::filesystem::path& p) {
     return name.find(MSS_PLUGIN_SUFFIX) != std::string::npos && p.extension() == ".so";
 #endif
 }
-
-/**
- * @brief Converts a PluginType enum value to its corresponding string representation.
- * @param type The PluginType enum value to convert.
- * @return A string representation of the PluginType.
- */
-inline static std::string pluginTypeToString(PluginType type) {
-    switch (type) {
-    case PluginType::SOURCE:
-        return "Source";
-    case PluginType::PROCESSOR:
-        return "Processor";
-    case PluginType::MOUNT:
-        return "Mount";
-    default:
-        return "Unknown";
-	}
-}

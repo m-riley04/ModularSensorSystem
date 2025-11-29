@@ -10,6 +10,7 @@
 #include "sdk/plugins/factory.hpp"
 #include "sdk/plugins/iplugin.hpp"
 #include "utils/plugins_utils.hpp"
+#include "features/ielement.hpp"
 
 /**
  * @brief Represents a loaded plugin.
@@ -33,9 +34,9 @@ public:
     void scan(const std::vector<std::filesystem::path>& dirs, uint32_t requiredApi);
 
     const std::deque<LoadedPlugin>& all() const { return m_all; }
-    const std::vector<LoadedPlugin*>& sources() const { return byType(PluginType::SOURCE); }
-    const std::vector<LoadedPlugin*>& processors() const { return byType(PluginType::PROCESSOR); }
-    const std::vector<LoadedPlugin*>& mounts() const { return byType(PluginType::MOUNT); }
+    const std::vector<LoadedPlugin*>& sources() const { return byType(IElement::Type::Source); }
+    const std::vector<LoadedPlugin*>& processors() const { return byType(IElement::Type::Processor); }
+    const std::vector<LoadedPlugin*>& mounts() const { return byType(IElement::Type::Mount); }
 
     /**
      * @brief Unloads/frees all loaded plugins.
@@ -57,14 +58,14 @@ public:
 
 private:
     std::deque<LoadedPlugin> m_all;
-    std::unordered_map<PluginType, std::vector<LoadedPlugin*>> m_byType;
+    std::unordered_map<IElement::Type, std::vector<LoadedPlugin*>> m_byType;
 
     /**
 	 * @brief Gets loaded plugins by type.
      * @param t 
      * @return 
      */
-    const std::vector<LoadedPlugin*>& byType(PluginType t) const;
+    const std::vector<LoadedPlugin*>& byType(IElement::Type t) const;
 
     /**
 	 * @brief Scans a directory for plugins and loads them if they match the required API version.

@@ -12,7 +12,7 @@ void PluginRegistry::unloadAll() {
     m_byType.clear();
 }
 
-const std::vector<LoadedPlugin*>& PluginRegistry::byType(PluginType t) const {
+const std::vector<LoadedPlugin*>& PluginRegistry::byType(IElement::Type t) const {
     static const std::vector<LoadedPlugin*> kEmpty;
     auto it = m_byType.find(t);
     return it == m_byType.end() ? kEmpty : it->second;

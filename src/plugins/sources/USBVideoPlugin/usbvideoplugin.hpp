@@ -20,6 +20,9 @@ public:
 	const std::string name() const override { return PLUGIN_NAME; }
 	const uint32_t version() const override { return MSS_API;  }
 	Source::Type sourceType() const override { return Source::Type::VIDEO; }
+	const std::string description() const override { return "A source plugin that captures video from USB video devices."; }
+	const std::string author() const override { return "Riley Meyerkorth"; }
+	const bool isCore() const override { return true; }
 };
 
 static USBVideoPlugin* make_impl() { return new USBVideoPlugin(); }
