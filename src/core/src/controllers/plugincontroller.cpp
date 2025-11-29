@@ -23,6 +23,16 @@ void PluginController::unloadPlugins() {
 	m_mountPlugins.clear();
 }
 
+void PluginController::loadPlugin(const QString& pluginId)
+{
+	// TODO: implement plugin load by ID
+}
+
+void PluginController::unloadPlugin(const QString& pluginId)
+{
+	// TODO: implement plugin unload by ID
+}
+
 void PluginController::loadPlugins()
 {
 	// Iterate through plugin types

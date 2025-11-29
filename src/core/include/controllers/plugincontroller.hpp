@@ -20,6 +20,9 @@ public:
     void loadPlugins();
     void unloadPlugins();
 
+	void loadPlugin(const QString& pluginId);
+	void unloadPlugin(const QString& pluginId);
+
 	const PluginRegistry& registry() const { return m_pluginRegistry; }
 
     // Return raw pointers; nullptr when not found
