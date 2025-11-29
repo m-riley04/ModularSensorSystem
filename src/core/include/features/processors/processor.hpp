@@ -14,8 +14,8 @@ class Processor : public Element
     Q_OBJECT
 
 public:
-    Processor(ElementInfo& element, QObject* parent = nullptr) : Element(element, parent), m_source(nullptr) {}
-    Processor(ElementInfo& element, Source* source, QObject* parent = nullptr) : Element(element, parent), m_source(source) {}
+    Processor(const ElementInfo& element, QObject* parent = nullptr) : Element(element, parent), m_source(nullptr) {}
+    Processor(const ElementInfo& element, Source* source, QObject* parent = nullptr) : Element(element, parent), m_source(source) {}
     virtual ~Processor() = default;
     
     /**
@@ -29,8 +29,11 @@ public:
 		emit sourceChanged(m_source);
     }
 
+    virtual const IElement::Type elementType() const noexcept override { return IElement::Type::Processor; }
+
     virtual void startProcessing() {}
     virtual void stopProcessing() {}
+
 
 protected:
     Source* m_source;

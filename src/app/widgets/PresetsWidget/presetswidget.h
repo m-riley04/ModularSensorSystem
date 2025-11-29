@@ -16,8 +16,8 @@ public:
 	QListWidget* listWidget() const { return ui.listPresets; }
 
 	void setController(MainController* controller) {
-		if (pController == controller) return;
-		pController = controller;
+		if (m_controller == controller) return;
+		m_controller = controller;
 		initWidgets();
 		initSignals();
 	}
@@ -33,7 +33,7 @@ private slots:
 
 private:
 	Ui::PresetsWidgetClass ui;
-	MainController* pController = nullptr;
+	MainController* m_controller = nullptr;
 	QListWidgetItem* pSelectedItem = nullptr;
 	bool mControlsVisible = false;
 

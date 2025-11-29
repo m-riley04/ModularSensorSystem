@@ -10,6 +10,14 @@ class IElement
 {
 
 public:
+	enum class Type {
+		Unknown = -1,
+		Mount,
+		Source,
+		Processor
+	};
+
+public:
 	virtual ~IElement() = default;
 
 	/**
@@ -17,20 +25,20 @@ public:
 	 * Assigned in the constructor.
 	 * @return The UUID of the element.
 	 */
-	virtual const boost::uuids::uuid uuid() const noexcept = 0;
+	virtual const boost::uuids::uuid& uuid() const noexcept = 0;
 
 	/**
 	 * The hardware/location ID of the element.
 	 * @return The hardware/location ID of the element.
 	 */
-	virtual std::string id() const = 0;
+	virtual const std::string& id() const = 0;
 
 	/**
 	 * The name of the element given by the hardware/source.
 	 * Not necessarily the user-facing name for the app, but is generally user-friendly to read.
 	 * @return The name of the element.
 	 */
-	virtual std::string name() const = 0;
+	virtual const std::string& name() const = 0;
 
 	/**
 	 * The display name of the element, used for user interfaces
@@ -38,7 +46,7 @@ public:
 	 * By default, it displays the same as name().
 	 * @return The display name of the element.
 	 */
-	virtual std::string displayName() const = 0;
+	virtual const std::string& displayName() const = 0;
 	virtual void setDisplayName(const std::string& newDisplayName) = 0;
 
 	/**
@@ -46,7 +54,13 @@ public:
 	 * By default, returns "unknown_plugin".
 	 * @return string ID of the parent plugin.
 	 */
-	virtual std::string pluginId() const = 0;
+	virtual const std::string& pluginId() const = 0;
+
+	/**
+	 * @brief The type of the element.
+	 * @return The type of the element.
+	 */
+	virtual const Type elementType() const noexcept = 0;
 
 	/**
 	 * A hook called when a session starts.

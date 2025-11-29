@@ -16,7 +16,7 @@ public:
 	MountController(QObject *parent);
 	~MountController();
 
-	QList<Mount*> mounts() const { return mMounts; }
+	const QList<Mount*>& mounts() const { return mMounts; }
 
 	const Mount* byId(const QUuid& id) const;
 

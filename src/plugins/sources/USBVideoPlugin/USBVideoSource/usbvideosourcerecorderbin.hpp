@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <pipeline/bins/recorderbin.hpp>
 #include <gst/video/videooverlay.h>
+#include <pipeline/sinks/recording_defaults.hpp>
 
 class USBVideoSourceRecorderBin : public RecorderBin {
 public:
@@ -54,10 +55,6 @@ protected:
 	virtual bool build() override;
 
 private:
-	GstElement* m_inputQueue = nullptr;
-	GstElement* m_valveElement = nullptr;
-	GstElement* m_encoder = nullptr;
 	GstElement* m_parse = nullptr;
 	GstElement* m_muxer = nullptr;
-	GstElement* m_filesinkElement = nullptr;
 };

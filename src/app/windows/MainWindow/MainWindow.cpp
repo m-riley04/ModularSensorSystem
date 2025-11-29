@@ -9,7 +9,7 @@
 #include <utils/debug.hpp>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), pController(new MainController(this))
+    : QMainWindow(parent), m_controller(new MainController(this))
 {
     ui.setupUi(this);
 
@@ -65,20 +65,18 @@ void MainWindow::initWidgets()
     ui.sessionControls->setSessionControlActions(sessionActions);
 
     // Init preview container widget
-    ui.devicePreviewWidget->setController(pController);
+    ui.devicePreviewWidget->setController(&m_controller);
 
     // Init presets widget
-    ui.presetsWidget->setController(pController);
+    ui.presetsWidget->setController(&m_controller);
 
     // Init elements tree
-    ui.dockWidget->setController(pController);
+    ui.dockWidget->setController(&m_controller);
     ui.dockWidget->setActions(this->getElementTreeActions());
 }
 
 void MainWindow::initActionSignals()
 {
-    if (!pController->checkIfControllersAreOk()) return;
-
     // Presets
 	connect(ui.actionSavePreset, &QAction::triggered, this, &MainWindow::openSavePresetDialog);
     connect(ui.actionLoadPreset, &QAction::triggered, this, &MainWindow::onLoadPresetClicked);
@@ -89,20 +87,20 @@ void MainWindow::initActionSignals()
 
     // Session
     connect(ui.actionStartStopSession, &QAction::triggered, [this](bool checked) {
-		if (checked) pController->sessionController()->startSession();
-		else pController->sessionController()->stopSession();
+		if (checked) m_controller.sessionController().startSession();
+		else m_controller.sessionController().stopSession();
         });
-    connect(ui.actionRestartSession, &QAction::triggered, pController->sessionController(), &SessionController::restartSession);
+    connect(ui.actionRestartSession, &QAction::triggered, &m_controller.sessionController(), &SessionController::restartSession);
     connect(ui.actionRecord, &QAction::triggered, [this](bool checked) {
-        if (checked) pController->sessionController()->startRecording();
-		else pController->sessionController()->requestStopRecording(); // use request to allow graceful stopping
+        if (checked) m_controller.sessionController().startRecording();
+		else m_controller.sessionController().stopRecording(); // use request to allow graceful stopping
         });
     connect(ui.actionSessionProperties, &QAction::triggered, [this]() {
         // Create new session properties dialog
-        SessionPropertiesDialog* dialog = new SessionPropertiesDialog(pController, &pController->sessionController()->sessionProperties(), this);
+        SessionPropertiesDialog* dialog = new SessionPropertiesDialog(&m_controller, &m_controller.sessionController().sessionProperties(), this);
         connect(dialog, &SessionPropertiesDialog::settingsChanged,
             this, [this](SessionProperties data) {
-                pController->sessionController()->setSessionProperties(data);
+                m_controller.sessionController().setSessionProperties(data);
 			});
         dialog->show();
         });
@@ -152,12 +150,11 @@ void MainWindow::initActionSignals()
 }
 
 void MainWindow::initSignals() {
-    if (!pController->checkIfControllersAreOk()) return;
-	SourceController* pSourceController = pController->sourceController();
-	SessionController* pSessionController = pController->sessionController();
+	SourceController& m_sourceController = m_controller.sourceController();
+	SessionController& m_sessionController = m_controller.sessionController();
 
     // Error message propagation
-    connect(pSessionController, &SessionController::errorOccurred,
+    connect(&m_sessionController, &SessionController::errorOccurred,
         this, [this](const QString& errorMessage) {
             QMessageBox::critical(this, tr("Session Error"), tr("An error occurred in the session:\n%1").arg(errorMessage));
 		});
@@ -166,10 +163,11 @@ void MainWindow::initSignals() {
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
 
 	// Connect dock widget signals
-    connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, this, &MainWindow::onSelectedElementChanged);
-    connect(pController->sourceController(), &SourceController::sourceRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
-    connect(pController->mountController(), &MountController::mountRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
-    connect(pController->processingController(), &ProcessingController::processorRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
+    connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, this, &MainWindow::updateToolbarButtonsState);
+    connect(ui.dockWidget, &DockableElementsManagerWidget::elementRemoved, this, &MainWindow::updateToolbarButtonsState);
+    connect(&m_controller.sourceController(), &SourceController::sourceRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
+    connect(&m_controller.mountController(), &MountController::mountRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
+    connect(&m_controller.processingController(), &ProcessingController::processorRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
 
     // Init toolbar and actions
     initActionSignals();
@@ -177,8 +175,6 @@ void MainWindow::initSignals() {
 
 void MainWindow::openSavePresetDialog()
 {
-    if (!pController->checkIfControllersAreOk()) return;
-
     // Get the preset name from the user
     bool ok;
     QString presetName = QInputDialog::getText(this, tr("Save Preset"), tr("Preset name:"), QLineEdit::Normal, QString(), &ok);
@@ -196,8 +192,7 @@ void MainWindow::openSavePresetDialog()
             }
         }
 
-        PresetsController* pPresetsController = pController->presetsController();
-        pPresetsController->savePreset(presetName, pController->sourceController()->sources());
+        m_controller.presetsController().savePreset(presetName, m_controller.sourceController().sources());
     }
     else if (ok) {
         QMessageBox::warning(this, tr("Invalid Name"), tr("Preset name cannot be empty."));
@@ -207,9 +202,6 @@ void MainWindow::openSavePresetDialog()
 
 void MainWindow::onLoadPresetClicked()
 {
-    // Check controllers
-    if (!pController->checkIfControllersAreOk()) return;
-    
 	// Check selected item
     if (!pSelectedPresetItem) {
         QMessageBox::warning(this, tr("No Preset Selected"), tr("Please select a preset to load."));
@@ -220,22 +212,19 @@ void MainWindow::onLoadPresetClicked()
     QString presetName = pSelectedPresetItem->text();
 
     // Find the preset in the controller
-    PresetsController* pPresetsController = pController->presetsController();
-    auto presets = pPresetsController->presets();
+    PresetsController& m_presetsController = m_controller.presetsController();
+    auto presets = m_presetsController.presets();
     auto it = std::find_if(presets.begin(), presets.end(), [&presetName](const Preset& preset) {
         return preset.name == presetName;
         });
     if (it != presets.end()) {
         // Load the preset
-        pPresetsController->loadPreset(it->path, pController->sourceController(), pController->pluginController());
+        m_presetsController.loadPreset(it->path, m_controller.sourceController(), m_controller.pluginController());
     }
 }
 
 void MainWindow::openDeletePresetDialog()
 {
-	// Check controllers
-    if (!pController->checkIfControllersAreOk()) return;
-
 	// Check selected item
     if (!pSelectedPresetItem) {
         QMessageBox::warning(this, tr("No Preset Selected"), tr("Please select a preset to remove."));
@@ -253,14 +242,14 @@ void MainWindow::openDeletePresetDialog()
     if (reply == QMessageBox::No) return;
 
     // Find the preset in the controller
-    PresetsController* pPresetsController = pController->presetsController();
-    auto presets = pPresetsController->presets();
+    PresetsController& m_presetsController = m_controller.presetsController();
+    auto presets = m_presetsController.presets();
     auto it = std::find_if(presets.begin(), presets.end(), [&presetName](const Preset& preset) {
         return preset.name == presetName;
         });
     if (it != presets.end()) {
         // Remove the preset
-        pPresetsController->removePreset(it->path);
+        m_presetsController.removePreset(it->path);
     }
 	//ui.listPresets->removeItemWidget(pSelectedItem); // TODO: check if I *need* to "take" the item from the list
     delete pSelectedPresetItem;
@@ -274,94 +263,96 @@ void MainWindow::openConfigurePresetDialog()
 
 void MainWindow::onRefreshPresetClicked()
 {
-    // Check controllers
-    if (!pController->checkIfControllersAreOk()) return;
-
     // Scan
-    pController->presetsController()->scanForPresets(); // CONSIDER: Pass specific path?
+    m_controller.presetsController().scanForPresets(); // CONSIDER: Pass specific path?
 }
 
 void MainWindow::openAddMountDialog()
 {
-    // Check controllers
-    if (!pController->checkIfControllersAreOk()) return;
-
     // Create and show the AddMountDialog
-    AddMountDialog* addDeviceDialog = new AddMountDialog(pController->pluginController(), this);
+    AddMountDialog* addDeviceDialog = new AddMountDialog(&m_controller.pluginController(), this);
     addDeviceDialog->setWindowModality(Qt::WindowModal);
 
-    connect(addDeviceDialog, &AddMountDialog::mountConfirmed, pController->mountController(), &MountController::addMount);
+    connect(addDeviceDialog, &AddMountDialog::mountConfirmed, &m_controller.mountController(), &MountController::addMount);
 
     addDeviceDialog->show();
 }
 
 void MainWindow::openRemoveMountDialog()
 {
-    // Check controllers
-    if (!pController->checkIfControllersAreOk()) return;
+    auto selectedElement = ui.dockWidget->selectedNode();
+    if (!selectedElement) {
+        QMessageBox::warning(this, tr("No Mount Selected"), tr("Please select a mount to remove."));
+        return;
+	}
 
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Mount) {
+    if (selectedElement->kind != IElement::Type::Mount) {
         QMessageBox::warning(this, tr("No Mount Selected"), tr("Please select a mount to remove."));
         return;
     }
 
     auto response = QMessageBox::question(this, tr("Remove Mount"), tr("Are you sure you want to remove the selected mount?"), QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
-        pController->mountController()->removeMount(m_selectedElement->id);
+        m_controller.mountController().removeMount(selectedElement->uuid);
     }
 }
 
 void MainWindow::openEditMountDialog()
 {
-    // TODO: implement
+    QMessageBox::warning(this, tr("Feature Not Implemted"), tr("This feature has not been implemented yet."));
 }
 
 void MainWindow::openAddSourceDialog()
 {
-    // Check controllers
-    if (!pController->checkIfControllersAreOk()) return;
-
 	// Create and show the AddSourceDialog
-    AddSourceDialog* addDeviceDialog = new AddSourceDialog(pController->pluginController(), this);
+    AddSourceDialog* addDeviceDialog = new AddSourceDialog(&m_controller.pluginController(), this);
     addDeviceDialog->setWindowModality(Qt::WindowModal);
 
-    connect(addDeviceDialog, &AddSourceDialog::sourceConfirmed, pController->sourceController(), &SourceController::addSource);
+    connect(addDeviceDialog, &AddSourceDialog::sourceConfirmed, [this](ISourcePlugin* plugin, SourceInfo deviceInfo) {
+		m_controller.sourceController().addSource(plugin, deviceInfo);
+        });
 
     addDeviceDialog->show();
 }
 
 void MainWindow::openRemoveSourceDialog()
 {
-    // Check controllers
-    if (!pController->checkIfControllersAreOk()) return;
+    auto selectedElement = ui.dockWidget->selectedNode();
+    if (!selectedElement) {
+        QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to remove."));
+        return;
+    }
 
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Source) {
+    if (selectedElement->kind != IElement::Type::Source) {
         QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to remove."));
         return;
 	}
 
     auto response = QMessageBox::question(this, tr("Remove Source"), tr("Are you sure you want to remove the selected source?"), QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
-        pController->sourceController()->removeSource(m_selectedElement->id);
+        m_controller.sourceController().removeSource(selectedElement->uuid);
     }
 }
 
 void MainWindow::openConfigureSourceDialog()
 {
-    // Check controllers
-    if (!pController->checkIfControllersAreOk()) return;
+    auto selectedElement = ui.dockWidget->selectedNode();
+    if (!selectedElement) {
+        QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to configure."));
+        return;
+    }
 
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Source) {
+    if (selectedElement->kind != IElement::Type::Source) {
         QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to configure."));
         return;
     }
 
 	// Get the source from the selected element
     // TODO: check this implementation
-	Source* source = pController->sourceController()->byId(m_selectedElement->id);
+	Source* source = m_controller.sourceController().byId(selectedElement->uuid);
     if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
        /* QWidget* w = cfg->createConfigWidget(this);
         QDialog dlg(this);
@@ -379,28 +370,24 @@ void MainWindow::openConfigureSourceDialog()
 
 void MainWindow::openAddProcessorDialog()
 {
-	// Check controllers
-    if (!pController->checkIfControllersAreOk()) return;
-
-    ProcessingController* pProcessingController = pController->processingController();
-    PluginController* pPluginController = pController->pluginController();
-    if (!pProcessingController || !pPluginController) return;
-
-    AddProcessorDialog* addProcessorDialog = new AddProcessorDialog(pPluginController, this);
+    AddProcessorDialog* addProcessorDialog = new AddProcessorDialog(&m_controller.pluginController(), this);
     addProcessorDialog->setWindowModality(Qt::WindowModal);
 
-    connect(addProcessorDialog, &AddProcessorDialog::processorConfirmed, pProcessingController, &ProcessingController::addProcessor);
+    connect(addProcessorDialog, &AddProcessorDialog::processorConfirmed, &m_controller.processingController(), &ProcessingController::addProcessor);
 
     addProcessorDialog->show();
 }
 
 void MainWindow::openRemoveProcessorDialog()
 {
-    // Check controllers
-    if (!pController->checkIfControllersAreOk()) return;
+    auto selectedElement = ui.dockWidget->selectedNode();
+    if (!selectedElement) {
+        QMessageBox::warning(this, tr("No Processor Selected"), tr("Please select a processor to remove."));
+        return;
+    }
 
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Processor) {
+    if (selectedElement->kind != IElement::Type::Processor) {
         QMessageBox::warning(this, tr("No Processor Selected"), tr("Please select a processor to remove."));
         return;
     }
@@ -409,10 +396,10 @@ void MainWindow::openRemoveProcessorDialog()
     if (response == QMessageBox::Yes) {
 		// Get the processor from the selected element
         // TODO: implement this
-        //ProcessorBase* processor = m_selectedElement.data(Qt::UserRole).value<ProcessorBase*>();
+        //ProcessorBase* processor = selectedElement.data(Qt::UserRole).value<ProcessorBase*>();
 
         // Remove source from the controller
-        //pController->processingController()->removeProcessor(processor);
+        //m_controller->processingController()->removeProcessor(processor);
     }
 }
 
@@ -438,13 +425,11 @@ void MainWindow::onSelectedPresetItemChanged(QListWidgetItem* current, QListWidg
 
 void MainWindow::onSelectedElementChanged(ElementTreeNode* node)
 {
-	m_selectedElement = node; // TODO: check copying performance impact
     updateToolbarButtonsState();
 }
 
 void MainWindow::onSelectedElementRemoved()
 {
-    m_selectedElement = nullptr;
     // Update the elements tree
     ui.dockWidget->update();
     updateToolbarButtonsState();
@@ -452,53 +437,52 @@ void MainWindow::onSelectedElementRemoved()
 
 void MainWindow::updateToolbarButtonsState()
 {
-    if (!pController->checkIfControllersAreOk()) return;
-
     /// PRESETS
-    bool hasPresets = !pController->presetsController()->presets().isEmpty();
+    bool hasPresets = !m_controller.presetsController().presets().isEmpty();
     ui.actionLoadPreset->setEnabled(hasPresets && pSelectedPresetItem);
     ui.actionDeletePreset->setEnabled(hasPresets && pSelectedPresetItem);
 
     // Check selected element
-    if (!m_selectedElement) {
+    auto selectedElement = ui.dockWidget->selectedNode();
+    if (!selectedElement) {
 		// TODO: maybe disable all element-related actions here?
         return;
     }
 
     /// SOURCES
-    bool hasSources = !pController->sourceController()->sources().isEmpty();
-    ui.actionRemoveSource->setEnabled(hasSources && m_selectedElement->kind == ElementTreeNode::Kind::Source);
-    ui.actionConfigureSource->setEnabled(hasSources && m_selectedElement->kind == ElementTreeNode::Kind::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
+    bool hasSources = !m_controller.sourceController().sources().isEmpty();
+    ui.actionRemoveSource->setEnabled(hasSources && selectedElement->kind == IElement::Type::Source);
+    ui.actionConfigureSource->setEnabled(hasSources && selectedElement->kind == IElement::Type::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
 
     /// PROCESSING
-    bool hasProcessors = !pController->processingController()->processors().isEmpty();
-    ui.actionRemoveProcessor->setEnabled(hasProcessors && m_selectedElement->kind == ElementTreeNode::Kind::Processor);
-	ui.actionConfigureProcessor->setEnabled(hasProcessors && m_selectedElement->kind == ElementTreeNode::Kind::Processor);
+    bool hasProcessors = !m_controller.processingController().processors().isEmpty();
+    ui.actionRemoveProcessor->setEnabled(hasProcessors && selectedElement->kind == IElement::Type::Processor);
+	ui.actionConfigureProcessor->setEnabled(hasProcessors && selectedElement->kind == IElement::Type::Processor);
     ui.actionToggleProcessing->setEnabled(hasProcessors);
 
 	/// MOUNTS
-    bool hasMounts = !pController->mountController()->mounts().isEmpty();
-	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
-	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
+    bool hasMounts = !m_controller.mountController().mounts().isEmpty();
+	ui.actionRemoveMount->setEnabled(hasMounts && selectedElement->kind == IElement::Type::Mount);
+	ui.actionEditMount->setEnabled(hasMounts && selectedElement->kind == IElement::Type::Mount);
 
     /// SESSION
     ui.actionStartStopSession->setEnabled(hasSources);
-    ui.actionRecord->setEnabled(pController->sessionController()->isPipelineBuilt());
-    ui.actionClipSession->setEnabled(pController->sessionController()->isPipelineBuilt());
+    ui.actionRecord->setEnabled(m_controller.sessionController().pipeline().isBuilt());
+    ui.actionClipSession->setEnabled(m_controller.sessionController().pipeline().isBuilt());
 
     /// DEBUG
-	ui.actionDebugPipelineDiagram->setEnabled(pController->sessionController()->isPipelineBuilt());
+	ui.actionDebugPipelineDiagram->setEnabled(m_controller.sessionController().pipeline().isBuilt());
 }
 
 void MainWindow::onPrintPipelineDebugClicked()
 {
-	GstPipeline* pipeline = pController->sessionController()->pipeline();
+	const GstElement* pipeline = m_controller.sessionController().pipeline().bin();
     if (!pipeline) {
         QMessageBox::warning(this, tr("Pipeline Not Built"), tr("The GStreamer pipeline is not built yet."));
         return;
 	}
 
-    QString output = debugDisplayGstBin(GST_ELEMENT(pipeline));
+    QString output = debugDisplayGstBin(pipeline, true);
 
     if (!output.isEmpty()) {
         QMessageBox::warning(this, tr("Error"), output);

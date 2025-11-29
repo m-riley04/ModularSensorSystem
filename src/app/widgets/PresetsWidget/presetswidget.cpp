@@ -15,7 +15,7 @@ PresetsWidget::~PresetsWidget()
 
 void PresetsWidget::initWidgets()
 {
-	if (!pController) {
+	if (!m_controller) {
 		qWarning() << "PresetsWidget: pController is null; cannot initialize widgets";
 		return;
 	}
@@ -27,12 +27,8 @@ void PresetsWidget::initWidgets()
 	ui.listPresets->clear();
 
 	// Load all presets
-	PresetsController* pPresetsController = pController->presetsController();
-	if (!pPresetsController) {
-		qWarning() << "PresetsController is null; aborting presets scan";
-		return;
-	}
-	pPresetsController->scanForPresets();
+	PresetsController& m_presetsController = m_controller->presetsController();
+	m_presetsController.scanForPresets();
 
 	// Add presets to the list
 	repopulateList();
@@ -42,12 +38,12 @@ void PresetsWidget::initSignals()
 {
 	connect(ui.listPresets, &QListWidget::currentItemChanged, this, &PresetsWidget::selectedPresetChanged);
 
-	if (!pController) {
+	if (!m_controller) {
 		qWarning() << "PresetsWidget: pController is null; cannot initialize signals";
 		return;
 	}
 
-	PresetsController* pPresetsController = pController->presetsController();
+	PresetsController& m_presetsController = m_controller->presetsController();
 
 	connect(ui.buttonRemove, &QPushButton::clicked, this, &PresetsWidget::onRemoveClicked);
 	connect(ui.buttonSave, &QPushButton::clicked, this, &PresetsWidget::onSaveClicked);
@@ -55,25 +51,21 @@ void PresetsWidget::initSignals()
 
 	connect(ui.listPresets, &QListWidget::itemClicked, this, &PresetsWidget::onSelected);
 
-	connect(pPresetsController, &PresetsController::presetSaved, this, &PresetsWidget::repopulateList);
-	connect(pPresetsController, &PresetsController::presetRemoved, this, &PresetsWidget::repopulateList);
-	connect(pPresetsController, &PresetsController::presetsScanned, this, &PresetsWidget::repopulateList);
+	connect(&m_presetsController, &PresetsController::presetSaved, this, &PresetsWidget::repopulateList);
+	connect(&m_presetsController, &PresetsController::presetRemoved, this, &PresetsWidget::repopulateList);
+	connect(&m_presetsController, &PresetsController::presetsScanned, this, &PresetsWidget::repopulateList);
 }
 
 void PresetsWidget::repopulateList()
 {
 	// Get and check presets controller
-	PresetsController* pPresetsController = pController->presetsController();
-	if (!pPresetsController) {
-		qWarning() << "PresetsController is null; aborting presets population";
-		return;
-	}
+	PresetsController& m_presetsController = m_controller->presetsController();
 
 	// Clear list
 	ui.listPresets->clear();
 
 	// Iterate through presets
-	for (const auto& preset : pPresetsController->presets()) {
+	for (const auto& preset : m_presetsController.presets()) {
 		QListWidgetItem* item = new QListWidgetItem(preset.name);
 		item->setData(Qt::UserRole, preset.path);
 		ui.listPresets->addItem(item);

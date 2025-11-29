@@ -2,7 +2,7 @@
 #include "models/session_properties.hpp"
 #include "features/sources/source.hpp"
 
-QString generateSessionDirectoryPath(const SessionProperties& props, QString suffix)
+const QString generateSessionDirectoryPath(const SessionProperties& props, const QString suffix)
 {
 	const QString outputDir = props.recordingProperties.outputDirectory.absolutePath();
 
@@ -28,7 +28,7 @@ QString generateSessionDirectoryPath(const SessionProperties& props, QString suf
 	return outputFolderPath;
 }
 
-QString generateSessionSourcePath(Source* src, const SessionProperties& props, ns timestamp)
+const QString generateSessionSourcePath(Source* src, const SessionProperties& props, const ns timestamp)
 {
 	auto recordableSrc = src->asRecordable();
 	if (!src->asRecordable()) {

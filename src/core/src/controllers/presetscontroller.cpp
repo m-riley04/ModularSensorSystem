@@ -21,11 +21,13 @@ PresetsController::PresetsController(const QString& dir, QObject *parent)
 PresetsController::~PresetsController()
 {}
 
-void PresetsController::savePreset(QString name, QList<Source*> activeSources, QString dirPath)
+void PresetsController::savePreset(const QString& name, const QList<Source*>& activeSources, const QString& dirPath)
 {
+	QString dirPathLocal = dirPath;
+
 	// Check dirPath
-	if (dirPath.isEmpty()) {
-		dirPath = mPresetsDir;
+	if (dirPathLocal.isEmpty()) {
+		dirPathLocal = mPresetsDir;
 	}
 
 	QList<SourcePreset> sourcePresets;
@@ -48,7 +50,7 @@ void PresetsController::savePreset(QString name, QList<Source*> activeSources, Q
 		sourcePresets.append(preset);
 	}
 
-	QString fullPath = dirPath + "/" + name + ".json";
+	QString fullPath = dirPathLocal + "/" + name + ".json";
 	Preset preset{
 		name,
 		fullPath,
@@ -75,7 +77,7 @@ void PresetsController::savePreset(QString name, QList<Source*> activeSources, Q
 	emit presetSaved(fullPath);
 }
 
-void PresetsController::loadPreset(const QString& path, SourceController* sourceController, PluginController* pluginController)
+void PresetsController::loadPreset(const QString& path, SourceController& sourceController, PluginController& pluginController)
 {
 	// Check if the file exists
 	if (!QFile::exists(path)) {
@@ -103,7 +105,7 @@ void PresetsController::loadPreset(const QString& path, SourceController* source
 	}
 
 	// Remove previously loaded sources/settings
-	sourceController->clearSources();
+	sourceController.clearSources();
 
 	QString name = obj["name"].toString();
 	QJsonArray sourcesArray = obj["sources"].toArray();
@@ -112,13 +114,10 @@ void PresetsController::loadPreset(const QString& path, SourceController* source
 	// Iterate each source preset and load it into the source controller
 	for (const SourcePreset& sourcePreset : sourcePresets)
 	{
-		// Clear the current source list
-		sourceController->clearSources();
-
 		// Get the plugin for the source
-		ISourcePlugin* plugin = pluginController->getSourcePlugin(sourcePreset.pluginId);
+		ISourcePlugin* plugin = pluginController.getSourcePlugin(sourcePreset.pluginId);
 		if (!plugin) {
-			qWarning() << "Plugin is null: aborting source load";
+			qWarning() << "Plugin '" << sourcePreset.pluginId << "' not found.";
 			return;
 		}
 
@@ -134,10 +133,10 @@ void PresetsController::loadPreset(const QString& path, SourceController* source
 		};
 
 		// Create the source
-		Source* source = sourceController->addSource(plugin, sourceInfo);
+		Source* source = sourceController.addSource(plugin, sourceInfo);
 		if (!source) {
-			qWarning() << "Source is null: aborting source load";
-			return;
+			qWarning() << "Failed to create source:" << sourcePreset.sourceName;
+			continue;
 		}
 		
 		// Load the preset into the source
@@ -217,21 +216,21 @@ void PresetsController::scanForPresets(QString presetDir)
 			if (!sourceObj.contains("id") || !sourceObj.contains("name") || !sourceObj.contains("plugin_id") || !sourceObj.contains("type") || !sourceObj.contains("config")) {
 				qWarning() << "Invalid source preset format:" << filePath;
 				continue;
-
-				QByteArray sourceId = QByteArray(sourceObj["id"].toString().toStdString());
-				QString sourceName = sourceObj["source_name"].toString();
-				QString pluginId = sourceObj["plugin_id"].toString();
-				Source::Type sourceType = static_cast<Source::Type>(sourceObj["type"].toInt());
-				QJsonObject config = sourceObj["config"].toObject();
-				SourcePreset preset{
-					sourceId,
-					sourceName,
-					pluginId,
-					sourceType,
-					config
-				};
-				sourcePresets.append(preset);
 			}
+
+			QByteArray sourceId = QByteArray(sourceObj["id"].toString().toStdString());
+			QString sourceName = sourceObj["name"].toString();
+			QString pluginId = sourceObj["plugin_id"].toString();
+			Source::Type sourceType = static_cast<Source::Type>(sourceObj["type"].toInt());
+			QJsonObject config = sourceObj["config"].toObject();
+			SourcePreset preset{
+				sourceId,
+				sourceName,
+				pluginId,
+				sourceType,
+				config
+			};
+			sourcePresets.append(preset);
 		}
 
 		Preset preset{
@@ -274,7 +273,7 @@ QList<SourcePreset> PresetsController::jsonToSourcePresets(const QJsonArray& jso
 			continue;
 		}
 		QByteArray sourceId = QByteArray(sourceObj["id"].toString().toStdString());
-		QString sourceName = QByteArray(sourceObj["name"].toString().toStdString());
+		QString sourceName = sourceObj["name"].toString();
 		QString pluginId = sourceObj["plugin_id"].toString();
 		Source::Type sourceType = static_cast<Source::Type>(sourceObj["type"].toInt());
 		QJsonObject config = sourceObj["config"].toObject();

@@ -14,9 +14,9 @@ public:
 	TripodPlugin();
 	~TripodPlugin() = default;
 	TripodMount* createMount(const std::string& id, QObject* parent) override;
-	std::vector<ElementInfo> discover() const override;
-	std::string name() const override { return "Tripod Mount"; }
-	uint32_t version() const override { return MSS_API; }
+	const std::vector<ElementInfo> discover() const override;
+	const std::string name() const override { return "Tripod Mount"; }
+	const uint32_t version() const override { return MSS_API; }
 };
 
 // Export proper factory functions that create/destroy the plugin instance

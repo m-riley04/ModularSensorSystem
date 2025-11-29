@@ -18,7 +18,7 @@ public:
 	};
 
 public:
-	Mount(ElementInfo& element, QObject* parent) : Element(element, parent) {}
+	Mount(const ElementInfo& element, QObject* parent) : Element(element, parent) {}
 	virtual ~Mount() = default;
 
 	/**
@@ -46,6 +46,8 @@ public:
 	 */
 	virtual std::optional<Pose> pose() const = 0;
 	virtual bool setPose(const Pose& newPose) = 0;
+
+	virtual const IElement::Type elementType() const noexcept override { return IElement::Type::Mount; }
 
 };
 

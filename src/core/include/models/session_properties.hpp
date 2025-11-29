@@ -2,6 +2,8 @@
 
 #include <QDir>
 #include <QString>
+#include <string>
+#include <QCoreApplication>
 
 struct SessionGeneralProperties {
 	// TODO: add to this
@@ -31,3 +33,32 @@ struct SessionProperties {
 	SessionRecordingProperties recordingProperties = {};
 	SessionProcessingProperties processingProperties = {};
 };
+
+/**
+ * @brief Initializes default session properties.
+ * @return 
+ */
+static inline SessionProperties initSessionProps(QString outputDirectoryName, QString outputPrefix) {
+	// Create sessions directory if it doesn't exist
+	QDir sessionsDir = QDir(QCoreApplication::applicationDirPath() + outputDirectoryName);
+	if (!sessionsDir.exists()) {
+		if (!QDir().mkpath(sessionsDir.absolutePath())) {
+			qWarning() << "Failed to create sessions directory:" << sessionsDir.absolutePath() << "\nUsing application directory instead.";
+			sessionsDir = QDir(QCoreApplication::applicationDirPath());
+		}
+	}
+
+	return {
+		.generalProperties = {},
+		.clippingProperties = {
+			.enabled = false,
+		},
+		.recordingProperties = {
+			.outputDirectory = sessionsDir,
+			.outputPrefix = outputPrefix,
+		},
+		.processingProperties = {
+			.enabled = false,
+		},
+	};
+}

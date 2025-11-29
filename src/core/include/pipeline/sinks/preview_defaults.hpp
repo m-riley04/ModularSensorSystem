@@ -15,7 +15,7 @@ inline const char* getVideoSinkFactoryName() {
 #elif Q_OS_LINUX
 	sinkName = "v4l2sink";
 #else
-	sinkName = "autovideosink"; // need to change this probs
+	sinkName = "autovideosink"; // TODO: need to change this probs
 #endif
 	return sinkName;
 }
@@ -26,7 +26,7 @@ inline const char* getVideoSinkFactoryName() {
  * @param binName 
  * @return A pointer to the created audio visualizer sink bin, or nullptr on failure.
  */
-inline GstElement* createDefaultAudioVisualizerSink(guintptr windowId, const char* binName = nullptr) {
+inline GstElement* createDefaultAudioPreviewSink(guintptr windowId, const char* binName = nullptr) {
 	/** Multiple differet visualizers could be used here.
 	 * - monoscope (best one by far)
 	 * - goom (cool visuals, but not really good for real visualization)
@@ -83,7 +83,7 @@ inline GstElement* createDefaultAudioVisualizerSink(guintptr windowId, const cha
 	return bin;
 }
 
-inline GstElement* createDefaultDataVisualizerSink(guintptr windowId, const char* binName = nullptr) {
+inline GstElement* createDefaultDataPreviewSink(guintptr windowId, const char* binName = nullptr) {
 
 	const char* sinkName = getVideoSinkFactoryName();
 
@@ -146,7 +146,7 @@ inline GstElement* createDefaultDataVisualizerSink(guintptr windowId, const char
  * @param binName The name of the bin to create.
  * @return A pointer to the created video sink element, or nullptr on failure.
  */
-inline GstElement* createDefaultVideoSink(guintptr windowId, const char* binName = nullptr) {
+inline GstElement* createDefaultVideoPreviewSink(guintptr windowId, const char* binName = nullptr) {
 	const char* sinkName = getVideoSinkFactoryName();
 
 	// Initialize elements
@@ -174,14 +174,14 @@ inline GstElement* createDefaultVideoSink(guintptr windowId, const char* binName
  * @param binName 
  * @return 
  */
-inline GstElement* createDefaultSink(Source::Type type, guintptr windowId = 0, const char* binName = nullptr) {
+inline GstElement* createDefaultPreviewSink(Source::Type type, guintptr windowId = 0, const char* binName = nullptr) {
 	switch (type) {
 	case Source::Type::VIDEO:
-		return createDefaultVideoSink(windowId, binName);
+		return createDefaultVideoPreviewSink(windowId, binName);
 	case Source::Type::AUDIO:
-		return createDefaultAudioVisualizerSink(windowId, binName);
+		return createDefaultAudioPreviewSink(windowId, binName);
 	case Source::Type::DATA:
-		return createDefaultDataVisualizerSink(windowId, binName);
+		return createDefaultDataPreviewSink(windowId, binName);
 	default:
 		qWarning() << "No default sink available for the given source type.";
 		return nullptr;

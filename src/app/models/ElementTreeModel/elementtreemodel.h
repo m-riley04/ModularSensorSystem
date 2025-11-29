@@ -9,17 +9,13 @@
 #include "controllers/maincontroller.hpp"
 #include "controllers/sessioncontroller.hpp"
 #include "utils/boost_qt_conversions.hpp"
+#include "features/ielement.hpp"
 
 struct ElementTreeNode {
-    enum class Kind { 
-        None = -1,
-        Mount,
-        Source,
-        Processor
-    };
-    Kind kind = Kind::None;
-    QUuid id; // the controller's primary key
-    int parentIndex; // index in m_nodes (-1 for root)
+    QUuid uuid; // the controller's primary key
+    IElement::Type kind = IElement::Type::Unknown;
+    ElementTreeNode* parent = nullptr;
+	QList<ElementTreeNode*> children;
 };
 
 class ElementTreeModel : public QAbstractItemModel
@@ -27,7 +23,7 @@ class ElementTreeModel : public QAbstractItemModel
 	Q_OBJECT
 
 public:
-	ElementTreeModel(MainController*, QObject* parent = nullptr);
+	ElementTreeModel(MainController&, QObject* parent = nullptr);
 	~ElementTreeModel();
 
     // --- mandatory overrides ---
@@ -37,25 +33,21 @@ public:
     int columnCount(const QModelIndex&)   const override { return 2; }
     QVariant data(const QModelIndex&, int role) const override;
 
-    // helpers for management
-    ElementTreeNode* findNode(QUuid uuid);
-
 public slots:
-    void rebuild(bool isFlat = true); // quick & dirty first
+    void rebuild(bool isFlat = true);
     void removeNode(QUuid uuid);
-	// TODO: incremental updates instead of complete rebuilds
-    /*void onMountAdded(Mount*);
+    void onMountAdded(Mount*);
     void onSourceAdded(Source*);
-    void onProcessorAdded(ProcessorBase*);*/
+    void onProcessorAdded(Processor*);
 
 private:
-    QVector<ElementTreeNode> mNodes;
-    MainController* m_mainController;
+    MainController& m_mainController;
+	QHash<QUuid, ElementTreeNode> m_nodeMap;
+	QList<ElementTreeNode*> m_rootNodes;
 
 	void buildFlat();
 	void buildHierarchical();
 
-    //static QVariant iconFor(Node::Kind k);
 };
 
 Q_DECLARE_METATYPE(ElementTreeModel*)

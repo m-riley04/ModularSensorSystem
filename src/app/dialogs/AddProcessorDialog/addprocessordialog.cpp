@@ -1,7 +1,7 @@
 #include "addprocessordialog.h"
 
 AddProcessorDialog::AddProcessorDialog(PluginController* pluginController, QWidget *parent)
-	: QDialog(parent), pPluginController(pluginController)
+	: QDialog(parent), m_pluginController(pluginController)
 {
 	ui.setupUi(this);
 
@@ -32,14 +32,14 @@ void AddProcessorDialog::populateProcessorsDropdown()
 	ui.dropdownProcessor->clear();
 
 	// Populate the source type dropdown with available source types
-	for (const auto& plugin : pPluginController->processorPlugins()) {
+	for (const auto& plugin : m_pluginController->processorPlugins()) {
 		if (plugin) {
 			ui.dropdownProcessor->addItem(QString::fromStdString(plugin->name()), QVariant::fromValue(plugin));
 		}
 	}
 
 	// Check if there are any processors available
-	if (pPluginController->processorPlugins().count() <= 0) { // This is a more robust check. Sorta redunant, but still good to have.
+	if (m_pluginController->processorPlugins().count() <= 0) { // This is a more robust check. Sorta redunant, but still good to have.
 		qDebug() << "No processor plugins available in controller";
 		return;
 	}
@@ -50,7 +50,7 @@ void AddProcessorDialog::populateProcessorsDropdown()
 
 	// Set the first processor as selected by default
 	ui.dropdownProcessor->setCurrentIndex(0);
-	pSelectedProcessorPlugin = pPluginController->processorPlugins().first();
+	pSelectedProcessorPlugin = m_pluginController->processorPlugins().first();
 }
 
 void AddProcessorDialog::onConfirmButtonClicked() {

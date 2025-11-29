@@ -77,7 +77,7 @@
     <ClInclude Include="include\interfaces\capability\iapisource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pipeline\sinks\defaults.hpp">
+    <ClInclude Include="include\pipeline\sinks\preview_defaults.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utils\debug.hpp">
@@ -110,6 +110,9 @@
     <ClInclude Include="include\features\ielement.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\pipeline\sinks\recording_defaults.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">
@@ -137,6 +140,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\utils\utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pipeline\sessionpipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -175,6 +181,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\features\element.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\pipeline\sessionpipeline.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

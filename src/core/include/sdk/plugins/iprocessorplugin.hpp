@@ -16,5 +16,5 @@ class IProcessorPlugin : public IPlugin {
 public:
     virtual Source::Type supportedSourceType() const = 0;
     virtual Processor* createProcessor(Source* source, QObject* parent = nullptr) = 0;
-    PluginType type() const override { return PluginType::PROCESSOR; }
+    virtual const PluginType type() const override final { return PluginType::PROCESSOR; }
 };
