@@ -163,7 +163,8 @@ void MainWindow::initSignals() {
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
 
 	// Connect dock widget signals
-    connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, this, &MainWindow::onSelectedElementChanged);
+    connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, this, &MainWindow::updateToolbarButtonsState);
+    connect(ui.dockWidget, &DockableElementsManagerWidget::elementRemoved, this, &MainWindow::updateToolbarButtonsState);
     connect(&m_controller.sourceController(), &SourceController::sourceRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
     connect(&m_controller.mountController(), &MountController::mountRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
     connect(&m_controller.processingController(), &ProcessingController::processorRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
@@ -279,21 +280,27 @@ void MainWindow::openAddMountDialog()
 
 void MainWindow::openRemoveMountDialog()
 {
+    auto selectedElement = ui.dockWidget->selectedNode();
+    if (!selectedElement) {
+        QMessageBox::warning(this, tr("No Mount Selected"), tr("Please select a mount to remove."));
+        return;
+	}
+
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Mount) {
+    if (selectedElement->kind != IElement::Type::Mount) {
         QMessageBox::warning(this, tr("No Mount Selected"), tr("Please select a mount to remove."));
         return;
     }
 
     auto response = QMessageBox::question(this, tr("Remove Mount"), tr("Are you sure you want to remove the selected mount?"), QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
-        m_controller.mountController().removeMount(m_selectedElement->id);
+        m_controller.mountController().removeMount(selectedElement->uuid);
     }
 }
 
 void MainWindow::openEditMountDialog()
 {
-    // TODO: implement
+    QMessageBox::warning(this, tr("Feature Not Implemted"), tr("This feature has not been implemented yet."));
 }
 
 void MainWindow::openAddSourceDialog()
@@ -311,29 +318,41 @@ void MainWindow::openAddSourceDialog()
 
 void MainWindow::openRemoveSourceDialog()
 {
+    auto selectedElement = ui.dockWidget->selectedNode();
+    if (!selectedElement) {
+        QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to remove."));
+        return;
+    }
+
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Source) {
+    if (selectedElement->kind != IElement::Type::Source) {
         QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to remove."));
         return;
 	}
 
     auto response = QMessageBox::question(this, tr("Remove Source"), tr("Are you sure you want to remove the selected source?"), QMessageBox::Yes | QMessageBox::No);
     if (response == QMessageBox::Yes) {
-        m_controller.sourceController().removeSource(m_selectedElement->id);
+        m_controller.sourceController().removeSource(selectedElement->uuid);
     }
 }
 
 void MainWindow::openConfigureSourceDialog()
 {
+    auto selectedElement = ui.dockWidget->selectedNode();
+    if (!selectedElement) {
+        QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to configure."));
+        return;
+    }
+
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Source) {
+    if (selectedElement->kind != IElement::Type::Source) {
         QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to configure."));
         return;
     }
 
 	// Get the source from the selected element
     // TODO: check this implementation
-	Source* source = m_controller.sourceController().byId(m_selectedElement->id);
+	Source* source = m_controller.sourceController().byId(selectedElement->uuid);
     if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
        /* QWidget* w = cfg->createConfigWidget(this);
         QDialog dlg(this);
@@ -361,8 +380,14 @@ void MainWindow::openAddProcessorDialog()
 
 void MainWindow::openRemoveProcessorDialog()
 {
+    auto selectedElement = ui.dockWidget->selectedNode();
+    if (!selectedElement) {
+        QMessageBox::warning(this, tr("No Processor Selected"), tr("Please select a processor to remove."));
+        return;
+    }
+
     // Check selected item
-    if (m_selectedElement->kind != ElementTreeNode::Kind::Processor) {
+    if (selectedElement->kind != IElement::Type::Processor) {
         QMessageBox::warning(this, tr("No Processor Selected"), tr("Please select a processor to remove."));
         return;
     }
@@ -371,7 +396,7 @@ void MainWindow::openRemoveProcessorDialog()
     if (response == QMessageBox::Yes) {
 		// Get the processor from the selected element
         // TODO: implement this
-        //ProcessorBase* processor = m_selectedElement.data(Qt::UserRole).value<ProcessorBase*>();
+        //ProcessorBase* processor = selectedElement.data(Qt::UserRole).value<ProcessorBase*>();
 
         // Remove source from the controller
         //m_controller->processingController()->removeProcessor(processor);
@@ -400,13 +425,11 @@ void MainWindow::onSelectedPresetItemChanged(QListWidgetItem* current, QListWidg
 
 void MainWindow::onSelectedElementChanged(ElementTreeNode* node)
 {
-	m_selectedElement = node; // TODO: check copying performance impact
     updateToolbarButtonsState();
 }
 
 void MainWindow::onSelectedElementRemoved()
 {
-    m_selectedElement = nullptr;
     // Update the elements tree
     ui.dockWidget->update();
     updateToolbarButtonsState();
@@ -420,26 +443,27 @@ void MainWindow::updateToolbarButtonsState()
     ui.actionDeletePreset->setEnabled(hasPresets && pSelectedPresetItem);
 
     // Check selected element
-    if (!m_selectedElement) {
+    auto selectedElement = ui.dockWidget->selectedNode();
+    if (!selectedElement) {
 		// TODO: maybe disable all element-related actions here?
         return;
     }
 
     /// SOURCES
     bool hasSources = !m_controller.sourceController().sources().isEmpty();
-    ui.actionRemoveSource->setEnabled(hasSources && m_selectedElement->kind == ElementTreeNode::Kind::Source);
-    ui.actionConfigureSource->setEnabled(hasSources && m_selectedElement->kind == ElementTreeNode::Kind::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
+    ui.actionRemoveSource->setEnabled(hasSources && selectedElement->kind == IElement::Type::Source);
+    ui.actionConfigureSource->setEnabled(hasSources && selectedElement->kind == IElement::Type::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
 
     /// PROCESSING
     bool hasProcessors = !m_controller.processingController().processors().isEmpty();
-    ui.actionRemoveProcessor->setEnabled(hasProcessors && m_selectedElement->kind == ElementTreeNode::Kind::Processor);
-	ui.actionConfigureProcessor->setEnabled(hasProcessors && m_selectedElement->kind == ElementTreeNode::Kind::Processor);
+    ui.actionRemoveProcessor->setEnabled(hasProcessors && selectedElement->kind == IElement::Type::Processor);
+	ui.actionConfigureProcessor->setEnabled(hasProcessors && selectedElement->kind == IElement::Type::Processor);
     ui.actionToggleProcessing->setEnabled(hasProcessors);
 
 	/// MOUNTS
     bool hasMounts = !m_controller.mountController().mounts().isEmpty();
-	ui.actionRemoveMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
-	ui.actionEditMount->setEnabled(hasMounts && m_selectedElement->kind == ElementTreeNode::Kind::Mount);
+	ui.actionRemoveMount->setEnabled(hasMounts && selectedElement->kind == IElement::Type::Mount);
+	ui.actionEditMount->setEnabled(hasMounts && selectedElement->kind == IElement::Type::Mount);
 
     /// SESSION
     ui.actionStartStopSession->setEnabled(hasSources);

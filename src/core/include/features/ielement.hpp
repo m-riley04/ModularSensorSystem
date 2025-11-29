@@ -10,6 +10,14 @@ class IElement
 {
 
 public:
+	enum class Type {
+		Unknown = -1,
+		Mount,
+		Source,
+		Processor
+	};
+
+public:
 	virtual ~IElement() = default;
 
 	/**
@@ -47,6 +55,12 @@ public:
 	 * @return string ID of the parent plugin.
 	 */
 	virtual const std::string& pluginId() const = 0;
+
+	/**
+	 * @brief The type of the element.
+	 * @return The type of the element.
+	 */
+	virtual const Type elementType() const noexcept = 0;
 
 	/**
 	 * A hook called when a session starts.

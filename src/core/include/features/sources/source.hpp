@@ -45,19 +45,19 @@ public:
 	/**
 	 * The hardware ID for the device.
 	 * Different APIs have different names for this, including:
-	 * - "id" (QtMultimedia)
+	 * - "uuid" (QtMultimedia)
 	 * - "device_name" (FFmpeg)
 	 * - "device-name" (GStreamer)
 	 * @return hardware ID string
 	 */
-	//virtual std::string id() const override = 0;
+	//virtual std::string uuid() const override = 0;
 
 	/**
 	 * The name of the device from the system.
 	 * Different APIs have different names for this, including:
 	 * - "description" (QtMultimedia)
 	 * - "device_description" (FFmpeg)
-	 * - "device-id" or "device-path" (GStreamer)
+	 * - "device-uuid" or "device-path" (GStreamer)
 	 * @return user-friendly name of the device from the hardware.
 	 */
 	//virtual std::string name() const override = 0;
@@ -67,6 +67,7 @@ public:
 	 * @return the type of a device as Source::Type enum.
 	 */
 	virtual Source::Type type() const { return Source::Type::OTHER; }
+	virtual const IElement::Type elementType() const noexcept override { return IElement::Type::Source; }
 
 /// STATIC HELPERS ///
 public:

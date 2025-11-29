@@ -29,8 +29,11 @@ public:
 		emit sourceChanged(m_source);
     }
 
+    virtual const IElement::Type elementType() const noexcept override { return IElement::Type::Processor; }
+
     virtual void startProcessing() {}
     virtual void stopProcessing() {}
+
 
 protected:
     Source* m_source;
