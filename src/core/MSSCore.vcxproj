@@ -109,6 +109,7 @@
     <ClCompile Include="src\controllers\sessioncontroller.cpp" />
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
     <ClCompile Include="src\pipeline\sessionpipeline.cpp" />
+    <ClCompile Include="src\sdk\plugins\pluginloader.cpp" />
     <ClCompile Include="src\utils\session_utils.cpp" />
     <ClCompile Include="src\utils\utils.cpp" />
     <QtMoc Include="include\features\element.hpp" />
@@ -121,6 +122,7 @@
     <QtMoc Include="include\pipeline\sessionpipeline.hpp" />
     <ClInclude Include="include\pipeline\sinks\recording_defaults.hpp" />
     <ClInclude Include="include\utils\debug.hpp" />
+    <ClInclude Include="include\utils\plugins_utils.hpp" />
     <ClInclude Include="include\utils\session_utils.hpp" />
     <ClInclude Include="include\utils\utils.hpp" />
     <QtMoc Include="include\controllers\sessioncontroller.hpp" />

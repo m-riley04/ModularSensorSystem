@@ -24,7 +24,8 @@ public:
     explicit PluginController(const QString& pluginRoot, QObject* parent = nullptr);
 
     void loadPlugins(QList<PluginType> pluginType);
-    void loadPlugin(const QString& fullPath, const QString& fileName, PluginType pluginType);
+
+	bool verifyPlugin(const QString& fullPath, PluginType pluginType);
 
     // Return raw pointers; nullptr when not found
     ISourcePlugin* getSourcePlugin(const QString& pluginId) const;
