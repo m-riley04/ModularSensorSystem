@@ -48,6 +48,10 @@ public slots:
 	void handleRemoveElementClicked();
 	void handleEditElementClicked();
 
+private slots:
+	void onElementSelected(const QModelIndex& current, const QModelIndex& newIdx);
+	void onCustomContextMenuRequested(const QPoint& pos);
+
 signals:
 	void elementSelected(ElementTreeNode* node);
 	void elementRemoved();

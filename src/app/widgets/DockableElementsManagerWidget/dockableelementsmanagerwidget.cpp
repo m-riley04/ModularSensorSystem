@@ -49,20 +49,13 @@ void DockableElementsManagerWidget::initWidgets()
 	// Set the contents widget
 	this->setWidget(ui.contents);
 
-
-    initSignals();
+	// Ensure right-click selects the item under cursor by handling the tree view's context menu
+	ui.treeElements->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 void DockableElementsManagerWidget::initSignals() {
-
-	if (!m_mainController) {
-		return;
-	}
-
-	connect(ui.treeElements, &QTreeView::clicked, this, &DockableElementsManagerWidget::handleElementClicked);
-	connect(ui.treeElements, &QTreeView::doubleClicked, [this]() {
-		QMessageBox::information(this, "Info", "Double click action is not implemented yet.");
-		});
+	connect(ui.treeElements->selectionModel(), &QItemSelectionModel::currentChanged, this, &DockableElementsManagerWidget::onElementSelected);
+	connect(ui.treeElements, &QTreeView::customContextMenuRequested, this, &DockableElementsManagerWidget::onCustomContextMenuRequested);
 }
 
 void DockableElementsManagerWidget::initContextMenu()
@@ -82,27 +75,46 @@ void DockableElementsManagerWidget::initContextMenu()
 	m_contextMenu->addSeparator();
 
 	m_actionRemoveElement = m_contextMenu->addAction("Remove", this, &DockableElementsManagerWidget::handleRemoveElementClicked);
-	/*m_contextMenu->addAction(m_actions.removeMount);
-	m_contextMenu->addAction(m_actions.removeProcessor);
-	m_contextMenu->addAction(m_actions.removeSource);*/
-
 	m_actionEditElement = m_contextMenu->addAction("Edit", this, &DockableElementsManagerWidget::handleEditElementClicked);
-	/*m_contextMenu->addAction(m_actions.editMount);
-	m_contextMenu->addAction(m_actions.editProcessor);
-	m_contextMenu->addAction(m_actions.editSource);*/
-
-	m_contextMenu->addAction("Rebuild", this, &DockableElementsManagerWidget::handleRebuildClicked);
 
 	m_contextMenu->addSeparator();
+
+	m_contextMenu->addAction("Rebuild", this, &DockableElementsManagerWidget::handleRebuildClicked);
 
 	m_contextMenu->addAction("Expand All", this, &DockableElementsManagerWidget::handleExpandAllClicked);
 
 	m_contextMenu->addAction("Collapse All", this, &DockableElementsManagerWidget::handleCollapseAllClicked);
 
-	setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(this, &QDockWidget::customContextMenuRequested, this, [this](const QPoint& pos) {
-		m_contextMenu->exec(mapToGlobal(pos));
-	});
+	// Context menu is handled on the tree view for accurate item selection
+}
+
+void DockableElementsManagerWidget::onElementSelected(const QModelIndex& currentIdx, const QModelIndex& prevIdx) {
+	if (!currentIdx.isValid() || !m_elementModel) {
+		qDebug() << "Invalid index or model.";
+		m_actionRemoveElement->setEnabled(false);
+		m_actionEditElement->setEnabled(false);
+		return;
+	}
+
+	QVariant nodeData = m_elementModel->data(currentIdx, Qt::UserRole);
+	if (!nodeData.isValid() || !nodeData.canConvert<ElementTreeNode*>()) {
+		qDebug() << "Invalid node data.";
+		m_actionRemoveElement->setEnabled(false);
+		m_actionEditElement->setEnabled(false);
+		return;
+	}
+
+	qDebug() << "Node data:" << nodeData;
+
+	ui.treeElements->setCurrentIndex(currentIdx);
+
+	// Update the selected node
+	m_selectedNode = nodeData.value<ElementTreeNode*>();
+
+	m_actionRemoveElement->setEnabled(true);
+	m_actionEditElement->setEnabled(true);
+
+	emit elementSelected(m_selectedNode);
 }
 
 void DockableElementsManagerWidget::handleRebuildClicked()
@@ -122,25 +134,8 @@ void DockableElementsManagerWidget::handleCollapseAllClicked()
 
 void DockableElementsManagerWidget::handleElementClicked(const QModelIndex& index)
 {
-	qDebug() << "Element clicked:" << index;
-
-	if (!index.isValid() || !m_elementModel) {
-		qDebug() << "Invalid index or model.";
-		return;
-	}
-	
-	QVariant nodeData = m_elementModel->data(index, Qt::UserRole);
-	if (!nodeData.isValid() || !nodeData.canConvert<ElementTreeNode*>()) {
-		qDebug() << "Invalid node data.";
-		return;
-	}
-
-	qDebug() << "Node data:" << nodeData;
-
-	// Update the selected node
-	m_selectedNode = nodeData.value<ElementTreeNode*>();
-
-	emit elementSelected(m_selectedNode);
+	auto previousIndex = ui.treeElements->currentIndex();
+	onElementSelected(index, previousIndex);
 }
 
 void DockableElementsManagerWidget::handleRemoveElementClicked()
@@ -187,5 +182,15 @@ void DockableElementsManagerWidget::handleEditElementClicked()
 	}
 
 	this->update();
+}
+
+void DockableElementsManagerWidget::onCustomContextMenuRequested(const QPoint& pos)
+{
+	QModelIndex index = ui.treeElements->indexAt(pos);
+	auto previousIndex = ui.treeElements->currentIndex();
+	onElementSelected(index, previousIndex);
+	if (m_contextMenu) {
+		m_contextMenu->exec(ui.treeElements->viewport()->mapToGlobal(pos));
+	}
 }
 
