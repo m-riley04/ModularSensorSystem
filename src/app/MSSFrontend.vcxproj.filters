@@ -64,6 +64,15 @@
     <ClCompile Include="dialogs\AddMountDialog\addmountdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogs\PluginsDialog\pluginsdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\PluginDetailsWidget\plugindetailswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -99,6 +108,15 @@
     <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="widgets\PluginDetailsWidget\plugindetailswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogs\PluginsDialog\pluginsdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="models\PluginListModel\pluginlistmodel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
@@ -129,6 +147,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogs\PluginsDialog\pluginsdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="widgets\PluginDetailsWidget\plugindetailswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

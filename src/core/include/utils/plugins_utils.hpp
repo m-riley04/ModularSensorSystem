@@ -30,7 +30,7 @@ inline static bool isSharedLib(const std::filesystem::path& p) {
  * @param p The filesystem path to test. The function inspects the filename and extension to decide whether it resembles a plugin.
  * @return true if the path appears to be a plugin file according to platform-specific heuristics; otherwise false. On Windows, returns true when the filename ends with "Plugin.dll" (and the name is longer than 10 characters). On macOS, returns true when the filename contains "Plugin" and the extension is ".dylib". On other Unix-like systems, returns true when the filename contains "Plugin" and the extension is ".so".
  */
-static bool looksLikePlugin(const std::filesystem::path& p) {
+inline static bool looksLikePlugin(const std::filesystem::path& p) {
     const std::string name = p.filename().string();
 #ifdef _WIN32
     std::string fullSuffix = MSS_PLUGIN_SUFFIX + std::string(".dll");
@@ -40,4 +40,22 @@ static bool looksLikePlugin(const std::filesystem::path& p) {
 #else
     return name.find(MSS_PLUGIN_SUFFIX) != std::string::npos && p.extension() == ".so";
 #endif
+}
+
+/**
+ * @brief Converts a PluginType enum value to its corresponding string representation.
+ * @param type The PluginType enum value to convert.
+ * @return A string representation of the PluginType.
+ */
+inline static std::string pluginTypeToString(PluginType type) {
+    switch (type) {
+    case PluginType::SOURCE:
+        return "Source";
+    case PluginType::PROCESSOR:
+        return "Processor";
+    case PluginType::MOUNT:
+        return "Mount";
+    default:
+        return "Unknown";
+	}
 }

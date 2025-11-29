@@ -25,18 +25,23 @@ public:
 
     void loadPlugins(QList<PluginType> pluginType);
 
-	bool verifyPlugin(const QString& fullPath, PluginType pluginType);
+	const PluginRegistry& registry() const { return m_pluginRegistry; }
 
     // Return raw pointers; nullptr when not found
     ISourcePlugin* getSourcePlugin(const QString& pluginId) const;
     IProcessorPlugin* getProcessorPlugin(const QString& pluginId) const;
     IMountPlugin* getMountPlugin(const QString& pluginId) const;
 
+	const QList<IPlugin*>& plugins() const { return m_plugins; }
     const QList<ISourcePlugin*>& sourcePlugins() const { return m_sourcePlugins; }
     const QList<IProcessorPlugin*>& processorPlugins() const { return m_processorPlugins; }
     const QList<IMountPlugin*>& mountPlugins() const { return m_mountPlugins; }
 
+public slots:
+	void rescanPlugins();
+
 private:
+	QList<IPlugin*> m_plugins;
     QList<ISourcePlugin*> m_sourcePlugins;
     QList<IProcessorPlugin*> m_processorPlugins;
     QList<IMountPlugin*> m_mountPlugins;

@@ -473,6 +473,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <property name="title">
      <string>Plugins</string>
     </property>
+    <addaction name="actionOpenPluginsManager"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -905,6 +906,14 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="text">
     <string>clipSession</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenPluginsManager">
+   <property name="text">
+    <string>Open Plugins Manager</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

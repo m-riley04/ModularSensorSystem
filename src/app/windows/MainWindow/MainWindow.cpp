@@ -77,6 +77,9 @@ void MainWindow::initWidgets()
 
 void MainWindow::initActionSignals()
 {
+    // Plugins
+	connect(ui.actionOpenPluginsManager, &QAction::triggered, this, &MainWindow::onOpenPluginDialog);
+
     // Presets
 	connect(ui.actionSavePreset, &QAction::triggered, this, &MainWindow::openSavePresetDialog);
     connect(ui.actionLoadPreset, &QAction::triggered, this, &MainWindow::onLoadPresetClicked);
@@ -165,12 +168,16 @@ void MainWindow::initSignals() {
 	// Connect dock widget signals
     connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, this, &MainWindow::updateToolbarButtonsState);
     connect(ui.dockWidget, &DockableElementsManagerWidget::elementRemoved, this, &MainWindow::updateToolbarButtonsState);
-    connect(&m_controller.sourceController(), &SourceController::sourceRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
-    connect(&m_controller.mountController(), &MountController::mountRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
-    connect(&m_controller.processingController(), &ProcessingController::processorRemoved, ui.dockWidget, &DockableElementsManagerWidget::handleRebuildClicked);
 
     // Init toolbar and actions
     initActionSignals();
+}
+
+void MainWindow::onOpenPluginDialog() {
+    // Create and show the PluginDialog
+    PluginsDialog* pluginsDialog = new PluginsDialog(m_controller.pluginController(), this);
+    pluginsDialog->setWindowModality(Qt::WindowModal);
+	pluginsDialog->show();
 }
 
 void MainWindow::openSavePresetDialog()
@@ -421,18 +428,6 @@ void MainWindow::onSelectedPresetItemChanged(QListWidgetItem* current, QListWidg
     if (pSelectedPresetItem == current) return; // No change
     pSelectedPresetItem = current;
     updateToolbarButtonsState(); // CONSIDER: move this to it's own connection to this signal
-}
-
-void MainWindow::onSelectedElementChanged(ElementTreeNode* node)
-{
-    updateToolbarButtonsState();
-}
-
-void MainWindow::onSelectedElementRemoved()
-{
-    // Update the elements tree
-    ui.dockWidget->update();
-    updateToolbarButtonsState();
 }
 
 void MainWindow::updateToolbarButtonsState()
