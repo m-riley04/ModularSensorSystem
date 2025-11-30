@@ -77,7 +77,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QTreeView" name="listPlugins"/>
+           <widget class="QTreeView" name="listPlugins">
+            <property name="sortingEnabled">
+             <bool>true</bool>
+            </property>
+            <attribute name="headerShowSortIndicator" stdset="0">
+             <bool>true</bool>
+            </attribute>
+           </widget>
           </item>
          </layout>
         </widget>

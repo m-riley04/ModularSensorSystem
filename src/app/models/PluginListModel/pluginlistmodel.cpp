@@ -87,6 +87,50 @@ Qt::ItemFlags PluginListModel::flags(const QModelIndex& index) const
     return f;
 }
 
+void PluginListModel::sort(int column, Qt::SortOrder order)
+{
+    beginResetModel();
+    std::sort(m_plugins.begin(), m_plugins.end(), [column, order](const PluginMetadata* a, const PluginMetadata* b) {
+        int cmp = 0;
+        switch (column) {
+            case 0: // name
+                cmp = QString::fromStdString(a->name).compare(QString::fromStdString(b->name), Qt::CaseInsensitive);
+                break;
+            case 1: // version
+                cmp = static_cast<int>(a->version) - static_cast<int>(b->version);
+                break;
+            case 2: // author
+                cmp = QString::fromStdString(a->author).compare(QString::fromStdString(b->author), Qt::CaseInsensitive);
+                break;
+            case 3: // type
+                cmp = QString::fromStdString(elementTypeToString(a->type)).compare(QString::fromStdString(elementTypeToString(b->type)), Qt::CaseInsensitive);
+                break;
+            case 4: // isCore
+                cmp = static_cast<int>(a->isCore) - static_cast<int>(b->isCore);
+                break;
+            default:
+                break;
+        }
+        return (order == Qt::AscendingOrder) ? (cmp < 0) : (cmp > 0);
+    });
+	endResetModel();
+}
+
+QVariant PluginListModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+        switch (section) {
+        case 0: return "Name";
+        case 1: return "Version";
+        case 2: return "Author";
+        case 3: return "Type";
+        case 4: return "Core?";
+        default: return QVariant();
+        }
+    }
+    return QAbstractItemModel::headerData(section, orientation, role);
+}
+
 void PluginListModel::buildFlat()
 {
     for (auto& plugin : m_pluginController.registry().metadata()) {

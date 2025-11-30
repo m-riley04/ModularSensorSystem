@@ -21,6 +21,7 @@ void PluginDetailsWidget::setPlugin(PluginMetadata* plugin) {
 void PluginDetailsWidget::updateUi() {
 	if (!m_plugin) {
 		ui.labelPluginName->setText("N/A");
+		ui.labelAuthor->setText("N/A");
 		ui.labelPluginVersion->setText("N/A");
 		ui.labelPluginType->setText("N/A");
 		ui.labelPluginDescription->setText("N/A");

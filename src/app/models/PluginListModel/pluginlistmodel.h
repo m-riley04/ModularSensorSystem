@@ -25,6 +25,8 @@ public:
     int columnCount(const QModelIndex&)   const override { return 5; } // name, author, version, type, isCore
     QVariant data(const QModelIndex&, int role) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override; // add checkable visual cue
+	void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 public slots:
     void rebuild();
