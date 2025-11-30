@@ -113,9 +113,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="controllers\AppActionController\appactioncontroller.cpp" />
     <ClCompile Include="dialogs\AddMountDialog\addmountdialog.cpp" />
     <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp" />
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
+    <ClCompile Include="dialogs\AppPropertiesDialog\apppropertiesdialog.cpp" />
     <ClCompile Include="dialogs\PluginsDialog\pluginsdialog.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
     <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp" />
@@ -128,6 +130,7 @@
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
+    <QtUic Include="dialogs\AppPropertiesDialog\apppropertiesdialog.ui" />
     <QtUic Include="dialogs\PluginsDialog\pluginsdialog.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
     <QtUic Include="widgets\PluginDetailsWidget\plugindetailswidget.ui" />
@@ -194,7 +197,9 @@
     <QtMoc Include="models\ElementTreeModel\elementtreemodel.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="controllers\AppActionController\appactioncontroller.h" />
     <ClInclude Include="data\required_actions.hpp" />
+    <QtMoc Include="dialogs\AppPropertiesDialog\apppropertiesdialog.h" />
     <QtMoc Include="models\PluginListModel\pluginlistmodel.h" />
     <QtMoc Include="dialogs\PluginsDialog\pluginsdialog.h" />
     <QtMoc Include="widgets\PluginDetailsWidget\plugindetailswidget.h" />

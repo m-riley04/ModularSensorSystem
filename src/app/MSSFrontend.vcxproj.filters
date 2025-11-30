@@ -73,6 +73,12 @@
     <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogs\AppPropertiesDialog\apppropertiesdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="controllers\AppActionController\appactioncontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -117,6 +123,12 @@
     <QtMoc Include="models\PluginListModel\pluginlistmodel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="dialogs\AppPropertiesDialog\apppropertiesdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controllers\AppActionController\appactioncontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
@@ -153,6 +165,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\PluginDetailsWidget\plugindetailswidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogs\AppPropertiesDialog\apppropertiesdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

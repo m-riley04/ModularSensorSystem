@@ -6,6 +6,7 @@
 #include "controllers/mountcontroller.hpp"
 #include "data/required_actions.hpp"
 #include "dialogs/PluginsDialog/pluginsdialog.h"
+#include <controllers/AppActionController/appactioncontroller.h>
 
 // Forward declaration for element tree node
 struct ElementTreeNode;
@@ -19,41 +20,18 @@ public:
     ~MainWindow();
 
 private slots:
-    void onOpenPluginDialog();
-
-    void openSavePresetDialog();
-    void onLoadPresetClicked();
-    void openDeletePresetDialog();
-    void openConfigurePresetDialog();
-    void onRefreshPresetClicked();
-
-    void openAddMountDialog();
-    void openRemoveMountDialog();
-    void openEditMountDialog();
-
-    void openAddSourceDialog();
-    void openRemoveSourceDialog();
-    void openConfigureSourceDialog();
-
-    void openAddProcessorDialog();
-    void openRemoveProcessorDialog();
-    void openConfigureProcessorDialog();
-
-    void openGithubRepository();
-
     void onSelectedPresetItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
     void updateToolbarButtonsState();
 
-	void onPrintPipelineDebugClicked();
-
-public slots:
-    void quit();
-    void restart();
+protected:
+    void closeEvent(QCloseEvent* event) override;
 
 private:
+    AppActions createActions();
     void initWidgets();
     void initSignals();
-    void initActionSignals();
+
+	void loadAppSettings();
 
     ElementTreeActions getElementTreeActions() const;
 
@@ -61,6 +39,7 @@ private:
 
     Ui::MainWindowClass ui;
     MainController m_controller;
-
+    QSettings m_appSettings;
     QListWidgetItem* pSelectedPresetItem = nullptr;
+    AppActionController* m_actionController = nullptr;
 };
