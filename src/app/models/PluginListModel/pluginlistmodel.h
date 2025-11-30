@@ -30,7 +30,7 @@ public slots:
 
 private:
     PluginController& m_pluginController;
-    QList<IPlugin*> m_plugins;
+    QList<const PluginMetadata*> m_plugins;
 
     void buildFlat();
 

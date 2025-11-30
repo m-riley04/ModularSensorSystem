@@ -11,7 +11,7 @@ PluginDetailsWidget::~PluginDetailsWidget()
 {
 }
 
-void PluginDetailsWidget::setPlugin(IPlugin* plugin) {
+void PluginDetailsWidget::setPlugin(PluginMetadata* plugin) {
 	if (m_plugin == plugin) return;
 	m_plugin = plugin;
 	emit pluginChanged(m_plugin);
@@ -27,8 +27,8 @@ void PluginDetailsWidget::updateUi() {
 		return;
 	}
 
-	ui.labelPluginName->setText(QString::fromStdString(m_plugin->name()));
-	ui.labelPluginVersion->setText(QString::number(m_plugin->version()));
-	ui.labelPluginType->setText(QString::fromStdString(elementTypeToString(m_plugin->type())));
-	ui.labelPluginDescription->setText(QString::fromStdString(m_plugin->description()));
+	ui.labelPluginName->setText(QString::fromStdString(m_plugin->name));
+	ui.labelPluginVersion->setText(QString::number(m_plugin->version));
+	ui.labelPluginType->setText(QString::fromStdString(elementTypeToString(m_plugin->type)));
+	ui.labelPluginDescription->setText(QString::fromStdString(m_plugin->description));
 }

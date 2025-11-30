@@ -1,16 +1,19 @@
 #pragma once
 
 #include <boost/dll/shared_library.hpp>
+#include <boost/dll/library_info.hpp>
 #include <filesystem>
 #include <vector>
 #include <deque>
 #include <unordered_map>
 #include <string>
+#include <memory>
 #include <QDebug>
 #include "sdk/plugins/factory.hpp"
 #include "sdk/plugins/iplugin.hpp"
 #include "utils/plugins_utils.hpp"
 #include "features/ielement.hpp"
+#include "sdk/plugins/pluginmetadata.hpp"
 
 /**
  * @brief Represents a loaded plugin.
@@ -27,13 +30,13 @@ public:
     ~PluginRegistry() { unloadAll(); }
 
     /**
-	 * @brief Scans the specified directories for plugins.
+	 * @brief Scans the specified directories for plugins (collects metadata only).
      * @param dirs The directories to scan for plugins.
      * @param requiredApi The required API version that the plugins must match.
      */
     void scan(const std::vector<std::filesystem::path>& dirs, uint32_t requiredApi);
 
-	const std::deque<std::string>& pluginPaths() const { return m_pluginPaths; }
+    const std::vector<PluginMetadata>& metadata() const { return m_pluginMetadata; }
     const std::deque<LoadedPlugin>& all() const { return m_loaded; }
     const std::vector<LoadedPlugin*>& sources() const { return byType(IElement::Type::Source); }
     const std::vector<LoadedPlugin*>& processors() const { return byType(IElement::Type::Processor); }
@@ -57,11 +60,24 @@ public:
         return out;
     }
 
+    // Metadata access
+    const std::unordered_map<std::string, PluginMetadata>& metadataByPath() const { return m_metadataByPath; }
+    const PluginMetadata* metadata(const std::string& path) const {
+        auto it = m_metadataByPath.find(path);
+        return it == m_metadataByPath.end() ? nullptr : &it->second;
+    }
+
+    bool isLoaded(const std::string& path) const {
+        return m_loadedByPath.find(path) != m_loadedByPath.end();
+	}
+
 private:
-	std::deque<std::string> m_pluginPaths;
+    std::vector<PluginMetadata> m_pluginMetadata;
+    // Use deque to keep element addresses stable across push_back/pop_front
     std::deque<LoadedPlugin> m_loaded;
     std::unordered_map<IElement::Type, std::vector<LoadedPlugin*>> m_loadedByType;
 	std::unordered_map<std::string, LoadedPlugin*> m_loadedByPath;
+    std::unordered_map<std::string, PluginMetadata> m_metadataByPath; // keyed by full path
 
     /**
 	 * @brief Gets loaded plugins by type.
@@ -69,14 +85,20 @@ private:
      * @return A vector of loaded plugins of the specified type.
      */
     const std::vector<LoadedPlugin*> byType(IElement::Type t) const;
-
 	const std::vector<LoadedPlugin*> byPath(const std::string& path) const;
 
     /**
-     * @brief Scans a directory for plugins and populates the list of plugin paths.
+     * @brief Scans a directory for plugins, collects metadata.
      * @param dir The directory to scan for plugins.
      * @param requiredApi The required API version that the plugins must match.
      */
     void scanDir(const std::filesystem::path& dir, uint32_t requiredApi);
+
+    /**
+	 * @brief Collects metadata (and only metadata) from a plugin library.
+	 * @param libPath The path to the plugin library.
+	 * @param requiredApi The required API version that the plugin must match.
+     */
+    void collectMetadata(const std::filesystem::path& libPath, uint32_t requiredApi);
 
 };

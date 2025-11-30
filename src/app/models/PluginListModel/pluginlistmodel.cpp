@@ -36,24 +36,24 @@ int PluginListModel::rowCount(const QModelIndex& parent) const
 QVariant PluginListModel::data(const QModelIndex& idx, int role) const
 {
     if (!idx.isValid()) return {};
-    IPlugin* n = static_cast<IPlugin*>(idx.internalPointer());
+    PluginMetadata* n = static_cast<PluginMetadata*>(idx.internalPointer());
 	if (!n) return {};
 
     if (role == Qt::DisplayRole) {
         if (idx.column() == 0) {
-			return n->name().c_str();
+			return n->name.c_str();
         }
         if (idx.column() == 1) { // version
-            return QString::number(n->version());
+            return QString::number(n->version);
         }
         if (idx.column() == 2) { // author
-            return QString::fromStdString(n->author());
+            return QString::fromStdString(n->author);
         }
         if (idx.column() == 3) { // type
-            return QString::fromStdString(elementTypeToString(n->type()));
+            return QString::fromStdString(elementTypeToString(n->type));
         }
         if (idx.column() == 4) { // isCore
-            return n->isCore() ? QString("Yes") : QString("No");
+            return n->isCore ? QString("Yes") : QString("No");
         }
     }
     if (role == Qt::UserRole) {
@@ -64,8 +64,8 @@ QVariant PluginListModel::data(const QModelIndex& idx, int role) const
 
 void PluginListModel::buildFlat()
 {
-    for (auto& plugin : m_pluginController.plugins()) {
-        m_plugins.append(plugin);
+    for (auto& plugin : m_pluginController.registry().metadata()) {
+        m_plugins.append(&plugin);
     }
 }
 

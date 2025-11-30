@@ -50,7 +50,7 @@ void PluginsDialog::initContextMenu()
 
 	m_contextMenu->addSeparator();
 
-	m_actionTogglePlugin = m_contextMenu->addAction("Disable", this, &PluginsDialog::onToggleSelectedPlugin);
+	m_actionTogglePlugin = m_contextMenu->addAction("Unload", this, &PluginsDialog::onToggleSelectedPlugin);
 
 	m_contextMenu->addSeparator();
 
@@ -66,7 +66,7 @@ void PluginsDialog::onPluginSelected(const QModelIndex& currentIdx, const QModel
 	}
 
 	QVariant nodeData = m_model->data(currentIdx, Qt::UserRole);
-	if (!nodeData.isValid() || !nodeData.canConvert<IPlugin*>()) {
+	if (!nodeData.isValid() || !nodeData.canConvert<PluginMetadata*>()) {
 		qDebug() << "Invalid node data.";
 		m_actionTogglePlugin->setEnabled(false);
 		return;
@@ -75,7 +75,7 @@ void PluginsDialog::onPluginSelected(const QModelIndex& currentIdx, const QModel
 	ui.listPlugins->setCurrentIndex(currentIdx);
 
 	// Update the selected plugin
-	m_selectedPlugin = nodeData.value<IPlugin*>();
+	m_selectedPlugin = nodeData.value<PluginMetadata*>();
 
 	m_actionTogglePlugin->setEnabled(true);
 	ui.pluginDetailsWidget->setPlugin(m_selectedPlugin);
@@ -100,9 +100,13 @@ void PluginsDialog::onToggleSelectedPlugin()
 {
 	if (!m_selectedPlugin) return;
 
-	// TODO: add loading/unloading plugin functionality
-	bool isEnabled = true;/*m_selectedPlugin->instance->isEnabled();
-	m_selectedPlugin->instance->setEnabled(!isEnabled);*/
+	// Check current state
+	bool isLoaded = m_pluginController.registry().isLoaded(m_selectedPlugin->path);
+	if (!isLoaded) {
+		m_pluginController.loadPlugin(QString::fromStdString(m_selectedPlugin->path));
+	} else {
+		m_pluginController.unloadPlugin(QString::fromStdString(m_selectedPlugin->path));
+	}
 
-	m_actionTogglePlugin->setText(isEnabled ? "Enable" : "Disable");
+	m_actionTogglePlugin->setText(isLoaded ? "Load" : "Unload");
 }

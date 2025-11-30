@@ -44,11 +44,12 @@ private:
     QList<IProcessorPlugin*> m_processorPlugins;
     QList<IMountPlugin*> m_mountPlugins;
     std::string m_pluginRoot;
+    std::vector<std::filesystem::path> m_pluginPaths;
     PluginRegistry m_pluginRegistry;
 
-    void loadSourcePlugins();
-    void loadProcessorPlugins();
-    void loadMountPlugins();
+    void populateSourcePlugins();
+    void populateProcessorPlugins();
+    void populateMountPlugins();
 
     std::vector<std::filesystem::path> buildPluginPaths();
 };

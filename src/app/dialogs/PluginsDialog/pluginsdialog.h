@@ -25,7 +25,7 @@ private:
 	Ui::PluginsDialogClass ui;
 	PluginController& m_pluginController;
 	PluginListModel* m_model = nullptr;
-	IPlugin* m_selectedPlugin = nullptr;
+	PluginMetadata* m_selectedPlugin = nullptr;
 
 	QMenu* m_contextMenu = nullptr;
 	QAction* m_actionTogglePlugin = nullptr;

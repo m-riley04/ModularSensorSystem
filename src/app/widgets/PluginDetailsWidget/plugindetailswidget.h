@@ -15,14 +15,14 @@ public:
 	~PluginDetailsWidget();
 
 public slots:
-	void setPlugin(IPlugin* plugin);
+	void setPlugin(PluginMetadata* plugin);
 
 signals:
-	void pluginChanged(IPlugin* plugin);
+	void pluginChanged(PluginMetadata* plugin);
 
 private:
 	Ui::PluginDetailsWidgetClass ui;
-	IPlugin* m_plugin = nullptr;
+	PluginMetadata* m_plugin = nullptr;
 
 	void updateUi();
 };
