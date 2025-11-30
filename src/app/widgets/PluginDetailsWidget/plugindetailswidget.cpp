@@ -28,6 +28,7 @@ void PluginDetailsWidget::updateUi() {
 	}
 
 	ui.labelPluginName->setText(QString::fromStdString(m_plugin->name));
+	ui.labelAuthor->setText(QString::fromStdString(m_plugin->author));
 	ui.labelPluginVersion->setText(QString::number(m_plugin->version));
 	ui.labelPluginType->setText(QString::fromStdString(elementTypeToString(m_plugin->type)));
 	ui.labelPluginDescription->setText(QString::fromStdString(m_plugin->description));
