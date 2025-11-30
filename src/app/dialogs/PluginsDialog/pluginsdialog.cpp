@@ -37,6 +37,8 @@ void PluginsDialog::initWidgets()
 void PluginsDialog::initSignals() {
 	connect(ui.listPlugins->selectionModel(), &QItemSelectionModel::currentChanged, this, &PluginsDialog::onPluginSelected);
 	connect(ui.listPlugins, &QTreeView::customContextMenuRequested, this, &PluginsDialog::onCustomContextMenuRequested);
+	connect(ui.buttonBox, &QDialogButtonBox::rejected, this, &PluginsDialog::reject);
+	connect(ui.buttonBox, &QDialogButtonBox::accepted, this, &PluginsDialog::accept);
 }
 
 void PluginsDialog::initContextMenu()
