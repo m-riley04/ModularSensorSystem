@@ -1,5 +1,7 @@
 #include "pluginlistmodel.h"
 #include <utils/element_utils.hpp>
+#include <QBrush>
+#include <QColor>
 
 PluginListModel::PluginListModel(PluginController& c,
     QObject* parent)
@@ -39,6 +41,9 @@ QVariant PluginListModel::data(const QModelIndex& idx, int role) const
     PluginMetadata* n = static_cast<PluginMetadata*>(idx.internalPointer());
 	if (!n) return {};
 
+    // Determine loaded state via registry
+	bool isLoaded = m_pluginController.registry().isLoaded(n->path);
+
     if (role == Qt::DisplayRole) {
         if (idx.column() == 0) {
 			return n->name.c_str();
@@ -59,7 +64,27 @@ QVariant PluginListModel::data(const QModelIndex& idx, int role) const
     if (role == Qt::UserRole) {
         return QVariant::fromValue(n);
     }
+    if (role == Qt::CheckStateRole && idx.column() == 0) {
+        // checked = loaded, unchecked = disabled
+        return isLoaded ? Qt::Checked : Qt::Unchecked;
+    }
+    if (role == Qt::ForegroundRole) {
+        // dim text if disabled
+        if (!isLoaded) {
+            return QBrush(QColor(Qt::gray));
+        }
+    }
     return {};
+}
+
+Qt::ItemFlags PluginListModel::flags(const QModelIndex& index) const
+{
+    if (!index.isValid()) return Qt::NoItemFlags;
+    Qt::ItemFlags f = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    if (index.column() == 0) {
+        f |= Qt::ItemIsUserCheckable; // show checkbox for loaded state visual cue
+    }
+    return f;
 }
 
 void PluginListModel::buildFlat()

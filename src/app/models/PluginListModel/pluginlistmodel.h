@@ -22,8 +22,9 @@ public:
     QModelIndex index(int row, int col, const QModelIndex& p) const override;
     QModelIndex parent(const QModelIndex& c)  const override;
     int rowCount(const QModelIndex& p) const override;
-	int columnCount(const QModelIndex&)   const override { return 5; } // name, author, version, type, isCore
+    int columnCount(const QModelIndex&)   const override { return 5; } // name, author, version, type, isCore
     QVariant data(const QModelIndex&, int role) const override;
+    Qt::ItemFlags flags(const QModelIndex& index) const override; // add checkable visual cue
 
 public slots:
     void rebuild();
