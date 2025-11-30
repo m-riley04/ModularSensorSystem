@@ -116,8 +116,11 @@
     <ClCompile Include="dialogs\AddMountDialog\addmountdialog.cpp" />
     <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp" />
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
+    <ClCompile Include="dialogs\PluginsDialog\pluginsdialog.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
+    <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
+    <ClCompile Include="widgets\PluginDetailsWidget\plugindetailswidget.cpp" />
     <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
@@ -125,7 +128,9 @@
     <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
+    <QtUic Include="dialogs\PluginsDialog\pluginsdialog.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
+    <QtUic Include="widgets\PluginDetailsWidget\plugindetailswidget.ui" />
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui" />
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
@@ -190,6 +195,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="data\required_actions.hpp" />
+    <QtMoc Include="models\PluginListModel\pluginlistmodel.h" />
+    <QtMoc Include="dialogs\PluginsDialog\pluginsdialog.h" />
+    <QtMoc Include="widgets\PluginDetailsWidget\plugindetailswidget.h" />
     <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

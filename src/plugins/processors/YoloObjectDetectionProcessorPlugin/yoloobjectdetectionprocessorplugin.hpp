@@ -17,6 +17,9 @@ public:
     const std::string name() const override { return "YOLO Object Detection"; }
     const uint32_t version() const override { return 0x00010000; }
     Processor* createProcessor(Source* src, QObject* parent = nullptr) override;
+	const std::string description() const override { return "A processor plugin that uses YOLO for object detection."; }
+    const std::string author() const override { return "Riley Meyerkorth"; }
+	const bool isCore() const override { return true; }
 };
 
 static YoloObjectDetectionProcessorPlugin* make_impl() { return new YoloObjectDetectionProcessorPlugin(); }

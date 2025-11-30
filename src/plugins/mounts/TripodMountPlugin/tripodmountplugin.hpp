@@ -17,6 +17,9 @@ public:
 	const std::vector<ElementInfo> discover() const override;
 	const std::string name() const override { return "Tripod Mount"; }
 	const uint32_t version() const override { return MSS_API; }
+	const std::string description() const override { return "A simple tripod mount plugin."; }
+	const std::string author() const override { return "Riley Meyerkorth"; }
+	const bool isCore() const override { return true; }
 };
 
 // Export proper factory functions that create/destroy the plugin instance

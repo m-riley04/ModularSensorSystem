@@ -1,17 +1,23 @@
 #pragma once
 
 #include <boost/dll/shared_library.hpp>
+#include <boost/dll/library_info.hpp>
 #include <filesystem>
 #include <vector>
 #include <deque>
 #include <unordered_map>
 #include <string>
+#include <memory>
 #include <QDebug>
 #include "sdk/plugins/factory.hpp"
 #include "sdk/plugins/iplugin.hpp"
+#include "utils/plugins_utils.hpp"
+#include "features/ielement.hpp"
+#include "sdk/plugins/pluginmetadata.hpp"
 
-constexpr uint32_t FACTORY_API_VERSION = 0x00010000;
-
+/**
+ * @brief Represents a loaded plugin.
+ */
 struct LoadedPlugin {
     boost::dll::shared_library lib;
     IPlugin* instance{ nullptr };
@@ -21,97 +27,84 @@ struct LoadedPlugin {
 
 class PluginRegistry {
 public:
-    void scan(const std::vector<std::filesystem::path>& dirs, uint32_t requiredApi) {
-        for (auto& d : dirs) if (std::filesystem::exists(d)) scanDir(d, requiredApi);
-    }
+    ~PluginRegistry() { unloadAll(); }
 
-    const std::deque<LoadedPlugin>& all() const { return m_all; }
-    const std::vector<LoadedPlugin*>& sources() const { return byType(PluginType::SOURCE); }
-    const std::vector<LoadedPlugin*>& processors() const { return byType(PluginType::PROCESSOR); }
-    const std::vector<LoadedPlugin*>& mounts() const { return byType(PluginType::MOUNT); }
+    /**
+	 * @brief Scans the specified directories for plugins (collects metadata only).
+     * @param dirs The directories to scan for plugins.
+     * @param requiredApi The required API version that the plugins must match.
+     */
+    void scan(const std::vector<std::filesystem::path>& dirs, uint32_t requiredApi);
 
-    void unloadAll() {
-        for (auto& p : m_all) {
-            if (p.instance && p.destroy) { p.destroy(p.instance); p.instance = nullptr; }
-        }
-        m_all.clear();
-        m_byType.clear();
-    }
+    const std::vector<PluginMetadata>& metadata() const { return m_pluginMetadata; }
+    const std::deque<LoadedPlugin>& all() const { return m_loaded; }
+    const std::vector<LoadedPlugin*>& sources() const { return byType(IElement::Type::Source); }
+    const std::vector<LoadedPlugin*>& processors() const { return byType(IElement::Type::Processor); }
+    const std::vector<LoadedPlugin*>& mounts() const { return byType(IElement::Type::Mount); }
 
+    bool load(const std::string& pluginPath, uint32_t requiredApi);
+    bool unload(const std::string& pluginPath);
+
+    void loadAll();
+    void unloadAll();
+
+    /**
+	 * @brief Casts all loaded plugins to the specified type T and, if valid, returns them as a vector.
+     * @tparam T 
+     * @return 
+     */
     template <typename T> std::vector<T*> as() const {
         std::vector<T*> out;
-        out.reserve(m_all.size());
-        // TODO: fix this cast or something to do with mount plugins
-        for (auto& p : m_all) if (auto cast = dynamic_cast<T*>(p.instance)) out.push_back(cast);
+        out.reserve(m_loaded.size());
+        for (auto& p : m_loaded) if (auto cast = dynamic_cast<T*>(p.instance)) out.push_back(cast);
         return out;
     }
 
-    ~PluginRegistry() { unloadAll(); }
+    // Metadata access
+    const std::unordered_map<std::string, PluginMetadata>& metadataByPath() const { return m_metadataByPath; }
+    const PluginMetadata* metadata(const std::string& path) const {
+        auto it = m_metadataByPath.find(path);
+        return it == m_metadataByPath.end() ? nullptr : &it->second;
+    }
+
+    bool isLoaded(const std::string& path) const {
+        return m_loadedByPath.find(path) != m_loadedByPath.end();
+	}
+
+    // Access a loaded plugin by its path, or nullptr if not loaded
+    LoadedPlugin* loadedByPath(const std::string& path) const {
+        auto it = m_loadedByPath.find(path);
+        return it == m_loadedByPath.end() ? nullptr : it->second;
+    }
 
 private:
-    const std::vector<LoadedPlugin*>& byType(PluginType t) const {
-        static const std::vector<LoadedPlugin*> kEmpty;
-        auto it = m_byType.find(t);
-        return it == m_byType.end() ? kEmpty : it->second;
-    }
+    std::vector<PluginMetadata> m_pluginMetadata;
+    // Use deque to keep element addresses stable across push_back/pop_front
+    std::deque<LoadedPlugin> m_loaded;
+    std::unordered_map<IElement::Type, std::vector<LoadedPlugin*>> m_loadedByType;
+	std::unordered_map<std::string, LoadedPlugin*> m_loadedByPath;
+    std::unordered_map<std::string, PluginMetadata> m_metadataByPath; // keyed by full path
 
-    static bool isSharedLib(const std::filesystem::path& p) {
-#ifdef _WIN32
-        return p.extension() == ".dll";
-#elif __APPLE__
-        return p.extension() == ".dylib";
-#else
-        return p.extension() == ".so";
-#endif
-    }
+    /**
+	 * @brief Gets loaded plugins by type.
+     * @param t The type of elements to filter by.
+     * @return A vector of loaded plugins of the specified type.
+     */
+    const std::vector<LoadedPlugin*> byType(IElement::Type t) const;
+	const std::vector<LoadedPlugin*> byPath(const std::string& path) const;
 
-    static bool looksLikePlugin(const std::filesystem::path& p) {
-        // Heuristic: only try files that look like actual plugins to avoid probing dependencies
-        const std::string name = p.filename().string();
-#ifdef _WIN32
-        return name.size() > 10 && name.rfind("Plugin.dll") == name.size() - std::string("Plugin.dll").size();
-#elif __APPLE__
-        return name.find("Plugin") != std::string::npos && p.extension() == ".dylib";
-#else
-        return name.find("Plugin") != std::string::npos && p.extension() == ".so";
-#endif
-    }
+    /**
+     * @brief Scans a directory for plugins, collects metadata.
+     * @param dir The directory to scan for plugins.
+     * @param requiredApi The required API version that the plugins must match.
+     */
+    void scanDir(const std::filesystem::path& dir, uint32_t requiredApi);
 
-    void scanDir(const std::filesystem::path& dir, uint32_t requiredApi) {
-        for (auto& e : std::filesystem::directory_iterator(dir)) {
-            if (!e.is_regular_file() || !isSharedLib(e.path()) || !looksLikePlugin(e.path())) continue;
-            try {
-                // On Windows ensure the DLL's directory is searched for its dependencies
-#ifdef _WIN32
-                boost::dll::shared_library lib(
-                    e.path().string(),
-                    boost::dll::load_mode::load_with_altered_search_path
-                );
-#else
-                boost::dll::shared_library lib(e.path().string());
-#endif
-                if (!lib.has("mss_api")) continue;
-                auto api = lib.get<mss_av_t*>("mss_api")();
-                if (api != requiredApi) continue;
+    /**
+	 * @brief Collects metadata (and only metadata) from a plugin library.
+	 * @param libPath The path to the plugin library.
+	 * @param requiredApi The required API version that the plugin must match.
+     */
+    void collectMetadata(const std::filesystem::path& libPath, uint32_t requiredApi);
 
-                auto make = lib.get<mss_make_t*>("mss_make");
-                auto destroy = lib.get<mss_destroy_t*>("mss_destroy");
-                IPlugin* inst = make();
-
-                // Bucket by kind
-                m_all.push_back(LoadedPlugin{ std::move(lib), inst, destroy, e.path().string() });
-                m_byType[inst->type()].push_back(&m_all.back()); // copies, so push then keep ref
-            }
-            catch (const std::exception& ex) {
-                qDebug() << "Failed to load plugin from " << QString::fromStdString(e.path().string())
-                         << ": " << ex.what();
-            }
-            catch (...) {
-                qDebug() << "Failed to load plugin from " << QString::fromStdString(e.path().string());
-            }
-        }
-    }
-
-    std::deque<LoadedPlugin> m_all;
-    std::unordered_map<PluginType, std::vector<LoadedPlugin*>> m_byType;
 };

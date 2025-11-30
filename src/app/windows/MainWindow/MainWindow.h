@@ -5,6 +5,7 @@
 #include "controllers/maincontroller.hpp"
 #include "controllers/mountcontroller.hpp"
 #include "data/required_actions.hpp"
+#include "dialogs/PluginsDialog/pluginsdialog.h"
 
 // Forward declaration for element tree node
 struct ElementTreeNode;
@@ -18,6 +19,8 @@ public:
     ~MainWindow();
 
 private slots:
+    void onOpenPluginDialog();
+
     void openSavePresetDialog();
     void onLoadPresetClicked();
     void openDeletePresetDialog();
@@ -35,9 +38,6 @@ private slots:
     void openAddProcessorDialog();
     void openRemoveProcessorDialog();
     void openConfigureProcessorDialog();
-
-    void onSelectedElementChanged(ElementTreeNode* node);
-    void onSelectedElementRemoved();
 
     void openGithubRepository();
 
