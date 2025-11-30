@@ -2,7 +2,7 @@
 #include <qmessagebox.h>
 
 DockableElementsManagerWidget::DockableElementsManagerWidget(QWidget *parent)
-	: QDockWidget(parent), m_actions(ElementTreeActions())
+	: QDockWidget(parent), m_actions(nullptr)
 {
 	ui.setupUi(this);
 }
@@ -20,7 +20,7 @@ void DockableElementsManagerWidget::setController(MainController* c)
 	initContextMenu();
 }
 
-void DockableElementsManagerWidget::setActions(ElementTreeActions actions)
+void DockableElementsManagerWidget::setActions(AppActions* actions)
 {
 	m_actions = actions;
 
@@ -67,10 +67,11 @@ void DockableElementsManagerWidget::initContextMenu()
 
 	m_contextMenu = new QMenu(this);
 
+	if (!m_actions) return;
 	QMenu* pAddElementMenu = m_contextMenu->addMenu("Add...");
-	pAddElementMenu->addAction(m_actions.addMount);
-	pAddElementMenu->addAction(m_actions.addSource);
-	pAddElementMenu->addAction(m_actions.addProcessor);
+	pAddElementMenu->addAction(m_actions->mountActions->openAddMount);
+	pAddElementMenu->addAction(m_actions->sourceActions->openAddSource);
+	pAddElementMenu->addAction(m_actions->processorActions->openAddProcessor);
 
 	m_contextMenu->addSeparator();
 
@@ -144,13 +145,13 @@ void DockableElementsManagerWidget::handleRemoveElementClicked()
 
 	switch (m_selectedNode->kind) {
 	case IElement::Type::Mount:
-		m_actions.removeMount->trigger();
+		m_actions->mountActions->openRemoveMount->trigger();
 		break;
 	case IElement::Type::Source:
-		m_actions.removeSource->trigger();
+		m_actions->sourceActions->openRemoveSource->trigger();
 		break;
 	case IElement::Type::Processor:
-		m_actions.removeProcessor->trigger();
+		m_actions->processorActions->openRemoveProcessor->trigger();
 		break;
 	case IElement::Type::Unknown:
 	default:
@@ -168,13 +169,13 @@ void DockableElementsManagerWidget::handleEditElementClicked()
 
 	switch (m_selectedNode->kind) {
 	case IElement::Type::Mount:
-		m_actions.editMount->trigger();
+		m_actions->mountActions->openEditMount->trigger();
 		break;
 	case IElement::Type::Source:
-		m_actions.editSource->trigger();
+		m_actions->sourceActions->openEditSource->trigger();
 		break;
 	case IElement::Type::Processor:
-		m_actions.editProcessor->trigger();
+		m_actions->processorActions->openEditProcessor->trigger();
 		break;
 	case IElement::Type::Unknown:
 	default:

@@ -4,7 +4,6 @@
 #include "ui_MainWindow.h"
 #include "controllers/maincontroller.hpp"
 #include "controllers/mountcontroller.hpp"
-#include "data/required_actions.hpp"
 #include "dialogs/PluginsDialog/pluginsdialog.h"
 #include <controllers/AppActionController/appactioncontroller.h>
 
@@ -32,8 +31,6 @@ private:
     void initSignals();
 
 	void loadAppSettings();
-
-    ElementTreeActions getElementTreeActions() const;
 
     void syncViewActionChecks();
 

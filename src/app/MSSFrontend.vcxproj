@@ -198,7 +198,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="controllers\AppActionController\appactioncontroller.h" />
-    <ClInclude Include="data\required_actions.hpp" />
     <QtMoc Include="dialogs\AppPropertiesDialog\apppropertiesdialog.h" />
     <QtMoc Include="models\PluginListModel\pluginlistmodel.h" />
     <QtMoc Include="dialogs\PluginsDialog\pluginsdialog.h" />

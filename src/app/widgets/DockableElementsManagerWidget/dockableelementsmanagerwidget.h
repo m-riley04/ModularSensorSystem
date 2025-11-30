@@ -6,7 +6,7 @@
 #include "ui_dockableelementsmanagerwidget.h"
 #include "controllers/maincontroller.hpp"
 #include "models/ElementTreeModel/elementtreemodel.h"
-#include "data/required_actions.hpp"
+#include <controllers/AppActionController/appactioncontroller.h>
 
 class DockableElementsManagerWidget : public QDockWidget
 {
@@ -17,7 +17,7 @@ public:
 	~DockableElementsManagerWidget();
 
 	void setController(MainController* c);
-	void setActions(ElementTreeActions actions);
+	void setActions(AppActions* actions);
 
 	ElementTreeNode* selectedNode() const { return m_selectedNode; }
 
@@ -37,7 +37,7 @@ private:
 
 	ElementTreeNode* m_selectedNode = nullptr;
 
-	ElementTreeActions m_actions{};
+	AppActions* m_actions;
 
 public slots:
 	void handleRebuildClicked();

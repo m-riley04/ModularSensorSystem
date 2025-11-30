@@ -93,21 +93,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {}
 
-ElementTreeActions MainWindow::getElementTreeActions() const
-{
-    ElementTreeActions actions{};
-    actions.addSource = ui.actionAddSource;
-    actions.removeSource = ui.actionRemoveSource;
-    actions.editSource = ui.actionConfigureSource;
-    actions.addMount = ui.actionAddMount;
-    actions.removeMount = ui.actionRemoveMount;
-    actions.editMount = ui.actionEditMount;
-    actions.addProcessor = ui.actionAddProcessor;
-    actions.removeProcessor = ui.actionRemoveProcessor;
-    actions.editProcessor = ui.actionConfigureProcessor;
-    return actions;
-}
-
 void MainWindow::syncViewActionChecks()
 {
     // Initialize checkable actions to reflect current widget visibility
@@ -127,14 +112,7 @@ void MainWindow::initWidgets()
     updateToolbarButtonsState();
 
     // Init session controls widget
-    SessionControlsActions sessionActions{
-		.startStopSession = ui.actionStartStopSession,
-		.recordSession = ui.actionRecord,
-		.restartSession = ui.actionRestartSession,
-		.clipSession = ui.actionClipSession,
-		.openSessionProperties = ui.actionSessionProperties
-	};
-    ui.sessionControls->setSessionControlActions(sessionActions);
+    ui.sessionControls->setSessionControlActions(&this->m_actionController->sessionActions());
 
     // Init preview container widget
     ui.devicePreviewWidget->setController(&m_controller);
@@ -144,7 +122,7 @@ void MainWindow::initWidgets()
 
     // Init elements tree
     ui.dockWidget->setController(&m_controller);
-    ui.dockWidget->setActions(this->getElementTreeActions());
+    ui.dockWidget->setActions(&this->m_actionController->actions());
 }
 
 void MainWindow::loadAppSettings()
