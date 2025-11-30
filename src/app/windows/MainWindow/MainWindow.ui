@@ -404,6 +404,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionOpenOutputDirectory"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
     <addaction name="actionRestart"/>
@@ -583,7 +584,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Record</string>
    </property>
   </action>
-  <action name="actionOpen_Output_Directory">
+  <action name="actionOpenOutputDirectory">
    <property name="text">
     <string>Open Output Directory</string>
    </property>
