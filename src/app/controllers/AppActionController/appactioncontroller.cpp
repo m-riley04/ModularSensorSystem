@@ -1,4 +1,6 @@
 #include "appactioncontroller.h"
+#include "widgets/DockableElementsManagerWidget/dockableelementsmanagerwidget.h"
+#include <algorithm>
 
 AppActionController::AppActionController(AppActions* actions, MainController& c, QWidget* parentWidget, QObject* parent)
     : QObject(parent), m_controller(c), m_parentWidget(parentWidget)
@@ -79,6 +81,57 @@ void AppActionController::initActionSignals()
     connect(m_miscActions.restart, &QAction::triggered, this, &AppActionController::restart);
 }
 
+void AppActionController::onElementSelected(ElementTreeNode* node) {
+	m_currentSelectedElementNode = node;
+
+    // Check selected element
+    if (!node) {
+        // TODO: maybe disable all element-related actions here?
+        return;
+    }
+
+    /// SOURCES
+    bool hasSources = !m_controller.sourceController().sources().isEmpty();
+    m_sourceActions.openRemoveSource->setEnabled(hasSources && node->kind == IElement::Type::Source);
+    m_sourceActions.openEditSource->setEnabled(hasSources && node->kind == IElement::Type::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
+
+    /// PROCESSING
+    bool hasProcessors = !m_controller.processingController().processors().isEmpty();
+    m_processorActions.openRemoveProcessor->setEnabled(hasProcessors && node->kind == IElement::Type::Processor);
+    m_processorActions.openEditProcessor->setEnabled(hasProcessors && node->kind == IElement::Type::Processor);
+    m_processorActions.toggleProcessing->setEnabled(hasProcessors);
+
+    /// MOUNTS
+    bool hasMounts = !m_controller.mountController().mounts().isEmpty();
+    m_mountActions.openRemoveMount->setEnabled(hasMounts && node->kind == IElement::Type::Mount);
+    m_mountActions.openEditMount->setEnabled(hasMounts && node->kind == IElement::Type::Mount);
+
+    /// SESSION
+    m_sessionActions.toggleSession->setEnabled(hasSources);
+    m_sessionActions.restartSession->setEnabled(m_controller.sessionController().pipeline().isBuilt());
+    m_sessionActions.toggleRecording->setEnabled(m_controller.sessionController().pipeline().isBuilt());
+    m_sessionActions.clipSession->setEnabled(m_controller.sessionController().pipeline().isBuilt());
+
+    /// DEBUG
+    m_miscActions.generatePipelineDiagram->setEnabled(m_controller.sessionController().pipeline().isBuilt());
+}
+
+void AppActionController::onElementRemoved()
+{
+	m_currentSelectedElementNode = nullptr;
+}
+
+void AppActionController::onPresetElementSelected(QListWidgetItem* current, QListWidgetItem* previous)
+{
+	m_currentSelectedPresetItem = current;
+
+    // Refresh action states for presets
+    bool hasPresets = !m_controller.presetsController().presets().isEmpty();
+    m_presetActions.loadPreset->setEnabled(hasPresets && current);
+    m_presetActions.deletePreset->setEnabled(hasPresets && current);
+	//m_presetActions.editPreset->setEnabled(hasPresets && current);
+}
+
 void AppActionController::onOpenAppPropertiesDialog() {
     AppPropertiesDialog* appPropertiesDialog = new AppPropertiesDialog(m_parentWidget);
     appPropertiesDialog->setWindowModality(Qt::WindowModal);
@@ -95,85 +148,86 @@ void AppActionController::onOpenPluginDialog() {
 
 void AppActionController::onOpenSavePresetDialog()
 {
-    //// Get the preset name from the user
-    //bool ok;
-    //QString presetName = QInputDialog::getText(this, tr("Save Preset"), tr("Preset name:"), QLineEdit::Normal, QString(), &ok);
-    //if (ok && !presetName.isEmpty()) {
-    //    // Check if the preset name already exists
-    //    // If so, ask to overwrite
-    //    auto existingItems = ui.presetsWidget->listWidget()->findItems(presetName, Qt::MatchExactly);
-    //    if (!existingItems.isEmpty()) {
-    //        QMessageBox::StandardButton reply;
-    //        reply = QMessageBox::question(this, tr("Overwrite Preset"),
-    //            tr("Preset already exists. Do you want to overwrite it?"),
-    //            QMessageBox::Yes | QMessageBox::No);
-    //        if (reply == QMessageBox::No) {
-    //            return;
-    //        }
-    //    }
+    // Get the preset name from the user
+    bool ok;
+    QString presetName = QInputDialog::getText(m_parentWidget, tr("Save Preset"), tr("Preset name:"), QLineEdit::Normal, QString(), &ok);
+    if (ok && !presetName.isEmpty()) {
+        // Check if the preset name already exists
+        // If so, ask to overwrite
+        const auto presets = m_controller.presetsController().presets();
+        const bool doesPresetExist = std::any_of(presets.begin(), presets.end(), [&presetName](const Preset& preset){ return preset.name == presetName; });
+        if (doesPresetExist) {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(m_parentWidget, tr("Overwrite Preset"),
+                tr("Preset already exists. Do you want to overwrite it?"),
+                QMessageBox::Yes | QMessageBox::No);
+            if (reply == QMessageBox::No) {
+                return;
+            }
+        }
 
-    //    m_controller.presetsController().savePreset(presetName, m_controller.sourceController().sources());
-    //}
-    //else if (ok) {
-    //    QMessageBox::warning(this, tr("Invalid Name"), tr("Preset name cannot be empty."));
-    //    return;
-    //}
+        m_controller.presetsController().savePreset(presetName, m_controller.sourceController().sources());
+    }
+    else if (ok) {
+        QMessageBox::warning(m_parentWidget, tr("Invalid Name"), tr("Preset name cannot be empty."));
+        return;
+    }
 }
 
 void AppActionController::onLoadPresetClicked()
 {
-    //// Check selected item
-    //if (!pSelectedPresetItem) {
-    //    QMessageBox::warning(this, tr("No Preset Selected"), tr("Please select a preset to load."));
-    //    return;
-    //}
+    // Check selected item
+    if (!m_currentSelectedPresetItem) {
+        QMessageBox::warning(m_parentWidget, tr("No Preset Selected"), tr("Please select a preset to load."));
+        return;
+    }
 
-    //// Get the preset name from the item
-    //QString presetName = pSelectedPresetItem->text();
+    // Get the preset name from the item
+    QString presetName = m_currentSelectedPresetItem->text();
 
-    //// Find the preset in the controller
-    //PresetsController& m_presetsController = m_controller.presetsController();
-    //auto presets = m_presetsController.presets();
-    //auto it = std::find_if(presets.begin(), presets.end(), [&presetName](const Preset& preset) {
-    //    return preset.name == presetName;
-    //    });
-    //if (it != presets.end()) {
-    //    // Load the preset
-    //    m_presetsController.loadPreset(it->path, m_controller.sourceController(), m_controller.pluginController());
-    //}
+    // Find the preset in the controller
+    PresetsController& m_presetsController = m_controller.presetsController();
+    auto presets = m_presetsController.presets();
+    auto it = std::find_if(presets.begin(), presets.end(), [&presetName](const Preset& preset) {
+        return preset.name == presetName;
+        });
+    if (it != presets.end()) {
+        // Load the preset
+        m_presetsController.loadPreset(it->path, m_controller.sourceController(), m_controller.pluginController());
+    }
 }
 
 void AppActionController::onOpenDeletePresetDialog()
 {
-    //// Check selected item
-    //if (!pSelectedPresetItem) {
-    //    QMessageBox::warning(this, tr("No Preset Selected"), tr("Please select a preset to remove."));
-    //    return;
-    //}
+    // Check selected item
+    if (!m_currentSelectedPresetItem) {
+        QMessageBox::warning(m_parentWidget, tr("No Preset Selected"), tr("Please select a preset to remove."));
+        return;
+    }
 
-    //// Get the preset name from the item
-    //QString presetName = pSelectedPresetItem->text();
+    // Get the preset name from the item
+    QString presetName = m_currentSelectedPresetItem->text();
 
-    //// Confirm removal
-    //QMessageBox::StandardButton reply;
-    //reply = QMessageBox::question(this, tr("Remove Preset"),
-    //    tr("Are you sure you want to remove the preset: %1?").arg(presetName),
-    //    QMessageBox::Yes | QMessageBox::No);
-    //if (reply == QMessageBox::No) return;
+    // Confirm removal
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(m_parentWidget, tr("Remove Preset"),
+        tr("Are you sure you want to remove the preset: %1?").arg(presetName),
+        QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No) return;
 
-    //// Find the preset in the controller
-    //PresetsController& m_presetsController = m_controller.presetsController();
-    //auto presets = m_presetsController.presets();
-    //auto it = std::find_if(presets.begin(), presets.end(), [&presetName](const Preset& preset) {
-    //    return preset.name == presetName;
-    //    });
-    //if (it != presets.end()) {
-    //    // Remove the preset
-    //    m_presetsController.removePreset(it->path);
-    //}
-    ////ui.listPresets->removeItemWidget(pSelectedItem); // TODO: check if I *need* to "take" the item from the list
-    //delete pSelectedPresetItem;
-    //pSelectedPresetItem = nullptr;
+    // Find the preset in the controller
+    PresetsController& m_presetsController = m_controller.presetsController();
+    auto presets = m_presetsController.presets();
+    auto it = std::find_if(presets.begin(), presets.end(), [&presetName](const Preset& preset) {
+        return preset.name == presetName;
+        });
+    if (it != presets.end()) {
+        // Remove the preset
+        m_presetsController.removePreset(it->path);
+    }
+    //ui.listPresets->removeItemWidget(pSelectedItem); // TODO: check if I *need* to "take" the item from the list
+    delete m_currentSelectedPresetItem; // TODO: make this WAY safer. To be done in another more appropriate ticket for presets.
+    m_currentSelectedPresetItem = nullptr;
 }
 
 void AppActionController::onOpenEditPresetDialog()
@@ -200,22 +254,21 @@ void AppActionController::onOpenAddMountDialog()
 
 void AppActionController::onOpenRemoveMountDialog()
 {
-    //auto selectedElement = ui.dockWidget->selectedNode();
-    //if (!selectedElement) {
-    //    QMessageBox::warning(m_parentWidget, tr("No Mount Selected"), tr("Please select a mount to remove."));
-    //    return;
-    //}
+    if (!m_currentSelectedElementNode) {
+        QMessageBox::warning(m_parentWidget, tr("No Mount Selected"), tr("Please select a mount to remove."));
+        return;
+    }
 
-    //// Check selected item
-    //if (selectedElement->kind != IElement::Type::Mount) {
-    //    QMessageBox::warning(m_parentWidget, tr("No Mount Selected"), tr("Please select a mount to remove."));
-    //    return;
-    //}
+    // Check selected item
+    if (m_currentSelectedElementNode->kind != IElement::Type::Mount) {
+        QMessageBox::warning(m_parentWidget, tr("No Mount Selected"), tr("Please select a mount to remove."));
+        return;
+    }
 
-    //auto response = QMessageBox::question(m_parentWidget, tr("Remove Mount"), tr("Are you sure you want to remove the selected mount?"), QMessageBox::Yes | QMessageBox::No);
-    //if (response == QMessageBox::Yes) {
-    //    m_controller.mountController().removeMount(selectedElement->uuid);
-    //}
+    auto response = QMessageBox::question(m_parentWidget, tr("Remove Mount"), tr("Are you sure you want to remove the selected mount?"), QMessageBox::Yes | QMessageBox::No);
+    if (response == QMessageBox::Yes) {
+        m_controller.mountController().removeMount(m_currentSelectedElementNode->uuid);
+    }
 }
 
 void AppActionController::onOpenEditMountDialog()
@@ -238,54 +291,53 @@ void AppActionController::onOpenAddSourceDialog()
 
 void AppActionController::onOpenRemoveSourceDialog()
 {
-    //auto selectedElement = ui.dockWidget->selectedNode();
-    //if (!selectedElement) {
-    //    QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to remove."));
-    //    return;
-    //}
+    if (!m_currentSelectedElementNode) {
+        QMessageBox::warning(m_parentWidget, tr("No Source Selected"), tr("Please select a source to remove."));
+        return;
+    }
 
-    //// Check selected item
-    //if (selectedElement->kind != IElement::Type::Source) {
-    //    QMessageBox::warning(this, tr("No Source Selected"), tr("Please select a source to remove."));
-    //    return;
-    //}
+    // Check selected item
+    if (m_currentSelectedElementNode->kind != IElement::Type::Source) {
+        QMessageBox::warning(m_parentWidget, tr("No Source Selected"), tr("Please select a source to remove."));
+        return;
+    }
 
-    //auto response = QMessageBox::question(this, tr("Remove Source"), tr("Are you sure you want to remove the selected source?"), QMessageBox::Yes | QMessageBox::No);
-    //if (response == QMessageBox::Yes) {
-    //    m_controller.sourceController().removeSource(selectedElement->uuid);
-    //}
+    auto response = QMessageBox::question(m_parentWidget, tr("Remove Source"), tr("Are you sure you want to remove the selected source?"), QMessageBox::Yes | QMessageBox::No);
+    if (response == QMessageBox::Yes) {
+        m_controller.sourceController().removeSource(m_currentSelectedElementNode->uuid);
+    }
 }
 
 void AppActionController::onOpenEditSourceDialog()
 {
-    //auto selectedElement = ui.dockWidget->selectedNode();
-    //if (!selectedElement) {
-    //    QMessageBox::warning(m_parentWidget, tr("No Source Selected"), tr("Please select a source to configure."));
-    //    return;
-    //}
+    if (!m_currentSelectedElementNode) {
+        QMessageBox::warning(m_parentWidget, tr("No Source Selected"), tr("Please select a source to configure."));
+        return;
+    }
 
-    //// Check selected item
-    //if (selectedElement->kind != IElement::Type::Source) {
-    //    QMessageBox::warning(m_parentWidget, tr("No Source Selected"), tr("Please select a source to configure."));
-    //    return;
-    //}
+    // Check selected item
+    if (m_currentSelectedElementNode->kind != IElement::Type::Source) {
+        QMessageBox::warning(m_parentWidget, tr("No Source Selected"), tr("Please select a source to configure."));
+        return;
+    }
 
-    //// Get the source from the selected element
-    //// TODO: check this implementation
-    //Source* source = m_controller.sourceController().byId(selectedElement->uuid);
-    //if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
-    //    /* QWidget* w = cfg->createConfigWidget(this);
-    //     QDialog dlg(this);
-    //     dlg.setWindowTitle(QString::fromStdString(source->name()) + " Properties");
-    //     QVBoxLayout lay(&dlg);
-    //     lay.addWidget(w);
-    //     dlg.exec();*/
-    //}
-    //else {
-    //    // fallback: show generic property inspector
-    //    //showGenericPropertyDialog(source);
-    //    QMessageBox::information(m_parentWidget, tr("Properties"), tr("No properties available for this source."));
-    //}
+    // Get the source from the selected element
+    // TODO: check this implementation
+    Source* source = m_controller.sourceController().byId(m_currentSelectedElementNode->uuid);
+    if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
+		// TODO: show source-specific property dialog
+        /* QWidget* w = cfg->createConfigWidget(this);
+         QDialog dlg(this);
+         dlg.setWindowTitle(QString::fromStdString(source->name()) + " Properties");
+         QVBoxLayout lay(&dlg);
+         lay.addWidget(w);
+         dlg.exec();*/
+    }
+    else {
+        // fallback: show generic property inspector
+        //showGenericPropertyDialog(source);
+        QMessageBox::information(m_parentWidget, tr("Properties"), tr("No properties available for this source."));
+    }
 }
 
 void AppActionController::onOpenAddProcessorDialog()
@@ -300,27 +352,28 @@ void AppActionController::onOpenAddProcessorDialog()
 
 void AppActionController::onOpenRemoveProcessorDialog()
 {
-    //auto selectedElement = ui.dockWidget->selectedNode();
-    //if (!selectedElement) {
-    //    QMessageBox::warning(m_parentWidget, tr("No Processor Selected"), tr("Please select a processor to remove."));
-    //    return;
-    //}
+    if (!m_currentSelectedElementNode) {
+        QMessageBox::warning(m_parentWidget, tr("No Processor Selected"), tr("Please select a processor to remove."));
+        return;
+    }
 
-    //// Check selected item
-    //if (selectedElement->kind != IElement::Type::Processor) {
-    //    QMessageBox::warning(m_parentWidget, tr("No Processor Selected"), tr("Please select a processor to remove."));
-    //    return;
-    //}
+    // Check selected item
+    if (m_currentSelectedElementNode->kind != IElement::Type::Processor) {
+        QMessageBox::warning(m_parentWidget, tr("No Processor Selected"), tr("Please select a processor to remove."));
+        return;
+    }
 
-    //auto response = QMessageBox::question(m_parentWidget, tr("Remove Processor"), tr("Are you sure you want to remove the selected processor?"), QMessageBox::Yes | QMessageBox::No);
-    //if (response == QMessageBox::Yes) {
-    //    // Get the processor from the selected element
-    //    // TODO: implement this
-    //    //ProcessorBase* processor = selectedElement.data(Qt::UserRole).value<ProcessorBase*>();
-
-    //    // Remove source from the controller
-    //    //m_controller->processingController()->removeProcessor(processor);
-    //}
+    auto response = QMessageBox::question(m_parentWidget, tr("Remove Processor"), tr("Are you sure you want to remove the selected processor?"), QMessageBox::Yes | QMessageBox::No);
+    if (response == QMessageBox::Yes) {
+        // Get the processor from the selected element
+		// TODO: implement this in a more straightforward way (i.e. remove by UUID directly)
+        Processor* processor = m_controller.processingController().byId(m_currentSelectedElementNode->uuid);
+        if (processor) {
+            m_controller.processingController().removeProcessor(processor);
+        } else {
+            QMessageBox::warning(m_parentWidget, tr("Processor Not Found"), tr("The selected processor could not be found."));
+        }
+    }
 }
 
 void AppActionController::onOpenEditProcessorDialog()

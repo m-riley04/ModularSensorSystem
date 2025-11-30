@@ -108,9 +108,6 @@ void MainWindow::initWidgets()
     // Init menu bar
     syncViewActionChecks();
 
-    // Init toolbar
-    updateToolbarButtonsState();
-
     // Init session controls widget
     ui.sessionControls->setSessionControlActions(&this->m_actionController->sessionActions());
 
@@ -145,57 +142,12 @@ void MainWindow::initSignals() {
 		});
 
     // Connect preset widget signals
-    connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, this, &MainWindow::onSelectedPresetItemChanged);
+    connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, m_actionController, &AppActionController::onPresetElementSelected);
 
 	// Connect dock widget signals
-    connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, this, &MainWindow::updateToolbarButtonsState);
-    connect(ui.dockWidget, &DockableElementsManagerWidget::elementRemoved, this, &MainWindow::updateToolbarButtonsState);
-}
+    connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, m_actionController, &AppActionController::onElementSelected);
+    connect(ui.dockWidget, &DockableElementsManagerWidget::elementRemoved, m_actionController, &AppActionController::onElementRemoved);
 
-void MainWindow::onSelectedPresetItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
-{
-    if (pSelectedPresetItem == current) return; // No change
-    pSelectedPresetItem = current;
-    updateToolbarButtonsState(); // CONSIDER: move this to it's own connection to this signal
-}
-
-void MainWindow::updateToolbarButtonsState()
-{
-    /// PRESETS
-    bool hasPresets = !m_controller.presetsController().presets().isEmpty();
-    ui.actionLoadPreset->setEnabled(hasPresets && pSelectedPresetItem);
-    ui.actionDeletePreset->setEnabled(hasPresets && pSelectedPresetItem);
-
-    // Check selected element
-    auto selectedElement = ui.dockWidget->selectedNode();
-    if (!selectedElement) {
-		// TODO: maybe disable all element-related actions here?
-        return;
-    }
-
-    /// SOURCES
-    bool hasSources = !m_controller.sourceController().sources().isEmpty();
-    ui.actionRemoveSource->setEnabled(hasSources && selectedElement->kind == IElement::Type::Source);
-    ui.actionConfigureSource->setEnabled(hasSources && selectedElement->kind == IElement::Type::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
-
-    /// PROCESSING
-    bool hasProcessors = !m_controller.processingController().processors().isEmpty();
-    ui.actionRemoveProcessor->setEnabled(hasProcessors && selectedElement->kind == IElement::Type::Processor);
-	ui.actionConfigureProcessor->setEnabled(hasProcessors && selectedElement->kind == IElement::Type::Processor);
-    ui.actionToggleProcessing->setEnabled(hasProcessors);
-
-	/// MOUNTS
-    bool hasMounts = !m_controller.mountController().mounts().isEmpty();
-	ui.actionRemoveMount->setEnabled(hasMounts && selectedElement->kind == IElement::Type::Mount);
-	ui.actionEditMount->setEnabled(hasMounts && selectedElement->kind == IElement::Type::Mount);
-
-    /// SESSION
-    ui.actionStartStopSession->setEnabled(hasSources);
-    ui.actionRecord->setEnabled(m_controller.sessionController().pipeline().isBuilt());
-    ui.actionClipSession->setEnabled(m_controller.sessionController().pipeline().isBuilt());
-
-    /// DEBUG
-	ui.actionDebugPipelineDiagram->setEnabled(m_controller.sessionController().pipeline().isBuilt());
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)

@@ -7,9 +7,6 @@
 #include "dialogs/PluginsDialog/pluginsdialog.h"
 #include <controllers/AppActionController/appactioncontroller.h>
 
-// Forward declaration for element tree node
-struct ElementTreeNode;
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -18,14 +15,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
-    void onSelectedPresetItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
-    void updateToolbarButtonsState();
-
 protected:
     void closeEvent(QCloseEvent* event) override;
 
 private:
+    /**
+     * @brief Creates an AppActions struct with all actions initialized from UI.
+	 * @return AppActions struct with sub-structs with action pointers.
+     */
     AppActions createActions();
     void initWidgets();
     void initSignals();
@@ -37,6 +34,5 @@ private:
     Ui::MainWindowClass ui;
     MainController m_controller;
     QSettings m_appSettings;
-    QListWidgetItem* pSelectedPresetItem = nullptr;
     AppActionController* m_actionController = nullptr;
 };

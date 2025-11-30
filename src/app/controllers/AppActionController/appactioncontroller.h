@@ -73,6 +73,9 @@ struct AppActions {
 	MiscActions* miscActions;
 };
 
+// Forward declarations
+struct ElementTreeNode;
+
 class AppActionController : public QObject
 {
 	Q_OBJECT
@@ -88,6 +91,11 @@ public:
 	ProcessorActions& processorActions() { return m_processorActions; }
 	SessionActions& sessionActions() { return m_sessionActions; }
 	ViewActions& viewActions() { return m_viewActions; }
+
+public slots:
+    void onElementSelected(ElementTreeNode* node);
+	void onElementRemoved();
+	void onPresetElementSelected(QListWidgetItem* current, QListWidgetItem* previous);
 
 private slots:
     void onOpenSavePresetDialog();
@@ -134,5 +142,8 @@ private:
 	ViewActions m_viewActions;
     MiscActions m_miscActions;
     QWidget* m_parentWidget;
+
+	ElementTreeNode* m_currentSelectedElementNode = nullptr; // TODO: should these even exist?
+	QListWidgetItem* m_currentSelectedPresetItem = nullptr;
 };
 
