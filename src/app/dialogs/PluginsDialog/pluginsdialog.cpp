@@ -50,11 +50,11 @@ void PluginsDialog::initContextMenu()
 
 	m_contextMenu->addSeparator();
 
-	m_actionTogglePlugin = m_contextMenu->addAction("Unload", this, &PluginsDialog::onToggleSelectedPlugin);
+	m_actionTogglePlugin = m_contextMenu->addAction(tr("Unload"), this, &PluginsDialog::onToggleSelectedPlugin);
 
 	m_contextMenu->addSeparator();
 
-	m_contextMenu->addAction("Rescan", this, &PluginsDialog::onRescanPlugins);
+	m_contextMenu->addAction(tr("Rescan"), this, &PluginsDialog::onRescanPlugins);
 }
 
 void PluginsDialog::onPluginSelected(const QModelIndex& currentIdx, const QModelIndex& newIdx)
@@ -76,8 +76,10 @@ void PluginsDialog::onPluginSelected(const QModelIndex& currentIdx, const QModel
 
 	// Update the selected plugin
 	m_selectedPlugin = nodeData.value<PluginMetadata*>();
+	m_isSelectedPluginLoaded = m_pluginController.registry().isLoaded(m_selectedPlugin->path);
 
 	m_actionTogglePlugin->setEnabled(true);
+	m_actionTogglePlugin->setText(m_isSelectedPluginLoaded ? tr("Unload") : tr("Load"));
 	ui.pluginDetailsWidget->setPlugin(m_selectedPlugin);
 }
 
@@ -101,12 +103,9 @@ void PluginsDialog::onToggleSelectedPlugin()
 	if (!m_selectedPlugin) return;
 
 	// Check current state
-	bool isLoaded = m_pluginController.registry().isLoaded(m_selectedPlugin->path);
-	if (!isLoaded) {
+	if (!m_isSelectedPluginLoaded) {
 		m_pluginController.loadPlugin(QString::fromStdString(m_selectedPlugin->path));
 	} else {
 		m_pluginController.unloadPlugin(QString::fromStdString(m_selectedPlugin->path));
 	}
-
-	m_actionTogglePlugin->setText(isLoaded ? "Load" : "Unload");
 }

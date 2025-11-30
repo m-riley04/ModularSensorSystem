@@ -71,6 +71,12 @@ public:
         return m_loadedByPath.find(path) != m_loadedByPath.end();
 	}
 
+    // Access a loaded plugin by its path, or nullptr if not loaded
+    LoadedPlugin* loadedByPath(const std::string& path) const {
+        auto it = m_loadedByPath.find(path);
+        return it == m_loadedByPath.end() ? nullptr : it->second;
+    }
+
 private:
     std::vector<PluginMetadata> m_pluginMetadata;
     // Use deque to keep element addresses stable across push_back/pop_front

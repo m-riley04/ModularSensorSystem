@@ -26,6 +26,7 @@ private:
 	PluginController& m_pluginController;
 	PluginListModel* m_model = nullptr;
 	PluginMetadata* m_selectedPlugin = nullptr;
+	bool m_isSelectedPluginLoaded = true;
 
 	QMenu* m_contextMenu = nullptr;
 	QAction* m_actionTogglePlugin = nullptr;

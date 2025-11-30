@@ -29,11 +29,61 @@ void PluginController::unloadPlugins() {
 void PluginController::loadPlugin(const QString& pluginPath)
 {
 	m_pluginRegistry.load(pluginPath.toStdString(), FACTORY_API_VERSION);
+	auto& pluginMeta = m_pluginRegistry.metadataByPath().at(pluginPath.toStdString());
+	if (pluginMeta.type == IElement::Type::Source) {
+		ISourcePlugin* plugin = m_pluginRegistry.as < ISourcePlugin
+		>().back(); // Get the last loaded source plugin
+		m_sourcePlugins.append(plugin);
+		m_plugins.append(plugin);
+	}
+	else if (pluginMeta.type == IElement::Type::Processor) {
+		IProcessorPlugin* plugin = m_pluginRegistry.as<IProcessorPlugin>().back(); // Get the last loaded processor plugin
+		m_processorPlugins.append(plugin);
+		m_plugins.append(plugin);
+	}
+	else if (pluginMeta.type == IElement::Type::Mount) {
+		IMountPlugin* plugin = m_pluginRegistry.as<IMountPlugin>().back(); // Get the last loaded mount plugin
+		m_mountPlugins.append(plugin);
+		m_plugins.append(plugin);
+	}
 }
 
 void PluginController::unloadPlugin(const QString& pluginPath)
 {
-	m_pluginRegistry.unload(pluginPath.toStdString());
+	// Identify the loaded plugin instance by path BEFORE unloading so we can remove
+	// the exact pointer from our local lists safely.
+	const std::string path = pluginPath.toStdString();
+	IPlugin* instancePtr = nullptr;
+	if (auto lp = m_pluginRegistry.loadedByPath(path)) {
+		instancePtr = lp->instance;
+	}
+
+	// Determine plugin type from metadata (if available)
+	IElement::Type pluginType = IElement::Type::Source; // default doesn't matter here
+	{
+		auto it = m_pluginRegistry.metadataByPath().find(path);
+		if (it != m_pluginRegistry.metadataByPath().end()) {
+			pluginType = it->second.type;
+		}
+	}
+
+	// Remove from specific type list and aggregate list using pointer equality
+	if (instancePtr) {
+		if (pluginType == IElement::Type::Source) {
+			m_sourcePlugins.erase(std::remove(m_sourcePlugins.begin(), m_sourcePlugins.end(), static_cast<ISourcePlugin*>(instancePtr)), m_sourcePlugins.end());
+		}
+		else if (pluginType == IElement::Type::Processor) {
+			m_processorPlugins.erase(std::remove(m_processorPlugins.begin(), m_processorPlugins.end(), static_cast<IProcessorPlugin*>(instancePtr)), m_processorPlugins.end());
+		}
+		else if (pluginType == IElement::Type::Mount) {
+			m_mountPlugins.erase(std::remove(m_mountPlugins.begin(), m_mountPlugins.end(), static_cast<IMountPlugin*>(instancePtr)), m_mountPlugins.end());
+		}
+
+		m_plugins.erase(std::remove(m_plugins.begin(), m_plugins.end(), instancePtr), m_plugins.end());
+	}
+
+	// Finally unload from registry
+	m_pluginRegistry.unload(path);
 }
 
 void PluginController::loadPlugins()
