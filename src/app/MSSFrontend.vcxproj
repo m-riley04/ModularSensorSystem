@@ -204,6 +204,9 @@
     <QtMoc Include="widgets\PluginDetailsWidget\plugindetailswidget.h" />
     <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="controllers\AppActionController\action_containers.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

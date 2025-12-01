@@ -12,66 +12,7 @@
 #include <dialogs/AddMountDialog/addmountdialog.h>
 #include <dialogs/AddSourceDialog/addsourcedialog.h>
 #include <dialogs/AddProcessorDialog/addprocessordialog.h>
-
-struct PresetActions {
-    QAction* savePreset;
-    QAction* loadPreset;
-    QAction* deletePreset;
-    QAction* refreshPreset;
-};
-
-struct MountActions {
-    QAction* openAddMount;
-    QAction* openRemoveMount;
-    QAction* openEditMount;
-};
-
-struct SourceActions {
-    QAction* openAddSource;
-    QAction* openRemoveSource;
-    QAction* openEditSource;
-};
-
-struct ProcessorActions {
-    QAction* openAddProcessor;
-    QAction* openRemoveProcessor;
-    QAction* openEditProcessor;
-    QAction* toggleProcessing;
-};
-
-struct SessionActions {
-    QAction* toggleSession;
-    QAction* restartSession;
-    QAction* toggleRecording;
-    QAction* openSessionProperties;
-    QAction* clipSession;
-};
-
-struct ViewActions {
-	QAction* viewPresetsList;
-	QAction* viewControls;
-	QAction* viewMenuBar;
-	QAction* viewToolbar;
-};
-
-struct MiscActions {
-    QAction* openGithubRepository;
-	QAction* generatePipelineDiagram;
-    QAction* openAppProperties;
-    QAction* openPluginDialog;
-	QAction* quit;
-	QAction* restart;
-};
-
-struct AppActions {
-	PresetActions* presetActions;
-	MountActions* mountActions;
-	SourceActions* sourceActions;
-	ProcessorActions* processorActions;
-	SessionActions* sessionActions;
-	ViewActions* viewActions;
-	MiscActions* miscActions;
-};
+#include "action_containers.h"
 
 // Forward declarations
 struct ElementTreeNode;
@@ -132,6 +73,16 @@ private slots:
 
 private:
     void initActionSignals();
+
+    void refreshActionStates();
+	void refreshPresetActionStates();
+    void refreshSourceActionStates();
+    void refreshMountActionStates();
+    void refreshProcessorActionStates();
+    void refreshSessionActionStates();
+
+private:
+    QWidget* m_parentWidget;
 	MainController& m_controller;
     AppActions m_actions;
 	PresetActions m_presetActions;
@@ -141,8 +92,7 @@ private:
 	SessionActions m_sessionActions;
 	ViewActions m_viewActions;
     MiscActions m_miscActions;
-    QWidget* m_parentWidget;
-
+    
 	ElementTreeNode* m_currentSelectedElementNode = nullptr; // TODO: should these even exist?
 	QListWidgetItem* m_currentSelectedPresetItem = nullptr;
 };

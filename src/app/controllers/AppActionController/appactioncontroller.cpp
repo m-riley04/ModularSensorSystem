@@ -16,6 +16,7 @@ AppActionController::AppActionController(AppActions* actions, MainController& c,
     m_miscActions = *actions->miscActions;
 
     initActionSignals();
+    refreshActionStates();
 }
 
 AppActionController::~AppActionController()
@@ -81,39 +82,76 @@ void AppActionController::initActionSignals()
     connect(m_miscActions.restart, &QAction::triggered, this, &AppActionController::restart);
 }
 
+void AppActionController::refreshActionStates()
+{
+    refreshPresetActionStates();
+    refreshSourceActionStates();
+    refreshMountActionStates();
+    refreshProcessorActionStates();
+	refreshSessionActionStates();
+}
+
+void AppActionController::refreshPresetActionStates()
+{
+    bool hasPresets = !m_controller.presetsController().presets().isEmpty();
+    m_presetActions.loadPreset->setEnabled(hasPresets && m_currentSelectedPresetItem);
+    m_presetActions.deletePreset->setEnabled(hasPresets && m_currentSelectedPresetItem);
+	//m_presetActions.editPreset->setEnabled(hasPresets && m_currentSelectedPresetItem);
+}
+
+void AppActionController::refreshSourceActionStates()
+{
+    bool isSourceSelected = !m_controller.sourceController().sources().isEmpty();
+	bool isElementSource = false;
+    if (m_currentSelectedElementNode) {
+        isElementSource = (m_currentSelectedElementNode->kind == IElement::Type::Source);
+    }
+
+    m_sourceActions.openRemoveSource->setEnabled(isSourceSelected && isElementSource);
+    m_sourceActions.openEditSource->setEnabled(isSourceSelected && isElementSource); // TODO/CONSIDER: change this action to open a dialog for ALL sources
+}
+
+void AppActionController::refreshMountActionStates()
+{
+    bool isMountSelected = !m_controller.mountController().mounts().isEmpty();
+	bool isElementMount = false;
+    if (m_currentSelectedElementNode) {
+        isElementMount = (m_currentSelectedElementNode->kind == IElement::Type::Mount);
+	}
+    m_mountActions.openRemoveMount->setEnabled(isMountSelected && isElementMount);
+    m_mountActions.openEditMount->setEnabled(isMountSelected && isElementMount);
+}
+
+void AppActionController::refreshProcessorActionStates()
+{
+    bool isProcessorSelected = !m_controller.processingController().processors().isEmpty();
+    bool isElementProcessor = false;
+    if (m_currentSelectedElementNode) {
+        isElementProcessor = (m_currentSelectedElementNode->kind == IElement::Type::Processor);
+	}
+    m_processorActions.openRemoveProcessor->setEnabled(isProcessorSelected && isElementProcessor);
+    m_processorActions.openEditProcessor->setEnabled(isProcessorSelected && isElementProcessor);
+	m_processorActions.toggleProcessing->setEnabled(isProcessorSelected); // Toggle is for all processors. TODO/CONSIDER: make this per-processor?
+}
+
+void AppActionController::refreshSessionActionStates()
+{
+    bool isSessionReady = m_controller.sourceController().sources().size() > 0;
+	bool isSessionRunning = m_controller.sessionController().pipeline().isBuilt();
+    m_sessionActions.toggleSession->setEnabled(isSessionReady);
+    m_sessionActions.restartSession->setEnabled(isSessionRunning);
+    m_sessionActions.toggleRecording->setEnabled(isSessionRunning);
+    m_sessionActions.clipSession->setEnabled(isSessionRunning);
+    m_miscActions.generatePipelineDiagram->setEnabled(isSessionRunning);
+}
+
 void AppActionController::onElementSelected(ElementTreeNode* node) {
 	m_currentSelectedElementNode = node;
 
-    // Check selected element
-    if (!node) {
-        // TODO: maybe disable all element-related actions here?
-        return;
-    }
-
-    /// SOURCES
-    bool hasSources = !m_controller.sourceController().sources().isEmpty();
-    m_sourceActions.openRemoveSource->setEnabled(hasSources && node->kind == IElement::Type::Source);
-    m_sourceActions.openEditSource->setEnabled(hasSources && node->kind == IElement::Type::Source); // TODO/CONSIDER: change this action to open a dialog for ALL sources
-
-    /// PROCESSING
-    bool hasProcessors = !m_controller.processingController().processors().isEmpty();
-    m_processorActions.openRemoveProcessor->setEnabled(hasProcessors && node->kind == IElement::Type::Processor);
-    m_processorActions.openEditProcessor->setEnabled(hasProcessors && node->kind == IElement::Type::Processor);
-    m_processorActions.toggleProcessing->setEnabled(hasProcessors);
-
-    /// MOUNTS
-    bool hasMounts = !m_controller.mountController().mounts().isEmpty();
-    m_mountActions.openRemoveMount->setEnabled(hasMounts && node->kind == IElement::Type::Mount);
-    m_mountActions.openEditMount->setEnabled(hasMounts && node->kind == IElement::Type::Mount);
-
-    /// SESSION
-    m_sessionActions.toggleSession->setEnabled(hasSources);
-    m_sessionActions.restartSession->setEnabled(m_controller.sessionController().pipeline().isBuilt());
-    m_sessionActions.toggleRecording->setEnabled(m_controller.sessionController().pipeline().isBuilt());
-    m_sessionActions.clipSession->setEnabled(m_controller.sessionController().pipeline().isBuilt());
-
-    /// DEBUG
-    m_miscActions.generatePipelineDiagram->setEnabled(m_controller.sessionController().pipeline().isBuilt());
+    refreshMountActionStates();
+	refreshSourceActionStates();
+    refreshProcessorActionStates();
+    refreshSessionActionStates();
 }
 
 void AppActionController::onElementRemoved()
@@ -125,11 +163,7 @@ void AppActionController::onPresetElementSelected(QListWidgetItem* current, QLis
 {
 	m_currentSelectedPresetItem = current;
 
-    // Refresh action states for presets
-    bool hasPresets = !m_controller.presetsController().presets().isEmpty();
-    m_presetActions.loadPreset->setEnabled(hasPresets && current);
-    m_presetActions.deletePreset->setEnabled(hasPresets && current);
-	//m_presetActions.editPreset->setEnabled(hasPresets && current);
+    refreshPresetActionStates();
 }
 
 void AppActionController::onOpenAppPropertiesDialog() {
