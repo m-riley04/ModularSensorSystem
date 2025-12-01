@@ -6,6 +6,7 @@
 #include "controllers/mountcontroller.hpp"
 #include "dialogs/PluginsDialog/pluginsdialog.h"
 #include <controllers/AppActionController/appactioncontroller.h>
+#include <controllers/UiSettingsController/uisettingscontroller.h>
 
 class MainWindow : public QMainWindow
 {
@@ -36,6 +37,7 @@ private:
 
     Ui::MainWindowClass ui;
     MainController m_controller;
+    UiSettingsController m_uiSettingsController;
     QSettings m_appSettings;
     AppActionController* m_actionController = nullptr;
 };

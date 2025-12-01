@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QThread>
+#include <QSettings>
 #include <qcoreapplication.h>
 #include <memory>
 #include "controllers/plugincontroller.hpp"
@@ -10,15 +11,14 @@
 #include "controllers/sourcecontroller.hpp"
 #include "controllers/mountcontroller.hpp"
 #include "controllers/sessioncontroller.hpp"
-
-class DataPipelineController; // forward declare to break circular include
+#include "controllers/settingscontroller.hpp"
 
 class MainController  : public QObject
 {
 	Q_OBJECT
 
 public:
-	MainController(QObject *parent);
+	MainController(QSettings& settings, QObject *parent);
 	~MainController();
 
 	SourceController& sourceController() { return m_sourceController; }
@@ -27,6 +27,7 @@ public:
 	ProcessingController& processingController() { return m_processingController; }
 	MountController& mountController() { return m_mountController; }
 	SessionController& sessionController() { return m_sessionController; }
+	SettingsController& settingsController() { return m_settingsController; }
 
 private:
 	SourceController m_sourceController;
@@ -35,4 +36,5 @@ private:
 	ProcessingController m_processingController;
 	MountController m_mountController;
 	SessionController m_sessionController;
+	SettingsController m_settingsController;
 };

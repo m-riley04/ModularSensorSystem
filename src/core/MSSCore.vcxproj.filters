@@ -157,6 +157,9 @@
     <ClCompile Include="src\sdk\plugins\pluginloader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\controllers\settingscontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="include\controllers\maincontroller.hpp">
@@ -196,6 +199,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\pipeline\sessionpipeline.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\controllers\settingscontroller.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

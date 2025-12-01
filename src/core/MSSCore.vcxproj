@@ -108,11 +108,13 @@
   <ItemGroup>
     <ClCompile Include="src\controllers\sessioncontroller.cpp" />
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
+    <ClCompile Include="src\controllers\settingscontroller.cpp" />
     <ClCompile Include="src\pipeline\sessionpipeline.cpp" />
     <ClCompile Include="src\sdk\plugins\pluginloader.cpp" />
     <ClCompile Include="src\utils\session_utils.cpp" />
     <ClCompile Include="src\utils\utils.cpp" />
     <QtMoc Include="include\features\element.hpp" />
+    <QtMoc Include="include\controllers\settingscontroller.hpp" />
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp" />
     <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp" />
     <ClInclude Include="include\interfaces\capability\irecordablesource.hpp" />

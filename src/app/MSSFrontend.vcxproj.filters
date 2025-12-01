@@ -79,6 +79,9 @@
     <ClCompile Include="controllers\AppActionController\appactioncontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controllers\UiSettingsController\uisettingscontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -127,6 +130,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="controllers\AppActionController\appactioncontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controllers\UiSettingsController\uisettingscontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

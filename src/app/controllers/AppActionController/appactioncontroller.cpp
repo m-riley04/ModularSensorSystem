@@ -167,10 +167,9 @@ void AppActionController::onPresetElementSelected(QListWidgetItem* current, QLis
 }
 
 void AppActionController::onOpenAppPropertiesDialog() {
-    AppPropertiesDialog* appPropertiesDialog = new AppPropertiesDialog(m_parentWidget);
+    AppPropertiesDialog* appPropertiesDialog = new AppPropertiesDialog(m_controller.settingsController(), m_parentWidget);
     appPropertiesDialog->setWindowModality(Qt::WindowModal);
     appPropertiesDialog->show();
-
 }
 
 void AppActionController::onOpenPluginDialog() {

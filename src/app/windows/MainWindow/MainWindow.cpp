@@ -73,8 +73,10 @@ AppActions MainWindow::createActions() {
 }
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), m_controller(new MainController(this))
+    : QMainWindow(parent)
     , m_appSettings(QSettings(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), QCoreApplication::applicationName()))
+    , m_controller(MainController(m_appSettings, this))
+	, m_uiSettingsController(UiSettingsController(m_appSettings, this))
 {
     ui.setupUi(this);
 
@@ -140,11 +142,11 @@ void MainWindow::initSignals() {
 
 void MainWindow::loadAppSettings()
 {
-    // Window state/geometry
-    m_appSettings.beginGroup("window");
-    restoreGeometry(m_appSettings.value("geometry").toByteArray());
-    restoreState(m_appSettings.value("state").toByteArray());
-    m_appSettings.endGroup();
+    m_uiSettingsController.loadSettings();
+    m_controller.settingsController().loadSettings();
+
+	restoreGeometry(m_uiSettingsController.windowSettings().geometry);
+	restoreState(m_uiSettingsController.windowSettings().windowState);
 }
 
 void MainWindow::handleSessionError(const QString& errorMessage) {
@@ -153,7 +155,11 @@ void MainWindow::handleSessionError(const QString& errorMessage) {
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    m_appSettings.setValue("window/geometry", saveGeometry());
-    m_appSettings.setValue("window/state", saveState());
+    m_uiSettingsController.setWindowSettings({
+        .geometry = saveGeometry(),
+        .windowState = saveState()
+		});
+
+	m_uiSettingsController.saveSettings();
     QMainWindow::closeEvent(event);
 }
