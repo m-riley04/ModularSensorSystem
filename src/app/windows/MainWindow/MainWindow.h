@@ -15,6 +15,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+	void handleSessionError(const QString& errorMessage);
+
 protected:
     void closeEvent(QCloseEvent* event) override;
 

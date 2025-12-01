@@ -122,24 +122,12 @@ void MainWindow::initWidgets()
     ui.dockWidget->setActions(&this->m_actionController->actions());
 }
 
-void MainWindow::loadAppSettings()
-{
-    // Window state/geometry
-    m_appSettings.beginGroup("window");
-    restoreGeometry(m_appSettings.value("geometry").toByteArray());
-    restoreState(m_appSettings.value("state").toByteArray());
-	m_appSettings.endGroup();
-}
-
 void MainWindow::initSignals() {
 	SourceController& m_sourceController = m_controller.sourceController();
 	SessionController& m_sessionController = m_controller.sessionController();
 
     // Error message propagation
-    connect(&m_sessionController, &SessionController::errorOccurred,
-        this, [this](const QString& errorMessage) {
-            QMessageBox::critical(this, tr("Session Error"), tr("An error occurred in the session:\n%1").arg(errorMessage));
-		});
+    connect(&m_sessionController, &SessionController::errorOccurred, this, &MainWindow::handleSessionError);
 
     // Connect preset widget signals
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, m_actionController, &AppActionController::onPresetElementSelected);
@@ -148,6 +136,19 @@ void MainWindow::initSignals() {
     connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, m_actionController, &AppActionController::onElementSelected);
     connect(ui.dockWidget, &DockableElementsManagerWidget::elementRemoved, m_actionController, &AppActionController::onElementRemoved);
 
+}
+
+void MainWindow::loadAppSettings()
+{
+    // Window state/geometry
+    m_appSettings.beginGroup("window");
+    restoreGeometry(m_appSettings.value("geometry").toByteArray());
+    restoreState(m_appSettings.value("state").toByteArray());
+    m_appSettings.endGroup();
+}
+
+void MainWindow::handleSessionError(const QString& errorMessage) {
+    QMessageBox::critical(this, tr("Session Error"), tr("An error occurred in the session:\n%1").arg(errorMessage));
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
