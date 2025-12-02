@@ -1,13 +1,12 @@
 ﻿#include "controllers/sessioncontroller.hpp"
 
-SessionController::SessionController(SourceController& sourceController, ProcessingController& processingController, 
+SessionController::SessionController(SettingsController& settingsController, SourceController& sourceController, ProcessingController& processingController,
 	MountController& mountController, QObject* parent)
-	: BackendControllerBase("SessionController", parent), m_sessionProperties(initSessionProps(DEFAULT_SESSIONS_DIRECTORY, DEFAULT_SESSION_PREFIX)),
-	m_pipeline(SessionPipeline(m_sessionProperties, this)), m_sourceController(sourceController), m_processingController(processingController),
+	: BackendControllerBase("SessionController", parent)
+	, m_settingsController(settingsController)
+	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), this)), m_sourceController(sourceController), m_processingController(processingController),
 	m_mountController(mountController)
 {
-	// TODO: in the future, load the session properties from a saved state. For right now, they're default.
-
 	// Connect signals for error handling
 	connect(&m_pipeline, &SessionPipeline::errorOccurred, this, &SessionController::errorOccurred);
 }
@@ -15,15 +14,6 @@ SessionController::SessionController(SourceController& sourceController, Process
 SessionController::~SessionController()
 {
 	m_pipeline.close();
-}
-
-void SessionController::setSessionProperties(const SessionProperties& properties)
-{
-	//if (m_sessionProperties == properties) return;
-	m_sessionProperties = properties;
-	m_pipeline.setSessionProperties(m_sessionProperties);
-
-	emit sessionPropertiesChanged(properties);
 }
 
 void SessionController::restartSession()
@@ -38,7 +28,7 @@ void SessionController::startSession()
 	// Generate a new session timestamp
 	m_lastSessionTimestamp = generateTimestampNs();
 	m_pipeline.setSessionTimestamp(m_lastSessionTimestamp);
-	m_pipeline.build(m_sessionProperties, m_sourceController.sources(), m_sourceController.recordableSources());
+	m_pipeline.build(m_sourceController.sources(), m_sourceController.recordableSources());
 }
 
 void SessionController::stopSession()

@@ -2,33 +2,9 @@
 
 #include <QObject>
 #include <QSettings>
-#include <QDir>
-#include <QCoreApplication>
+#include "models/settings_models.hpp"
 
 constexpr const char* MSS_SETTINGS_GROUP_BACKEND = "core";
-
-struct AdvancedSettings
-{
-	bool enableLogging = false;
-	bool enableDebugMode = false;
-};
-
-struct SessionSettings
-{
-	// Recording settings
-	QDir outputDirectory = QCoreApplication::applicationDirPath() + "/recordings";
-	std::string outputPrefix = "session_";
-
-	// Clipping settings
-	bool enableClipping = false;
-};
-
-struct GeneralSettings
-{
-	bool closeToTray = true;
-	bool checkForUpdatesOnStartup = true;
-	std::string language = "system"; // "system" to use system language by default
-};
 
 class SettingsController : public QObject
 {
@@ -38,9 +14,9 @@ public:
 	SettingsController(QSettings& settings, QObject* parent = nullptr);
 	~SettingsController();
 
-	GeneralSettings generalSettings() const { return m_generalSettings; }
-	AdvancedSettings advancedSettings() const { return m_advancedSettings; }
-	SessionSettings sessionSettings() const { return m_sessionSettings; }
+	GeneralSettings& generalSettings() { return m_generalSettings; }
+	AdvancedSettings& advancedSettings() { return m_advancedSettings; }
+	SessionSettings& sessionSettings() { return m_sessionSettings; }
 
 public slots:
 	void loadSettings();

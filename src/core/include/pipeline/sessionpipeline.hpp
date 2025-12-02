@@ -27,7 +27,7 @@ public:
 	};
 
 public:
-	explicit SessionPipeline(SessionProperties& properties, QObject* parent = nullptr);
+	explicit SessionPipeline(SessionSettings& settings, QObject* parent = nullptr);
 	virtual ~SessionPipeline() = default;
 
 	const GstElement* bin() const { return GST_ELEMENT(m_pipeline.get()); }
@@ -39,13 +39,12 @@ public:
 	bool isBuilt() const { return m_pipeline != nullptr; }
 
 	void setSessionTimestamp(ns timestamp) { m_lastSessionTimestamp = timestamp; }
-	void setSessionProperties(SessionProperties& properties) { m_sessionProperties = &properties; }
 
 public slots:
 	void setState(State newState);
 	void startRecording();
 	void stopRecording();
-	bool build(SessionProperties& properties, const QList<Source*>& sources, const QList<IRecordableSource*>& recSources);
+	bool build(const QList<Source*>& sources, const QList<IRecordableSource*>& recSources);
 	bool close();
 
 	void onPipelineError(const QString& errorMessage);
@@ -76,7 +75,7 @@ private:
 	QList<GstElement*> m_recordBins;
 	QList<GstElement*> m_recordableSourceBins;
 	QList<IRecordableSource*> m_recordableSources;
-	SessionProperties* m_sessionProperties = nullptr; // ptr to session properties owned by session controller
+	SessionSettings& m_sessionSettings; // ptr to session settings owned by settings controller
 	guint m_pipelineBusWatchId = 0;
 
 signals:

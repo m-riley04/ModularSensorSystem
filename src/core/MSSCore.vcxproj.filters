@@ -95,9 +95,6 @@
     <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\models\session_properties.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\pipeline\bins\recorderbin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -120,6 +117,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\sdk\plugins\pluginmetadata.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\models\settings_models.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

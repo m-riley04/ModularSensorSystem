@@ -1,10 +1,10 @@
 #include "utils/session_utils.hpp"
-#include "models/session_properties.hpp"
+#include "models/settings_models.hpp"
 #include "features/sources/source.hpp"
 
-const QString generateSessionDirectoryPath(const SessionProperties& props, const QString suffix)
+const QString generateSessionDirectoryPath(const SessionSettings& props, const QString suffix)
 {
-	const QString outputDir = props.recordingProperties.outputDirectory.absolutePath();
+	const QString outputDir = props.outputDirectory.absolutePath();
 
 	// Check output directory
 	if (!QDir(outputDir).exists()) {
@@ -14,7 +14,7 @@ const QString generateSessionDirectoryPath(const SessionProperties& props, const
 		}
 	}
 
-	const QString outputFolderPrefix = props.recordingProperties.outputPrefix + suffix;
+	const QString outputFolderPrefix = QString::fromStdString(props.outputPrefix) + suffix;
 	const QString outputFolderPath = outputDir + "/" + outputFolderPrefix;
 
 	// Check output directory
@@ -28,7 +28,7 @@ const QString generateSessionDirectoryPath(const SessionProperties& props, const
 	return outputFolderPath;
 }
 
-const QString generateSessionSourcePath(Source* src, const SessionProperties& props, const ns timestamp)
+const QString generateSessionSourcePath(Source* src, const SessionSettings& props, const ns timestamp)
 {
 	auto recordableSrc = src->asRecordable();
 	if (!src->asRecordable()) {

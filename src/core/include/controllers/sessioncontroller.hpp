@@ -14,12 +14,10 @@
 #include "interfaces/capability/ianalogsource.hpp"
 #include "pipeline/sinks/preview_defaults.hpp"
 #include <interfaces/capability/ipreviewablesource.hpp>
-#include "models/session_properties.hpp"
+#include "models/settings_models.hpp"
 #include <utils/session_utils.hpp>
 #include "pipeline/sessionpipeline.hpp"
-
-#define DEFAULT_SESSION_PREFIX "session_"
-#define DEFAULT_SESSIONS_DIRECTORY "/sessions"
+#include "settingscontroller.hpp"
 
 using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
@@ -28,12 +26,11 @@ class SessionController : public BackendControllerBase
 	Q_OBJECT
 
 public:
-	SessionController(SourceController& sourceController, ProcessingController& processingController, 
+	SessionController(SettingsController& settingsController, SourceController& sourceController, ProcessingController& processingController, 
 		MountController& mountController, QObject* parent);
 	~SessionController();
 
 	const SessionPipeline& pipeline() { return m_pipeline; }
-	SessionProperties& sessionProperties() { return m_sessionProperties; }
 	const QList<const Source*> getSourcesByMount(QUuid mountId) const;
 	const QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
 
@@ -45,16 +42,14 @@ public slots:
 	void startRecording();
 	void stopRecording();
 
-	void setSessionProperties(const SessionProperties& properties);
-
 private:
 	SessionPipeline m_pipeline;
-	SessionProperties m_sessionProperties;
 	ns m_lastSessionTimestamp = 0;
 
 	SourceController& m_sourceController;
 	ProcessingController& m_processingController;
 	MountController& m_mountController;
+	SettingsController& m_settingsController;
 
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
@@ -67,7 +62,6 @@ signals:
 	void recordingStarted();
 	void recordingStopped();
 
-	void sessionPropertiesChanged(const SessionProperties& properties);
 	void errorOccurred(QString errorMessage); // TODO: should I use a const ref?
 
 };
