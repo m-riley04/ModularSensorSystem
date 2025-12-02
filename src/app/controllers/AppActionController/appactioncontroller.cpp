@@ -424,6 +424,8 @@ void AppActionController::onToggleSession(bool checked)
 {
     if (checked) m_controller.sessionController().startSession();
 	else m_controller.sessionController().stopSession();
+
+    refreshSessionActionStates();
 }
 
 void AppActionController::onToggleRecording(bool checked)
