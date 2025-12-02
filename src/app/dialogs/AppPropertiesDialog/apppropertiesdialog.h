@@ -12,7 +12,7 @@ enum AppPropertiesTab {
 	Advanced,
 	Appearance,
 	Session,
-	Sources,
+	Plugins,
 	Keybinds,
 	Accessibility
 };
@@ -29,7 +29,7 @@ private slots:
 	void onGeneralTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::General); }
 	void onAppearanceTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Appearance); }
 	void onSessionTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Session); }
-	void onSourcesTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Sources); }
+	void onPluginsTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Plugins); }
 	void onKeybindsTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Keybinds); }
 	void onAccessibilityTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Accessibility); }
 	void onAdvancedTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Advanced); }

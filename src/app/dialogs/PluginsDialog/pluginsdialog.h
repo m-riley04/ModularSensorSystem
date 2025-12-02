@@ -6,13 +6,14 @@
 #include <QTreeView>
 #include <models/PluginListModel/pluginlistmodel.h>
 #include <sdk/plugins/iplugin.hpp>
+#include <controllers/settingscontroller.hpp>
 
 class PluginsDialog : public QDialog
 {
 	Q_OBJECT
 
 public:
-	PluginsDialog(PluginController& c, QWidget *parent = nullptr);
+	PluginsDialog(SettingsController& sc, PluginController& pc, QWidget *parent = nullptr);
 	~PluginsDialog();
 
 private slots:
@@ -23,6 +24,7 @@ private slots:
 
 private:
 	Ui::PluginsDialogClass ui;
+	SettingsController& m_settingsController;
 	PluginController& m_pluginController;
 	PluginListModel* m_model = nullptr;
 	PluginMetadata* m_selectedPlugin = nullptr;

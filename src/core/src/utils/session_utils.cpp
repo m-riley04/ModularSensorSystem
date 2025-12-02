@@ -14,7 +14,7 @@ const QString generateSessionDirectoryPath(const SessionSettings& props, const Q
 		}
 	}
 
-	const QString outputFolderPrefix = QString::fromStdString(props.outputPrefix) + suffix;
+	const QString outputFolderPrefix = props.outputPrefix + suffix;
 	const QString outputFolderPath = outputDir + "/" + outputFolderPrefix;
 
 	// Check output directory

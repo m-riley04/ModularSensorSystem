@@ -173,7 +173,7 @@ void AppActionController::onOpenAppPropertiesDialog() {
 
 void AppActionController::onOpenPluginDialog() {
     // Create and show the PluginDialog
-    PluginsDialog* pluginsDialog = new PluginsDialog(m_controller.pluginController(), m_parentWidget);
+    PluginsDialog* pluginsDialog = new PluginsDialog(m_controller.settingsController(), m_controller.pluginController(), m_parentWidget);
     pluginsDialog->setWindowModality(Qt::WindowModal);
     pluginsDialog->show();
 }

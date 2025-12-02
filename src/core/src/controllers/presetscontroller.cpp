@@ -1,21 +1,22 @@
 #include "controllers/presetscontroller.hpp"
 
-PresetsController::PresetsController(const QString& dir, QObject *parent)
-	: BackendControllerBase("PresetsController", parent), mPresetsDir(dir)
+PresetsController::PresetsController(SettingsController& sc, QObject *parent)
+	: BackendControllerBase("PresetsController", parent), m_settingsController(sc),
+	m_presetDirectory(sc.presetSettings().presetDirectory) // TODO: should I pass by reference or value?
 {
 	// Check if directory exists
-	QDir presetsDir(mPresetsDir);
+	QDir presetsDir(m_presetDirectory);
 	if (!presetsDir.exists()) {
-		qWarning() << "Presets directory does not exist:" << mPresetsDir;
+		qWarning() << "Presets directory does not exist:" << m_presetDirectory;
 		// Create it
-		if (!presetsDir.mkpath(mPresetsDir)) { // TODO: More error checking if this happens
-			qWarning() << "Failed to create presets directory:" << mPresetsDir;
+		if (!presetsDir.mkpath(m_presetDirectory.absolutePath())) { // TODO: More error checking if this happens
+			qWarning() << "Failed to create presets directory:" << m_presetDirectory;
 			return;
 		}
 	}
 
 	// Scan directory for presets
-	scanForPresets(mPresetsDir);
+	scanForPresets(m_presetDirectory.absolutePath());
 }
 
 PresetsController::~PresetsController()
@@ -27,7 +28,7 @@ void PresetsController::savePreset(const QString& name, const QList<Source*>& ac
 
 	// Check dirPath
 	if (dirPathLocal.isEmpty()) {
-		dirPathLocal = mPresetsDir;
+		dirPathLocal = m_presetDirectory.absolutePath();
 	}
 
 	QList<SourcePreset> sourcePresets;
@@ -179,7 +180,7 @@ void PresetsController::scanForPresets(QString presetDir)
 {
 	// Check passed dir
 	if (presetDir.isEmpty()) {
-		presetDir = mPresetsDir;
+		presetDir = m_presetDirectory.absolutePath(); // TODO: use reference?
 	}
 
 	// Clear list of presets

@@ -30,11 +30,12 @@ public:
 	SettingsController& settingsController() { return m_settingsController; }
 
 private:
+	// IMPORTANT: Construct settings first so dependent controllers receive a valid reference
+	SettingsController m_settingsController;
 	SourceController m_sourceController;
-	PluginController m_pluginController;
-	PresetsController m_presetsController;
 	ProcessingController m_processingController;
 	MountController m_mountController;
+	PluginController m_pluginController;
+	PresetsController m_presetsController;
 	SessionController m_sessionController;
-	SettingsController m_settingsController;
 };

@@ -12,7 +12,7 @@ AppPropertiesDialog::AppPropertiesDialog(SettingsController& sc, UiSettingsContr
 	connect(ui.buttonAdvanced, &QPushButton::clicked, this, &AppPropertiesDialog::onAdvancedTabClicked);
 	connect(ui.buttonAppearance, &QPushButton::clicked, this, &AppPropertiesDialog::onAppearanceTabClicked);
 	connect(ui.buttonSession, &QPushButton::clicked, this, &AppPropertiesDialog::onSessionTabClicked);
-	connect(ui.buttonSources, &QPushButton::clicked, this, &AppPropertiesDialog::onSourcesTabClicked);
+	connect(ui.buttonPlugins, &QPushButton::clicked, this, &AppPropertiesDialog::onPluginsTabClicked);
 	connect(ui.buttonKeybinds, &QPushButton::clicked, this, &AppPropertiesDialog::onKeybindsTabClicked);
 	connect(ui.buttonAccessibility, &QPushButton::clicked, this, &AppPropertiesDialog::onAccessibilityTabClicked);
 	onGeneralTabClicked(); // Default to general tab
@@ -82,7 +82,7 @@ void AppPropertiesDialog::loadSettingsIntoUi()
 	GeneralSettings generalSettings = m_settingsController.generalSettings();
 	ui.checkboxCloseToTray->setChecked(generalSettings.closeToTray);
 	ui.checkboxCheckForUpdates->setChecked(generalSettings.checkForUpdatesOnStartup);
-	ui.dropdownLanguage->setCurrentText(QString::fromStdString(generalSettings.language));
+	ui.dropdownLanguage->setCurrentText(generalSettings.language);
 	// Advanced tab
 	AdvancedSettings advancedSettings = m_settingsController.advancedSettings();
 	ui.checkboxLogging->setChecked(advancedSettings.enableLogging);
@@ -90,6 +90,9 @@ void AppPropertiesDialog::loadSettingsIntoUi()
 	// Session tab
 	SessionSettings sessionSettings = m_settingsController.sessionSettings();
 	ui.dirPickerRecording->setSelectedDirectory(sessionSettings.outputDirectory);
-	ui.lineRecordingPrefix->setText(QString::fromStdString(sessionSettings.outputPrefix));
+	ui.lineRecordingPrefix->setText(sessionSettings.outputPrefix);
 	ui.checkboxEnableClipping->setChecked(sessionSettings.enableClipping);
+	// Plugins tab
+	PluginsSettings pluginsSettings = m_settingsController.pluginsSettings();
+	ui.dirPickerPluginsRoot->setSelectedDirectory(pluginsSettings.pluginsDirectory);
 }

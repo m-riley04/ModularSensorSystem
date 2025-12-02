@@ -14,6 +14,7 @@
 #include "utils/plugins_utils.hpp"
 #include "features/ielement.hpp"
 #include "sdk/plugins/pluginmetadata.hpp"
+#include <controllers/settingscontroller.hpp>
 
 /**
  * @brief Represents a loaded plugin.
@@ -27,6 +28,7 @@ struct LoadedPlugin {
 
 class PluginRegistry {
 public:
+    PluginRegistry(SettingsController& settingsController);
     ~PluginRegistry() { unloadAll(); }
 
     /**
@@ -78,6 +80,7 @@ public:
     }
 
 private:
+	SettingsController& m_settingsController;
     std::vector<PluginMetadata> m_pluginMetadata;
     // Use deque to keep element addresses stable across push_back/pop_front
     std::deque<LoadedPlugin> m_loaded;

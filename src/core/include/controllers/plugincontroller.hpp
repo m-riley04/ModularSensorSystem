@@ -9,13 +9,14 @@
 #include "sdk/plugins/pluginloader.hpp"
 #include "sdk/plugins/imountplugin.hpp"
 #include <string>
+#include "settingscontroller.hpp"
 
 class PluginController : public BackendControllerBase
 {
     Q_OBJECT
 
 public:
-    explicit PluginController(const std::string& pluginRoot, QObject* parent = nullptr);
+    explicit PluginController(SettingsController& settingsController, QObject* parent = nullptr);
 
     void loadPlugins();
     void unloadPlugins();
@@ -43,7 +44,7 @@ private:
     QList<ISourcePlugin*> m_sourcePlugins;
     QList<IProcessorPlugin*> m_processorPlugins;
     QList<IMountPlugin*> m_mountPlugins;
-    std::string m_pluginRoot;
+    QDir m_pluginRoot;
     std::vector<std::filesystem::path> m_pluginPaths;
     PluginRegistry m_pluginRegistry;
 

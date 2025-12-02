@@ -4,6 +4,13 @@
 #include <QCoreApplication>
 #include <string>
 
+struct GeneralSettings
+{
+	bool closeToTray = true;
+	bool checkForUpdatesOnStartup = true;
+	QString language = "system"; // "system" to use system language by default
+};
+
 struct AdvancedSettings
 {
 	bool enableLogging = false;
@@ -14,15 +21,19 @@ struct SessionSettings
 {
 	// Recording settings
 	QDir outputDirectory = QCoreApplication::applicationDirPath() + "/recordings";
-	std::string outputPrefix = "session_";
+	QString outputPrefix = "session_";
 
 	// Clipping settings
 	bool enableClipping = false;
 };
 
-struct GeneralSettings
+struct PluginsSettings
 {
-	bool closeToTray = true;
-	bool checkForUpdatesOnStartup = true;
-	std::string language = "system"; // "system" to use system language by default
+	QDir pluginsDirectory = QCoreApplication::applicationDirPath() + "/plugins";
+	QStringList enabledPluginIds = {};
+};
+
+struct PresetSettings
+{
+	QDir presetDirectory = QCoreApplication::applicationDirPath() + "/presets";
 };
