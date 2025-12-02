@@ -128,7 +128,6 @@
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
-    <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
     <QtUic Include="dialogs\AppPropertiesDialog\apppropertiesdialog.ui" />
@@ -150,12 +149,10 @@
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialogs\AddProcessorDialog\addprocessordialog.h" />
     <QtMoc Include="dialogs\AddSourceDialog\addsourcedialog.h" />
-    <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h" />
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h" />
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />

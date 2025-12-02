@@ -4,16 +4,17 @@
 #include <QSettings>
 #include "ui_apppropertiesdialog.h"
 #include <controllers/settingscontroller.hpp>
+#include <controllers/UiSettingsController/uisettingscontroller.h>
 
 // Not an enum class to allow implicit conversion to int for stacked widget index
 enum AppPropertiesTab {
 	General,
+	Advanced,
 	Appearance,
 	Session,
 	Sources,
 	Keybinds,
-	Accessibility,
-	Advanced
+	Accessibility
 };
 
 class AppPropertiesDialog : public QDialog
@@ -21,7 +22,7 @@ class AppPropertiesDialog : public QDialog
 	Q_OBJECT
 
 public:
-	AppPropertiesDialog(SettingsController& sc, QWidget *parent = nullptr);
+	AppPropertiesDialog(SettingsController& sc, UiSettingsController& uic, QWidget *parent = nullptr);
 	~AppPropertiesDialog();
 
 private slots:
@@ -41,5 +42,8 @@ private slots:
 private:
 	Ui::AppPropertiesDialogClass ui;
 	SettingsController& m_settingsController;
+	UiSettingsController& m_uiSettingsController;
+
+	void loadSettingsIntoUi();
 };
 

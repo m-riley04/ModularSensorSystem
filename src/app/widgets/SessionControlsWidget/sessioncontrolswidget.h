@@ -3,7 +3,6 @@
 #include <QWidget>
 #include "ui_sessioncontrolswidget.h"
 #include "controllers/maincontroller.hpp"
-#include "dialogs/SessionPropertiesDialog/sessionpropertiesdialog.h"
 #include <controllers/AppActionController/appactioncontroller.h>
 
 class SessionControlsWidget : public QWidget
@@ -22,7 +21,6 @@ public:
 		ui.buttonRestart->setAction(m_actions->restartSession);
 		ui.buttonRecord->setAction(m_actions->toggleRecording);
 		ui.buttonClip->setAction(m_actions->clipSession);
-		ui.buttonProperties->setAction(m_actions->openSessionProperties);
 	}
 
 private:

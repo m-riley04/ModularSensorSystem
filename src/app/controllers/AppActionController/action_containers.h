@@ -32,7 +32,6 @@ struct SessionActions {
     QAction* toggleSession;
     QAction* restartSession;
     QAction* toggleRecording;
-    QAction* openSessionProperties;
     QAction* clipSession;
 };
 

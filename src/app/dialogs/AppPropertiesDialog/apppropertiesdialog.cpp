@@ -1,23 +1,37 @@
 #include "apppropertiesdialog.h"
 
-AppPropertiesDialog::AppPropertiesDialog(SettingsController& sc, QWidget *parent)
-	: QDialog(parent), m_settingsController(sc)
+AppPropertiesDialog::AppPropertiesDialog(SettingsController& sc, UiSettingsController& uic, QWidget *parent)
+	: QDialog(parent), m_settingsController(sc), m_uiSettingsController(uic)
 {
 	ui.setupUi(this);
 
+	loadSettingsIntoUi();
+
 	// Connect tab buttons to their respective slots
 	connect(ui.buttonGeneral, &QPushButton::clicked, this, &AppPropertiesDialog::onGeneralTabClicked);
+	connect(ui.buttonAdvanced, &QPushButton::clicked, this, &AppPropertiesDialog::onAdvancedTabClicked);
 	connect(ui.buttonAppearance, &QPushButton::clicked, this, &AppPropertiesDialog::onAppearanceTabClicked);
 	connect(ui.buttonSession, &QPushButton::clicked, this, &AppPropertiesDialog::onSessionTabClicked);
 	connect(ui.buttonSources, &QPushButton::clicked, this, &AppPropertiesDialog::onSourcesTabClicked);
 	connect(ui.buttonKeybinds, &QPushButton::clicked, this, &AppPropertiesDialog::onKeybindsTabClicked);
 	connect(ui.buttonAccessibility, &QPushButton::clicked, this, &AppPropertiesDialog::onAccessibilityTabClicked);
-	connect(ui.buttonAdvanced, &QPushButton::clicked, this, &AppPropertiesDialog::onAdvancedTabClicked);
 	onGeneralTabClicked(); // Default to general tab
 
-	/// GENERAL TAB SETUP
 	connect(ui.buttonBox, &QDialogButtonBox::clicked, this, &AppPropertiesDialog::onButtonBoxClicked);
-	
+
+	/// GENERAL TAB SETUP
+	connect(ui.checkboxCloseToTray, &QCheckBox::toggled, &m_settingsController, &SettingsController::setCloseToTray);
+	connect(ui.checkboxCheckForUpdates, &QCheckBox::toggled, &m_settingsController, &SettingsController::setCheckForUpdatesOnStartup);
+	connect(ui.dropdownLanguage, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setLanguage);
+
+	/// ADVANCED TAB SETUP
+	connect(ui.checkboxLogging, &QCheckBox::toggled, &m_settingsController, &SettingsController::setEnableLogging);
+	connect(ui.checkboxDebug, &QCheckBox::toggled, &m_settingsController, &SettingsController::setEnableDebugMode);
+
+	/// SESSION TAB SETUP
+	connect(ui.dirPickerRecording, &QDirectoryPickerWidget::directoryChanged, &m_settingsController, &SettingsController::setOutputDirectory);
+	connect(ui.lineRecordingPrefix, &QLineEdit::textChanged, &m_settingsController, &SettingsController::setOutputPrefix);
+	connect(ui.checkboxEnableClipping, &QCheckBox::toggled, &m_settingsController, &SettingsController::setEnableClipping);
 }
 
 AppPropertiesDialog::~AppPropertiesDialog()
@@ -33,18 +47,49 @@ void AppPropertiesDialog::onButtonBoxClicked(QAbstractButton* button)
 
 void AppPropertiesDialog::onResetClicked()
 {
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(this, tr("Reset Settings"), tr("Are you sure you want to reset settings to their previous values?"), QMessageBox::Yes | QMessageBox::No);
+	if (reply == QMessageBox::No) return;
+
 	// TODO: Reset settings to previous
+
+	loadSettingsIntoUi();
 }
 
 void AppPropertiesDialog::onRestoreDefaultsClicked()
 {
-	// TODO: Restore default settings
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(this, tr("Restore Default Settings"), tr("Are you sure you want to reset settings to their default values?"), QMessageBox::Yes | QMessageBox::No);
+	if (reply == QMessageBox::No) return;
+
+	m_settingsController.restoreDefaultSettings();
+	m_settingsController.saveSettings();
+	m_uiSettingsController.restoreDefaultSettings();
+	m_uiSettingsController.saveSettings();
+	loadSettingsIntoUi();
 }
 
 void AppPropertiesDialog::onApplyClicked()
 {
-	// TODO: Apply settings changes
+	m_settingsController.saveSettings();
+	m_uiSettingsController.saveSettings();
 	accept();
 }
 
-
+void AppPropertiesDialog::loadSettingsIntoUi()
+{
+	// General tab
+	GeneralSettings generalSettings = m_settingsController.generalSettings();
+	ui.checkboxCloseToTray->setChecked(generalSettings.closeToTray);
+	ui.checkboxCheckForUpdates->setChecked(generalSettings.checkForUpdatesOnStartup);
+	ui.dropdownLanguage->setCurrentText(QString::fromStdString(generalSettings.language));
+	// Advanced tab
+	AdvancedSettings advancedSettings = m_settingsController.advancedSettings();
+	ui.checkboxLogging->setChecked(advancedSettings.enableLogging);
+	ui.checkboxDebug->setChecked(advancedSettings.enableDebugMode);
+	// Session tab
+	SessionSettings sessionSettings = m_settingsController.sessionSettings();
+	ui.dirPickerRecording->setSelectedDirectory(sessionSettings.outputDirectory);
+	ui.lineRecordingPrefix->setText(QString::fromStdString(sessionSettings.outputPrefix));
+	ui.checkboxEnableClipping->setChecked(sessionSettings.enableClipping);
+}

@@ -6,7 +6,6 @@ SettingsController::SettingsController(QSettings& settings, QObject* parent)
 	// Initialize default settings
 	m_defaultGeneralSettings = GeneralSettings();
 	m_defaultAdvancedSettings = AdvancedSettings();
-	m_defaultSourceSettings = SourceSettings();
 	m_defaultSessionSettings = SessionSettings();
 }
 
@@ -24,13 +23,13 @@ void SettingsController::loadSettings()
 	m_generalSettings.language = m_settings.value("general/language", QString::fromStdString(m_defaultGeneralSettings.language)).toString().toStdString();
 
 	// Advanced settings
-	// TODO: Load advanced settings here
-
-	// Source settings
-	// TODO: Load source settings here
+	m_advancedSettings.enableLogging = m_settings.value("advanced/enableLogging", m_defaultAdvancedSettings.enableLogging).toBool();
+	m_advancedSettings.enableDebugMode = m_settings.value("advanced/enableDebugMode", m_defaultAdvancedSettings.enableDebugMode).toBool();
 
 	// Session settings
-	// TODO: Load session settings here
+	m_sessionSettings.outputDirectory = QDir(m_settings.value("session/outputDirectory", m_defaultSessionSettings.outputDirectory.absolutePath()).toString());
+	m_sessionSettings.outputPrefix = m_settings.value("session/outputPrefix", QString::fromStdString(m_defaultSessionSettings.outputPrefix)).toString().toStdString();
+	m_sessionSettings.enableClipping = m_settings.value("session/enableClipping", m_defaultSessionSettings.enableClipping).toBool();
 
 	m_settings.endGroup();
 }
@@ -45,13 +44,13 @@ void SettingsController::saveSettings()
 	m_settings.setValue("general/language", QString::fromStdString(m_generalSettings.language));
 
 	// Advanced settings
-	// TODO
-
-	// Source settings
-	// TODO
+	m_settings.setValue("advanced/enableLogging", m_advancedSettings.enableLogging);
+	m_settings.setValue("advanced/enableDebugMode", m_advancedSettings.enableDebugMode);
 
 	// Session settings
-	// TODO
+	m_settings.setValue("session/outputDirectory", m_sessionSettings.outputDirectory.absolutePath());
+	m_settings.setValue("session/outputPrefix", QString::fromStdString(m_sessionSettings.outputPrefix));
+	m_settings.setValue("session/enableClipping", m_sessionSettings.enableClipping);
 
 	m_settings.endGroup();
 }

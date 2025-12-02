@@ -40,9 +40,6 @@
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="windows\MainWindow\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -85,9 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h">
@@ -147,9 +141,6 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="windows\MainWindow\MainWindow.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui">

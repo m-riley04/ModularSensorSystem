@@ -2,22 +2,25 @@
 
 #include <QObject>
 #include <QSettings>
+#include <QDir>
+#include <QCoreApplication>
 
 constexpr const char* MSS_SETTINGS_GROUP_BACKEND = "core";
 
 struct AdvancedSettings
 {
-
-};
-
-struct SourceSettings
-{
-
+	bool enableLogging = false;
+	bool enableDebugMode = false;
 };
 
 struct SessionSettings
 {
-	
+	// Recording settings
+	QDir outputDirectory = QCoreApplication::applicationDirPath() + "/recordings";
+	std::string outputPrefix = "session_";
+
+	// Clipping settings
+	bool enableClipping = false;
 };
 
 struct GeneralSettings
@@ -37,27 +40,46 @@ public:
 
 	GeneralSettings generalSettings() const { return m_generalSettings; }
 	AdvancedSettings advancedSettings() const { return m_advancedSettings; }
-	SourceSettings sourceSettings() const { return m_sourceSettings; }
 	SessionSettings sessionSettings() const { return m_sessionSettings; }
-
-	void setGeneralSettings(const GeneralSettings& settings) { m_generalSettings = settings; }
-	void setAdvancedSettings(const AdvancedSettings& settings) { m_advancedSettings = settings; }
-	void setSourceSettings(const SourceSettings& settings) { m_sourceSettings = settings; }
-	void setSessionSettings(const SessionSettings& settings) { m_sessionSettings = settings; }
 
 public slots:
 	void loadSettings();
 	void saveSettings();
+	void restoreDefaultSettings() {
+		restoreDefaultGeneralSettings();
+		restoreDefaultAdvancedSettings();
+		restoreDefaultSessionSettings();
+	}
+
+	// General settings setters
+	void setGeneralSettings(const GeneralSettings& settings) { m_generalSettings = settings; }
+	void setCloseToTray(bool closeToTray) { m_generalSettings.closeToTray = closeToTray; }
+	void setCheckForUpdatesOnStartup(bool check) { m_generalSettings.checkForUpdatesOnStartup = check; }
+	void setLanguage(const QString& language) { m_generalSettings.language = language.toStdString(); }
+
+	// Session settings setters
+	void setSessionSettings(const SessionSettings& settings) { m_sessionSettings = settings; }
+	void setOutputDirectory(const QDir& dir) { m_sessionSettings.outputDirectory = dir; }
+	void setOutputPrefix(const QString& prefix) { m_sessionSettings.outputPrefix = prefix.toStdString(); }
+	void setEnableClipping(bool enabled) { m_sessionSettings.enableClipping = enabled; }
+
+	// Advanced settings setters
+	void setAdvancedSettings(const AdvancedSettings& settings) { m_advancedSettings = settings; }
+	void setEnableLogging(bool enabled) { m_advancedSettings.enableLogging = enabled; }
+	void setEnableDebugMode(bool enabled) { m_advancedSettings.enableDebugMode = enabled; }
+
+private:
+	void restoreDefaultGeneralSettings() { m_generalSettings = m_defaultGeneralSettings; }
+	void restoreDefaultAdvancedSettings() { m_advancedSettings = m_defaultAdvancedSettings; }
+	void restoreDefaultSessionSettings() { m_sessionSettings = m_defaultSessionSettings; }
 
 private:
 	QSettings& m_settings;
 	GeneralSettings m_generalSettings;
 	AdvancedSettings m_advancedSettings;
-	SourceSettings m_sourceSettings;
 	SessionSettings m_sessionSettings;
 
 	GeneralSettings m_defaultGeneralSettings;
 	AdvancedSettings m_defaultAdvancedSettings;
-	SourceSettings m_defaultSourceSettings;
 	SessionSettings m_defaultSessionSettings;
 };

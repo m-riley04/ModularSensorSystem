@@ -2,8 +2,8 @@
 #include "widgets/DockableElementsManagerWidget/dockableelementsmanagerwidget.h"
 #include <algorithm>
 
-AppActionController::AppActionController(AppActions* actions, MainController& c, QWidget* parentWidget, QObject* parent)
-    : QObject(parent), m_controller(c), m_parentWidget(parentWidget)
+AppActionController::AppActionController(AppActions* actions, UiSettingsController& uisc, MainController& c, QWidget* parentWidget, QObject* parent)
+    : QObject(parent), m_uiSettingsController(uisc), m_controller(c), m_parentWidget(parentWidget)
 {
 	// Load actions
     m_actions = *actions;
@@ -33,7 +33,6 @@ void AppActionController::initActionSignals()
     connect(m_sessionActions.toggleSession, &QAction::triggered, this, &AppActionController::onToggleSession);
     connect(m_sessionActions.restartSession, &QAction::triggered, &m_controller.sessionController(), &SessionController::restartSession);
     connect(m_sessionActions.toggleRecording, &QAction::triggered, this, &AppActionController::onToggleRecording);
-    connect(m_sessionActions.openSessionProperties, &QAction::triggered, this, &AppActionController::onOpenSessionProperties);
     connect(m_sessionActions.clipSession, &QAction::triggered, this, &AppActionController::onClipSession);
 
     // Mounts
@@ -167,7 +166,7 @@ void AppActionController::onPresetElementSelected(QListWidgetItem* current, QLis
 }
 
 void AppActionController::onOpenAppPropertiesDialog() {
-    AppPropertiesDialog* appPropertiesDialog = new AppPropertiesDialog(m_controller.settingsController(), m_parentWidget);
+    AppPropertiesDialog* appPropertiesDialog = new AppPropertiesDialog(m_controller.settingsController(), m_uiSettingsController, m_parentWidget);
     appPropertiesDialog->setWindowModality(Qt::WindowModal);
     appPropertiesDialog->show();
 }
@@ -431,17 +430,6 @@ void AppActionController::onToggleRecording(bool checked)
 {
     if (checked) m_controller.sessionController().startRecording();
     else m_controller.sessionController().stopRecording();
-}
-
-void AppActionController::onOpenSessionProperties()
-{
-    // Create new session properties dialog
-    SessionPropertiesDialog* dialog = new SessionPropertiesDialog(&m_controller, &m_controller.sessionController().sessionProperties(), m_parentWidget);
-    connect(dialog, &SessionPropertiesDialog::settingsChanged,
-        this, [this](SessionProperties data) {
-            m_controller.sessionController().setSessionProperties(data);
-        });
-    dialog->show();
 }
 
 void AppActionController::onClipSession()

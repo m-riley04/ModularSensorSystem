@@ -6,7 +6,6 @@
 #include <QMessageBox>
 #include <qinputdialog.h>
 #include <controllers/maincontroller.hpp>
-#include <dialogs/SessionPropertiesDialog/sessionpropertiesdialog.h>
 #include <dialogs/AppPropertiesDialog/apppropertiesdialog.h>
 #include <dialogs/PluginsDialog/pluginsdialog.h>
 #include <dialogs/AddMountDialog/addmountdialog.h>
@@ -22,7 +21,7 @@ class AppActionController : public QObject
 	Q_OBJECT
 
 public:
-    AppActionController(AppActions* actions, MainController& c, QWidget* parentWidget, QObject *parent);
+    AppActionController(AppActions* actions, UiSettingsController& uisc, MainController& c, QWidget* parentWidget, QObject *parent);
 	~AppActionController();
 
 	AppActions& actions() { return m_actions; }
@@ -60,7 +59,6 @@ private slots:
 
     void onToggleSession(bool);
     void onToggleRecording(bool);
-	void onOpenSessionProperties();
     void onClipSession();
 
     void onOpenGithubRepository();
@@ -83,6 +81,7 @@ private:
 
 private:
     QWidget* m_parentWidget;
+	UiSettingsController& m_uiSettingsController;
 	MainController& m_controller;
     AppActions m_actions;
 	PresetActions m_presetActions;

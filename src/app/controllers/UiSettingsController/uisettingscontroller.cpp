@@ -3,7 +3,10 @@
 UiSettingsController::UiSettingsController(QSettings& settings, QObject *parent)
 	: QObject(parent), m_settings(settings)
 {
-
+	// Init defaults
+	m_defaultWindowSettings = WindowSettings();
+	m_defaultAccessibilitySettings = AccessibilitySettings();
+	m_defaultAppearanceSettings = AppearanceSettings();
 }
 
 UiSettingsController::~UiSettingsController()
@@ -27,4 +30,11 @@ void UiSettingsController::saveSettings()
 	m_settings.setValue("window/windowState", m_windowSettings.windowState);
 
 	m_settings.endGroup();
+}
+
+void UiSettingsController::restoreDefaultSettings()
+{
+	m_windowSettings = m_defaultWindowSettings;
+	m_appearanceSettings = m_defaultAppearanceSettings;
+	m_accessibilitySettings = m_defaultAccessibilitySettings;
 }

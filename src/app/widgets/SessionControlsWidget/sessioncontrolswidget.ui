@@ -59,19 +59,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QActionButton" name="buttonProperties">
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="whatsThis">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Properties</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QActionButton" name="buttonClip">
      <property name="toolTip">
       <string/>

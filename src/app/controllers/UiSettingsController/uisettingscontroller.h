@@ -44,11 +44,16 @@ public:
 public slots:
 	void loadSettings();
 	void saveSettings();
+	void restoreDefaultSettings();
 
 private:
 	QSettings& m_settings;
 	WindowSettings m_windowSettings;
 	AppearanceSettings m_appearanceSettings;
 	AccessibilitySettings m_accessibilitySettings;
+
+	WindowSettings m_defaultWindowSettings;
+	AppearanceSettings m_defaultAppearanceSettings;
+	AccessibilitySettings m_defaultAccessibilitySettings;
 };
 

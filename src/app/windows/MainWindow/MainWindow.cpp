@@ -41,7 +41,6 @@ AppActions MainWindow::createActions() {
         .toggleSession = ui.actionStartStopSession,
         .restartSession = ui.actionRestartSession,
         .toggleRecording = ui.actionRecord,
-        .openSessionProperties = ui.actionSessionProperties,
         .clipSession = ui.actionClipSession
     };
 
@@ -82,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Load actions into controller
     AppActions actions = createActions();
-    m_actionController = new AppActionController(&actions, m_controller, this, this);
+    m_actionController = new AppActionController(&actions, m_uiSettingsController, m_controller, this, this);
 
     // Load settings
     loadAppSettings();
@@ -161,5 +160,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
 		});
 
 	m_uiSettingsController.saveSettings();
+    m_controller.settingsController().saveSettings();
     QMainWindow::closeEvent(event);
 }
