@@ -9,87 +9,110 @@ QChaptersWidget::QChaptersWidget(QWidget *parent)
 QChaptersWidget::~QChaptersWidget()
 {}
 
-void QChaptersWidget::insertWidget(int index, QWidget* widget) {
+void QChaptersWidget::insertPage(int index, QWidget* widget) {
 	if (index < 0 || index > ui.stack->count()) return;
+	if (!widget) return;
+
 	ui.stack->insertWidget(index, widget);
-	
+
+	// Insert corresponding button
 	QPushButton* button = new QPushButton();
-	button->setText(widget->windowTitle().isEmpty() ? tr("Chapter %1").arg(index + 1) : widget->windowTitle());
+	button->setMinimumSize(QSize(0, 32)); // Minimum height for better appearance)
+	int buttonNumber = ui.layoutButtons->count() + 1;
+	button->setObjectName(
+		QStringLiteral("__qt__passive_chapterButton_%1").arg(buttonNumber) // Make it a passive button for Qt Designer
+	);
+
+	const QString title =
+		widget->windowTitle().isEmpty()
+		? tr("Chapter %1").arg(buttonNumber)
+		: widget->windowTitle();
+	button->setText(title);
+	widget->setWindowTitle(title); // Sync back to the widget
+	button->setCheckable(true);
 	ui.layoutButtons->insertWidget(index, button);
 
-
+	// Connect button click to page change
 	connect(button, &QPushButton::clicked, this, [this, widget]() {
 		int index = ui.stack->indexOf(widget);
 		setCurrentIndex(index);
 		});
 }
 
-void QChaptersWidget::addWidget(QWidget* widget) {
+void QChaptersWidget::addPage(QWidget* widget) {
 	if (!widget) return;
-	this->insertWidget(ui.stack->count(), widget);
+	this->insertPage(ui.stack->count(), widget);
 }
 
-void QChaptersWidget::removeWidget(QWidget* widget)
+void QChaptersWidget::removePage(QWidget* widget)
 {
+	if (!widget) return;
+
 	int index = ui.stack->indexOf(widget);
 	if (index == -1) return;
-	auto button = getChapterButton(index);
-	ui.stack->removeWidget(widget);
+
+	auto button = getPageButton(index);
+
+	ui.stack->removeWidget(ui.stack->widget(index));
 	ui.layoutButtons->removeWidget(button);
+
 	button->deleteLater();
-	widget->deleteLater(); // TODO: consider if this is the desired behavior
+	widget->deleteLater();
 }
 
-void QChaptersWidget::setChapterTitle(const QString& title) {
-	int index = currentIndex();
-	if (index < 0 || index >= count()) return;
-	auto button = getChapterButton(index);
-	if (!button) return;
+void QChaptersWidget::setPageTitle(const QString& title) {
+	int index = currentIndex(); if (index < 0 || index >= count()) return;
+
+	auto button = getPageButton(index); if (!button) return;
 	button->setText(title);
-	emit chapterTitleChanged(index, title);
+
+	auto page = widget(index); if (!page) return;
+	page->setWindowTitle(title);
+
+	emit pageTitleChanged(index, title);
 }
 
-void QChaptersWidget::setChapterEnabled(int index, bool enabled) {
+void QChaptersWidget::setPageEnabled(int index, bool enabled) {
 	if (index < 0 || index >= count()) return;
-	auto button = getChapterButton(index);
+	auto button = getPageButton(index);
 	if (!button) return;
 	button->setEnabled(enabled);
 }
 
-void QChaptersWidget::setChapterVisible(int index, bool visible) {
+void QChaptersWidget::setPageVisible(int index, bool visible) {
 	if (index < 0 || index >= count()) return;
-	auto button = getChapterButton(index);
+	auto button = getPageButton(index);
 	if (!button) return;
 	button->setVisible(visible);
 }
 
-void QChaptersWidget::setChapterIcon(int index, const QIcon& icon) {
+void QChaptersWidget::setPageIcon(int index, const QIcon& icon) {
 	if (index < 0 || index >= count()) return;
-	auto button = getChapterButton(index);
+	auto button = getPageButton(index);
 	if (!button) return;
 	button->setIcon(icon);
 }
 
-QString QChaptersWidget::chapterTitle() const {
+QString QChaptersWidget::pageTitle() const {
 	int index = currentIndex();
 	if (index < 0 || index >= count()) return QString();
-	auto button = getChapterButton(index);
+	auto button = getPageButton(index);
 	if (!button) return QString();
 	return button->text();
 }
 
-bool QChaptersWidget::isChapterEnabled() const {
+bool QChaptersWidget::isPageEnabled() const {
 	int index = currentIndex();
 	if (index < 0 || index >= count()) return false;
-	auto button = getChapterButton(index);
+	auto button = getPageButton(index);
 	if (!button) return false;
 	return button->isEnabled();
 }
 
-bool QChaptersWidget::isChapterVisible() const {
+bool QChaptersWidget::isPageVisible() const {
 	int index = currentIndex();
 	if (index < 0 || index >= count()) return false;
-	auto button = getChapterButton(index);
+	auto button = getPageButton(index);
 	if (!button) return false;
 	return button->isVisible();
 }
@@ -99,10 +122,30 @@ void QChaptersWidget::setCurrentIndex(int index) {
 	if (index == currentIndex()) return;
 
 	ui.stack->setCurrentWidget(ui.stack->widget(index));
+	ui.labelTitle->setText(pageTitle());
+	updateButtonStates(index);
 	emit currentIndexChanged(index);
 }
 
-QPushButton* QChaptersWidget::getChapterButton(int index) const {
+void QChaptersWidget::setPageTitleVisible(bool visible)
+{
+	if (m_pageTitleVisible == visible) return;
+	m_pageTitleVisible = visible;
+	ui.labelTitle->setVisible(visible); // TODO/CONSIDER: maybe hide label per page instead?
+	emit pageTitleVisibleChanged(currentIndex(), visible);
+}
+
+QPushButton* QChaptersWidget::getPageButton(int index) const {
 	if (index < 0 || index >= count()) return nullptr;
 	return qobject_cast<QPushButton*>(ui.layoutButtons->itemAt(index)->widget());
+}
+
+void QChaptersWidget::updateButtonStates(int checkedIndex)
+{
+	// Undo checks on all buttons except the checked one
+	for (int i = 0; i < ui.layoutButtons->count(); ++i) {
+		auto button = qobject_cast<QPushButton*>(ui.layoutButtons->itemAt(i)->widget());
+		if (!button) continue;
+		button->setChecked(i == checkedIndex);
+	}
 }

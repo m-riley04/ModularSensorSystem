@@ -6,11 +6,11 @@
 #include <QMessageBox>
 #include <qinputdialog.h>
 #include <controllers/maincontroller.hpp>
-#include <dialogs/AppPropertiesDialog/apppropertiesdialog.h>
 #include <dialogs/PluginsDialog/pluginsdialog.h>
 #include <dialogs/AddMountDialog/addmountdialog.h>
 #include <dialogs/AddSourceDialog/addsourcedialog.h>
 #include <dialogs/AddProcessorDialog/addprocessordialog.h>
+#include <dialogs/AppSettingsDialog/appsettingsdialog.h>
 #include "action_containers.h"
 
 // Forward declarations

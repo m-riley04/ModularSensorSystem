@@ -8,7 +8,6 @@
 #endif
 
 #include <utils/debug.hpp>
-#include <dialogs/AppPropertiesDialog/apppropertiesdialog.h>
 
 AppActions MainWindow::createActions() {
     PresetActions* presetActions = new PresetActions{

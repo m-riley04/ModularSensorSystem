@@ -7,7 +7,7 @@ QChaptersWidgetExtension::QChaptersWidgetExtension(QChaptersWidget* widget, QObj
 void QChaptersWidgetExtension::addWidget(QWidget* page)
 {
 	if (!m_chaptersWidget) return;
-	m_chaptersWidget->addWidget(page);
+	m_chaptersWidget->addPage(page);
 }
 
 bool QChaptersWidgetExtension::canAddWidget() const
@@ -35,19 +35,20 @@ int QChaptersWidgetExtension::currentIndex() const
 void QChaptersWidgetExtension::insertWidget(int index, QWidget* widget)
 {
     if (!m_chaptersWidget) return;
-    m_chaptersWidget->insertWidget(index, widget);
+    m_chaptersWidget->insertPage(index, widget);
 }
 
 void QChaptersWidgetExtension::remove(int index)
 {
     if (!m_chaptersWidget) return;
     auto page = m_chaptersWidget->widget(index);
-    if (page) m_chaptersWidget->removeWidget(page);
+    if (page) m_chaptersWidget->removePage(page);
 }
 
 void QChaptersWidgetExtension::setCurrentIndex(int index)
 {
-    if (m_chaptersWidget) m_chaptersWidget->setCurrentIndex(index);
+    if (!m_chaptersWidget) return;
+    m_chaptersWidget->setCurrentIndex(index);
 }
 
 QWidget* QChaptersWidgetExtension::widget(int index) const

@@ -30,8 +30,7 @@ public:
 public slots:
     void currentIndexChanged(int index);
 	void pageTitleChanged(int index, const QString& title);
-
-	
+	void pageTitleVisibleChanged(int index, bool visible);
 
 private:
     bool initialized = false;

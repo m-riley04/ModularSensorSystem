@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\app;$(SolutionDir)src\core\include;$(SolutionDir)src\widgets;$(SolutionDir)src\widgets\$(QtIntDir)uic\;$(SolutionDir)src\widgets\widgets\QActionButton;$(SolutionDir)src\widgets\widgets\QDirectoryPickerWidget;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\app;$(SolutionDir)src\core\include;$(SolutionDir)src\widgets;$(SolutionDir)src\widgets\$(QtIntDir)uic\;$(SolutionDir)src\widgets\widgets\QActionButton;$(SolutionDir)src\widgets\widgets\QDirectoryPickerWidget;$(SolutionDir)src\widgets\widgets\QChaptersWidget;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSFrontendWidgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -118,7 +118,6 @@
     <ClCompile Include="dialogs\AddMountDialog\addmountdialog.cpp" />
     <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp" />
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
-    <ClCompile Include="dialogs\AppPropertiesDialog\apppropertiesdialog.cpp" />
     <ClCompile Include="dialogs\AppSettingsDialog\appsettingsdialog.cpp" />
     <ClCompile Include="dialogs\PluginsDialog\pluginsdialog.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
@@ -131,7 +130,6 @@
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
-    <QtUic Include="dialogs\AppPropertiesDialog\apppropertiesdialog.ui" />
     <QtUic Include="dialogs\AppSettingsDialog\appsettingsdialog.ui" />
     <QtUic Include="dialogs\PluginsDialog\pluginsdialog.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
@@ -198,7 +196,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="controllers\AppActionController\appactioncontroller.h" />
-    <QtMoc Include="dialogs\AppPropertiesDialog\apppropertiesdialog.h" />
     <QtMoc Include="models\PluginListModel\pluginlistmodel.h" />
     <QtMoc Include="dialogs\PluginsDialog\pluginsdialog.h" />
     <QtMoc Include="widgets\PluginDetailsWidget\plugindetailswidget.h" />

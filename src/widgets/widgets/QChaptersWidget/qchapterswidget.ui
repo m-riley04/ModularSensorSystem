@@ -83,7 +83,26 @@
     </layout>
    </item>
    <item>
-    <widget class="QStackedWidget" name="stack"/>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="labelTitle">
+       <property name="font">
+        <font>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Chapter Title</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QStackedWidget" name="stack"/>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
