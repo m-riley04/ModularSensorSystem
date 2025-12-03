@@ -10,9 +10,9 @@ class QChaptersWidget : public QFrame
 	Q_OBJECT
 	Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
 	Q_PROPERTY(int count READ count)
-	Q_PROPERTY(QString chapterText READ chapterText)
 	Q_PROPERTY(bool chapterEnabled READ isChapterEnabled)
 	Q_PROPERTY(bool chapterVisible READ isChapterVisible)
+	Q_PROPERTY(QString chapterTitle READ chapterTitle WRITE setChapterTitle NOTIFY chapterTitleChanged)
 
 public:
 	QChaptersWidget(QWidget *parent = nullptr);
@@ -25,7 +25,7 @@ public:
 	QWidget* widget(int index) const { return ui.stack->widget(index); }
 
 	// Chapter getters
-	QString chapterText() const;
+	QString chapterTitle() const;
 	bool isChapterEnabled() const;
 	bool isChapterVisible() const;
 
@@ -38,7 +38,7 @@ public slots:
 	void removeWidget(QWidget* widget);
 
 	// Chapter setters
-	void setChapterText(int index, const QString& text);
+	void setChapterTitle(const QString& title);
 	void setChapterEnabled(int index, bool enabled);
 	void setChapterVisible(int index, bool visible);
 	void setChapterIcon(int index, const QIcon& icon);

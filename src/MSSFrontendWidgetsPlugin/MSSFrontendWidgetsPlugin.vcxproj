@@ -116,6 +116,7 @@
   <ItemGroup>
     <ClCompile Include="..\widgets\widgets\QChaptersWidget\qchapterswidget.cpp" />
     <ClCompile Include="..\widgets\widgets\QDirectoryPickerWidget\qdirectorypickerwidget.cpp" />
+    <ClCompile Include="plugins\QActionButtonPlugin\qactionbuttonplugin.cpp" />
     <ClCompile Include="plugins\QChaptersWidgetPlugin\qchapterswidgetextension.cpp" />
     <ClCompile Include="plugins\QChaptersWidgetPlugin\qchapterswidgetextensionfactory.cpp" />
     <ClCompile Include="plugins\QChaptersWidgetPlugin\qchapterswidgetplugin.cpp" />
@@ -150,6 +151,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="plugins\QChaptersWidgetPlugin\qchapterswidgetextensionfactory.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="plugins\QActionButtonPlugin\qactionbuttonplugin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

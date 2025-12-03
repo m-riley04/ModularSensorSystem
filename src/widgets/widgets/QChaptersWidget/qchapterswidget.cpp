@@ -40,11 +40,13 @@ void QChaptersWidget::removeWidget(QWidget* widget)
 	widget->deleteLater(); // TODO: consider if this is the desired behavior
 }
 
-void QChaptersWidget::setChapterText(int index, const QString& text) {
+void QChaptersWidget::setChapterTitle(const QString& title) {
+	int index = currentIndex();
 	if (index < 0 || index >= count()) return;
 	auto button = getChapterButton(index);
 	if (!button) return;
-	button->setText(text);
+	button->setText(title);
+	emit chapterTitleChanged(index, title);
 }
 
 void QChaptersWidget::setChapterEnabled(int index, bool enabled) {
@@ -68,7 +70,7 @@ void QChaptersWidget::setChapterIcon(int index, const QIcon& icon) {
 	button->setIcon(icon);
 }
 
-QString QChaptersWidget::chapterText() const {
+QString QChaptersWidget::chapterTitle() const {
 	int index = currentIndex();
 	if (index < 0 || index >= count()) return QString();
 	auto button = getChapterButton(index);
