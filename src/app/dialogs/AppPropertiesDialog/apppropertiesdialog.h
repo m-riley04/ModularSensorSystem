@@ -26,13 +26,13 @@ public:
 	~AppPropertiesDialog();
 
 private slots:
-	void onGeneralTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::General); }
-	void onAppearanceTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Appearance); }
-	void onSessionTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Session); }
-	void onPluginsTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Plugins); }
-	void onKeybindsTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Keybinds); }
-	void onAccessibilityTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Accessibility); }
-	void onAdvancedTabClicked() { ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Advanced); }
+	void onGeneralTabClicked() { resetButtonStates(); ui.buttonGeneral->setChecked(true); ui.stackedWidget->setCurrentIndex(AppPropertiesTab::General); }
+	void onAppearanceTabClicked() { resetButtonStates(); ui.buttonAppearance->setChecked(true); ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Appearance); }
+	void onSessionTabClicked() { resetButtonStates(); ui.buttonSession->setChecked(true); ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Session); }
+	void onPluginsTabClicked() { resetButtonStates(); ui.buttonPlugins->setChecked(true); ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Plugins); }
+	void onKeybindsTabClicked() { resetButtonStates(); ui.buttonKeybinds->setChecked(true); ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Keybinds); }
+	void onAccessibilityTabClicked() { resetButtonStates(); ui.buttonAccessibility->setChecked(true); ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Accessibility); }
+	void onAdvancedTabClicked() { resetButtonStates(); ui.buttonAdvanced->setChecked(true); ui.stackedWidget->setCurrentIndex(AppPropertiesTab::Advanced); }
 
 	void onButtonBoxClicked(QAbstractButton* button);
 	void onResetClicked();
@@ -45,5 +45,6 @@ private:
 	UiSettingsController& m_uiSettingsController;
 
 	void loadSettingsIntoUi();
+	void resetButtonStates();
 };
 

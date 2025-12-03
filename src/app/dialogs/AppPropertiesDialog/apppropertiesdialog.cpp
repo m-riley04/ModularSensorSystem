@@ -96,3 +96,14 @@ void AppPropertiesDialog::loadSettingsIntoUi()
 	PluginsSettings pluginsSettings = m_settingsController.pluginsSettings();
 	ui.dirPickerPluginsRoot->setSelectedDirectory(pluginsSettings.pluginsDirectory);
 }
+
+void AppPropertiesDialog::resetButtonStates()
+{
+	ui.buttonGeneral->setChecked(false);
+	ui.buttonAdvanced->setChecked(false);
+	ui.buttonAppearance->setChecked(false);
+	ui.buttonPlugins->setChecked(false);
+	ui.buttonSession->setChecked(false);
+	ui.buttonKeybinds->setChecked(false);
+	ui.buttonAccessibility->setChecked(false);
+}
