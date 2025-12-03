@@ -37,6 +37,22 @@ void QChaptersWidget::insertPage(int index, QWidget* widget) {
 		int index = ui.stack->indexOf(widget);
 		setCurrentIndex(index);
 		});
+
+	// Connect widget title change to button text change. Basically initializes on load, because the window title is changed by uic.
+	connect(widget, &QWidget::windowTitleChanged,
+		this, [this, widget, button](const QString& newTitle) {
+			int i = ui.stack->indexOf(widget);
+			if (i < 0) return;
+
+			QString title = newTitle;
+			if (title.isEmpty())
+				title = tr("Chapter %1").arg(i + 1);
+
+			button->setText(title);
+
+			if (i == currentIndex())
+				ui.labelTitle->setText(title);
+		});
 }
 
 void QChaptersWidget::addPage(QWidget* widget) {
