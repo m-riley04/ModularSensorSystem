@@ -79,6 +79,9 @@
     <ClCompile Include="controllers\UiSettingsController\uisettingscontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogs\AppSettingsDialog\appsettingsdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -129,6 +132,9 @@
     <QtMoc Include="controllers\UiSettingsController\uisettingscontroller.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="dialogs\AppSettingsDialog\appsettingsdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
@@ -165,6 +171,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogs\AppPropertiesDialog\apppropertiesdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogs\AppSettingsDialog\appsettingsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

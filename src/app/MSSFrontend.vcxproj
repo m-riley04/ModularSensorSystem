@@ -119,6 +119,7 @@
     <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp" />
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
     <ClCompile Include="dialogs\AppPropertiesDialog\apppropertiesdialog.cpp" />
+    <ClCompile Include="dialogs\AppSettingsDialog\appsettingsdialog.cpp" />
     <ClCompile Include="dialogs\PluginsDialog\pluginsdialog.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
     <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp" />
@@ -131,6 +132,7 @@
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
     <QtUic Include="dialogs\AppPropertiesDialog\apppropertiesdialog.ui" />
+    <QtUic Include="dialogs\AppSettingsDialog\appsettingsdialog.ui" />
     <QtUic Include="dialogs\PluginsDialog\pluginsdialog.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
     <QtUic Include="widgets\PluginDetailsWidget\plugindetailswidget.ui" />
@@ -204,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controllers\AppActionController\action_containers.h" />
+    <QtMoc Include="dialogs\AppSettingsDialog\appsettingsdialog.h" />
     <QtMoc Include="controllers\UiSettingsController\uisettingscontroller.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

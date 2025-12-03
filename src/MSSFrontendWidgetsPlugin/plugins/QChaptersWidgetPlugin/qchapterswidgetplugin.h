@@ -5,14 +5,16 @@
 #include <QString>
 #include <QWidget>
 
-class QActionButtonPlugin : public QObject, public QDesignerCustomWidgetInterface
+class QChaptersWidgetPlugin : public QObject
+    , public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    explicit QActionButtonPlugin(QObject* parent = nullptr);
+    explicit QChaptersWidgetPlugin(QObject* parent = nullptr);
 
+    // Custom widget overrides
     bool isContainer() const override;
     bool isInitialized() const override;
     QIcon icon() const override;
@@ -24,6 +26,12 @@ public:
     QString whatsThis() const override;
     QWidget* createWidget(QWidget* parent) override;
     void initialize(QDesignerFormEditorInterface* core) override;
+
+public slots:
+    void currentIndexChanged(int index);
+	void pageTitleChanged(int index, const QString& title);
+
+	
 
 private:
     bool initialized = false;

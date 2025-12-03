@@ -35,35 +35,53 @@
     <QtMoc Include="..\widgets\widgets\QActionButton\qactionbutton.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="qactionbuttonplugin.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="qdirectorypickerwidgetplugin.h">
+    <QtMoc Include="plugins\QDirectoryPickerWidgetPlugin\qdirectorypickerwidgetplugin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="..\widgets\widgets\QDirectoryPickerWidget\qdirectorypickerwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="plugins\QChaptersWidgetPlugin\qchapterswidgetplugin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="plugins\QChaptersWidgetPlugin\qchapterswidgetextension.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\widgets\widgets\QChaptersWidget\qchapterswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="plugins\QChaptersWidgetPlugin\qchapterswidgetextensionfactory.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="qactionbuttonplugin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\widgets\widgets\QActionButton\qactionbutton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="qdirectorypickerwidgetplugin.cpp">
+    <ClCompile Include="plugins\QDirectoryPickerWidgetPlugin\qdirectorypickerwidgetplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\widgets\widgets\QDirectoryPickerWidget\qdirectorypickerwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="qactionbuttonplugin.json" />
+    <ClCompile Include="..\widgets\widgets\QChaptersWidget\qchapterswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plugins\QChaptersWidgetPlugin\qchapterswidgetplugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plugins\QChaptersWidgetPlugin\qchapterswidgetextension.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plugins\QChaptersWidgetPlugin\qchapterswidgetextensionfactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="..\widgets\widgets\QDirectoryPickerWidget\qdirectorypickerwidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\widgets\widgets\QChaptersWidget\qchapterswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
