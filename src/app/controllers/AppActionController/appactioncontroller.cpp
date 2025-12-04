@@ -76,6 +76,21 @@ void AppActionController::initActionSignals()
     connect(m_miscActions.generatePipelineDiagram, &QAction::triggered, this, &AppActionController::onPrintPipelineDebugClicked);
 
     // File menu
+    connect(m_miscActions.openPresetsDirectory, &QAction::triggered, [this]() {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().presetSettings().presetDirectory.absolutePath()));
+        });
+    connect(m_miscActions.openPluginsDirectory, &QAction::triggered, [this]() {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().pluginsSettings().pluginsDirectory.absolutePath()));
+		});
+    connect(m_miscActions.openLogsDirectory, &QAction::triggered, [this]() {
+		//QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().advancedSettings().logsDirectory.absolutePath()));
+		});
+    connect(m_miscActions.openAppDirectory, &QAction::triggered, [this]() {
+		QDesktopServices::openUrl(QUrl::fromLocalFile(QCoreApplication::applicationDirPath()));
+		});
+	connect(m_miscActions.openOutputDirectory, &QAction::triggered, [this]() {
+		QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().sessionSettings().outputDirectory.absolutePath()));
+		});
     connect(m_miscActions.openAppProperties, &QAction::triggered, this, &AppActionController::onOpenAppPropertiesDialog);
     connect(m_miscActions.quit, &QAction::triggered, this, &AppActionController::quit);
     connect(m_miscActions.restart, &QAction::triggered, this, &AppActionController::restart);

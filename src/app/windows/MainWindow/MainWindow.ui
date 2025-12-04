@@ -406,6 +406,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </property>
     <addaction name="actionProperties"/>
     <addaction name="separator"/>
+    <addaction name="actionOpenPresetsDirectory"/>
+    <addaction name="actionOpenPluginsDirectory"/>
+    <addaction name="actionOpenLogsDirectory"/>
+    <addaction name="actionOpenOutputDirectory"/>
+    <addaction name="actionOpenAppDirectory"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
     <addaction name="actionRestart"/>
    </widget>
@@ -584,7 +590,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Record</string>
    </property>
   </action>
-  <action name="actionOpen_Output_Directory">
+  <action name="actionOpenOutputDirectory">
    <property name="text">
     <string>Open Output Directory</string>
    </property>
@@ -926,6 +932,38 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="text">
     <string>Properties</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenAppDirectory">
+   <property name="text">
+    <string>Open App Directory</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenLogsDirectory">
+   <property name="text">
+    <string>Open Logs Directory</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenPluginsDirectory">
+   <property name="text">
+    <string>Open Plugins Directory</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenPresetsDirectory">
+   <property name="text">
+    <string>Open Presets Directory</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

@@ -51,6 +51,11 @@ AppActions MainWindow::createActions() {
     };
 
     MiscActions* miscActions = new MiscActions{
+		.openPresetsDirectory = ui.actionOpenPresetsDirectory,
+		.openPluginsDirectory = ui.actionOpenPluginsDirectory,
+        .openLogsDirectory = ui.actionOpenLogsDirectory,
+		.openAppDirectory = ui.actionOpenAppDirectory,
+		.openOutputDirectory = ui.actionOpenOutputDirectory,
         .openGithubRepository = ui.actionGitHub, // adjust to existing action name if available
         .generatePipelineDiagram = ui.actionDebugPipelineDiagram,
         .openAppProperties = ui.actionProperties,

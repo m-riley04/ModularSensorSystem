@@ -43,6 +43,11 @@ struct ViewActions {
 };
 
 struct MiscActions {
+	QAction* openPresetsDirectory;
+    QAction* openPluginsDirectory;
+    QAction* openLogsDirectory;
+    QAction* openAppDirectory;
+	QAction* openOutputDirectory;
     QAction* openGithubRepository;
     QAction* generatePipelineDiagram;
     QAction* openAppProperties;
