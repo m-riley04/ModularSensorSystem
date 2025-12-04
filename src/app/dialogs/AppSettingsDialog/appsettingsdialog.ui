@@ -32,7 +32,7 @@
    <item>
     <widget class="QChaptersWidget" name="chaptersWidget">
      <property name="pageTitle">
-      <string>General</string>
+      <string>Sources</string>
      </property>
      <widget class="QWidget" name="pageGeneral">
       <property name="windowTitle">
@@ -176,8 +176,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>321</width>
-            <height>190</height>
+            <width>634</width>
+            <height>456</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -291,8 +291,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>150</width>
-            <height>91</height>
+            <width>634</width>
+            <height>456</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -367,8 +367,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>339</width>
-            <height>347</height>
+            <width>634</width>
+            <height>456</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -523,7 +523,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>206</width>
+            <width>620</width>
             <height>509</height>
            </rect>
           </property>
@@ -679,8 +679,22 @@
               <string>Audio Sources Defaults</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_11">
-              <item row="0" column="1">
-               <widget class="QComboBox" name="dropdownSampleRate"/>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Sample Rate</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QComboBox" name="dropdownAudioEncoder"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_11">
+                <property name="text">
+                 <string>Container Format</string>
+                </property>
+               </widget>
               </item>
               <item row="1" column="0">
                <widget class="QRadioButton" name="radioButtonStereo">
@@ -692,10 +706,10 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_2">
+              <item row="1" column="1">
+               <widget class="QRadioButton" name="radioButtonMono">
                 <property name="text">
-                 <string>Sample Rate</string>
+                 <string>Mono</string>
                 </property>
                </widget>
               </item>
@@ -706,25 +720,32 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="QComboBox" name="dropdownAudioEncoder"/>
-              </item>
-              <item row="1" column="1">
-               <widget class="QRadioButton" name="radioButtonMono">
-                <property name="text">
-                 <string>Mono</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_11">
-                <property name="text">
-                 <string>Container Format</string>
-                </property>
-               </widget>
-              </item>
               <item row="2" column="1">
                <widget class="QComboBox" name="dropdownAudioContainerFormat"/>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="dropdownSampleRate">
+                <item>
+                 <property name="text">
+                  <string>44100</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>48000</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>96000</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>192000</string>
+                 </property>
+                </item>
+               </widget>
               </item>
              </layout>
             </widget>

@@ -34,15 +34,34 @@ AppSettingsDialog::AppSettingsDialog(SettingsController& sc, UiSettingsControlle
 
 	/// SOURCES TAB SETUP
 	// video sources
-	// TODO: connect resolution
+	connect(ui.spinboxVideoWidth, &QSpinBox::valueChanged, [this](int width) {
+		int height = ui.spinboxVideoHeight->value();
+		m_settingsController.setDefaultVideoResolution(QSize(width, height));
+		});
+	connect(ui.spinboxVideoHeight, &QSpinBox::valueChanged, [this](int height) {
+		int width = ui.spinboxVideoWidth->value();
+		m_settingsController.setDefaultVideoResolution(QSize(width, height));
+		});
 	connect(ui.spinboxVideoFps, &QSpinBox::valueChanged , &m_settingsController, &SettingsController::setDefaultVideoFramerate); // TODO: make sure this works with double
 	connect(ui.spinboxVideoBitrate, &QSpinBox::valueChanged, &m_settingsController, &SettingsController::setDefaultVideoBitrateKbps);
 	connect(ui.dropdownPixelFormat, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setDefaultPixelFormat);
 	connect(ui.dropdownVideoContainerFormat, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setDefaultVideoContainerFormat);
 	connect(ui.dropdownVideoEncoder, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setDefaultVideoCodec);
 	// audio sources
-	// TOOD: add sample rate connection
-	// TODO: add stereo/mono radio button connections
+	connect(ui.dropdownSampleRate, &QComboBox::currentTextChanged, [this](const QString& sampleRateStr) {
+		bool ok;
+		int sampleRate = sampleRateStr.toInt(&ok);
+		if (ok) {
+			m_settingsController.setDefaultAudioSampleRate(sampleRate);
+		}
+		});
+	connect(ui.radioButtonMono, &QRadioButton::toggled, [this](bool checked) {
+		bool stereoSelected = ui.radioButtonStereo->isChecked();
+		m_settingsController.setDefaultAudioStereo(stereoSelected);
+		});
+	connect(ui.radioButtonStereo, &QRadioButton::toggled, [this](bool checked) {
+		m_settingsController.setDefaultAudioStereo(checked);
+		});
 	connect(ui.dropdownAudioContainerFormat, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setDefaultAudioContainerFormat);
 	connect(ui.dropdownAudioEncoder, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setDefaultAudioCodec);
 
