@@ -36,8 +36,8 @@ private:
     void syncViewActionChecks();
 
     Ui::MainWindowClass ui;
+    QSettings m_appSettings;
     MainController m_controller;
     UiSettingsController m_uiSettingsController;
-    QSettings m_appSettings;
     AppActionController* m_actionController = nullptr;
 };

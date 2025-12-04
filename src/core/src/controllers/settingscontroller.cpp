@@ -12,6 +12,8 @@ SettingsController::SettingsController(QSettings& settings, QObject* parent)
 	m_defaultProcessorSettings = ProcessorSettings();
 	m_defaultPresetSettings = PresetSettings();
 	m_defaultPluginsSettings = PluginsSettings();
+
+	loadSettings();
 }
 
 SettingsController::~SettingsController()
@@ -129,4 +131,6 @@ void SettingsController::saveSettings()
 	m_settings.setValue("plugins/enabledPluginIds", m_pluginsSettings.enabledPluginIds);
 
 	m_settings.endGroup();
+
+	m_settings.sync();
 }

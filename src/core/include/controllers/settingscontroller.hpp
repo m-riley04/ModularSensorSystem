@@ -91,7 +91,7 @@ public slots:
 	void setPluginsSettings(const PluginsSettings& settings) { m_pluginsSettings = settings; }
 	void setPluginsDirectory(const QDir& dir) { m_pluginsSettings.pluginsDirectory = dir; }
 	void setEnabledPluginIds(const QStringList& ids) { m_pluginsSettings.enabledPluginIds = ids; }
-	void addEnabledPluginId(const QString& id) { m_pluginsSettings.enabledPluginIds.push_back(id); }
+	void addEnabledPluginId(const QString& id) { m_pluginsSettings.enabledPluginIds.append(id); }
 	void removeEnabledPluginId(const QString& id) {
 		m_pluginsSettings.enabledPluginIds.erase(
 			std::remove(m_pluginsSettings.enabledPluginIds.begin(), m_pluginsSettings.enabledPluginIds.end(), id),

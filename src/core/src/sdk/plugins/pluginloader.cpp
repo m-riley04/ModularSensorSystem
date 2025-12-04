@@ -25,6 +25,9 @@ void PluginRegistry::collectMetadata(const std::filesystem::path& libPath, uint3
     PluginMetadata meta; // local build
     meta.path = libPath.string();
 
+    // Replace backslashes with forward slashes for consistency
+    std::replace(meta.path.begin(), meta.path.end(), '\\', '/');
+
     try {
         // Use lightweight symbol enumeration first
         boost::dll::library_info info(libPath.string()); // Ensure the path is passed as a string
@@ -139,13 +142,12 @@ bool PluginRegistry::unload(const std::string& pluginPath) {
 void PluginRegistry::loadAll() {
     for (auto& p : m_pluginMetadata) {
 		// check if plugin is to be loaded (settings)
-        if (m_settingsController.pluginsSettings().enabledPluginIds.size() > 0) {
-            QString pluginPath = QString::fromStdString(p.path);
-            if (!m_settingsController.pluginsSettings().enabledPluginIds.contains(pluginPath)) {
-                qDebug() << "Skipping plugin '" << p.name << "' as it is not enabled in settings.";
-                continue;
-            }
-		}
+        QString pluginPath = QString::fromStdString(p.path);
+		QStringList enabledPlugins = m_settingsController.pluginsSettings().enabledPluginIds;
+        if (!enabledPlugins.contains(pluginPath)) {
+            qDebug() << "Skipping plugin '" << p.name << "' as it is not enabled in settings.";
+            continue;
+        }
 
         if (!this->load(p.path, FACTORY_API_VERSION)) {
             qDebug() << "Failed to load plugin '" << QString::fromStdString(p.name) << "'";

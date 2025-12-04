@@ -72,5 +72,5 @@ struct PresetSettings
 struct PluginsSettings
 {
 	QDir pluginsDirectory = QCoreApplication::applicationDirPath() + "/plugins";
-	QStringList enabledPluginIds = {};
+	QStringList enabledPluginIds = {""};
 };

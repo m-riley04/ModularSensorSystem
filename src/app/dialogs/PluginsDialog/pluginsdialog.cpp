@@ -105,17 +105,18 @@ void PluginsDialog::onToggleSelectedPlugin()
 	if (!m_selectedPlugin) return;
 
 	// Check current state
+	QString pluginPath = QString::fromStdString(m_selectedPlugin->path);
 	if (!m_isSelectedPluginLoaded) {
 		// Update settings
-		m_settingsController.addEnabledPluginId(QString::fromStdString(m_selectedPlugin->path));
+		m_settingsController.addEnabledPluginId(pluginPath);
 
 		// Load plugin
-		m_pluginController.loadPlugin(QString::fromStdString(m_selectedPlugin->path));
+		m_pluginController.loadPlugin(pluginPath);
 	} else {
 		// Unload plugin
-		m_pluginController.unloadPlugin(QString::fromStdString(m_selectedPlugin->path));
+		m_pluginController.unloadPlugin(pluginPath);
 
 		// Update settings
-		m_settingsController.removeEnabledPluginId(QString::fromStdString(m_selectedPlugin->path));
+		m_settingsController.removeEnabledPluginId(pluginPath);
 	}
 }
