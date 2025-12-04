@@ -5,6 +5,9 @@ AppSettingsDialog::AppSettingsDialog(SettingsController& sc, UiSettingsControlle
 {
 	ui.setupUi(this);
 
+	// Set label for settings file path
+	ui.labelSettingsFilePath->setText(m_settingsController.settings().fileName());
+
 	loadSettingsIntoUi();
 
 	connect(ui.buttonBox, &QDialogButtonBox::clicked, this, &AppSettingsDialog::onButtonBoxClicked);
@@ -159,6 +162,12 @@ void AppSettingsDialog::loadSettingsIntoUi()
 	// Plugins tab
 	PluginsSettings pluginsSettings = m_settingsController.pluginsSettings();
 	ui.dirPickerPluginsRoot->setSelectedDirectory(pluginsSettings.pluginsDirectory);
+
+	// Keybinds tab
+	KeybindingSettings keybindingSettings = m_uiSettingsController.keybindingSettings();
+	ui.keyToggleSession->setKeySequence(keybindingSettings.toggleSession);
+	ui.keyToggleRecording->setKeySequence(keybindingSettings.toggleRecording);
+	ui.keyClip->setKeySequence(keybindingSettings.clipSession);
 	
 	// Accessibility tab
 	AccessibilitySettings accessibilitySettings = m_uiSettingsController.accessibilitySettings();

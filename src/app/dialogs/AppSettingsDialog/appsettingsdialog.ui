@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>718</width>
-    <height>481</height>
+    <height>565</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
    <item>
     <widget class="QChaptersWidget" name="chaptersWidget">
      <property name="pageTitle">
-      <string>Sources</string>
+      <string>General</string>
      </property>
      <widget class="QWidget" name="pageGeneral">
       <property name="windowTitle">
@@ -65,7 +65,7 @@
             <x>0</x>
             <y>0</y>
             <width>634</width>
-            <height>412</height>
+            <height>456</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -176,8 +176,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>634</width>
-            <height>412</height>
+            <width>321</width>
+            <height>190</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -291,8 +291,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>634</width>
-            <height>412</height>
+            <width>150</width>
+            <height>91</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -367,8 +367,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>634</width>
-            <height>412</height>
+            <width>339</width>
+            <height>347</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -522,8 +522,8 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-97</y>
-            <width>620</width>
+            <y>0</y>
+            <width>206</width>
             <height>509</height>
            </rect>
           </property>
@@ -1195,6 +1195,45 @@
        </item>
       </layout>
      </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>Settings File: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelSettingsFilePath">
+        <property name="text">
+         <string>path</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>

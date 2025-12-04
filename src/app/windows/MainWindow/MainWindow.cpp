@@ -72,7 +72,7 @@ AppActions MainWindow::createActions() {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , m_appSettings(QSettings(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), QCoreApplication::applicationName()))
+    , m_appSettings(QSettings(QCoreApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat, this))
     , m_controller(MainController(m_appSettings, this))
 	, m_uiSettingsController(UiSettingsController(m_appSettings, this))
 {

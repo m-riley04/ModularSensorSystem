@@ -43,6 +43,7 @@ public:
 
 	WindowSettings windowSettings() const { return m_windowSettings; }
 	AppearanceSettings appearanceSettings() const { return m_appearanceSettings; }
+	KeybindingSettings keybindingSettings() const { return m_keybindingSettings; }
 	AccessibilitySettings accessibilitySettings() const { return m_accessibilitySettings; }
 
 public slots:

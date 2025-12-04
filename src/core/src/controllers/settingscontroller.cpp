@@ -6,10 +6,12 @@ SettingsController::SettingsController(QSettings& settings, QObject* parent)
 	// Initialize default settings
 	m_defaultGeneralSettings = GeneralSettings();
 	m_defaultAdvancedSettings = AdvancedSettings();
-	m_defaultPresetSettings = PresetSettings();
 	m_defaultSessionSettings = SessionSettings();
+	m_defaultSourcesSettings = SourcesSettings();
+	m_defaultMountSettings = MountSettings();
+	m_defaultProcessorSettings = ProcessorSettings();
+	m_defaultPresetSettings = PresetSettings();
 	m_defaultPluginsSettings = PluginsSettings();
-
 }
 
 SettingsController::~SettingsController()
