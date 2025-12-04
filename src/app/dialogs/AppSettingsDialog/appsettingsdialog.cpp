@@ -18,10 +18,50 @@ AppSettingsDialog::AppSettingsDialog(SettingsController& sc, UiSettingsControlle
 	connect(ui.checkboxLogging, &QCheckBox::toggled, &m_settingsController, &SettingsController::setEnableLogging);
 	connect(ui.checkboxDebug, &QCheckBox::toggled, &m_settingsController, &SettingsController::setEnableDebugMode);
 
+	/// APPEARANCE TAB SETUP
+
 	/// SESSION TAB SETUP
+	connect(ui.checkboxConfirmStopSession, &QCheckBox::toggled, &m_settingsController, &SettingsController::setConfirmOnStopSession);
+	connect(ui.checkboxConfirmStopRecording, &QCheckBox::toggled, &m_settingsController, &SettingsController::setConfirmOnStopRecording);
 	connect(ui.dirPickerRecording, &QDirectoryPickerWidget::directoryChanged, &m_settingsController, &SettingsController::setOutputDirectory);
 	connect(ui.lineRecordingPrefix, &QLineEdit::textChanged, &m_settingsController, &SettingsController::setOutputPrefix);
+	connect(ui.checkboxOverwrite, &QCheckBox::toggled, &m_settingsController, &SettingsController::setOverwriteExistingFiles);
+	connect(ui.checkboxAllowSpaces, &QCheckBox::toggled, &m_settingsController, &SettingsController::setAllowSpacesInFilenames);
 	connect(ui.checkboxEnableClipping, &QCheckBox::toggled, &m_settingsController, &SettingsController::setEnableClipping);
+
+	/// SOURCES TAB SETUP
+	// video sources
+	// TODO: connect resolution
+	connect(ui.spinboxVideoFps, &QSpinBox::valueChanged , &m_settingsController, &SettingsController::setDefaultVideoFramerate); // TODO: make sure this works with double
+	connect(ui.spinboxVideoBitrate, &QSpinBox::valueChanged, &m_settingsController, &SettingsController::setDefaultVideoBitrateKbps);
+	connect(ui.dropdownPixelFormat, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setDefaultPixelFormat);
+	connect(ui.dropdownVideoContainerFormat, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setDefaultVideoContainerFormat);
+	connect(ui.dropdownVideoEncoder, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setDefaultVideoCodec);
+	// audio sources
+	// TOOD: add sample rate connection
+	// TODO: add stereo/mono radio button connections
+	connect(ui.dropdownAudioContainerFormat, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setDefaultAudioContainerFormat);
+	connect(ui.dropdownAudioEncoder, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setDefaultAudioCodec);
+
+	/// MOUNTS TAB SETUP
+	// TODO
+
+	/// PROCESSORS TAB SETUP
+	// TODO
+
+	/// PRESETS TAB SETUP
+	connect(ui.dirPickerPresets, &QDirectoryPickerWidget::directoryChanged, &m_settingsController, &SettingsController::setPresetDirectory);
+
+	/// PLUGINS TAB SETUP
+	connect(ui.dirPickerPluginsRoot, &QDirectoryPickerWidget::directoryChanged, &m_settingsController, &SettingsController::setPluginsDirectory);
+
+	/// KEYBINDS TAB SETUP
+	connect(ui.keyToggleSession, &QKeySequenceEdit::keySequenceChanged, &m_uiSettingsController, &UiSettingsController::setToggleSessionKeybinding);
+	connect(ui.keyToggleRecording, &QKeySequenceEdit::keySequenceChanged, &m_uiSettingsController, &UiSettingsController::setToggleRecordingKeybinding);
+	connect(ui.keyClip, &QKeySequenceEdit::keySequenceChanged, &m_uiSettingsController, &UiSettingsController::setClipSessionKeybinding);
+
+	/// ACCESSIBILITY TAB SETUP
+	// TODO
 }
 
 AppSettingsDialog::~AppSettingsDialog()
@@ -73,16 +113,54 @@ void AppSettingsDialog::loadSettingsIntoUi()
 	ui.checkboxCloseToTray->setChecked(generalSettings.closeToTray);
 	ui.checkboxCheckForUpdates->setChecked(generalSettings.checkForUpdatesOnStartup);
 	ui.dropdownLanguage->setCurrentText(generalSettings.language);
+
 	// Advanced tab
 	AdvancedSettings advancedSettings = m_settingsController.advancedSettings();
 	ui.checkboxLogging->setChecked(advancedSettings.enableLogging);
 	ui.checkboxDebug->setChecked(advancedSettings.enableDebugMode);
+
+	// Appearance tab
+	AppearanceSettings appearanceSettings = m_uiSettingsController.appearanceSettings();
+
 	// Session tab
 	SessionSettings sessionSettings = m_settingsController.sessionSettings();
+	ui.checkboxConfirmStopSession->setChecked(sessionSettings.confirmOnStopSession);
+	ui.checkboxConfirmStopRecording->setChecked(sessionSettings.confirmOnStopRecording);
 	ui.dirPickerRecording->setSelectedDirectory(sessionSettings.outputDirectory);
 	ui.lineRecordingPrefix->setText(sessionSettings.outputPrefix);
+	ui.checkboxOverwrite->setChecked(sessionSettings.overwriteExistingFiles);
+	ui.checkboxAllowSpaces->setChecked(sessionSettings.allowSpacesInFilenames);
 	ui.checkboxEnableClipping->setChecked(sessionSettings.enableClipping);
+
+	// Sources tab
+	SourcesSettings sourcesSettings = m_settingsController.sourcesSettings();
+	// TODO: set resolution fields
+	ui.spinboxVideoBitrate->setValue(sourcesSettings.defaultVideoBitrateKbps);
+	ui.spinboxVideoFps->setValue(static_cast<int>(sourcesSettings.defaultVideoFramerate)); // TODO: check double to int conversion
+	ui.dropdownPixelFormat->setCurrentText(sourcesSettings.defaultPixelFormat);
+	ui.dropdownVideoContainerFormat->setCurrentText(sourcesSettings.defaultVideoContainerFormat);
+	ui.dropdownVideoEncoder->setCurrentText(sourcesSettings.defaultVideoCodec);
+	ui.dropdownSampleRate->setCurrentText(QString::number(sourcesSettings.defaultAudioSampleRate));
+	// TODO: set stereo/mono radio buttons
+	ui.dropdownAudioContainerFormat->setCurrentText(sourcesSettings.defaultAudioContainerFormat);
+	ui.dropdownAudioEncoder->setCurrentText(sourcesSettings.defaultAudioCodec);
+	ui.dropdownDataFormat->setCurrentText(sourcesSettings.defaultDataFormat);
+
+	// Mounts tab
+	MountSettings mountSettings = m_settingsController.mountSettings();
+
+	// Processor tab
+	ProcessorSettings processorSettings = m_settingsController.processorSettings();
+
+	// Presets tab
+	PresetSettings presetSettings = m_settingsController.presetSettings();
+	ui.dirPickerPresets->setSelectedDirectory(presetSettings.presetDirectory);
+
 	// Plugins tab
 	PluginsSettings pluginsSettings = m_settingsController.pluginsSettings();
 	ui.dirPickerPluginsRoot->setSelectedDirectory(pluginsSettings.pluginsDirectory);
+	
+	// Accessibility tab
+	AccessibilitySettings accessibilitySettings = m_uiSettingsController.accessibilitySettings();
+
 }

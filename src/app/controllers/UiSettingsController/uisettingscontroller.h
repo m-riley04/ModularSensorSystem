@@ -14,12 +14,20 @@ struct WindowSettings
 
 struct AppearanceSettings
 {
+	QString theme = "default";
+};
 
+struct KeybindingSettings
+{
+	// Session keybindings
+	QKeySequence toggleSession = QKeySequence("Ctrl+Shift+S");
+	QKeySequence toggleRecording = QKeySequence("Ctrl+R");
+	QKeySequence clipSession = QKeySequence("Ctrl+C"); // TODO: change these defaults, they suck
 };
 
 struct AccessibilitySettings
 {
-
+	// TODO: Add accessibility-related settings here
 };
 
 /**
@@ -37,23 +45,37 @@ public:
 	AppearanceSettings appearanceSettings() const { return m_appearanceSettings; }
 	AccessibilitySettings accessibilitySettings() const { return m_accessibilitySettings; }
 
-	void setWindowSettings(const WindowSettings& settings) { m_windowSettings = settings; }
-	void setAppearanceSettings(const AppearanceSettings& settings) { m_appearanceSettings = settings; }
-	void setAccessibilitySettings(const AccessibilitySettings& settings) { m_accessibilitySettings = settings; }
-
 public slots:
 	void loadSettings();
 	void saveSettings();
 	void restoreDefaultSettings();
 
+	// Window settings setters
+	void setWindowSettings(const WindowSettings& settings) { m_windowSettings = settings; }
+
+	// Appearance settings setters
+	void setAppearanceSettings(const AppearanceSettings& settings) { m_appearanceSettings = settings; }
+	void setTheme(const QString& theme) { m_appearanceSettings.theme = theme; }
+
+	// Keybinding settings setters
+	void setKeybindingSettings(const KeybindingSettings& settings) { m_keybindingSettings = settings; }
+	void setToggleSessionKeybinding(const QKeySequence& keybinding) { m_keybindingSettings.toggleSession = keybinding; }
+	void setToggleRecordingKeybinding(const QKeySequence& keybinding) { m_keybindingSettings.toggleRecording = keybinding; }
+	void setClipSessionKeybinding(const QKeySequence& keybinding) { m_keybindingSettings.clipSession = keybinding; }
+
+	// Accessibility settings setters
+	void setAccessibilitySettings(const AccessibilitySettings& settings) { m_accessibilitySettings = settings; }
+
 private:
 	QSettings& m_settings;
 	WindowSettings m_windowSettings;
 	AppearanceSettings m_appearanceSettings;
+	KeybindingSettings m_keybindingSettings;
 	AccessibilitySettings m_accessibilitySettings;
 
 	WindowSettings m_defaultWindowSettings;
 	AppearanceSettings m_defaultAppearanceSettings;
+	KeybindingSettings m_defaultKeybindingSettings;
 	AccessibilitySettings m_defaultAccessibilitySettings;
 };
 
