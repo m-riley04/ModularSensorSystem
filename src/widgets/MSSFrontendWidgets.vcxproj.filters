@@ -43,6 +43,9 @@
     <ClCompile Include="widgets\QDirectoryPickerWidget\qdirectorypickerwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\QChaptersWidget\qchapterswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h">
@@ -57,6 +60,9 @@
     <QtMoc Include="widgets\QDirectoryPickerWidget\qdirectorypickerwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="widgets\QChaptersWidget\qchapterswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui">
@@ -69,6 +75,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\QDirectoryPickerWidget\qdirectorypickerwidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="widgets\QChaptersWidget\qchapterswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

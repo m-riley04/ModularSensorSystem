@@ -109,17 +109,20 @@
   <ItemGroup>
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
     <ClCompile Include="widgets\QActionButton\qactionbutton.cpp" />
+    <ClCompile Include="widgets\QChaptersWidget\qchapterswidget.cpp" />
     <ClCompile Include="widgets\QDirectoryPickerWidget\qdirectorypickerwidget.cpp" />
     <ClCompile Include="widgets\QDynamicGridWidget\qdynamicgridwidget.cpp" />
     <ClCompile Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.cpp" />
     <QtMoc Include="widgets\QActionButton\qactionbutton.h" />
     <QtMoc Include="widgets\QDirectoryPickerWidget\qdirectorypickerwidget.h" />
+    <QtMoc Include="widgets\QChaptersWidget\qchapterswidget.h" />
     <ClInclude Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="widgets\QDynamicGridWidget\qdynamicgridwidget.h" />
     <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\CustomTitleBar\customtitlebar.ui" />
+    <QtUic Include="widgets\QChaptersWidget\qchapterswidget.ui" />
     <QtUic Include="widgets\QDirectoryPickerWidget\qdirectorypickerwidget.ui" />
     <QtUic Include="widgets\QDynamicGridWidget\qdynamicgridwidget.ui" />
     <QtUic Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.ui" />

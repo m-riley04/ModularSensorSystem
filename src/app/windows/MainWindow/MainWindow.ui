@@ -404,6 +404,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionProperties"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
     <addaction name="actionRestart"/>
@@ -473,6 +474,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <property name="title">
      <string>Plugins</string>
     </property>
+    <addaction name="actionOpenPluginsManager"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -905,6 +907,25 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="text">
     <string>clipSession</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenPluginsManager">
+   <property name="text">
+    <string>Open Plugins Manager</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionProperties">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+   </property>
+   <property name="text">
+    <string>Properties</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

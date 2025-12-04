@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\app;$(SolutionDir)src\core\include;$(SolutionDir)src\widgets;$(SolutionDir)src\widgets\$(QtIntDir)uic\;$(SolutionDir)src\widgets\widgets\QActionButton;$(SolutionDir)src\widgets\widgets\QDirectoryPickerWidget;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\app;$(SolutionDir)src\core\include;$(SolutionDir)src\widgets;$(SolutionDir)src\widgets\$(QtIntDir)uic\;$(SolutionDir)src\widgets\widgets\QActionButton;$(SolutionDir)src\widgets\widgets\QDirectoryPickerWidget;$(SolutionDir)src\widgets\widgets\QChaptersWidget;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSCore.lib;$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSFrontendWidgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -113,19 +113,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="controllers\AppActionController\appactioncontroller.cpp" />
+    <ClCompile Include="controllers\UiSettingsController\uisettingscontroller.cpp" />
     <ClCompile Include="dialogs\AddMountDialog\addmountdialog.cpp" />
     <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp" />
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
+    <ClCompile Include="dialogs\AppSettingsDialog\appsettingsdialog.cpp" />
+    <ClCompile Include="dialogs\PluginsDialog\pluginsdialog.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
+    <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
+    <ClCompile Include="widgets\PluginDetailsWidget\plugindetailswidget.cpp" />
     <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
     <ClCompile Include="widgets\PreviewContainerWidget\previewcontainerwidget.cpp" />
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp" />
-    <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
+    <QtUic Include="dialogs\AppSettingsDialog\appsettingsdialog.ui" />
+    <QtUic Include="dialogs\PluginsDialog\pluginsdialog.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
+    <QtUic Include="widgets\PluginDetailsWidget\plugindetailswidget.ui" />
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui" />
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui" />
     <QtUic Include="widgets\PreviewContainerWidget\previewcontainerwidget.ui" />
@@ -141,12 +149,10 @@
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialogs\AddProcessorDialog\addprocessordialog.h" />
     <QtMoc Include="dialogs\AddSourceDialog\addsourcedialog.h" />
-    <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h" />
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h" />
     <QtMoc Include="widgets\PreviewContainerWidget\previewcontainerwidget.h" />
     <QtMoc Include="widgets\PresetsWidget\presetswidget.h" />
@@ -189,8 +195,16 @@
     <QtMoc Include="models\ElementTreeModel\elementtreemodel.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="data\required_actions.hpp" />
+    <QtMoc Include="controllers\AppActionController\appactioncontroller.h" />
+    <QtMoc Include="models\PluginListModel\pluginlistmodel.h" />
+    <QtMoc Include="dialogs\PluginsDialog\pluginsdialog.h" />
+    <QtMoc Include="widgets\PluginDetailsWidget\plugindetailswidget.h" />
     <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="controllers\AppActionController\action_containers.h" />
+    <QtMoc Include="dialogs\AppSettingsDialog\appsettingsdialog.h" />
+    <QtMoc Include="controllers\UiSettingsController\uisettingscontroller.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

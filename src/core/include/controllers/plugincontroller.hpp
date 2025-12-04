@@ -8,44 +8,49 @@
 #include "controllers/backendcontrollerbase.hpp"
 #include "sdk/plugins/pluginloader.hpp"
 #include "sdk/plugins/imountplugin.hpp"
+#include <string>
+#include "settingscontroller.hpp"
 
 class PluginController : public BackendControllerBase
 {
     Q_OBJECT
 
 public:
-    enum PluginType {
-        SourcePlugin,
-        ProcessorPlugin,
-        MountPlugin
-    };
+    explicit PluginController(SettingsController& settingsController, QObject* parent = nullptr);
 
-public:
-    explicit PluginController(const QString& pluginRoot, QObject* parent = nullptr);
+    void loadPlugins();
+    void unloadPlugins();
 
-    void loadPlugins(QList<PluginType> pluginType);
-    void loadPlugin(const QString& fullPath, const QString& fileName, PluginType pluginType);
+	void loadPlugin(const QString& pluginId);
+	void unloadPlugin(const QString& pluginId);
+
+	const PluginRegistry& registry() const { return m_pluginRegistry; }
 
     // Return raw pointers; nullptr when not found
     ISourcePlugin* getSourcePlugin(const QString& pluginId) const;
     IProcessorPlugin* getProcessorPlugin(const QString& pluginId) const;
     IMountPlugin* getMountPlugin(const QString& pluginId) const;
 
+	const QList<IPlugin*>& plugins() const { return m_plugins; }
     const QList<ISourcePlugin*>& sourcePlugins() const { return m_sourcePlugins; }
     const QList<IProcessorPlugin*>& processorPlugins() const { return m_processorPlugins; }
     const QList<IMountPlugin*>& mountPlugins() const { return m_mountPlugins; }
 
+public slots:
+	void rescanPlugins();
+
 private:
+	QList<IPlugin*> m_plugins;
     QList<ISourcePlugin*> m_sourcePlugins;
     QList<IProcessorPlugin*> m_processorPlugins;
     QList<IMountPlugin*> m_mountPlugins;
-    QString m_pluginRoot;
+    QDir m_pluginRoot;
+    std::vector<std::filesystem::path> m_pluginPaths;
     PluginRegistry m_pluginRegistry;
 
     void populateSourcePlugins();
     void populateProcessorPlugins();
     void populateMountPlugins();
 
-    QString pluginTypeToDirName(PluginType pluginType);
-    std::vector<std::filesystem::path> buildPluginPaths(QList<PluginType> pluginTypes);
+    std::vector<std::filesystem::path> buildPluginPaths();
 };

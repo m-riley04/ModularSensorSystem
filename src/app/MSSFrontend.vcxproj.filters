@@ -40,9 +40,6 @@
     <ClCompile Include="widgets\SessionControlsWidget\sessioncontrolswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="windows\MainWindow\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -64,12 +61,27 @@
     <ClCompile Include="dialogs\AddMountDialog\addmountdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogs\PluginsDialog\pluginsdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\PluginDetailsWidget\plugindetailswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="controllers\AppActionController\appactioncontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="controllers\UiSettingsController\uisettingscontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dialogs\AppSettingsDialog\appsettingsdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\SessionControlsWidget\sessioncontrolswidget.h">
@@ -99,6 +111,24 @@
     <QtMoc Include="dialogs\AddMountDialog\addmountdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="widgets\PluginDetailsWidget\plugindetailswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogs\PluginsDialog\pluginsdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="models\PluginListModel\pluginlistmodel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controllers\AppActionController\appactioncontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controllers\UiSettingsController\uisettingscontroller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogs\AppSettingsDialog\appsettingsdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
@@ -111,9 +141,6 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="windows\MainWindow\MainWindow.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="dialogs\SessionPropertiesDialog\sessionpropertiesdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui">
@@ -129,6 +156,15 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogs\PluginsDialog\pluginsdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="widgets\PluginDetailsWidget\plugindetailswidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogs\AppSettingsDialog\appsettingsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -189,7 +225,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="data\required_actions.hpp">
+    <ClInclude Include="controllers\AppActionController\action_containers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

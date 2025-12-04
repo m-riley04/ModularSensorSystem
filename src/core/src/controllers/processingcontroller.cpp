@@ -7,7 +7,7 @@ ProcessingController::ProcessingController(QObject *parent)
 ProcessingController::~ProcessingController()
 {}
 
-const Processor* ProcessingController::byId(const QUuid& id) const {
+Processor* ProcessingController::byId(const QUuid& id) const {
 	return mProcessorsById.value(id);
 }
 

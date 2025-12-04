@@ -4,10 +4,9 @@
 #include "ui_MainWindow.h"
 #include "controllers/maincontroller.hpp"
 #include "controllers/mountcontroller.hpp"
-#include "data/required_actions.hpp"
-
-// Forward declaration for element tree node
-struct ElementTreeNode;
+#include "dialogs/PluginsDialog/pluginsdialog.h"
+#include <controllers/AppActionController/appactioncontroller.h>
+#include <controllers/UiSettingsController/uisettingscontroller.h>
 
 class MainWindow : public QMainWindow
 {
@@ -18,49 +17,27 @@ public:
     ~MainWindow();
 
 private slots:
-    void openSavePresetDialog();
-    void onLoadPresetClicked();
-    void openDeletePresetDialog();
-    void openConfigurePresetDialog();
-    void onRefreshPresetClicked();
+	void handleSessionError(const QString& errorMessage);
 
-    void openAddMountDialog();
-    void openRemoveMountDialog();
-    void openEditMountDialog();
-
-    void openAddSourceDialog();
-    void openRemoveSourceDialog();
-    void openConfigureSourceDialog();
-
-    void openAddProcessorDialog();
-    void openRemoveProcessorDialog();
-    void openConfigureProcessorDialog();
-
-    void onSelectedElementChanged(ElementTreeNode* node);
-    void onSelectedElementRemoved();
-
-    void openGithubRepository();
-
-    void onSelectedPresetItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
-    void updateToolbarButtonsState();
-
-	void onPrintPipelineDebugClicked();
-
-public slots:
-    void quit();
-    void restart();
+protected:
+    void closeEvent(QCloseEvent* event) override;
 
 private:
+    /**
+     * @brief Creates an AppActions struct with all actions initialized from UI.
+	 * @return AppActions struct with sub-structs with action pointers.
+     */
+    AppActions createActions();
     void initWidgets();
     void initSignals();
-    void initActionSignals();
 
-    ElementTreeActions getElementTreeActions() const;
+	void loadAppSettings();
 
     void syncViewActionChecks();
 
     Ui::MainWindowClass ui;
+    QSettings m_appSettings;
     MainController m_controller;
-
-    QListWidgetItem* pSelectedPresetItem = nullptr;
+    UiSettingsController m_uiSettingsController;
+    AppActionController* m_actionController = nullptr;
 };

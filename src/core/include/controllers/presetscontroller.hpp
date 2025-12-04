@@ -11,17 +11,17 @@
 #include "presets/preset.hpp"
 #include "interfaces/capability/iconfigurablesource.hpp"
 #include "controllers/backendcontrollerbase.hpp"
+#include "controllers/settingscontroller.hpp"
 
 class PresetsController : public BackendControllerBase
 {
 	Q_OBJECT
 
 public:
-	PresetsController(const QString& dir, QObject *parent);
+	PresetsController(SettingsController& sc, QObject *parent);
 	~PresetsController();
 
 	QList<Preset> presets() const { return mPresets; }
-	QString presetsDir() const { return mPresetsDir; }
 
 	void savePreset(const QString& name, const QList<Source*>& activeSources = QList<Source*>(), const QString& dirPath = QString());
 	void loadPreset(const QString& path, SourceController& sourceController, PluginController& pluginController);
@@ -30,7 +30,8 @@ public:
 	void scanForPresets(QString presetDir = QString());
 
 private:
-	QString mPresetsDir;
+	SettingsController& m_settingsController;
+	QDir& m_presetDirectory;
 	QList<Preset> mPresets;
 
 	QJsonArray sourcePresetsToJson(const QList<SourcePreset>& sourcePresets);
