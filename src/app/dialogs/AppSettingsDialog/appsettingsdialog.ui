@@ -32,7 +32,7 @@
    <item>
     <widget class="QChaptersWidget" name="chaptersWidget">
      <property name="pageTitle">
-      <string>General</string>
+      <string>Sources</string>
      </property>
      <widget class="QWidget" name="pageGeneral">
       <property name="windowTitle">
@@ -71,12 +71,18 @@
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
             <widget class="QGroupBox" name="groupBox_5">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="title">
               <string>General</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_19">
               <item>
                <widget class="QCheckBox" name="checkboxCloseToTray">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Close to tray</string>
                 </property>
@@ -84,6 +90,9 @@
               </item>
               <item>
                <widget class="QCheckBox" name="checkboxCheckForUpdates">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Check for updates on startup</string>
                 </property>
@@ -94,12 +103,19 @@
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="title">
               <string>Translation</string>
              </property>
              <layout class="QGridLayout" name="gridLayout">
               <item row="0" column="1">
-               <widget class="QComboBox" name="dropdownLanguage"/>
+               <widget class="QComboBox" name="dropdownLanguage">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
               </item>
               <item row="0" column="0">
                <widget class="QLabel" name="label">
@@ -160,19 +176,25 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>634</width>
-            <height>412</height>
+            <width>321</width>
+            <height>190</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <widget class="QGroupBox" name="groupBox_6">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="title">
               <string>General</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_20">
               <item>
                <widget class="QCheckBox" name="checkboxDebug">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Debug</string>
                 </property>
@@ -183,6 +205,9 @@
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox_7">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="title">
               <string>Logging</string>
              </property>
@@ -206,6 +231,9 @@
               </item>
               <item row="0" column="0" colspan="2">
                <widget class="QCheckBox" name="checkboxLogging">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Logging</string>
                 </property>
@@ -270,6 +298,9 @@
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
             <widget class="QGroupBox" name="groupBox_3">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="title">
               <string>Theme</string>
              </property>
@@ -336,8 +367,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>339</width>
-            <height>465</height>
+            <width>634</width>
+            <height>412</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -347,10 +378,17 @@
               <string>General</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_4">
-              <item row="0" column="0">
-               <widget class="QCheckBox" name="checkBox">
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="checkboxConfirmStopRecording">
                 <property name="text">
-                 <string>Notify on session end</string>
+                 <string>Ask to confirm when stopping recording</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="checkboxConfirmStopSession">
+                <property name="text">
+                 <string>Ask to confirm when stopping session</string>
                 </property>
                </widget>
               </item>
@@ -363,7 +401,28 @@
               <string>Recording</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_5">
+              <item row="2" column="0" colspan="2">
+               <widget class="QCheckBox" name="checkboxOverwrite">
+                <property name="text">
+                 <string>Overwrite if file already exists</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string>Output Prefix</string>
+                </property>
+               </widget>
+              </item>
               <item row="1" column="1">
+               <widget class="QLineEdit" name="lineRecordingPrefix">
+                <property name="text">
+                 <string>session_</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
                <widget class="QDirectoryPickerWidget" name="dirPickerRecording">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -379,27 +438,17 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
-               <widget class="QLineEdit" name="lineRecordingPrefix"/>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_18">
-                <property name="text">
-                 <string>Output Prefix</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
+              <item row="0" column="0">
                <widget class="QLabel" name="label_19">
                 <property name="text">
                  <string>Output Directory</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="0" colspan="2">
-               <widget class="QCheckBox" name="checkBox_2">
+              <item row="3" column="0" colspan="2">
+               <widget class="QCheckBox" name="checkboxAllowSpaces">
                 <property name="text">
-                 <string>Notify on recording end</string>
+                 <string>Allow spaces in filename</string>
                 </property>
                </widget>
               </item>
@@ -414,209 +463,29 @@
              <layout class="QVBoxLayout" name="verticalLayout_18">
               <item>
                <widget class="QCheckBox" name="checkboxEnableClipping">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Enabled</string>
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QFrame" name="frameClipping">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::Shape::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Shadow::Raised</enum>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_8">
-                 <property name="spacing">
-                  <number>0</number>
-                 </property>
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QCheckBox" name="checkboxAutoClip">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>Auto-Clip</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frameParameters">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::Shape::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Shadow::Raised</enum>
-                   </property>
-                   <layout class="QGridLayout" name="gridLayout_2">
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <item row="2" column="1">
-                     <widget class="QSpinBox" name="spinBox_3">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="maximum">
-                       <number>999999</number>
-                      </property>
-                      <property name="value">
-                       <number>30</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="label_3">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Width</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="1">
-                     <widget class="QSpinBox" name="spinBox_2">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="maximum">
-                       <number>999999</number>
-                      </property>
-                      <property name="value">
-                       <number>1080</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QSpinBox" name="spinBox">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="maximum">
-                       <number>999999</number>
-                      </property>
-                      <property name="value">
-                       <number>1920</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="0">
-                     <widget class="QLabel" name="label_4">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Height</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="4" column="1">
-                     <widget class="QComboBox" name="dropdownPixelFormat">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="0">
-                     <widget class="QLabel" name="label_14">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>FPS</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="3" column="1">
-                     <widget class="QSpinBox" name="spinBox_4">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="maximum">
-                       <number>999999</number>
-                      </property>
-                      <property name="value">
-                       <number>2000</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="3" column="0">
-                     <widget class="QLabel" name="label_15">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Bitrate</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="5" column="0">
-                     <widget class="QLabel" name="label_16">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Encoder Codec</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="4" column="0">
-                     <widget class="QLabel" name="label_17">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Pixel Format</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="5" column="1">
-                     <widget class="QComboBox" name="dropdownEncoderCodec">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
              </layout>
             </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -653,24 +522,155 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>123</width>
-            <height>182</height>
+            <y>-65</y>
+            <width>620</width>
+            <height>477</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_25">
-           <item>
-            <widget class="QGroupBox" name="groupBox_13">
-             <property name="title">
-              <string>General</string>
-             </property>
-            </widget>
-           </item>
            <item>
             <widget class="QGroupBox" name="groupBox_14">
              <property name="title">
               <string>Video Sources</string>
              </property>
+             <layout class="QGridLayout" name="gridLayout_10">
+              <item row="6" column="0">
+               <widget class="QLabel" name="label_25">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Encoder Codec</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="1">
+               <widget class="QComboBox" name="dropdownVideoEncoder">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="spinboxVideoFps">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="maximum">
+                 <number>999999</number>
+                </property>
+                <property name="value">
+                 <number>60</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="spinboxVideoWidth">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="maximum">
+                 <number>999999</number>
+                </property>
+                <property name="value">
+                 <number>1920</number>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_26">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Pixel Format</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_22">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>FPS</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_23">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Bitrate</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QComboBox" name="dropdownPixelFormat">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="spinboxVideoHeight">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="maximum">
+                 <number>999999</number>
+                </property>
+                <property name="value">
+                 <number>1080</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_5">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Width</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_7">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Height</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QSpinBox" name="spinboxVideoBitrate">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="maximum">
+                 <number>999999</number>
+                </property>
+                <property name="value">
+                 <number>2000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>Container Format</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QComboBox" name="dropdownVideoContainerFormat"/>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
@@ -678,6 +678,52 @@
              <property name="title">
               <string>Audio Sources</string>
              </property>
+             <layout class="QGridLayout" name="gridLayout_11">
+              <item row="0" column="1">
+               <widget class="QComboBox" name="dropdownSampleRate"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QRadioButton" name="radioButtonStereo">
+                <property name="text">
+                 <string>Stereo</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Sample Rate</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>Audio Encoder</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QComboBox" name="dropdownAudioEncoder"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QRadioButton" name="radioButtonMono">
+                <property name="text">
+                 <string>Mono</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_11">
+                <property name="text">
+                 <string>Container Format</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QComboBox" name="dropdownAudioContainerFormat"/>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
@@ -736,18 +782,11 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>59</height>
+            <width>634</width>
+            <height>412</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_26">
-           <item>
-            <widget class="QGroupBox" name="groupBox_12">
-             <property name="title">
-              <string>General</string>
-             </property>
-            </widget>
-           </item>
            <item>
             <spacer name="verticalSpacer_11">
              <property name="orientation">
@@ -797,22 +836,14 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>67</height>
+            <width>634</width>
+            <height>412</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_27">
            <property name="leftMargin">
             <number>9</number>
            </property>
-           <item>
-            <widget class="QGroupBox" name="groupBox_11">
-             <property name="title">
-              <string>General</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_9"/>
-            </widget>
-           </item>
            <item>
             <spacer name="verticalSpacer_12">
              <property name="orientation">
@@ -1029,11 +1060,53 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>28</height>
+            <width>634</width>
+            <height>412</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_17">
+           <item>
+            <widget class="QGroupBox" name="groupBox_18">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="title">
+              <string>Session</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_13">
+              <item row="0" column="1">
+               <widget class="QKeySequenceEdit" name="keyToggleSession"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QKeySequenceEdit" name="keyToggleRecording"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_3">
+                <property name="text">
+                 <string>Toggle Recording</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>Toggle Session</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_10">
+                <property name="text">
+                 <string>Clip</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QKeySequenceEdit" name="keyClip"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
            <item>
             <spacer name="verticalSpacer_6">
              <property name="orientation">
