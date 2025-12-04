@@ -6,12 +6,12 @@
 #include <gst/gst.h>
 
 typedef unsigned long long ns;
-struct SessionProperties;
+struct SessionSettings;
 class Source;
 
-const QString generateSessionDirectoryPath(const SessionProperties& props, const QString suffix);
+const QString generateSessionDirectoryPath(const SessionSettings& props, const QString suffix);
 
-const QString generateSessionSourcePath(Source* src, const SessionProperties& props, const ns timestamp);
+const QString generateSessionSourcePath(Source* src, const SessionSettings& props, const ns timestamp);
 
 /**
  * @brief Sanitizes a file name to be safe for use on Windows file systems.

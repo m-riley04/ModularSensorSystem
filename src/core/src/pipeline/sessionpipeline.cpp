@@ -1,7 +1,9 @@
 #include "pipeline/sessionpipeline.hpp"
 
-SessionPipeline::SessionPipeline(SessionProperties& properties, QObject* parent)
-	: QObject(parent), m_pipeline(nullptr, &gst_object_unref), m_sessionProperties(&properties)
+SessionPipeline::SessionPipeline(SessionSettings& settings, QObject* parent)
+	: QObject(parent)
+	, m_pipeline(nullptr, &gst_object_unref)
+	, m_sessionSettings(settings)
 {
 	if (!gst_is_initialized()) {
 		gst_init(nullptr, nullptr);
@@ -54,13 +56,12 @@ static gboolean pipeline_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 	return true;
 }
 
-bool SessionPipeline::build(SessionProperties& properties, const QList<Source*>& sources, const QList<IRecordableSource*>& recordableSources)
+bool SessionPipeline::build(const QList<Source*>& sources, const QList<IRecordableSource*>& recordableSources)
 {
 	// Cleanly tear down any existing pipeline first
 	close();
 
 	// Set session properties
-	m_sessionProperties = &properties;
 	m_recordableSources = recordableSources;
 
 	// Create the main pipeline
@@ -173,8 +174,6 @@ bool SessionPipeline::cleanup()
 	// Sources ptrs list cleanup
 	m_recordableSources.clear();
 
-	// Session properties ptr cleanup
-	m_sessionProperties = nullptr;
 	return true;
 }
 
@@ -338,7 +337,7 @@ bool SessionPipeline::createAndLinkRecordBin(Source* src, GstElement* tee)
 	}
 
 	// Set sink's output directory and prefix from session properties
-	const QString outputFilePath = generateSessionSourcePath(src, *m_sessionProperties, m_lastSessionTimestamp);
+	const QString outputFilePath = generateSessionSourcePath(src, m_sessionSettings, m_lastSessionTimestamp);
 	if (outputFilePath.isEmpty()) {
 		qWarning() << "Cannot set recording file path: output file path is empty for source:" << QString::fromStdString(src->name());
 		return false;

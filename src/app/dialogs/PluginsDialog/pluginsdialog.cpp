@@ -1,7 +1,7 @@
 #include "pluginsdialog.h"
 
-PluginsDialog::PluginsDialog(PluginController& c, QWidget *parent)
-	: QDialog(parent), m_pluginController(c)
+PluginsDialog::PluginsDialog(SettingsController& sc, PluginController& pc, QWidget *parent)
+	: QDialog(parent), m_pluginController(pc), m_settingsController(sc)
 {
 	ui.setupUi(this);
 
@@ -105,9 +105,18 @@ void PluginsDialog::onToggleSelectedPlugin()
 	if (!m_selectedPlugin) return;
 
 	// Check current state
+	QString pluginPath = QString::fromStdString(m_selectedPlugin->path);
 	if (!m_isSelectedPluginLoaded) {
-		m_pluginController.loadPlugin(QString::fromStdString(m_selectedPlugin->path));
+		// Update settings
+		m_settingsController.addEnabledPluginId(pluginPath);
+
+		// Load plugin
+		m_pluginController.loadPlugin(pluginPath);
 	} else {
-		m_pluginController.unloadPlugin(QString::fromStdString(m_selectedPlugin->path));
+		// Unload plugin
+		m_pluginController.unloadPlugin(pluginPath);
+
+		// Update settings
+		m_settingsController.removeEnabledPluginId(pluginPath);
 	}
 }

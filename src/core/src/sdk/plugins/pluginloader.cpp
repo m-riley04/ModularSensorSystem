@@ -1,6 +1,12 @@
 #include "sdk/plugins/pluginloader.hpp"
 #include <algorithm>
 
+PluginRegistry::PluginRegistry(SettingsController& settingsController)
+	: m_settingsController(settingsController)
+{
+
+}
+
 void PluginRegistry::scan(const std::vector<std::filesystem::path>& dirs, uint32_t requiredApi) {
     m_pluginMetadata.clear();
     m_metadataByPath.clear();
@@ -18,6 +24,9 @@ void PluginRegistry::scanDir(const std::filesystem::path& dir, uint32_t required
 void PluginRegistry::collectMetadata(const std::filesystem::path& libPath, uint32_t requiredApi) {
     PluginMetadata meta; // local build
     meta.path = libPath.string();
+
+    // Replace backslashes with forward slashes for consistency
+    std::replace(meta.path.begin(), meta.path.end(), '\\', '/');
 
     try {
         // Use lightweight symbol enumeration first
@@ -132,6 +141,14 @@ bool PluginRegistry::unload(const std::string& pluginPath) {
 
 void PluginRegistry::loadAll() {
     for (auto& p : m_pluginMetadata) {
+		// check if plugin is to be loaded (settings)
+        QString pluginPath = QString::fromStdString(p.path);
+		QStringList enabledPlugins = m_settingsController.pluginsSettings().enabledPluginIds;
+        if (!enabledPlugins.contains(pluginPath)) {
+            qDebug() << "Skipping plugin '" << p.name << "' as it is not enabled in settings.";
+            continue;
+        }
+
         if (!this->load(p.path, FACTORY_API_VERSION)) {
             qDebug() << "Failed to load plugin '" << QString::fromStdString(p.name) << "'";
         }

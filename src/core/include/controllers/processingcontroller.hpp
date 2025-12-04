@@ -26,7 +26,7 @@ public:
 	void addProcessor(IProcessorPlugin* plugin);
 	void removeProcessor(Processor* processor);
 
-	const Processor* byId(const QUuid& id) const;
+	Processor* byId(const QUuid& id) const;
 
 private:
 	QList<Processor*> mProcessors;

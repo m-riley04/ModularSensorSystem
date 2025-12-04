@@ -1,12 +1,23 @@
 #include "controllers/plugincontroller.hpp"
 
-PluginController::PluginController(const std::string& root, QObject* parent)
-	: BackendControllerBase("PluginController", parent), m_pluginRoot(root)
+PluginController::PluginController(SettingsController& settingsController, QObject* parent)
+	: BackendControllerBase("PluginController", parent)
+	, m_pluginRegistry(settingsController)
+	, m_pluginRoot(settingsController.pluginsSettings().pluginsDirectory)
 {
-	m_pluginPaths = buildPluginPaths();
+	// Ensure m_pluginRoot is a valid absolute directory. Fallback to application plugins dir.
+	QString rootAbs = m_pluginRoot.absolutePath();
+	if (rootAbs.isEmpty() || !m_pluginRoot.exists()) {
+		QDir fallback(QCoreApplication::applicationDirPath() + "/plugins");
+		if (!fallback.exists()) {
+			fallback.mkpath(fallback.absolutePath());
+		}
+		m_pluginRoot = fallback;
+		rootAbs = m_pluginRoot.absolutePath();
+	}
 
+	m_pluginPaths = buildPluginPaths();
 	// Scan and load plugins on initialization
-	// TODO: when app settings are implemented, only load plugins that have been enabled
 	this->rescanPlugins();
 	loadPlugins();
 }
@@ -166,12 +177,19 @@ std::vector<std::filesystem::path> PluginController::buildPluginPaths()
 {
 	std::vector<std::filesystem::path> pluginPaths;
 
+	// Determine a safe root path
+	QString rootAbs = m_pluginRoot.absolutePath();
+	if (rootAbs.isEmpty()) {
+		rootAbs = QCoreApplication::applicationDirPath() + "/plugins";
+	}
+
 	// Build plugin paths based on types
-	std::filesystem::path mountsPluginsPath = m_pluginRoot + "/mounts";
-	std::filesystem::path sourcesPluginsPath = m_pluginRoot + "/sources";
-	std::filesystem::path processorsPluginsPath = m_pluginRoot + "/processors";
-	pluginPaths.push_back(mountsPluginsPath);
+	std::filesystem::path mountsPluginsPath = rootAbs.toStdString() + "/mounts";
+	std::filesystem::path sourcesPluginsPath = rootAbs.toStdString() + "/sources";
+	std::filesystem::path processorsPluginsPath = rootAbs.toStdString() + "/processors";
 	pluginPaths.push_back(sourcesPluginsPath);
 	pluginPaths.push_back(processorsPluginsPath);
+	// Optionally include mounts if they exist (won't hurt to add regardless)
+	pluginPaths.push_back(mountsPluginsPath);
 	return pluginPaths;
 }
