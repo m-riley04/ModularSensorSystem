@@ -10,10 +10,10 @@
 #include "controllers/plugincontroller.hpp"
 #include "presets/preset.hpp"
 #include "interfaces/capability/iconfigurablesource.hpp"
-#include "controllers/backendcontrollerbase.hpp"
+
 #include "controllers/settingscontroller.hpp"
 
-class PresetsController : public BackendControllerBase
+class PresetsController : public QObject
 {
 	Q_OBJECT
 

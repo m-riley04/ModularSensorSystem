@@ -1,7 +1,7 @@
 #include "controllers/presetscontroller.hpp"
 
 PresetsController::PresetsController(SettingsController& sc, QObject *parent)
-	: BackendControllerBase("PresetsController", parent), m_settingsController(sc),
+	: QObject(parent), m_settingsController(sc),
 	m_presetDirectory(sc.presetSettings().presetDirectory) // TODO: should I pass by reference or value?
 {
 	// Check if directory exists

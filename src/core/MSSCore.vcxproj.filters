@@ -160,6 +160,9 @@
     <ClCompile Include="src\controllers\settingscontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\controllers\loggingcontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="include\controllers\maincontroller.hpp">
@@ -175,9 +178,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\controllers\sourcecontroller.hpp">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="include\controllers\backendcontrollerbase.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\controllers\mountcontroller.hpp">
@@ -202,6 +202,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\controllers\settingscontroller.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\controllers\loggingcontroller.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

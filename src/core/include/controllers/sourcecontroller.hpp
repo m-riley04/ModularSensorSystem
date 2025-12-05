@@ -5,13 +5,13 @@
 #include <QPointer>
 #include <QDebug>
 #include <QUuid>
-#include "controllers/backendcontrollerbase.hpp"
+
 #include "features/processors/processor.hpp"
 #include <sdk/plugins/isourceplugin.hpp>
 #include "features/sources/source.hpp"
 #include "utils/boost_qt_conversions.hpp"
 
-class SourceController : public BackendControllerBase
+class SourceController : public QObject
 {
 	Q_OBJECT
 

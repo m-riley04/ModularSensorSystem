@@ -6,7 +6,7 @@
 #include <QJsonObject>
 #include <QThread>
 #include <QCoreApplication>
-#include "controllers/backendcontrollerbase.hpp"
+
 #include "controllers/sourcecontroller.hpp"
 #include "controllers/processingcontroller.hpp"
 #include "controllers/mountcontroller.hpp"
@@ -21,7 +21,7 @@
 
 using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
-class SessionController : public BackendControllerBase
+class SessionController : public QObject
 {
 	Q_OBJECT
 
