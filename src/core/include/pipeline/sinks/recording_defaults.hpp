@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <gst/video/videooverlay.h>
 #include "features/sources/source.hpp"
+#include <controllers/loggingcontroller.hpp>
 
 /**
  * @brief Creates a default video sink element.
@@ -23,7 +24,7 @@ inline GstElement* createDefaultVideoRecordingSink(const char* binName = nullptr
 
 	// Validate elements
 	if (!queue || !valve || !enc || !parse || !muxer || !filesink) {
-		qWarning() << "Failed to create one or more elements for default recording sink bin";
+		LoggingController::warning("Failed to create one or more elements for default recording sink bin");
 		if (queue) { gst_object_unref(queue);     queue = nullptr; }
 		if (valve) { gst_object_unref(valve);    valve = nullptr; }
 		if (enc) { gst_object_unref(enc);         enc = nullptr; }
@@ -52,7 +53,7 @@ inline GstElement* createDefaultVideoRecordingSink(const char* binName = nullptr
 
 	// Link chain
 	if (!gst_element_link_many(queue, valve, enc, parse, muxer, filesink, NULL)) {
-		qWarning() << "Failed to link queue -> valve -> encoder -> parse -> muxer -> filesink";
+		LoggingController::warning("Failed to link queue -> valve -> encoder -> parse -> muxer -> filesink");
 		gst_object_unref(bin);
 		return nullptr;
 	}
@@ -63,7 +64,7 @@ inline GstElement* createDefaultVideoRecordingSink(const char* binName = nullptr
 	gst_object_unref(inputPad);
 
 	if (!gst_element_add_pad(bin, ghostPad)) {
-		qWarning() << "Failed to create sink ghost pad for default recording sink bin";
+		LoggingController::warning("Failed to create sink ghost pad for default recording sink bin");
 		gst_object_unref(bin);
 		return nullptr;
 	}
@@ -82,7 +83,7 @@ inline GstElement* createDefaultAudioRecordingSink(const char* binName = nullptr
 
 	// Validate elements
 	if (!queue || !valve || !enc || !filesink) {
-		qWarning() << "Failed to create one or more elements for default recording sink bin";
+		LoggingController::warning("Failed to create one or more elements for default recording sink bin");
 		if (queue) { gst_object_unref(queue);      queue = nullptr; }
 		if (valve) { gst_object_unref(valve);    valve = nullptr; }
 		if (enc) { gst_object_unref(enc);         enc = nullptr; }
@@ -101,7 +102,7 @@ inline GstElement* createDefaultAudioRecordingSink(const char* binName = nullptr
 
 	// Link chain
 	if (!gst_element_link_many(queue, valve, enc, filesink, NULL)) {
-		qWarning() << "Failed to link queue -> valve -> encoder -> filesink";
+		LoggingController::warning("Failed to link queue -> valve -> encoder -> filesink");
 		gst_object_unref(bin);
 		return nullptr;
 	}
@@ -112,7 +113,7 @@ inline GstElement* createDefaultAudioRecordingSink(const char* binName = nullptr
 	gst_object_unref(inputPad);
 
 	if (!gst_element_add_pad(bin, ghostPad)) {
-		qWarning() << "Failed to create sink ghost pad for default recording sink bin";
+		LoggingController::warning("Failed to create sink ghost pad for default recording sink bin");
 		gst_object_unref(bin);
 		return nullptr;
 	}
@@ -131,7 +132,7 @@ inline GstElement* createDefaultDataRecordingSink(const char* binName = nullptr)
 
 	// Validate elements
 	if (!queue || !valve || !filesink) {
-		qWarning() << "Failed to create one or more elements for default recording sink bin";
+		LoggingController::warning("Failed to create one or more elements for default recording sink bin");
 		if (queue) { gst_object_unref(queue);      queue = nullptr; }
 		if (valve) { gst_object_unref(valve);    valve = nullptr; }
 		if (filesink) { gst_object_unref(filesink); filesink = nullptr; }
@@ -149,7 +150,7 @@ inline GstElement* createDefaultDataRecordingSink(const char* binName = nullptr)
 
 	// Link chain
 	if (!gst_element_link_many(queue, valve, filesink, NULL)) {
-		qWarning() << "Failed to link queue -> valve -> filesink";
+		LoggingController::warning("Failed to link queue -> valve -> filesink");
 		gst_object_unref(bin);
 		return nullptr;
 	}
@@ -160,7 +161,7 @@ inline GstElement* createDefaultDataRecordingSink(const char* binName = nullptr)
 	gst_object_unref(inputPad);
 
 	if (!gst_element_add_pad(bin, ghostPad)) {
-		qWarning() << "Failed to create sink ghost pad for default recording sink bin";
+		LoggingController::warning("Failed to create sink ghost pad for default recording sink bin");
 		gst_object_unref(bin);
 		return nullptr;
 	}
@@ -177,7 +178,7 @@ inline GstElement* createDefaultRecordingSink(Source::Type type, const char* bin
 	case Source::Type::DATA:
 		return createDefaultDataRecordingSink(binName);
 	default:
-		qWarning() << "No default recording sink available for the given source type.";
+		LoggingController::warning("No default recording sink available for the given source type.");
 		return nullptr;
 	}
 }

@@ -27,7 +27,7 @@ public:
 		}
 
 		if (filePath.empty()) {
-			qWarning() << "USBVideoSourceRecorderBin: empty file path provided to setRecordingFilePath";
+			LoggingController::warning("Empty file path provided to setRecordingFilePath");
 			return false;
 		}
 

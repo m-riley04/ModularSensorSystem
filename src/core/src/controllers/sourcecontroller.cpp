@@ -1,4 +1,5 @@
 #include "controllers/sourcecontroller.hpp"
+#include <controllers/loggingcontroller.hpp>
 
 SourceController::SourceController(QObject *parent)
 	: QObject(parent)
@@ -35,13 +36,13 @@ Source* SourceController::byId(const QUuid & id) const
 
 Source* SourceController::addSource(ISourcePlugin* plugin, SourceInfo info) {
 	if (!plugin) {
-		qWarning() << "addSource: plugin is null";
+		LoggingController::warning("Cannott add source; plugin is null");
 		return nullptr;
 	}
 
 	auto source = plugin->createSource(info.elementInfo.id, this);
 	if (!source) {
-		qWarning() << "createSource returned null for" << QString::fromStdString(info.elementInfo.id);
+		LoggingController::warning("Could not create source for element " + QString::fromStdString(info.elementInfo.id));
 		return nullptr;
 	}
 
@@ -56,7 +57,7 @@ Source* SourceController::addSource(ISourcePlugin* plugin, SourceInfo info) {
 void SourceController::removeSource(Source* source)
 {
 	if (!source) {
-		qWarning() << "Cannot remove source: source is null";
+		LoggingController::warning("Cannot remove source: source is null");
 		return;
 	};
 
@@ -75,7 +76,7 @@ void SourceController::removeSource(const QUuid& uuid)
 {
 	Source* source = byId(uuid);
 	if (!source) {
-		qWarning() << "Cannot remove source: source with given UUID not found";
+		LoggingController::warning("Cannot remove source: source with given UUID not found");
 		return;
 	}
 	removeSource(source);
