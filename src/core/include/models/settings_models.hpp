@@ -16,7 +16,7 @@ struct AdvancedSettings
 {
 	bool enableDebugMode = false;
 	bool enableLogging = false;
-	bool logToFile = false;
+	bool logToFile = true;
 	bool useUniqueLogFiles = true;
 	QDir logDirectory = QCoreApplication::applicationDirPath() + "/logs";
 };

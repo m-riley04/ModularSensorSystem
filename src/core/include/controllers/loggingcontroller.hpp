@@ -2,6 +2,9 @@
 
 #include <QObject>
 #include "controllers/settingscontroller.hpp"
+#include <iostream>
+#include <QFile>
+#include <QMutex>
 
 /**
  * @brief A controller class for logging messages at various severity levels.
@@ -16,18 +19,19 @@ public:
 	LoggingController(SettingsController& sc, QObject *parent);
 	~LoggingController();
 
-	void info(const QString& message);
-	void warning(const QString& message);
-	void critical(const QString& message);
-	void fatal(const QString& message);
-	void debug(const QString& message);
+	static void info(const QString& message);
+	static void warning(const QString& message);
+	static void critical(const QString& message);
+	static void fatal(const QString& message);
+	static void debug(const QString& message);
 
 	static QString generateLogFileName(bool unique = true);
 	static void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 
 private:
 	SettingsController& m_settingsController;
-	QFile* m_logFile = nullptr;
-	QTextStream* m_logStream = nullptr;
+
+	static QMutex logMutex;
+	static QFile* logFile;
 };
 

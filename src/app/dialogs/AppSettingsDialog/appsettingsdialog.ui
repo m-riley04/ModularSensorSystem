@@ -32,7 +32,7 @@
    <item>
     <widget class="QChaptersWidget" name="chaptersWidget">
      <property name="pageTitle">
-      <string>Sources</string>
+      <string>Advanced</string>
      </property>
      <widget class="QWidget" name="pageGeneral">
       <property name="windowTitle">
@@ -122,6 +122,9 @@
                 <property name="text">
                  <string>Language</string>
                 </property>
+                <property name="buddy">
+                 <cstring>dropdownLanguage</cstring>
+                </property>
                </widget>
               </item>
              </layout>
@@ -206,33 +209,52 @@
            <item>
             <widget class="QGroupBox" name="groupBox_7">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="title">
               <string>Logging</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_6">
-              <item row="1" column="1">
-               <widget class="QDirectoryPickerWidget" name="dirPickerLogs">
-                <property name="toolTip">
-                 <string/>
-                </property>
-                <property name="whatsThis">
-                 <string/>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="0">
-               <widget class="QLabel" name="label_20">
-                <property name="text">
-                 <string>Log Directory</string>
+               <widget class="QFrame" name="frameEnabledLogging">
+                <property name="frameShape">
+                 <enum>QFrame::Shape::StyledPanel</enum>
                 </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Shadow::Raised</enum>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_9">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="labelLogDirectory">
+                   <property name="text">
+                    <string>Log Directory</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDirectoryPickerWidget" name="dirPickerLogs">
+                   <property name="toolTip">
+                    <string/>
+                   </property>
+                   <property name="whatsThis">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QCheckBox" name="checkboxUniqueLogs">
+                   <property name="text">
+                    <string>Use unique names</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
               <item row="0" column="0" colspan="2">
                <widget class="QCheckBox" name="checkboxLogging">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="text">
                  <string>Logging</string>
@@ -291,8 +313,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>634</width>
-            <height>456</height>
+            <width>150</width>
+            <height>91</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -312,6 +334,9 @@
                <widget class="QLabel" name="label_6">
                 <property name="text">
                  <string>Theme</string>
+                </property>
+                <property name="buddy">
+                 <cstring>dropdownTheme</cstring>
                 </property>
                </widget>
               </item>
@@ -367,8 +392,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>634</width>
-            <height>456</height>
+            <width>339</width>
+            <height>347</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -412,6 +437,9 @@
                <widget class="QLabel" name="label_18">
                 <property name="text">
                  <string>Output Prefix</string>
+                </property>
+                <property name="buddy">
+                 <cstring>lineRecordingPrefix</cstring>
                 </property>
                </widget>
               </item>
@@ -523,7 +551,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>620</width>
+            <width>206</width>
             <height>509</height>
            </rect>
           </property>
@@ -541,6 +569,9 @@
                 </property>
                 <property name="text">
                  <string>Encoder Codec</string>
+                </property>
+                <property name="buddy">
+                 <cstring>dropdownVideoEncoder</cstring>
                 </property>
                </widget>
               </item>
@@ -585,6 +616,9 @@
                 <property name="text">
                  <string>Pixel Format</string>
                 </property>
+                <property name="buddy">
+                 <cstring>dropdownPixelFormat</cstring>
+                </property>
                </widget>
               </item>
               <item row="2" column="0">
@@ -595,6 +629,9 @@
                 <property name="text">
                  <string>FPS</string>
                 </property>
+                <property name="buddy">
+                 <cstring>spinboxVideoFps</cstring>
+                </property>
                </widget>
               </item>
               <item row="3" column="0">
@@ -604,6 +641,9 @@
                 </property>
                 <property name="text">
                  <string>Bitrate</string>
+                </property>
+                <property name="buddy">
+                 <cstring>spinboxVideoBitrate</cstring>
                 </property>
                </widget>
               </item>
@@ -635,6 +675,9 @@
                 <property name="text">
                  <string>Width</string>
                 </property>
+                <property name="buddy">
+                 <cstring>spinboxVideoWidth</cstring>
+                </property>
                </widget>
               </item>
               <item row="1" column="0">
@@ -644,6 +687,9 @@
                 </property>
                 <property name="text">
                  <string>Height</string>
+                </property>
+                <property name="buddy">
+                 <cstring>spinboxVideoHeight</cstring>
                 </property>
                </widget>
               </item>
@@ -665,6 +711,9 @@
                 <property name="text">
                  <string>Container Format</string>
                 </property>
+                <property name="buddy">
+                 <cstring>dropdownVideoContainerFormat</cstring>
+                </property>
                </widget>
               </item>
               <item row="5" column="1">
@@ -684,6 +733,9 @@
                 <property name="text">
                  <string>Sample Rate</string>
                 </property>
+                <property name="buddy">
+                 <cstring>dropdownSampleRate</cstring>
+                </property>
                </widget>
               </item>
               <item row="3" column="1">
@@ -693,6 +745,9 @@
                <widget class="QLabel" name="label_11">
                 <property name="text">
                  <string>Container Format</string>
+                </property>
+                <property name="buddy">
+                 <cstring>dropdownAudioContainerFormat</cstring>
                 </property>
                </widget>
               </item>
@@ -717,6 +772,9 @@
                <widget class="QLabel" name="label_9">
                 <property name="text">
                  <string>Audio Encoder</string>
+                </property>
+                <property name="buddy">
+                 <cstring>dropdownAudioEncoder</cstring>
                 </property>
                </widget>
               </item>
@@ -760,6 +818,9 @@
                <widget class="QLabel" name="label_12">
                 <property name="text">
                  <string>Format</string>
+                </property>
+                <property name="buddy">
+                 <cstring>dropdownDataFormat</cstring>
                 </property>
                </widget>
               </item>
@@ -1121,6 +1182,9 @@
                 <property name="text">
                  <string>Toggle Recording</string>
                 </property>
+                <property name="buddy">
+                 <cstring>keyToggleRecording</cstring>
+                </property>
                </widget>
               </item>
               <item row="0" column="0">
@@ -1128,12 +1192,18 @@
                 <property name="text">
                  <string>Toggle Session</string>
                 </property>
+                <property name="buddy">
+                 <cstring>keyToggleSession</cstring>
+                </property>
                </widget>
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_10">
                 <property name="text">
                  <string>Clip</string>
+                </property>
+                <property name="buddy">
+                 <cstring>keyClip</cstring>
                 </property>
                </widget>
               </item>
@@ -1281,6 +1351,48 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>checkboxCloseToTray</tabstop>
+  <tabstop>checkboxCheckForUpdates</tabstop>
+  <tabstop>dropdownLanguage</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+  <tabstop>checkboxDebug</tabstop>
+  <tabstop>checkboxLogging</tabstop>
+  <tabstop>scrollArea_3</tabstop>
+  <tabstop>dropdownTheme</tabstop>
+  <tabstop>scrollArea_4</tabstop>
+  <tabstop>checkboxConfirmStopSession</tabstop>
+  <tabstop>checkboxConfirmStopRecording</tabstop>
+  <tabstop>lineRecordingPrefix</tabstop>
+  <tabstop>checkboxOverwrite</tabstop>
+  <tabstop>checkboxAllowSpaces</tabstop>
+  <tabstop>checkboxEnableClipping</tabstop>
+  <tabstop>scrollArea_8</tabstop>
+  <tabstop>spinboxVideoWidth</tabstop>
+  <tabstop>spinboxVideoHeight</tabstop>
+  <tabstop>spinboxVideoFps</tabstop>
+  <tabstop>spinboxVideoBitrate</tabstop>
+  <tabstop>dropdownPixelFormat</tabstop>
+  <tabstop>dropdownVideoContainerFormat</tabstop>
+  <tabstop>dropdownVideoEncoder</tabstop>
+  <tabstop>dropdownSampleRate</tabstop>
+  <tabstop>radioButtonStereo</tabstop>
+  <tabstop>radioButtonMono</tabstop>
+  <tabstop>dropdownAudioContainerFormat</tabstop>
+  <tabstop>dropdownAudioEncoder</tabstop>
+  <tabstop>dropdownDataFormat</tabstop>
+  <tabstop>scrollArea_9</tabstop>
+  <tabstop>scrollArea_10</tabstop>
+  <tabstop>scrollArea_11</tabstop>
+  <tabstop>scrollArea_5</tabstop>
+  <tabstop>buttonOpenPluginsManager</tabstop>
+  <tabstop>scrollArea_6</tabstop>
+  <tabstop>keyToggleSession</tabstop>
+  <tabstop>keyToggleRecording</tabstop>
+  <tabstop>keyClip</tabstop>
+  <tabstop>scrollArea_7</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

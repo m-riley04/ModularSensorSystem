@@ -12,6 +12,7 @@
 #include "controllers/mountcontroller.hpp"
 #include "controllers/sessioncontroller.hpp"
 #include "controllers/settingscontroller.hpp"
+#include "controllers/loggingcontroller.hpp"
 
 class MainController  : public QObject
 {
@@ -28,10 +29,12 @@ public:
 	MountController& mountController() { return m_mountController; }
 	SessionController& sessionController() { return m_sessionController; }
 	SettingsController& settingsController() { return m_settingsController; }
+	LoggingController& loggingController() { return m_loggingController; }
 
 private:
 	// IMPORTANT: Construct settings first so dependent controllers receive a valid reference
 	SettingsController m_settingsController;
+	LoggingController m_loggingController;
 	SourceController m_sourceController;
 	ProcessingController m_processingController;
 	MountController m_mountController;

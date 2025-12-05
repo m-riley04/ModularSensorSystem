@@ -83,7 +83,7 @@ void AppActionController::initActionSignals()
         QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().pluginsSettings().pluginsDirectory.absolutePath()));
 		});
     connect(m_miscActions.openLogsDirectory, &QAction::triggered, [this]() {
-		//QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().advancedSettings().logsDirectory.absolutePath()));
+		QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().advancedSettings().logDirectory.absolutePath()));
 		});
     connect(m_miscActions.openAppDirectory, &QAction::triggered, [this]() {
 		QDesktopServices::openUrl(QUrl::fromLocalFile(QCoreApplication::applicationDirPath()));
@@ -181,7 +181,7 @@ void AppActionController::onPresetElementSelected(QListWidgetItem* current, QLis
 }
 
 void AppActionController::onOpenAppPropertiesDialog() {
-    AppSettingsDialog* appSettingsDialog = new AppSettingsDialog(m_controller.settingsController(), m_uiSettingsController, m_parentWidget);
+    AppSettingsDialog* appSettingsDialog = new AppSettingsDialog(*this, m_controller.settingsController(), m_uiSettingsController, m_parentWidget);
     appSettingsDialog->setWindowModality(Qt::WindowModal);
     appSettingsDialog->show();
 }
