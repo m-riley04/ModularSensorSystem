@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include <gst/gst.h>
-#include <QDebug>
 #include <gst/video/videooverlay.h>
+#include <controllers/loggingcontroller.hpp>
 
 /**
  * Gets the name of the video sink factory to use based on the operating system.
@@ -50,7 +50,7 @@ inline GstElement* createDefaultAudioPreviewSink(guintptr windowId, const char* 
 
 	// Check validity of each
 	if (!bin || !wavescope || !conv || !queue || !sink) {
-		qWarning() << "Failed to create one or more elements";
+		LoggingController::warning("Failed to create one or more elements");
 		if (bin) gst_object_unref(bin);
 		if (wavescope) gst_object_unref(wavescope);
 		if (conv) gst_object_unref(conv);
@@ -64,7 +64,7 @@ inline GstElement* createDefaultAudioPreviewSink(guintptr windowId, const char* 
 
 	// Link source bin to elements
 	if (!gst_element_link_many(wavescope, conv, queue, sink, nullptr)) {
-		qWarning() << "Failed to link source bin to elements.";
+		LoggingController::warning("Failed to link source bin to elements.");
 		gst_object_unref(bin);
 		return nullptr;
 	}
@@ -94,7 +94,7 @@ inline GstElement* createDefaultDataPreviewSink(guintptr windowId, const char* b
 	GstElement* video_sink = gst_element_factory_make(sinkName, "video_sink");
 
 	if (!bin || !queue || !visualizer || !conv || !video_sink) {
-		qWarning() << "Failed to create one or more elements in data-visualizer bin";
+		LoggingController::warning("Failed to create one or more elements in data-visualizer bin");
 		if (bin)         gst_object_unref(bin);
 		if (visualizer)   gst_object_unref(visualizer);
 		if (conv)        gst_object_unref(conv);
@@ -119,7 +119,7 @@ inline GstElement* createDefaultDataPreviewSink(guintptr windowId, const char* b
 
 	// Link the chain: visualzier -> videoconvert -> queue -> video_sink
 	if (!gst_element_link_many(visualizer, conv, queue, video_sink, nullptr)) {
-		qWarning() << "Failed to link elements in data-visualizer bin";
+		LoggingController::warning("Failed to link elements in data-visualizer bin");
 		gst_object_unref(bin);
 		return nullptr;
 	}
@@ -154,7 +154,7 @@ inline GstElement* createDefaultVideoPreviewSink(guintptr windowId, const char* 
 
 	// Check validity of each
 	if (!sink) {
-		qWarning() << "Failed to create one or more elements";
+		LoggingController::warning("Failed to create one or more elements");
 		if (sink) gst_object_unref(sink);
 		return nullptr;
 	}
@@ -183,7 +183,7 @@ inline GstElement* createDefaultPreviewSink(Source::Type type, guintptr windowId
 	case Source::Type::DATA:
 		return createDefaultDataPreviewSink(windowId, binName);
 	default:
-		qWarning() << "No default sink available for the given source type.";
+		LoggingController::warning("No default sink available for the given source type.");
 		return nullptr;
 	}
 }

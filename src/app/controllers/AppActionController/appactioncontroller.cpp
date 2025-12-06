@@ -83,7 +83,7 @@ void AppActionController::initActionSignals()
         QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().pluginsSettings().pluginsDirectory.absolutePath()));
 		});
     connect(m_miscActions.openLogsDirectory, &QAction::triggered, [this]() {
-		//QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().advancedSettings().logsDirectory.absolutePath()));
+		QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().advancedSettings().logDirectory.absolutePath()));
 		});
     connect(m_miscActions.openAppDirectory, &QAction::triggered, [this]() {
 		QDesktopServices::openUrl(QUrl::fromLocalFile(QCoreApplication::applicationDirPath()));
@@ -92,6 +92,7 @@ void AppActionController::initActionSignals()
 		QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().sessionSettings().outputDirectory.absolutePath()));
 		});
     connect(m_miscActions.openAppProperties, &QAction::triggered, this, &AppActionController::onOpenAppPropertiesDialog);
+	connect(m_miscActions.clearLogs, &QAction::triggered, this, &AppActionController::onClearLogs);
     connect(m_miscActions.quit, &QAction::triggered, this, &AppActionController::quit);
     connect(m_miscActions.restart, &QAction::triggered, this, &AppActionController::restart);
 }
@@ -181,7 +182,7 @@ void AppActionController::onPresetElementSelected(QListWidgetItem* current, QLis
 }
 
 void AppActionController::onOpenAppPropertiesDialog() {
-    AppSettingsDialog* appSettingsDialog = new AppSettingsDialog(m_controller.settingsController(), m_uiSettingsController, m_parentWidget);
+    AppSettingsDialog* appSettingsDialog = new AppSettingsDialog(*this, m_controller.settingsController(), m_uiSettingsController, m_parentWidget);
     appSettingsDialog->setWindowModality(Qt::WindowModal);
     appSettingsDialog->show();
 }
@@ -191,6 +192,14 @@ void AppActionController::onOpenPluginDialog() {
     PluginsDialog* pluginsDialog = new PluginsDialog(m_controller.settingsController(), m_controller.pluginController(), m_parentWidget);
     pluginsDialog->setWindowModality(Qt::WindowModal);
     pluginsDialog->show();
+}
+
+void AppActionController::onClearLogs()
+{
+    auto response = QMessageBox::question(m_parentWidget, tr("Clear Logs"), tr("Are you sure you want to clear all log files?"), QMessageBox::Yes | QMessageBox::No);
+    if (response == QMessageBox::Yes) {
+        m_controller.loggingController().clearLogs();
+	}
 }
 
 void AppActionController::onOpenSavePresetDialog()

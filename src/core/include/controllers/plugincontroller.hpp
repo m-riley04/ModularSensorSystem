@@ -5,13 +5,13 @@
 #include <QCoreApplication>
 #include "sdk/plugins/isourceplugin.hpp"
 #include "sdk/plugins/iprocessorplugin.hpp"
-#include "controllers/backendcontrollerbase.hpp"
+
 #include "sdk/plugins/pluginloader.hpp"
 #include "sdk/plugins/imountplugin.hpp"
 #include <string>
 #include "settingscontroller.hpp"
 
-class PluginController : public BackendControllerBase
+class PluginController : public QObject
 {
     Q_OBJECT
 

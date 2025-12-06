@@ -1,7 +1,7 @@
 #include "controllers/processingcontroller.hpp"
 
 ProcessingController::ProcessingController(QObject *parent)
-	: BackendControllerBase("ProcessingController", parent)
+	: QObject(parent)
 {}
 
 ProcessingController::~ProcessingController()

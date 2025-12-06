@@ -1,7 +1,8 @@
 #include "controllers/mountcontroller.hpp"
+#include <controllers/loggingcontroller.hpp>
 
 MountController::MountController(QObject *parent)
-	: BackendControllerBase("MountController", parent)
+	: QObject(parent)
 {}
 
 MountController::~MountController()
@@ -33,7 +34,7 @@ Mount* MountController::addMount(IMountPlugin* plugin, ElementInfo info)
 void MountController::removeMount(Mount* mount)
 {
 	if (!mount) {
-		qWarning() << "Cannot remove source: source is null";
+		LoggingController::warning("Cannot remove source: source is null");
 		return;
 	};
 
@@ -50,7 +51,7 @@ void MountController::removeMount(const QUuid& id)
 {
 	auto mount = mMountsById.value(id, nullptr);
 	if (!mount) {
-		qWarning() << "Cannot remove mount: mount not found";
+		LoggingController::warning("Cannot remove mount: mount not found");
 		return;
 	}
 

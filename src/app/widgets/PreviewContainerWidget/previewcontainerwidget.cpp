@@ -67,14 +67,14 @@ void PreviewContainerWidget::setController(MainController* controller) {
 void PreviewContainerWidget::addSourceWidget(Source* source)
 {
 	if (!source) {
-		qWarning() << "Cannot add source widget: source is null";
+		LoggingController::warning("Cannot add source widget: source is null");
 		return;
 	}
 
 	// Create new source preview widget
 	auto* widget = new SourcePreviewWidget(source, this);
 	if (!widget) {
-		qWarning() << "Failed to create widget for source";
+		LoggingController::warning("Failed to create widget for source");
 		return;
 	}
 

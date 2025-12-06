@@ -1,4 +1,5 @@
 #include "pipeline/sessionpipeline.hpp"
+#include <controllers/loggingcontroller.hpp>
 
 SessionPipeline::SessionPipeline(SessionSettings& settings, QObject* parent)
 	: QObject(parent)
@@ -67,7 +68,7 @@ bool SessionPipeline::build(const QList<Source*>& sources, const QList<IRecordab
 	// Create the main pipeline
 	m_pipeline.reset(GST_PIPELINE(gst_pipeline_new(MAIN_PIPELINE_NAME)));
 	if (!m_pipeline) {
-		qWarning() << "Failed to create GStreamer pipeline";
+		LoggingController::warning("Failed to create GStreamer pipeline");
 		return false;
 	}
 
@@ -105,7 +106,7 @@ bool SessionPipeline::close()
 {
 	// Stop pipeline first
 	if (!this->stop()) {
-		qWarning() << "Failed to stop pipeline";
+		LoggingController::warning("Failed to stop pipeline");
 		return false;
 	}
 
@@ -118,23 +119,23 @@ bool SessionPipeline::close()
 bool SessionPipeline::start()
 {
 	if (!m_pipeline) {
-		qWarning() << "Cannot start pipeline: pipeline is null";
+		LoggingController::warning("Cannot start pipeline: pipeline is null");
 		return false;
 	}
 
 	// Step through states to surface potential errors
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_READY) == GST_STATE_CHANGE_FAILURE) {
-		qWarning() << "Failed to set pipeline to READY";
+		LoggingController::warning("Failed to set pipeline to READY");
 		close();
 		return false;
 	}
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_PAUSED) == GST_STATE_CHANGE_FAILURE) {
-		qWarning() << "Failed to set pipeline to PAUSED";
+		LoggingController::warning("Failed to set pipeline to PAUSED");
 		close();
 		return false;
 	}
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_PLAYING) == GST_STATE_CHANGE_FAILURE) {
-		qWarning() << "Failed to set pipeline to PLAYING";
+		LoggingController::warning("Failed to set pipeline to PLAYING");
 		close();
 		return false;
 	}
@@ -149,7 +150,7 @@ bool SessionPipeline::stop()
 	}
 
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_NULL) == GST_STATE_CHANGE_FAILURE) {
-		qWarning() << "Failed to set pipeline to NULL";
+		LoggingController::warning("Failed to set pipeline to NULL");
 		return false;
 	}
 
@@ -182,7 +183,7 @@ void SessionPipeline::startRecording()
 	m_lastRecordingTimestamp = generateTimestampNs();
 
 	if (!openRecordingValves(m_recordableSources)) {
-		qWarning() << "Failed to open recording valves during startRecording.";
+		LoggingController::warning("Failed to open recording valves during startRecording.");
 		return;
 	}
 
@@ -192,7 +193,7 @@ void SessionPipeline::startRecording()
 void SessionPipeline::stopRecording()
 {
 	if (!closeRecordingValves(m_recordableSources)) {
-		qWarning() << "Failed to close recording valves during stopRecording.";
+		LoggingController::warning("Failed to close recording valves during stopRecording.");
 		return;
 	}
 
@@ -203,7 +204,7 @@ bool SessionPipeline::createSourceElements(Source* source)
 {
 	// Check source
 	if (!source) {
-		qWarning() << "Cannot create source elements: source is null";
+		LoggingController::warning("Cannot create source elements: source is null");
 		return false;
 	}
 
@@ -212,13 +213,13 @@ bool SessionPipeline::createSourceElements(Source* source)
 
 	// Check src bin
 	if (!srcBin) {
-		qWarning() << "Video source has no Gst bin";
+		LoggingController::warning("Video source has no Gst bin");
 		return false;
 	}
 
 	// Add source bin to pipeline
 	if (!gst_bin_add(GST_BIN(m_pipeline.get()), srcBin)) {
-		qWarning() << "Failed to add source bin to pipeline.";
+		LoggingController::warning("Failed to add source bin to pipeline.");
 		return false;
 	}
 
@@ -226,22 +227,19 @@ bool SessionPipeline::createSourceElements(Source* source)
 	std::string teeName = "tee_" + boost::uuids::to_string(source->uuid());
 	GstElement* tee = gst_element_factory_make("tee", teeName.c_str());
 	if (!tee) {
-		qWarning() << "Failed to create tee element for source:"
-			<< QString::fromStdString(source->name());
+		LoggingController::warning("Failed to create tee element for source:" + QString::fromStdString(source->name()));
 		return false;
 	}
 
 	// Add tee to pipeline
 	if (!gst_bin_add(GST_BIN(m_pipeline.get()), tee)) {
-		qWarning() << "Failed to add tee element to pipeline for source:"
-			<< QString::fromStdString(source->name());
+		LoggingController::warning("Failed to add tee element to pipeline for source:" + QString::fromStdString(source->name()));
 		return false;
 	}
 
 	// Link source bin to tee
 	if (!gst_element_link(srcBin, tee)) {
-		qWarning() << "Failed to link source bin to tee element for source:"
-			<< QString::fromStdString(source->name());
+		LoggingController::warning("Failed to link source bin to tee element for source:" + QString::fromStdString(source->name()));
 		gst_bin_remove(GST_BIN(m_pipeline.get()), tee);
 		return false;
 	}
@@ -252,16 +250,16 @@ bool SessionPipeline::createSourceElements(Source* source)
 	// Attempt to add/link preview
 	if (source->asPreviewable() != nullptr) {
 		if (!createAndLinkPreviewBin(source, tee)) {
-			qWarning() << "Failed to create and link preview bin for source:"
-				<< QString::fromStdString(source->name());
+			LoggingController::warning("Failed to create and link preview bin for source:"
+				+ QString::fromStdString(source->name()));
 		}
 	}
 
 	// Attempt to add/link recording bin
 	if (source->asRecordable() != nullptr) {
 		if (!createAndLinkRecordBin(source, tee)) {
-			qWarning() << "Failed to create and link recording bin for source:"
-				<< QString::fromStdString(source->name());
+			LoggingController::warning("Failed to create and link recording bin for source:"
+				+ QString::fromStdString(source->name()));
 		}
 	}
 
@@ -271,14 +269,14 @@ bool SessionPipeline::createSourceElements(Source* source)
 bool SessionPipeline::createAndLinkPreviewBin(Source* src, GstElement* tee)
 {
 	if (!src) {
-		qWarning() << "Cannot create and link the source and preview bins: source is null";
+		LoggingController::warning("Cannot create and link the source and preview bins: source is null");
 		return false;
 	}
 
 	IPreviewableSource* prevSrc = src->asPreviewable();
 
 	if (!prevSrc) {
-		qWarning() << "Cannot create and link the source and preview bins for '" << src->displayName() << "': source is not previewable";
+		LoggingController::warning("Cannot create and link the source and preview bins for '" + QString::fromStdString(src->displayName()) + "': source is not previewable");
 		return false;
 	}
 
@@ -290,19 +288,19 @@ bool SessionPipeline::createAndLinkPreviewBin(Source* src, GstElement* tee)
 
 	// Check validity of each
 	if (!sink) {
-		qWarning() << "Failed to create custom sink element for '" << src->displayName() << "'; creating default sink";
+		LoggingController::warning("Failed to create custom sink element for '" + QString::fromStdString(src->displayName()) + "'; creating default sink");
 		sink = createDefaultPreviewSink(src->type(), windowId, prevSrc->previewSinkElementName().c_str());
 	}
 
 	// Add preview element(s) to pipeline
 	if (!gst_bin_add(GST_BIN(m_pipeline.get()), sink)) {
-		qWarning() << "Failed to add preview sink for '" << src->displayName() << "' to pipeline.";
+		LoggingController::warning("Failed to add preview sink for '" + QString::fromStdString(src->displayName()) + "' to pipeline.");
 		return false;
 	}
 
 	// Link source bin to sink
 	if (!gst_element_link(tee, sink)) {
-		qWarning() << "Failed to link source bin to preview sink for '" << src->displayName() << "'.";
+		LoggingController::warning("Failed to link source bin to preview sink for '" + QString::fromStdString(src->displayName()) + "'.");
 		gst_bin_remove(GST_BIN(m_pipeline.get()), sink);
 		return false;
 	}
@@ -316,14 +314,14 @@ bool SessionPipeline::createAndLinkPreviewBin(Source* src, GstElement* tee)
 bool SessionPipeline::createAndLinkRecordBin(Source* src, GstElement* tee)
 {
 	if (!src) {
-		qWarning() << "Cannot create and link the source and recording bins: source is null";
+		LoggingController::warning("Cannot create and link the source and recording bins: source is null");
 		return false;
 	}
 
 	IRecordableSource* recSrc = src->asRecordable();
 
 	if (!recSrc) {
-		qWarning() << "Cannot create and link the source and recording bins for '" << src->displayName() << "': source is not recordable";
+		LoggingController::warning("Cannot create and link the source and recording bins for '" + QString::fromStdString(src->displayName()) + "': source is not recordable");
 		return false;
 	}
 
@@ -332,37 +330,37 @@ bool SessionPipeline::createAndLinkRecordBin(Source* src, GstElement* tee)
 
 	// Check validity of sink
 	if (!sink) {
-		qWarning() << "Failed to create custom sink element for '" << src->displayName() << "'; creating default sink";
+		LoggingController::warning("Failed to create custom sink element for '" + QString::fromStdString(src->displayName()) + "'; creating default sink");
 		return false;
 	}
 
 	// Set sink's output directory and prefix from session properties
 	const QString outputFilePath = generateSessionSourcePath(src, m_sessionSettings, m_lastSessionTimestamp);
 	if (outputFilePath.isEmpty()) {
-		qWarning() << "Cannot set recording file path: output file path is empty for source:" << QString::fromStdString(src->name());
+		LoggingController::warning("Cannot set recording file path: output file path is empty for source:" + QString::fromStdString(src->name()));
 		return false;
 	}
 	// Use UTF-8 when passing path strings into GStreamer properties
 	const std::string utf8Path = outputFilePath.toUtf8().toStdString();
 
 	if (!recSrc->setRecordingFilePath(utf8Path)) {
-		qWarning() << "Failed to set recording file path for source '"
-			<< QString::fromStdString(src->displayName())
-			<< "' to '"
-			<< outputFilePath
-			<< "'";
+		LoggingController::warning("Cannot set recording file path for source '"
+			+ QString::fromStdString(src->displayName())
+			+ "' to '"
+			+ outputFilePath
+			+ "'");
 		return false;
 	}
 
 	// Add recorder bin to pipeline
 	if (!gst_bin_add(GST_BIN(m_pipeline.get()), sink)) {
-		qWarning() << "Failed to add recorder sink for '" << src->displayName() << "' to pipeline.";
+		LoggingController::warning("Failed to add recorder sink for '" + QString::fromStdString(src->displayName()) + "' to pipeline.");
 		return false;
 	}
 
 	// Tee branches must have queues; the recorder bin now begins with a queue
 	if (!gst_element_link(tee, sink)) {
-		qWarning() << "Failed to link source bin tee to recorder bin for '" << src->displayName() << "'.";
+		LoggingController::warning("Failed to link source bin tee to recorder bin for '" + QString::fromStdString(src->displayName()) + "'.");
 		gst_bin_remove(GST_BIN(m_pipeline.get()), sink);
 		return false;
 	}
@@ -378,7 +376,7 @@ bool SessionPipeline::openRecordingValves(QList<IRecordableSource*>& sources)
 	// Iterate over all sources and open their valves
 	for (auto& src : sources) {
 		if (!openRecordingValveForSource(src)) {
-			qWarning() << "Failed to open recording valve for source";
+			LoggingController::warning("Failed to open recording valve for source");
 		}
 	}
 
@@ -390,7 +388,7 @@ bool SessionPipeline::closeRecordingValves(QList<IRecordableSource*>& sources)
 	// Iterate over all sources and close their valves
 	for (auto& src : sources) {
 		if (!closeRecordingValveForSource(src)) {
-			qWarning() << "Failed to close recording valve for source";
+			LoggingController::warning("Failed to close recording valve for source");
 		}
 	}
 
@@ -400,7 +398,7 @@ bool SessionPipeline::closeRecordingValves(QList<IRecordableSource*>& sources)
 bool SessionPipeline::openRecordingValveForSource(IRecordableSource* src)
 {
 	if (!src) {
-		qWarning() << "Cannot open recording valve for source: source is not recordable";
+		LoggingController::warning("Cannot open recording valve for source: source is not recordable");
 		return false;
 	}
 
@@ -411,7 +409,7 @@ bool SessionPipeline::openRecordingValveForSource(IRecordableSource* src)
 bool SessionPipeline::closeRecordingValveForSource(IRecordableSource* src)
 {
 	if (!src) {
-		qWarning() << "Cannot close recording valve for source: source is not recordable";
+		LoggingController::warning("Cannot close recording valve for source: source is not recordable");
 		return false;
 	}
 
@@ -444,7 +442,7 @@ void SessionPipeline::setState(State newState)
 		// Handled elsewhere
 		break;
 	default:
-		qWarning() << "Invalid session state transition attempted.";
+		LoggingController::warning("Invalid session state transition attempted.");
 		return;
 	}
 
@@ -453,12 +451,12 @@ void SessionPipeline::setState(State newState)
 }
 
 void SessionPipeline::onPipelineError(const QString& errorMessage) {
-	qWarning() << "Pipeline error occurred:" << errorMessage;
+	LoggingController::warning("Pipeline error occurred: " + errorMessage);
 	setState(State::ERROR);
 	emit errorOccurred(errorMessage);
 }
 
 void SessionPipeline::onPipelineEos() {
-	qDebug() << "Pipeline EOS reached.";
+	LoggingController::debug("Pipeline EOS reached.");
 	emit eosReached();
 }

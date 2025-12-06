@@ -1,4 +1,5 @@
 #include "sourcepreviewwidget.h"
+#include <controllers/loggingcontroller.hpp>
 
 SourcePreviewWidget::SourcePreviewWidget(Source* source, QWidget *parent)
 	: QWidget(parent), m_source(source)
@@ -9,7 +10,7 @@ SourcePreviewWidget::SourcePreviewWidget(Source* source, QWidget *parent)
 
 	// Check source null
 	if (!m_source) {
-		qWarning() << "SourcePreviewWidget initialized with null source.";
+		LoggingController::warning("Preview initialized with null source.");
 		return;
 	}
 
@@ -18,8 +19,8 @@ SourcePreviewWidget::SourcePreviewWidget(Source* source, QWidget *parent)
 
 	// Check if source is previewable
 	auto previewable = m_source->asPreviewable();
-	if (!m_source->asPreviewable()) {
-		qWarning() << "Source is not previewable, cannot create preview widget:" << QString::fromStdString(m_source->name());
+	if (!previewable) {
+		LoggingController::warning("Source is not previewable, cannot create preview widget:" + QString::fromStdString(m_source->name()));
 		return;
 	}
 

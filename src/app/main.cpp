@@ -1,5 +1,7 @@
 #include "Windows/MainWindow/MainWindow.h"
 #include <QtWidgets/QApplication>
+#include "controllers/maincontroller.hpp"
+#include <QSettings>
 
 #ifdef Q_OS_WINDOWS
 #include <windows.h>
@@ -28,16 +30,21 @@ int main(int argc, char *argv[])
 	if (IsDebuggerPresent()) setupConsole();
 	#endif
 
-	// Create application
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-
 	// Initialize core app
 	QCoreApplication::setApplicationName("ModularSensorSystem");
 	QCoreApplication::setApplicationVersion("1.0.0");
 	QCoreApplication::setOrganizationName("Riley Meyerkorth");
 	QCoreApplication::setOrganizationDomain("rileymeyerkorth.com");
+
+	// Initialize settings and controllers
+	QSettings settings = QSettings(QCoreApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat, nullptr);
+	MainController mainController(settings, nullptr);
+	UiSettingsController uiSettingsController(settings, nullptr);
+
+	// Create application
+    QApplication a(argc, argv);
+	MainWindow w(mainController, uiSettingsController, nullptr);
+    w.show();
 
 	// Execute the application and handle exceptions
     int ret;
@@ -57,5 +64,12 @@ int main(int argc, char *argv[])
 		qDebug() << "Unknown error caught in main.";
 		ret = EXIT_FAILURE;
 	}
+
+	// Clean up and exit
+	settings.deleteLater();
+	mainController.deleteLater();
+	uiSettingsController.deleteLater();
+	w.deleteLater();
+
     return ret;
 }

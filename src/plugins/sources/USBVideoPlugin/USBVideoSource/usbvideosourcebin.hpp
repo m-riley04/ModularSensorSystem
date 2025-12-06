@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QDebug>
 #include <pipeline/bins/sourcebin.hpp>
 #include <gst/video/videooverlay.h>
 

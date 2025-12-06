@@ -1,14 +1,12 @@
 #pragma once
 
-#include "controllers/backendcontrollerbase.hpp"
 #include "features/mounts/mount.hpp"
 #include <QHash>
 #include <QUuid>
-#include <QDebug>
 #include "sdk/plugins/imountplugin.hpp"
 #include "utils/boost_qt_conversions.hpp"
 
-class MountController : public BackendControllerBase
+class MountController : public QObject
 {
 	Q_OBJECT
 

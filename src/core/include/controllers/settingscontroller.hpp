@@ -47,8 +47,10 @@ public slots:
 
 	// Advanced settings setters
 	void setAdvancedSettings(const AdvancedSettings& settings) { m_advancedSettings = settings; }
-	void setEnableLogging(bool enabled) { m_advancedSettings.enableLogging = enabled; }
 	void setEnableDebugMode(bool enabled) { m_advancedSettings.enableDebugMode = enabled; }
+	void setEnableLogging(bool enabled) { m_advancedSettings.enableLogging = enabled; }
+	void setLogDirectory(const QDir& dir) { m_advancedSettings.logDirectory = dir; }
+	void setUseUniqueLogFiles(bool unique) { m_advancedSettings.useUniqueLogFiles = unique; }
 
 	// Session settings setters
 	void setSessionSettings(const SessionSettings& settings) { m_sessionSettings = settings; }

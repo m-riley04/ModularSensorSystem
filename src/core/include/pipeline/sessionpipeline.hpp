@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QDebug>
 #include <gst/gst.h>
 #include <gst/video/videooverlay.h>
 #include <gst/app/gstappsink.h>

@@ -13,7 +13,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(MainController& mc, UiSettingsController& uisc, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -37,7 +37,7 @@ private:
 
     Ui::MainWindowClass ui;
     QSettings m_appSettings;
-    MainController m_controller;
-    UiSettingsController m_uiSettingsController;
+    MainController& m_controller;
+    UiSettingsController& m_uiSettingsController;
     AppActionController* m_actionController = nullptr;
 };

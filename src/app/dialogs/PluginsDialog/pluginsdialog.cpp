@@ -62,14 +62,14 @@ void PluginsDialog::initContextMenu()
 void PluginsDialog::onPluginSelected(const QModelIndex& currentIdx, const QModelIndex& newIdx)
 {
 	if (!currentIdx.isValid() || !m_model) {
-		qDebug() << "Invalid index or model.";
+		LoggingController::warning("Invalid index or model for selected plugin");
 		m_actionTogglePlugin->setEnabled(false);
 		return;
 	}
 
 	QVariant nodeData = m_model->data(currentIdx, Qt::UserRole);
 	if (!nodeData.isValid() || !nodeData.canConvert<PluginMetadata*>()) {
-		qDebug() << "Invalid node data.";
+		LoggingController::warning("Failed to convert node data to PluginMetadata*");
 		m_actionTogglePlugin->setEnabled(false);
 		return;
 	}

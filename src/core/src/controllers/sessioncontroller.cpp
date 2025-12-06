@@ -2,7 +2,7 @@
 
 SessionController::SessionController(SettingsController& settingsController, SourceController& sourceController, ProcessingController& processingController,
 	MountController& mountController, QObject* parent)
-	: BackendControllerBase("SessionController", parent)
+	: QObject(parent)
 	, m_settingsController(settingsController)
 	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), this)), m_sourceController(sourceController), m_processingController(processingController),
 	m_mountController(mountController)

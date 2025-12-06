@@ -1,7 +1,8 @@
 #include "appsettingsdialog.h"
+#include <controllers/AppActionController/appactioncontroller.h>
 
-AppSettingsDialog::AppSettingsDialog(SettingsController& sc, UiSettingsController& uic, QWidget *parent)
-	: QDialog(parent), m_settingsController(sc), m_uiSettingsController(uic)
+AppSettingsDialog::AppSettingsDialog(AppActionController& ac, SettingsController& sc, UiSettingsController& uic, QWidget *parent)
+	: QDialog(parent), m_actionController(ac), m_settingsController(sc), m_uiSettingsController(uic)
 {
 	ui.setupUi(this);
 
@@ -18,8 +19,12 @@ AppSettingsDialog::AppSettingsDialog(SettingsController& sc, UiSettingsControlle
 	connect(ui.dropdownLanguage, &QComboBox::currentTextChanged, &m_settingsController, &SettingsController::setLanguage);
 
 	/// ADVANCED TAB SETUP
-	connect(ui.checkboxLogging, &QCheckBox::toggled, &m_settingsController, &SettingsController::setEnableLogging);
 	connect(ui.checkboxDebug, &QCheckBox::toggled, &m_settingsController, &SettingsController::setEnableDebugMode);
+	connect(ui.checkboxLogging, &QCheckBox::toggled, [this](bool checked) {
+		m_settingsController.setEnableLogging(checked);
+		// Also update ui frame for other logging elements
+		ui.frameEnabledLogging->setEnabled(checked);
+		});
 
 	/// APPEARANCE TAB SETUP
 
@@ -76,6 +81,7 @@ AppSettingsDialog::AppSettingsDialog(SettingsController& sc, UiSettingsControlle
 
 	/// PLUGINS TAB SETUP
 	connect(ui.dirPickerPluginsRoot, &QDirectoryPickerWidget::directoryChanged, &m_settingsController, &SettingsController::setPluginsDirectory);
+	connect(ui.buttonOpenPluginsManager, &QPushButton::clicked, m_actionController.actions().miscActions->openPluginDialog, &QAction::trigger);
 
 	/// KEYBINDS TAB SETUP
 	connect(ui.keyToggleSession, &QKeySequenceEdit::keySequenceChanged, &m_uiSettingsController, &UiSettingsController::setToggleSessionKeybinding);
@@ -138,8 +144,11 @@ void AppSettingsDialog::loadSettingsIntoUi()
 
 	// Advanced tab
 	AdvancedSettings advancedSettings = m_settingsController.advancedSettings();
-	ui.checkboxLogging->setChecked(advancedSettings.enableLogging);
 	ui.checkboxDebug->setChecked(advancedSettings.enableDebugMode);
+	ui.checkboxLogging->setChecked(advancedSettings.enableLogging);
+	ui.frameEnabledLogging->setEnabled(advancedSettings.enableLogging);
+	ui.dirPickerLogs->setSelectedDirectory(advancedSettings.logDirectory);
+	ui.checkboxUniqueLogs->setChecked(advancedSettings.useUniqueLogFiles);
 
 	// Appearance tab
 	AppearanceSettings appearanceSettings = m_uiSettingsController.appearanceSettings();

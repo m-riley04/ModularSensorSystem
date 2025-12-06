@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QDebug>
 #include <pipeline/bins/recorderbin.hpp>
 #include <gst/video/videooverlay.h>
 #include <pipeline/sinks/recording_defaults.hpp>
@@ -27,14 +26,13 @@ public:
 		}
 
 		if (filePath.empty()) {
-			qWarning() << "USBVideoSourceRecorderBin: empty file path provided to setRecordingFilePath";
+			LoggingController::warning("Empty file path provided to setRecordingFilePath");
 			return false;
 		}
 
 		// Debug: log and assert path length
-		qDebug() << "RecorderBin: setting filesink location to"
-			<< QString::fromUtf8(filePath.c_str());
-		qDebug() << "RecorderBin: path byte length =" << filePath.size();
+		LoggingController::debug("Setting recording file path to: " + QString::fromUtf8(filePath.c_str()));
+		LoggingController::debug("RecorderBin: path string =" + QString::fromUtf8(filePath.c_str()));
 
 		// Ensure non-empty sanitized path gets applied before any state changes
 		g_object_set(m_filesinkElement, "location", filePath.c_str(), nullptr);

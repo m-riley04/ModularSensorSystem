@@ -30,8 +30,10 @@ void SettingsController::loadSettings()
 	m_generalSettings.language = m_settings.value("general/language", m_defaultGeneralSettings.language).toString();
 
 	// Advanced settings
-	m_advancedSettings.enableLogging = m_settings.value("advanced/enableLogging", m_defaultAdvancedSettings.enableLogging).toBool();
 	m_advancedSettings.enableDebugMode = m_settings.value("advanced/enableDebugMode", m_defaultAdvancedSettings.enableDebugMode).toBool();
+	m_advancedSettings.enableLogging = m_settings.value("advanced/enableLogging", m_defaultAdvancedSettings.enableLogging).toBool();
+	m_advancedSettings.logDirectory = QDir(m_settings.value("advanced/logDirectory", m_defaultAdvancedSettings.logDirectory.absolutePath()).toString());
+	m_advancedSettings.useUniqueLogFiles = m_settings.value("advanced/useUniqueLogFiles", m_defaultAdvancedSettings.useUniqueLogFiles).toBool();
 
 	// Preset settings
 	m_presetSettings.presetDirectory = QDir(m_settings.value("preset/presetDirectory", m_defaultPresetSettings.presetDirectory.absolutePath()).toString());
@@ -86,8 +88,10 @@ void SettingsController::saveSettings()
 	m_settings.setValue("general/language", m_generalSettings.language);
 
 	// Advanced settings
-	m_settings.setValue("advanced/enableLogging", m_advancedSettings.enableLogging);
 	m_settings.setValue("advanced/enableDebugMode", m_advancedSettings.enableDebugMode);
+	m_settings.setValue("advanced/enableLogging", m_advancedSettings.enableLogging);
+	m_settings.setValue("advanced/logDirectory", m_advancedSettings.logDirectory.absolutePath());
+	m_settings.setValue("advanced/useUniqueLogFiles", m_advancedSettings.useUniqueLogFiles);
 
 	// Preset settings
 	m_settings.setValue("preset/presetDirectory", m_presetSettings.presetDirectory.absolutePath());

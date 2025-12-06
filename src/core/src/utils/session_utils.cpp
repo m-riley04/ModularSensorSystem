@@ -1,6 +1,7 @@
 #include "utils/session_utils.hpp"
 #include "models/settings_models.hpp"
 #include "features/sources/source.hpp"
+#include <controllers/loggingcontroller.hpp>
 
 const QString generateSessionDirectoryPath(const SessionSettings& props, const QString suffix)
 {
@@ -9,7 +10,7 @@ const QString generateSessionDirectoryPath(const SessionSettings& props, const Q
 	// Check output directory
 	if (!QDir(outputDir).exists()) {
 		if (!QDir().mkpath(outputDir)) {
-			qWarning() << "Failed to create base output directory:" << outputDir;
+			LoggingController::warning("Failed to create base output directory: " + outputDir);
 			return QString();
 		}
 	}
@@ -20,7 +21,7 @@ const QString generateSessionDirectoryPath(const SessionSettings& props, const Q
 	// Check output directory
 	if (!QDir(outputFolderPath).exists()) {
 		if (!QDir().mkpath(outputFolderPath)) {
-			qWarning() << "Failed to create session output directory:" << outputFolderPath;
+			LoggingController::warning("Failed to create session output directory: " + outputFolderPath);
 			return QString();
 		}
 	}
@@ -32,7 +33,7 @@ const QString generateSessionSourcePath(Source* src, const SessionSettings& prop
 {
 	auto recordableSrc = src->asRecordable();
 	if (!src->asRecordable()) {
-		qWarning() << "Cannot generate session source path: source is not recordable:" << QString::fromStdString(src->name());
+		LoggingController::warning("Cannot generate session source path: source is not recordable: " + QString::fromStdString(src->name()));
 		return QString();
 	}
 
@@ -41,7 +42,7 @@ const QString generateSessionSourcePath(Source* src, const SessionSettings& prop
 
 	// Check output folder path
 	if (outputFolderPath.isEmpty()) {
-		qWarning() << "Cannot generate session source path: output folder path is empty for source:" << QString::fromStdString(src->name());
+		LoggingController::warning("Cannot generate session source path: output folder path is empty for source: " + QString::fromStdString(src->name()));
 		return QString();
 	}
 
@@ -80,7 +81,7 @@ const QString generateSessionSourcePath(Source* src, const SessionSettings& prop
 	const QString cleanedOutputFilePath = candidate.trimmed();
 
 	if (cleanedOutputFilePath.isEmpty()) {
-		qWarning() << "Cannot generate session source path: output file path is empty for source:" << QString::fromStdString(src->name());
+		LoggingController::warning("Cannot generate session source path: output file path is empty for source: " + QString::fromStdString(src->name()));
 		return QString();
 	}
 

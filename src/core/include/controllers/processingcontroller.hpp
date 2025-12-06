@@ -4,10 +4,10 @@
 #include <qhash.h>
 #include "features/sources/source.hpp"
 #include "features/processors/processor.hpp"
-#include "controllers/backendcontrollerbase.hpp"
+
 #include "utils/boost_qt_conversions.hpp"
 
-class ProcessingController  : public BackendControllerBase
+class ProcessingController  : public QObject
 {
 	Q_OBJECT
 

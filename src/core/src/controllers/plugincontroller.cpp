@@ -1,7 +1,7 @@
 #include "controllers/plugincontroller.hpp"
 
 PluginController::PluginController(SettingsController& settingsController, QObject* parent)
-	: BackendControllerBase("PluginController", parent)
+	: QObject(parent)
 	, m_pluginRegistry(settingsController)
 	, m_pluginRoot(settingsController.pluginsSettings().pluginsDirectory)
 {
