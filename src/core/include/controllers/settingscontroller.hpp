@@ -25,6 +25,9 @@ public:
 	PresetSettings& presetSettings() { return m_presetSettings; }
 	PluginsSettings& pluginsSettings() { return m_pluginsSettings; }
 
+signals:
+	void enableLoggingChanged(bool enabled);
+
 public slots:
 	void loadSettings();
 	void saveSettings();
@@ -48,7 +51,11 @@ public slots:
 	// Advanced settings setters
 	void setAdvancedSettings(const AdvancedSettings& settings) { m_advancedSettings = settings; }
 	void setEnableDebugMode(bool enabled) { m_advancedSettings.enableDebugMode = enabled; }
-	void setEnableLogging(bool enabled) { m_advancedSettings.enableLogging = enabled; }
+	void setEnableLogging(bool enabled) {
+		if (m_advancedSettings.enableLogging == enabled) return;
+		m_advancedSettings.enableLogging = enabled;
+		emit enableLoggingChanged(enabled);
+	}
 	void setLogDirectory(const QDir& dir) { m_advancedSettings.logDirectory = dir; }
 	void setUseUniqueLogFiles(bool unique) { m_advancedSettings.useUniqueLogFiles = unique; }
 

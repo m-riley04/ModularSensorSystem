@@ -32,7 +32,7 @@
    <item>
     <widget class="QChaptersWidget" name="chaptersWidget">
      <property name="pageTitle">
-      <string>Advanced</string>
+      <string>Session</string>
      </property>
      <widget class="QWidget" name="pageGeneral">
       <property name="windowTitle">
@@ -224,6 +224,13 @@
                  <enum>QFrame::Shadow::Raised</enum>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_9">
+                 <item row="1" column="0">
+                  <widget class="QCheckBox" name="checkboxUniqueLogs">
+                   <property name="text">
+                    <string>Use unique names</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="0" column="0">
                   <widget class="QLabel" name="labelLogDirectory">
                    <property name="text">
@@ -241,10 +248,10 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="0">
-                  <widget class="QCheckBox" name="checkboxUniqueLogs">
+                 <item row="2" column="0" colspan="2">
+                  <widget class="QPushButton" name="buttonClearLogFiles">
                    <property name="text">
-                    <string>Use unique names</string>
+                    <string>Clear log files</string>
                    </property>
                   </widget>
                  </item>
@@ -313,8 +320,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>150</width>
-            <height>91</height>
+            <width>634</width>
+            <height>456</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -392,8 +399,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>339</width>
-            <height>347</height>
+            <width>634</width>
+            <height>456</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -426,30 +433,6 @@
               <string>Recording</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_5">
-              <item row="2" column="0" colspan="2">
-               <widget class="QCheckBox" name="checkboxOverwrite">
-                <property name="text">
-                 <string>Overwrite if file already exists</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_18">
-                <property name="text">
-                 <string>Output Prefix</string>
-                </property>
-                <property name="buddy">
-                 <cstring>lineRecordingPrefix</cstring>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="lineRecordingPrefix">
-                <property name="text">
-                 <string>session_</string>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="1">
                <widget class="QDirectoryPickerWidget" name="dirPickerRecording">
                 <property name="sizePolicy">
@@ -466,10 +449,10 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_19">
+              <item row="2" column="0" colspan="2">
+               <widget class="QCheckBox" name="checkboxOverwrite">
                 <property name="text">
-                 <string>Output Directory</string>
+                 <string>Overwrite if file already exists</string>
                 </property>
                </widget>
               </item>
@@ -477,6 +460,37 @@
                <widget class="QCheckBox" name="checkboxAllowSpaces">
                 <property name="text">
                  <string>Allow spaces in filename</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_19">
+                <property name="text">
+                 <string>Output Directory</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="lineRecordingPrefix">
+                <property name="text">
+                 <string>session_</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string>Output Prefix</string>
+                </property>
+                <property name="buddy">
+                 <cstring>lineRecordingPrefix</cstring>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0" colspan="2">
+               <widget class="QPushButton" name="buttonClearSessionRecordings">
+                <property name="text">
+                 <string>Clear session recordings</string>
                 </property>
                </widget>
               </item>
@@ -551,7 +565,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>206</width>
+            <width>620</width>
             <height>509</height>
            </rect>
           </property>
@@ -879,8 +893,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>28</height>
+            <width>634</width>
+            <height>456</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_26">
@@ -933,8 +947,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>28</height>
+            <width>634</width>
+            <height>456</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -990,8 +1004,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>338</width>
-            <height>91</height>
+            <width>634</width>
+            <height>456</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_28">
@@ -1070,8 +1084,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>368</width>
-            <height>121</height>
+            <width>634</width>
+            <height>456</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_15">

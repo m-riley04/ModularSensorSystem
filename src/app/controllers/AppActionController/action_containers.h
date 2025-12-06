@@ -55,6 +55,7 @@ struct MiscActions {
     QAction* openAppProperties;
     QAction* openPluginDialog;
     QAction* clearLogs;
+    QAction* clearRecordings;
     QAction* quit;
     QAction* restart;
 };

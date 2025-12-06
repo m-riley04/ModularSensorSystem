@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QMutex>
+#include <atomic>
 
 /**
  * @brief A controller class for logging messages at various severity levels.
@@ -31,10 +32,15 @@ public:
 	static QString generateLogFileName(bool unique = true);
 	static void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 
+private slots:
+	void onEnableLoggingChanged(bool enabled);
+
 private:
 	SettingsController& m_settingsController;
 
 	static QMutex logMutex;
 	static QFile* logFile;
+	static std::atomic<bool> s_loggingEnabled;
+	static QtMessageHandler previousHandler;
 };
 

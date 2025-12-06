@@ -60,6 +60,8 @@ AppActions MainWindow::createActions() {
         .generatePipelineDiagram = ui.actionDebugPipelineDiagram,
         .openAppProperties = ui.actionProperties,
         .openPluginDialog = ui.actionOpenPluginsManager,
+		.clearLogs = ui.actionClearLogs,
+		.clearRecordings = ui.actionClearRecordings,
         .quit = ui.actionQuit,
         .restart = ui.actionRestart
     };

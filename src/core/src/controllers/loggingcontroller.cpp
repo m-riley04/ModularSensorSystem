@@ -1,8 +1,14 @@
 #include "controllers/loggingcontroller.hpp"
+#include <QDir>
+#include <QTextStream>
+#include <QDateTime>
+#include <QMutexLocker>
 
 // Define static members
 QMutex LoggingController::logMutex;
 QFile* LoggingController::logFile = nullptr;
+std::atomic<bool> LoggingController::s_loggingEnabled{ false };
+QtMessageHandler LoggingController::previousHandler = nullptr;
 
 LoggingController::LoggingController(SettingsController& sc, QObject *parent)
 	: QObject(parent), m_settingsController(sc)
@@ -10,35 +16,24 @@ LoggingController::LoggingController(SettingsController& sc, QObject *parent)
 	// Set the message pattern for logging
 	qSetMessagePattern("[%{time yyyy-MM-dd HH:mm:ss.zzz}] [%{type}] %{message}");
 
-	// Initialize log file based on settings
-	QDir logDir = m_settingsController.advancedSettings().logDirectory;
+	// Install custom message handler and keep previous to allow chaining
+	previousHandler = qInstallMessageHandler(&LoggingController::messageHandler);
 
-	if (!logDir.exists()) {
-		QDir().mkpath(logDir.absolutePath());
-	}
+	// Mirror current setting and prepare file if enabled
+	s_loggingEnabled = m_settingsController.advancedSettings().enableLogging;
+	connect(&m_settingsController, &SettingsController::enableLoggingChanged,
+			this, &LoggingController::onEnableLoggingChanged);
 
-	QString logFilePath = logDir.absolutePath() + "/" + generateLogFileName(m_settingsController.advancedSettings().useUniqueLogFiles);
-	logFile = new QFile(logFilePath, this);
-
-	// Install custom message handler
-	qInstallMessageHandler(&LoggingController::messageHandler);
-
-	// Add log header
-	logMutex.lock();
-	if (logFile->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
-		QTextStream stream(logFile);
-		stream << "----- Log started at " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz") << " -----" << Qt::endl;
-		stream.flush();
-	} else {
-		std::cerr << "Failed to open log file: " << logFilePath.toLocal8Bit().constData() << std::endl;
-	}
-	logMutex.unlock();
+	onEnableLoggingChanged(s_loggingEnabled.load());
 }
 
 LoggingController::~LoggingController()
 {
-	if (logFile && logFile->isOpen()) {
-		logFile->close();
+	if (logFile) {
+		if (logFile->isOpen()) {
+			logFile->close();
+		}
+		logFile = nullptr;
 	}
 }
 
@@ -60,26 +55,31 @@ void LoggingController::clearLogs()
 
 void LoggingController::info(const QString & message)
 {
+	if (!s_loggingEnabled.load()) return;
 	qInfo() << message;
 }
 
 void LoggingController::warning(const QString& message)
 {
+	if (!s_loggingEnabled.load()) return;
 	qWarning() << message;
 }
 
 void LoggingController::critical(const QString& message)
 {
+	if (!s_loggingEnabled.load()) return;
 	qCritical() << message;
 }
 
 void LoggingController::fatal(const QString& message)
 {
+	// Always forward fatal, even if logging is disabled
 	qFatal() << message;
 }
 
 void LoggingController::debug(const QString& message)
 {
+	if (!s_loggingEnabled.load()) return;
 	// TODO/CONSIDER: disable debug messages entirely if debug mode is not enabled in settings?
 	qDebug() << message;
 }
@@ -93,9 +93,20 @@ QString LoggingController::generateLogFileName(bool unique)
 
 void LoggingController::messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg)
 {
+	if (!s_loggingEnabled.load()) {
+		// If logging is disabled, chain to previous handler (console, etc.)
+		if (previousHandler) {
+			previousHandler(type, context, msg);
+		}
+		return;
+	}
+
 	QMutexLocker locker(&logMutex); // Ensure thread-safe logging
 	if (!logFile || !logFile->isOpen()) {
-		std::cerr << "Log file not open: " << msg.toLocal8Bit().constData() << std::endl;
+		// Fallback to previous handler if file not ready
+		if (previousHandler) {
+			previousHandler(type, context, msg);
+		}
 		return;
 	}
 
@@ -109,8 +120,38 @@ void LoggingController::messageHandler(QtMsgType type, const QMessageLogContext&
 	stream.flush();
 
 	if (type == QtFatalMsg) {
-		// For fatal errors, it's crucial to ensure the message is written before aborting (automatically done after returning)
+		// For fatal errors, ensure the message is written before aborting
 		logFile->close(); // Ensure the file is closed before aborting
+	}
+}
+
+void LoggingController::onEnableLoggingChanged(bool enabled)
+{
+	s_loggingEnabled.store(enabled);
+
+	QMutexLocker locker(&logMutex);
+	if (enabled) {
+		if (!logFile) { // Create log file if it doesn't exist
+			QDir logDir = m_settingsController.advancedSettings().logDirectory;
+			if (!logDir.exists()) {
+				QDir().mkpath(logDir.absolutePath());
+			}
+
+			QString logFilePath = logDir.absolutePath() + "/" + generateLogFileName(m_settingsController.advancedSettings().useUniqueLogFiles);
+			logFile = new QFile(logFilePath, this);
+		}
+
+		if (!logFile->isOpen()) { // Open log file
+			if (logFile->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+				QTextStream stream(logFile);
+				stream << "----- Log started at " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz") << " -----" << Qt::endl;
+				stream.flush();
+			}
+		}
+	} else {
+		if (logFile && logFile->isOpen()) {
+			logFile->close();
+		}
 	}
 }
 

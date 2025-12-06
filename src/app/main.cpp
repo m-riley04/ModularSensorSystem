@@ -27,8 +27,13 @@ void setupConsole()
 int main(int argc, char *argv[])
 {
 	#ifdef Q_OS_WINDOWS
-	if (IsDebuggerPresent()) setupConsole();
+	// Removed this because I implemented a better logging system that writes to files.
+	// Need to re-evaluate if I want this behavior again later.
+	//if (IsDebuggerPresent()) setupConsole();
 	#endif
+
+	// Create application
+    QApplication a(argc, argv);
 
 	// Initialize core app
 	QCoreApplication::setApplicationName("ModularSensorSystem");
@@ -41,8 +46,7 @@ int main(int argc, char *argv[])
 	MainController mainController(settings, nullptr);
 	UiSettingsController uiSettingsController(settings, nullptr);
 
-	// Create application
-    QApplication a(argc, argv);
+	// Crete and show main window
 	MainWindow w(mainController, uiSettingsController, nullptr);
     w.show();
 

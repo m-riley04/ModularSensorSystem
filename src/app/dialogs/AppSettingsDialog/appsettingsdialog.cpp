@@ -25,6 +25,9 @@ AppSettingsDialog::AppSettingsDialog(AppActionController& ac, SettingsController
 		// Also update ui frame for other logging elements
 		ui.frameEnabledLogging->setEnabled(checked);
 		});
+	connect(ui.dirPickerLogs, &QDirectoryPickerWidget::directoryChanged, &m_settingsController, &SettingsController::setLogDirectory);
+	connect(ui.buttonClearLogFiles, &QPushButton::clicked, m_actionController.actions().miscActions->clearLogs, &QAction::trigger);
+	//connect(ui.spinboxMaxLogFiles, &QSpinBox::valueChanged, &m_settingsController, &SettingsController::setMaxLogFiles);
 
 	/// APPEARANCE TAB SETUP
 
@@ -35,6 +38,7 @@ AppSettingsDialog::AppSettingsDialog(AppActionController& ac, SettingsController
 	connect(ui.lineRecordingPrefix, &QLineEdit::textChanged, &m_settingsController, &SettingsController::setOutputPrefix);
 	connect(ui.checkboxOverwrite, &QCheckBox::toggled, &m_settingsController, &SettingsController::setOverwriteExistingFiles);
 	connect(ui.checkboxAllowSpaces, &QCheckBox::toggled, &m_settingsController, &SettingsController::setAllowSpacesInFilenames);
+	connect(ui.buttonClearSessionRecordings, &QPushButton::clicked, m_actionController.actions().miscActions->clearRecordings, &QAction::trigger);
 	connect(ui.checkboxEnableClipping, &QCheckBox::toggled, &m_settingsController, &SettingsController::setEnableClipping);
 
 	/// SOURCES TAB SETUP

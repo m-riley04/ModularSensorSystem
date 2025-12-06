@@ -46,6 +46,26 @@ void SessionController::stopRecording()
 	m_pipeline.stopRecording();
 }
 
+void SessionController::clearRecordings()
+{
+	QDir outputDir = m_settingsController.sessionSettings().outputDirectory;
+	if (!outputDir.exists()) {
+		return; // Nothing to clear
+	}
+
+	// TODO: make file extensions configurable
+	QString sessionRecordingPrefix = m_settingsController.sessionSettings().outputPrefix;
+	QStringList recordingDirs = outputDir.entryList(QStringList() << sessionRecordingPrefix << "*", QDir::Dirs);
+	for (const QString& dirName : recordingDirs) {
+		// Skip . and ..
+		if (dirName == "." || dirName == "..") continue;
+		QDir dir(outputDir.absoluteFilePath(dirName));
+		if (!dir.removeRecursively()) {
+			emit errorOccurred(QString("Failed to remove recording directory: %1").arg(dir.absolutePath()));
+		}
+	}
+}
+
 const QList<const Source*> SessionController::getSourcesByMount(QUuid mountId) const
 {
 	QList<const Source*> sources;

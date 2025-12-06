@@ -66,6 +66,7 @@ private slots:
     void onOpenAppPropertiesDialog();
     void onOpenPluginDialog();
 	void onClearLogs();
+    void onClearRecordings();
 
 	void quit();
 	void restart();

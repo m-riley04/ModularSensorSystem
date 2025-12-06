@@ -41,6 +41,8 @@ public slots:
 	void startRecording();
 	void stopRecording();
 
+	void clearRecordings();
+
 private:
 	SessionPipeline m_pipeline;
 	ns m_lastSessionTimestamp = 0;
