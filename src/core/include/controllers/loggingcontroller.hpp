@@ -3,6 +3,7 @@
 #include <QObject>
 #include "controllers/settingscontroller.hpp"
 #include <iostream>
+#include <QDebug>
 #include <QFile>
 #include <QMutex>
 
@@ -18,6 +19,8 @@ class LoggingController : public QObject
 public:
 	LoggingController(SettingsController& sc, QObject *parent);
 	~LoggingController();
+
+	void clearLogs();
 
 	static void info(const QString& message);
 	static void warning(const QString& message);

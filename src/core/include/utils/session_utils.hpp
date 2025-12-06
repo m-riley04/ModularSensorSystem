@@ -2,7 +2,6 @@
 
 #include <QString>
 #include <QDir>
-#include <QDebug>
 #include <gst/gst.h>
 
 typedef unsigned long long ns;

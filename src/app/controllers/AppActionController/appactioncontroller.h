@@ -65,6 +65,7 @@ private slots:
     void onPrintPipelineDebugClicked();
     void onOpenAppPropertiesDialog();
     void onOpenPluginDialog();
+	void onClearLogs();
 
 	void quit();
 	void restart();

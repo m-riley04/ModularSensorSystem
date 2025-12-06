@@ -3,8 +3,8 @@
 #include <QObject>
 #include <qcameradevice.h>
 #include <QPointer>
-#include <QDebug>
 #include <QUuid>
+#include <QHash>
 
 #include "features/processors/processor.hpp"
 #include <sdk/plugins/isourceplugin.hpp>

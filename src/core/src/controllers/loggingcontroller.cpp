@@ -42,6 +42,22 @@ LoggingController::~LoggingController()
 	}
 }
 
+void LoggingController::clearLogs()
+{
+	QDir logDir = m_settingsController.advancedSettings().logDirectory;
+	if (!logDir.exists()) {
+		return; // Nothing to clear
+	}
+
+	QStringList logFiles = logDir.entryList(QStringList() << "log*.txt", QDir::Files);
+	for (const QString& fileName : logFiles) {
+		QFile file(logDir.absoluteFilePath(fileName));
+		if (!file.remove()) {
+			qWarning() << "Failed to remove log file:" << file.fileName();
+		}
+	}
+}
+
 void LoggingController::info(const QString & message)
 {
 	qInfo() << message;

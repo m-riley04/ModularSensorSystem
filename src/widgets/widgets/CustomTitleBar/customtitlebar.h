@@ -7,6 +7,7 @@
 #include <QPoint>
 #include <qmainwindow.h>
 #include <QPointer>
+#include <QDebug>
 #include <qdir.h>
 
 class CustomTitleBar : public QWidget

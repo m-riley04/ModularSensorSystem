@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QThread>

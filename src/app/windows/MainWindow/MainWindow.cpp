@@ -75,11 +75,10 @@ AppActions MainWindow::createActions() {
     };
 }
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(MainController& mc, UiSettingsController& uisc, QWidget *parent)
     : QMainWindow(parent)
-    , m_appSettings(QSettings(QCoreApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat, this))
-    , m_controller(MainController(m_appSettings, this))
-	, m_uiSettingsController(UiSettingsController(m_appSettings, this))
+    , m_controller(mc)
+	, m_uiSettingsController(uisc)
 {
     ui.setupUi(this);
 

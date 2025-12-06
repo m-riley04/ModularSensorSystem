@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <gst/gst.h>
-#include <QDebug>
 #include <gst/video/videooverlay.h>
 #include <controllers/loggingcontroller.hpp>
 

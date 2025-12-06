@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
-#include <QDebug>
 #include "sdk/plugins/factory.hpp"
 #include "sdk/plugins/iplugin.hpp"
 #include "utils/plugins_utils.hpp"

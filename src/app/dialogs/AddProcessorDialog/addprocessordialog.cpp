@@ -1,4 +1,5 @@
 #include "addprocessordialog.h"
+#include <controllers/loggingcontroller.hpp>
 
 AddProcessorDialog::AddProcessorDialog(PluginController* pluginController, QWidget *parent)
 	: QDialog(parent), m_pluginController(pluginController)
@@ -40,11 +41,11 @@ void AddProcessorDialog::populateProcessorsDropdown()
 
 	// Check if there are any processors available
 	if (m_pluginController->processorPlugins().count() <= 0) { // This is a more robust check. Sorta redunant, but still good to have.
-		qDebug() << "No processor plugins available in controller";
+		LoggingController::warning("No processor plugins available to populate dropdown");
 		return;
 	}
 	if (ui.dropdownProcessor->count() <= 0) {
-		qDebug() << "No processor plugins available in dropdown";
+		LoggingController::warning("Dropdown processor count is zero after population");
 		return;
 	}
 

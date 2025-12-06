@@ -92,6 +92,7 @@ void AppActionController::initActionSignals()
 		QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().sessionSettings().outputDirectory.absolutePath()));
 		});
     connect(m_miscActions.openAppProperties, &QAction::triggered, this, &AppActionController::onOpenAppPropertiesDialog);
+	connect(m_miscActions.clearLogs, &QAction::triggered, this, &AppActionController::onClearLogs);
     connect(m_miscActions.quit, &QAction::triggered, this, &AppActionController::quit);
     connect(m_miscActions.restart, &QAction::triggered, this, &AppActionController::restart);
 }
@@ -191,6 +192,14 @@ void AppActionController::onOpenPluginDialog() {
     PluginsDialog* pluginsDialog = new PluginsDialog(m_controller.settingsController(), m_controller.pluginController(), m_parentWidget);
     pluginsDialog->setWindowModality(Qt::WindowModal);
     pluginsDialog->show();
+}
+
+void AppActionController::onClearLogs()
+{
+    auto response = QMessageBox::question(m_parentWidget, tr("Clear Logs"), tr("Are you sure you want to clear all log files?"), QMessageBox::Yes | QMessageBox::No);
+    if (response == QMessageBox::Yes) {
+        m_controller.loggingController().clearLogs();
+	}
 }
 
 void AppActionController::onOpenSavePresetDialog()
