@@ -3,6 +3,7 @@
 #include <QTextStream>
 #include <QDateTime>
 #include <QMutexLocker>
+#include <utils/safer_io_utils.hpp>
 
 // Define static members
 QMutex LoggingController::logMutex;
@@ -44,13 +45,10 @@ void LoggingController::clearLogs()
 		return; // Nothing to clear
 	}
 
-	QStringList logFiles = logDir.entryList(QStringList() << "log*.txt", QDir::Files);
-	for (const QString& fileName : logFiles) {
-		QFile file(logDir.absoluteFilePath(fileName));
-		if (!file.remove()) {
-			qWarning() << "Failed to remove log file:" << file.fileName();
-		}
-	}
+	safeDeleteDirectoryContents(
+		logDir
+		, QStringList() << "log*.txt"
+		, QDir::Files);
 }
 
 void LoggingController::info(const QString & message)

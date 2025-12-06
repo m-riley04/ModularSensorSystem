@@ -1,4 +1,5 @@
 ﻿#include "controllers/sessioncontroller.hpp"
+#include <utils/safer_io_utils.hpp>
 
 SessionController::SessionController(SettingsController& settingsController, SourceController& sourceController, ProcessingController& processingController,
 	MountController& mountController, QObject* parent)
@@ -48,22 +49,12 @@ void SessionController::stopRecording()
 
 void SessionController::clearRecordings()
 {
-	QDir outputDir = m_settingsController.sessionSettings().outputDirectory;
-	if (!outputDir.exists()) {
-		return; // Nothing to clear
-	}
-
-	// TODO: make file extensions configurable
 	QString sessionRecordingPrefix = m_settingsController.sessionSettings().outputPrefix;
-	QStringList recordingDirs = outputDir.entryList(QStringList() << sessionRecordingPrefix << "*", QDir::Dirs);
-	for (const QString& dirName : recordingDirs) {
-		// Skip . and ..
-		if (dirName == "." || dirName == "..") continue;
-		QDir dir(outputDir.absoluteFilePath(dirName));
-		if (!dir.removeRecursively()) {
-			emit errorOccurred(QString("Failed to remove recording directory: %1").arg(dir.absolutePath()));
-		}
-	}
+
+	safeDeleteDirectoryContents(
+		m_settingsController.sessionSettings().outputDirectory
+		, QStringList() << sessionRecordingPrefix << "*"
+		, QDir::Dirs);
 }
 
 const QList<const Source*> SessionController::getSourcesByMount(QUuid mountId) const

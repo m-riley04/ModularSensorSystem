@@ -129,6 +129,7 @@
     <ClInclude Include="include\utils\debug.hpp" />
     <ClInclude Include="include\utils\element_utils.hpp" />
     <ClInclude Include="include\utils\plugins_utils.hpp" />
+    <ClInclude Include="include\utils\safer_io_utils.hpp" />
     <ClInclude Include="include\utils\session_utils.hpp" />
     <ClInclude Include="include\utils\utils.hpp" />
     <QtMoc Include="include\controllers\sessioncontroller.hpp" />
