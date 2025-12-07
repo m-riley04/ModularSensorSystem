@@ -29,18 +29,22 @@ public:
 	static void fatal(const QString& message);
 	static void debug(const QString& message);
 
-	static QString generateLogFileName(bool unique = true);
-	static void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
-
 private slots:
 	void onEnableLoggingChanged(bool enabled);
+	void onUseUniqueLogFileNamesChanged(bool useUniqueNames);
 
 private:
 	SettingsController& m_settingsController;
 
+	static QString generateLogFileName();
+	static void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
+	static void closeLogFile(bool alreadyLocked = false);
+	static void openLogFile(QDir logDirectory, QObject* logFileParent = nullptr, bool alreadyLocked = false);
+
 	static QMutex logMutex;
 	static QFile* logFile;
 	static std::atomic<bool> s_loggingEnabled;
+	static std::atomic<bool> s_useUniqueLogFileNames;
 	static QtMessageHandler previousHandler;
 };
 

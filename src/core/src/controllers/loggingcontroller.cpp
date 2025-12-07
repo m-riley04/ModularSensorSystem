@@ -9,6 +9,7 @@
 QMutex LoggingController::logMutex;
 QFile* LoggingController::logFile = nullptr;
 std::atomic<bool> LoggingController::s_loggingEnabled{ false };
+std::atomic<bool> LoggingController::s_useUniqueLogFileNames{ false };
 QtMessageHandler LoggingController::previousHandler = nullptr;
 
 LoggingController::LoggingController(SettingsController& sc, QObject *parent)
@@ -30,12 +31,11 @@ LoggingController::LoggingController(SettingsController& sc, QObject *parent)
 
 LoggingController::~LoggingController()
 {
-	if (logFile) {
-		if (logFile->isOpen()) {
-			logFile->close();
-		}
-		logFile = nullptr;
-	}
+	// Close log file
+	closeLogFile(false);
+
+	// Restore previous message handler
+	qInstallMessageHandler(previousHandler);
 }
 
 void LoggingController::clearLogs()
@@ -82,9 +82,26 @@ void LoggingController::debug(const QString& message)
 	qDebug() << message;
 }
 
-QString LoggingController::generateLogFileName(bool unique)
+void LoggingController::onUseUniqueLogFileNamesChanged(bool useUniqueNames)
 {
-	if (!unique) return QString("log.txt");
+	s_loggingEnabled.store(useUniqueNames);
+
+	// Reset close current file and open a new one with updated naming scheme
+	this->closeLogFile(false);
+	this->openLogFile(m_settingsController.advancedSettings().logDirectory, this, false);
+}
+
+void LoggingController::onEnableLoggingChanged(bool enabled)
+{
+	s_loggingEnabled.store(enabled);
+
+	if (enabled) this->openLogFile(m_settingsController.advancedSettings().logDirectory, this, false);
+	else this->closeLogFile(false);
+}
+
+QString LoggingController::generateLogFileName()
+{
+	if (!s_useUniqueLogFileNames.load()) return QString("log.txt");
 	QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
 	return QString("log_%1.txt").arg(timestamp);
 }
@@ -119,37 +136,48 @@ void LoggingController::messageHandler(QtMsgType type, const QMessageLogContext&
 
 	if (type == QtFatalMsg) {
 		// For fatal errors, ensure the message is written before aborting
-		logFile->close(); // Ensure the file is closed before aborting
+		LoggingController::closeLogFile(true);
 	}
 }
 
-void LoggingController::onEnableLoggingChanged(bool enabled)
+void LoggingController::openLogFile(QDir logDirectory, QObject* logFileParent, bool alreadyLocked)
 {
-	s_loggingEnabled.store(enabled);
+	if (!alreadyLocked) QMutexLocker locker(&logMutex); // Lock if not already locked
+	if (logFile && logFile->isOpen()) return; // Already open
 
-	QMutexLocker locker(&logMutex);
-	if (enabled) {
-		if (!logFile) { // Create log file if it doesn't exist
-			QDir logDir = m_settingsController.advancedSettings().logDirectory;
-			if (!logDir.exists()) {
-				QDir().mkpath(logDir.absolutePath());
-			}
+	if (!logFile) {
+		if (!logDirectory.exists()) {
+			QDir().mkpath(logDirectory.absolutePath());
+		}
+		QString logFilePath = logDirectory.absolutePath() + "/" + generateLogFileName();
+		logFile = new QFile(logFilePath, logFileParent);
+	}
 
-			QString logFilePath = logDir.absolutePath() + "/" + generateLogFileName(m_settingsController.advancedSettings().useUniqueLogFiles);
-			logFile = new QFile(logFilePath, this);
-		}
-
-		if (!logFile->isOpen()) { // Open log file
-			if (logFile->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
-				QTextStream stream(logFile);
-				stream << "----- Log started at " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz") << " -----" << Qt::endl;
-				stream.flush();
-			}
-		}
-	} else {
-		if (logFile && logFile->isOpen()) {
-			logFile->close();
-		}
+	if (logFile->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+		QTextStream stream(logFile);
+		stream << "----- Log started at " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz") << " -----" << Qt::endl;
+		stream.flush();
 	}
 }
 
+void LoggingController::closeLogFile(bool alreadyLocked)
+{
+	if (!alreadyLocked) QMutexLocker locker(&logMutex); // Lock if not already locked
+	if (!logFile) return;
+	if (!logFile->isOpen()) return;
+
+	// Write closing messages directly to the file to ensure they are logged
+	{
+		QTextStream stream(logFile);
+		stream << "[" << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz") << "] [INFO] Log session ending..." << Qt::endl;
+		stream << "[" << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz") << "] [INFO] Bye bye!" << Qt::endl;
+		stream << "----- Log ended at " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz") << " -----" << Qt::endl;
+		stream.flush();
+	}
+
+	logFile->close();
+
+	// Delete log file object so a new one is created next time logging is enabled
+	logFile->deleteLater();
+	logFile = nullptr;
+}
