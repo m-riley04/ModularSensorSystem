@@ -1,5 +1,6 @@
 #include "sdk/plugins/pluginloader.hpp"
 #include <algorithm>
+#include <controllers/loggingcontroller.hpp>
 
 PluginRegistry::PluginRegistry(SettingsController& settingsController)
 	: m_settingsController(settingsController)
@@ -72,10 +73,10 @@ void PluginRegistry::collectMetadata(const std::filesystem::path& libPath, uint3
         }
     }
     catch (const std::exception& ex) {
-        qDebug() << "Metadata collection failed for" << QString::fromStdString(meta.path) << ":" << ex.what();
+		LoggingController::warning("Metadata collection failed for " + QString::fromStdString(meta.path) + ": " + QString::fromStdString(ex.what()));
     }
     catch (...) {
-        qDebug() << "Metadata collection failed for" << QString::fromStdString(meta.path);
+		LoggingController::warning("Metadata collection failed for " + QString::fromStdString(meta.path) + ": unknown error");
     }
 
     m_pluginMetadata.push_back(meta);
@@ -108,12 +109,11 @@ bool PluginRegistry::load(const std::string& pluginPath, uint32_t requiredApi) {
         m_loadedByPath[pluginPath] = &m_loaded.back();
     }
     catch (const std::exception& ex) {
-        qDebug() << "Failed to load plugin from " << QString::fromStdString(pluginPath)
-            << ": " << ex.what();
+		LoggingController::warning("Failed to load plugin from " + QString::fromStdString(pluginPath) + ": " + QString::fromStdString(ex.what()));;
         return false;
     }
     catch (...) {
-        qDebug() << "Failed to load plugin from " << QString::fromStdString(pluginPath);
+		LoggingController::warning("Failed to load plugin from " + QString::fromStdString(pluginPath) + ": unknown error");
         return false;
     }
 
@@ -128,7 +128,9 @@ bool PluginRegistry::unload(const std::string& pluginPath) {
     auto pluginType = plugin->instance ? plugin->instance->type() : IElement::Type::Source;
     if (plugin->instance && plugin->destroy) {
         try { plugin->destroy(plugin->instance); }
-        catch (...) {}
+        catch (...) {
+			LoggingController::warning("Exception occurred while destroying plugin instance for " + QString::fromStdString(pluginPath));
+        }
         plugin->instance = nullptr;
     }
     m_loadedByType[pluginType].erase(std::remove_if(m_loadedByType[pluginType].begin(), m_loadedByType[pluginType].end(),
@@ -145,12 +147,12 @@ void PluginRegistry::loadAll() {
         QString pluginPath = QString::fromStdString(p.path);
 		QStringList enabledPlugins = m_settingsController.pluginsSettings().enabledPluginIds;
         if (!enabledPlugins.contains(pluginPath)) {
-            qDebug() << "Skipping plugin '" << p.name << "' as it is not enabled in settings.";
+			LoggingController::warning("Skipping plugin '" + QString::fromStdString(p.name) + "' as it is not enabled in settings.");
             continue;
         }
 
         if (!this->load(p.path, FACTORY_API_VERSION)) {
-            qDebug() << "Failed to load plugin '" << QString::fromStdString(p.name) << "'";
+			LoggingController::warning("Failed to load plugin '" + QString::fromStdString(p.name) + "'.");
         }
     }
 }

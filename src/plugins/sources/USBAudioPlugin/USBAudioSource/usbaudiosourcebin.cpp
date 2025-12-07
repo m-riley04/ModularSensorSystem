@@ -1,4 +1,5 @@
 #include "usbaudiosourcebin.hpp"
+#include <controllers/loggingcontroller.hpp>
 
 USBAudioSourceBin::USBAudioSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
 	: SourceBin(uuid, id, Source::Type::AUDIO, "src")
@@ -26,7 +27,7 @@ bool USBAudioSourceBin::build()
 
     // Check validity of each
     if (!src || !conv || !resample || !queue) {
-        qWarning() << "Failed to create one or more elements";
+        LoggingController::warning("Failed to create one or more elements");
         if (src)  gst_object_unref(src);
         if (conv) gst_object_unref(conv);
 		if (resample) gst_object_unref(resample);
@@ -36,7 +37,7 @@ bool USBAudioSourceBin::build()
 
     // Add elements to bin, and clean up if failed
     if (!this->addMany(src, conv, resample, queue)) {
-        qWarning() << "Failed to add elements to source bin";
+        LoggingController::warning("Failed to add elements to source bin");
         gst_object_unref(src);
         gst_object_unref(conv);
 		gst_object_unref(resample);
@@ -46,14 +47,14 @@ bool USBAudioSourceBin::build()
 
     // Link elements, and clean up if failed
     if (!gst_element_link_many(src, conv, resample, queue, NULL)) {
-        qWarning() << "Failed to link wasapisrc2 -> conv -> resample -> queue";
+        LoggingController::warning("Failed to link wasapisrc2 -> conv -> resample -> queue");
         gst_bin_remove_many(GST_BIN(m_bin), src, conv, resample, queue, NULL);
         return false;
     }
 
     // Create ghost source pads, and clean up if failed
     if (!this->createSrcGhostPad(queue, "src")) {
-        qWarning() << "Failed to create ghost source pads";
+        LoggingController::warning("Failed to create ghost source pads");
         gst_element_unlink_many(src, conv, resample, queue, NULL);
         gst_bin_remove_many(GST_BIN(m_bin), src, conv, resample, queue, NULL);
         return false;

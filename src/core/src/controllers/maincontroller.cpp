@@ -4,6 +4,7 @@
 MainController::MainController(QSettings& settings, QObject *parent)
 	: QObject(parent)
 	, m_settingsController(SettingsController(settings, this))
+	, m_loggingController(LoggingController(m_settingsController, this))
 	, m_sourceController(SourceController(this))
 	, m_processingController(ProcessingController(this))
 	, m_mountController(MountController(this))

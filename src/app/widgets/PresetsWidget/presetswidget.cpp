@@ -16,7 +16,7 @@ PresetsWidget::~PresetsWidget()
 void PresetsWidget::initWidgets()
 {
 	if (!m_controller) {
-		qWarning() << "PresetsWidget: pController is null; cannot initialize widgets";
+		LoggingController::warning("PresetsWidget: pController is null; cannot initialize widgets");
 		return;
 	}
 
@@ -39,7 +39,7 @@ void PresetsWidget::initSignals()
 	connect(ui.listPresets, &QListWidget::currentItemChanged, this, &PresetsWidget::selectedPresetChanged);
 
 	if (!m_controller) {
-		qWarning() << "PresetsWidget: pController is null; cannot initialize signals";
+		LoggingController::warning("PresetsWidget: pController is null; cannot initialize signals");
 		return;
 	}
 

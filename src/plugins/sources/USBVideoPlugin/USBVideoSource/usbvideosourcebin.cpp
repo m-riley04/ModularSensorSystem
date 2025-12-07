@@ -1,4 +1,5 @@
 #include "usbvideosourcebin.hpp"
+#include <controllers/loggingcontroller.hpp>
 
 USBVideoSourceBin::USBVideoSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
 	: SourceBin(uuid, id, Source::Type::VIDEO, "src")
@@ -23,7 +24,7 @@ bool USBVideoSourceBin::build()
 
     // Check validity of each
     if (!src || !conv || !queue) {
-        qWarning() << "Failed to create one or more elements";
+        LoggingController::warning("Failed to create one or more elements");
         if (src)  gst_object_unref(src);
         if (conv) gst_object_unref(conv);
         if (queue) gst_object_unref(queue);
@@ -32,7 +33,7 @@ bool USBVideoSourceBin::build()
 
     // Add elements to bin, and clean up if failed
     if (!this->addMany(src, conv, queue)) {
-        qWarning() << "Failed to add elements to source bin";
+        LoggingController::warning("Failed to add elements to source bin");
         gst_object_unref(src);
         gst_object_unref(conv);
         gst_object_unref(queue);
@@ -41,14 +42,14 @@ bool USBVideoSourceBin::build()
 
     // Link elements, and clean up if failed
     if (!gst_element_link_many(src, conv, queue, NULL)) {
-        qWarning() << "Failed to link mfvideosrc -> queue -> videoconvert";
+        LoggingController::warning("Failed to link mfvideosrc -> queue -> videoconvert");
         gst_bin_remove_many(GST_BIN(m_bin), src, conv, queue, NULL);
         return false;
     }
 
     // Create ghost source pads, and clean up if failed
     if (!this->createSrcGhostPad(queue, "src")) {
-        qWarning() << "Failed to create ghost source pads";
+        LoggingController::warning("Failed to create ghost source pads");
         gst_element_unlink_many(src, conv, queue, NULL);
         gst_bin_remove_many(GST_BIN(m_bin), src, conv, queue, NULL);
         return false;

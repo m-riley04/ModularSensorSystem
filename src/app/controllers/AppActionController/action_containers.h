@@ -2,11 +2,10 @@
 
 #include <QAction>
 
-struct PresetActions {
-    QAction* savePreset;
-    QAction* loadPreset;
-    QAction* deletePreset;
-    QAction* refreshPreset;
+struct SourceActions {
+    QAction* openAddSource;
+    QAction* openRemoveSource;
+    QAction* openEditSource;
 };
 
 struct MountActions {
@@ -15,11 +14,6 @@ struct MountActions {
     QAction* openEditMount;
 };
 
-struct SourceActions {
-    QAction* openAddSource;
-    QAction* openRemoveSource;
-    QAction* openEditSource;
-};
 
 struct ProcessorActions {
     QAction* openAddProcessor;
@@ -34,6 +28,14 @@ struct SessionActions {
     QAction* toggleRecording;
     QAction* clipSession;
 };
+
+struct PresetActions {
+    QAction* savePreset;
+    QAction* loadPreset;
+    QAction* deletePreset;
+    QAction* refreshPreset;
+};
+
 
 struct ViewActions {
     QAction* viewPresetsList;
@@ -52,6 +54,8 @@ struct MiscActions {
     QAction* generatePipelineDiagram;
     QAction* openAppProperties;
     QAction* openPluginDialog;
+    QAction* clearLogs;
+    QAction* clearRecordings;
     QAction* quit;
     QAction* restart;
 };

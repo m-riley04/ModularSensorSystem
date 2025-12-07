@@ -12,7 +12,7 @@ bool USBVideoSourceRecorderBin::build()
 
     m_bin = createDefaultVideoRecordingSink(("usb_vid_recorder_sink_bin_" + deviceUuid).c_str());
     if (!m_bin) {
-        qWarning() << "USBVideoSourceRecorderBin: Failed to create recorder bin";
+		LoggingController::warning("Failed to create recorder bin");
         return false;
 	}
 
@@ -25,7 +25,7 @@ bool USBVideoSourceRecorderBin::build()
     m_filesinkElement = gst_bin_get_by_name(GST_BIN(m_bin), "filesink");
 
     if (!m_inputQueue || !m_valveElement || !m_encoder || !m_parse || !m_muxer || !m_filesinkElement) {
-        qWarning() << "USBVideoSourceRecorderBin: Failed to get one or more elements from recorder bin";
+		LoggingController::warning("Failed to get one or more elements from recorder bin");
         return false;
 	}
 

@@ -8,7 +8,6 @@
 #include "testdatasourcepluginutils.hpp"
 #include <QTimer>
 #include <QRandomGenerator>
-#include <QDebug>
 
 class TestDataSource : public Source
 	, public IPreviewableSource

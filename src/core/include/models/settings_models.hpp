@@ -14,8 +14,11 @@ struct GeneralSettings
 
 struct AdvancedSettings
 {
-	bool enableLogging = false;
 	bool enableDebugMode = false;
+	bool enableLogging = false;
+	bool logToFile = true;
+	bool useUniqueLogFiles = true;
+	QDir logDirectory = QCoreApplication::applicationDirPath() + "/logs";
 };
 
 struct SessionSettings

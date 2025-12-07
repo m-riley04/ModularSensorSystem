@@ -83,7 +83,7 @@ void AppActionController::initActionSignals()
         QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().pluginsSettings().pluginsDirectory.absolutePath()));
 		});
     connect(m_miscActions.openLogsDirectory, &QAction::triggered, [this]() {
-		//QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().advancedSettings().logsDirectory.absolutePath()));
+		QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().advancedSettings().logDirectory.absolutePath()));
 		});
     connect(m_miscActions.openAppDirectory, &QAction::triggered, [this]() {
 		QDesktopServices::openUrl(QUrl::fromLocalFile(QCoreApplication::applicationDirPath()));
@@ -92,6 +92,8 @@ void AppActionController::initActionSignals()
 		QDesktopServices::openUrl(QUrl::fromLocalFile(m_controller.settingsController().sessionSettings().outputDirectory.absolutePath()));
 		});
     connect(m_miscActions.openAppProperties, &QAction::triggered, this, &AppActionController::onOpenAppPropertiesDialog);
+	connect(m_miscActions.clearLogs, &QAction::triggered, this, &AppActionController::onClearLogs);
+	connect(m_miscActions.clearRecordings, &QAction::triggered, this, &AppActionController::onClearRecordings);
     connect(m_miscActions.quit, &QAction::triggered, this, &AppActionController::quit);
     connect(m_miscActions.restart, &QAction::triggered, this, &AppActionController::restart);
 }
@@ -181,7 +183,7 @@ void AppActionController::onPresetElementSelected(QListWidgetItem* current, QLis
 }
 
 void AppActionController::onOpenAppPropertiesDialog() {
-    AppSettingsDialog* appSettingsDialog = new AppSettingsDialog(m_controller.settingsController(), m_uiSettingsController, m_parentWidget);
+    AppSettingsDialog* appSettingsDialog = new AppSettingsDialog(*this, m_controller.settingsController(), m_uiSettingsController, m_parentWidget);
     appSettingsDialog->setWindowModality(Qt::WindowModal);
     appSettingsDialog->show();
 }
@@ -191,6 +193,30 @@ void AppActionController::onOpenPluginDialog() {
     PluginsDialog* pluginsDialog = new PluginsDialog(m_controller.settingsController(), m_controller.pluginController(), m_parentWidget);
     pluginsDialog->setWindowModality(Qt::WindowModal);
     pluginsDialog->show();
+}
+
+void AppActionController::onClearLogs()
+{
+    auto response = QMessageBox::question(m_parentWidget, tr("Clear Logs"), tr("Are you sure you want to clear all log files?"), QMessageBox::Yes | QMessageBox::No);
+    if (response == QMessageBox::Yes) {
+        m_controller.loggingController().clearLogs();
+	}
+}
+
+void AppActionController::onClearRecordings()
+{
+    auto response = QMessageBox::question(m_parentWidget, tr("Clear recordings"), tr("Are you sure you want to clear all log files?"), QMessageBox::Yes | QMessageBox::No);
+    if (response == QMessageBox::No) return;
+	response = QMessageBox::question(m_parentWidget, tr("Clear recordings"), tr("Are you SURE? This will permanently delete all recorded session data. Are you absolutely sure you want to continue?"), QMessageBox::Yes | QMessageBox::No);
+	if (response == QMessageBox::No) return;
+    bool ok;
+    QString userInput = QInputDialog::getText(m_parentWidget, tr("Final Confirmation"), tr("Type 'DELETE' to confirm permanent deletion of all recordings:"), QLineEdit::Normal, QString(), &ok);
+    if (ok && userInput == "DELETE") {
+        m_controller.sessionController().clearRecordings();
+    }
+    else {
+        QMessageBox::information(m_parentWidget, tr("Clear Recordings Cancelled"), tr("Clear recordings operation cancelled."));
+	}
 }
 
 void AppActionController::onOpenSavePresetDialog()

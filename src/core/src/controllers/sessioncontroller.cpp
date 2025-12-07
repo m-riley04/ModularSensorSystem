@@ -1,8 +1,9 @@
 ﻿#include "controllers/sessioncontroller.hpp"
+#include <utils/safer_io_utils.hpp>
 
 SessionController::SessionController(SettingsController& settingsController, SourceController& sourceController, ProcessingController& processingController,
 	MountController& mountController, QObject* parent)
-	: BackendControllerBase("SessionController", parent)
+	: QObject(parent)
 	, m_settingsController(settingsController)
 	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), this)), m_sourceController(sourceController), m_processingController(processingController),
 	m_mountController(mountController)
@@ -44,6 +45,16 @@ void SessionController::startRecording()
 void SessionController::stopRecording()
 {
 	m_pipeline.stopRecording();
+}
+
+void SessionController::clearRecordings()
+{
+	QString sessionRecordingPrefix = m_settingsController.sessionSettings().outputPrefix;
+
+	safeDeleteDirectoryContents(
+		m_settingsController.sessionSettings().outputDirectory
+		, QStringList() << sessionRecordingPrefix << "*"
+		, QDir::Dirs);
 }
 
 const QList<const Source*> SessionController::getSourcesByMount(QUuid mountId) const

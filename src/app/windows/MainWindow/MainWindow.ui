@@ -969,6 +969,22 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
+  <action name="actionClearRecordings">
+   <property name="text">
+    <string>Clear Recordings</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionClearLogs">
+   <property name="text">
+    <string>Clear Logs</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

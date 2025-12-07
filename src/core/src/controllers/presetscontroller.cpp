@@ -1,16 +1,17 @@
 #include "controllers/presetscontroller.hpp"
+#include <controllers/loggingcontroller.hpp>
 
 PresetsController::PresetsController(SettingsController& sc, QObject *parent)
-	: BackendControllerBase("PresetsController", parent), m_settingsController(sc),
+	: QObject(parent), m_settingsController(sc),
 	m_presetDirectory(sc.presetSettings().presetDirectory) // TODO: should I pass by reference or value?
 {
 	// Check if directory exists
 	QDir presetsDir(m_presetDirectory);
 	if (!presetsDir.exists()) {
-		qWarning() << "Presets directory does not exist:" << m_presetDirectory;
+		LoggingController::warning("Presets directory does not exist:" + m_presetDirectory.path());
 		// Create it
 		if (!presetsDir.mkpath(m_presetDirectory.absolutePath())) { // TODO: More error checking if this happens
-			qWarning() << "Failed to create presets directory:" << m_presetDirectory;
+			LoggingController::warning("Failed to create presets directory:" + m_presetDirectory.path());
 			return;
 		}
 	}
@@ -61,7 +62,7 @@ void PresetsController::savePreset(const QString& name, const QList<Source*>& ac
 	// Save preset to file
 	QFile file(fullPath);
 	if (!file.open(QIODevice::WriteOnly)) {
-		qWarning() << "Failed to open file for writing:" << file.errorString();
+		LoggingController::warning("Failed to open file for writing:" + file.errorString());
 		return;
 	}
 	QJsonDocument doc;
@@ -82,26 +83,26 @@ void PresetsController::loadPreset(const QString& path, SourceController& source
 {
 	// Check if the file exists
 	if (!QFile::exists(path)) {
-		qWarning() << "Preset file does not exist:" << path;
+		LoggingController::warning("Preset file does not exist:" + path);
 		return;
 	}
 
 	// Load preset from file
 	QFile file(path);
 	if (!file.open(QIODevice::ReadOnly)) {
-		qWarning() << "Failed to open file for reading:" << file.errorString();
+		LoggingController::warning("Failed to open file for reading:" + file.errorString());
 		return;
 	}
 
 	// Parse JSON
 	QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
 	if (doc.isNull()) {
-		qWarning() << "Failed to parse JSON:" << path;
+		LoggingController::warning("Failed to parse JSON:" + path);
 		return;
 	}
 	QJsonObject obj = doc.object();
 	if (!obj.contains("name") || !obj.contains("sources")) {
-		qWarning() << "Invalid preset format:" << path;
+		LoggingController::warning("Invalid preset format:" + path);
 		return;
 	}
 
@@ -118,7 +119,7 @@ void PresetsController::loadPreset(const QString& path, SourceController& source
 		// Get the plugin for the source
 		ISourcePlugin* plugin = pluginController.getSourcePlugin(sourcePreset.pluginId);
 		if (!plugin) {
-			qWarning() << "Plugin '" << sourcePreset.pluginId << "' not found.";
+			LoggingController::warning("Plugin '" + sourcePreset.pluginId + "' not found.");
 			return;
 		}
 
@@ -136,7 +137,7 @@ void PresetsController::loadPreset(const QString& path, SourceController& source
 		// Create the source
 		Source* source = sourceController.addSource(plugin, sourceInfo);
 		if (!source) {
-			qWarning() << "Failed to create source:" << sourcePreset.sourceName;
+			LoggingController::warning("Failed to create source:" + sourcePreset.sourceName);
 			continue;
 		}
 		
@@ -145,7 +146,7 @@ void PresetsController::loadPreset(const QString& path, SourceController& source
 			icfg->loadSettings(sourcePreset.settings);
 		}
 		else {
-			qWarning() << "Source is not configurable:" << source->id();
+			LoggingController::warning("Source is not configurable:" + QString::fromStdString(source->id()));
 			continue;
 		}
 	}
@@ -158,7 +159,7 @@ void PresetsController::removePreset(QString filePath)
 	// Get preset file
 	QFile presetFile(filePath);
 	if (!presetFile.exists()) {
-		qWarning() << "Cannot remove preset at " + filePath + ": file does not exist";
+		LoggingController::warning("Cannot remove preset at " + filePath + ": file does not exist");
 		return;
 	}
 
@@ -169,7 +170,7 @@ void PresetsController::removePreset(QString filePath)
 
 	// Remove file
 	if (!presetFile.remove()) {
-		qWarning() << "Unable to remove preset: error in removing";
+		LoggingController::warning("Unable to remove preset: error in removing");
 		return;
 	}
 
@@ -195,17 +196,17 @@ void PresetsController::scanForPresets(QString presetDir)
 		// Load preset into memory
 		QFile file(filePath);
 		if (!file.open(QIODevice::ReadOnly)) {
-			qWarning() << "Failed to open file for reading:" << file.errorString();
+			LoggingController::warning("Failed to open file for reading:" + file.errorString());
 			continue;
 		}
 		QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
 		if (doc.isNull()) {
-			qWarning() << "Failed to parse JSON:" << filePath;
+			LoggingController::warning("Failed to parse JSON:" + filePath);
 			continue;
 		}
 		QJsonObject obj = doc.object();
 		if (!obj.contains("name") || !obj.contains("sources")) {
-			qWarning() << "Invalid preset format:" << filePath;
+			LoggingController::warning("Invalid preset format:" + filePath);
 			continue;
 		}
 		QString name = obj["name"].toString();
@@ -215,7 +216,7 @@ void PresetsController::scanForPresets(QString presetDir)
 		{
 			QJsonObject sourceObj = value.toObject();
 			if (!sourceObj.contains("id") || !sourceObj.contains("name") || !sourceObj.contains("plugin_id") || !sourceObj.contains("type") || !sourceObj.contains("config")) {
-				qWarning() << "Invalid source preset format:" << filePath;
+				LoggingController::warning("Invalid source preset format:" + filePath);
 				continue;
 			}
 
@@ -270,7 +271,7 @@ QList<SourcePreset> PresetsController::jsonToSourcePresets(const QJsonArray& jso
 	{
 		QJsonObject sourceObj = value.toObject();
 		if (!sourceObj.contains("id") || !sourceObj.contains("name") || !sourceObj.contains("plugin_id") || !sourceObj.contains("type") || !sourceObj.contains("config")) {
-			qWarning() << "Invalid source preset format"; // TODO: Log better
+			LoggingController::warning("Invalid source preset format"); // TODO: Log better
 			continue;
 		}
 		QByteArray sourceId = QByteArray(sourceObj["id"].toString().toStdString());

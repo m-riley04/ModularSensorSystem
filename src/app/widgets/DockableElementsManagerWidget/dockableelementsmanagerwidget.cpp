@@ -91,7 +91,7 @@ void DockableElementsManagerWidget::initContextMenu()
 
 void DockableElementsManagerWidget::onElementSelected(const QModelIndex& currentIdx, const QModelIndex& prevIdx) {
 	if (!currentIdx.isValid() || !m_elementModel) {
-		qDebug() << "Invalid index or model.";
+		LoggingController::warning("Invalid index or model.");
 		m_actionRemoveElement->setEnabled(false);
 		m_actionEditElement->setEnabled(false);
 		return;
@@ -99,13 +99,11 @@ void DockableElementsManagerWidget::onElementSelected(const QModelIndex& current
 
 	QVariant nodeData = m_elementModel->data(currentIdx, Qt::UserRole);
 	if (!nodeData.isValid() || !nodeData.canConvert<ElementTreeNode*>()) {
-		qDebug() << "Invalid node data.";
+		LoggingController::warning("Invalid node data or cannot convert to ElementTreeNode*.");
 		m_actionRemoveElement->setEnabled(false);
 		m_actionEditElement->setEnabled(false);
 		return;
 	}
-
-	qDebug() << "Node data:" << nodeData;
 
 	ui.treeElements->setCurrentIndex(currentIdx);
 
