@@ -27,6 +27,7 @@ public:
 
 signals:
 	void enableLoggingChanged(bool enabled);
+	void useUniqueLogFilesChanged(bool unique);
 
 public slots:
 	void loadSettings();
@@ -57,7 +58,11 @@ public slots:
 		emit enableLoggingChanged(enabled);
 	}
 	void setLogDirectory(const QDir& dir) { m_advancedSettings.logDirectory = dir; }
-	void setUseUniqueLogFiles(bool unique) { m_advancedSettings.useUniqueLogFiles = unique; }
+	void setUseUniqueLogFiles(bool unique) {
+		if (m_advancedSettings.useUniqueLogFiles == unique) return;
+		m_advancedSettings.useUniqueLogFiles = unique;
+		emit useUniqueLogFilesChanged(unique);
+	}
 
 	// Session settings setters
 	void setSessionSettings(const SessionSettings& settings) { m_sessionSettings = settings; }

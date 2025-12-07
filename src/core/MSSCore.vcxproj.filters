@@ -166,6 +166,9 @@
     <ClCompile Include="src\controllers\loggingcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\logging\logwriterworker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="include\controllers\maincontroller.hpp">
@@ -208,6 +211,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\controllers\loggingcontroller.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\logging\logwriterworker.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

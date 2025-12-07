@@ -26,6 +26,7 @@ AppSettingsDialog::AppSettingsDialog(AppActionController& ac, SettingsController
 		ui.frameEnabledLogging->setEnabled(checked);
 		});
 	connect(ui.dirPickerLogs, &QDirectoryPickerWidget::directoryChanged, &m_settingsController, &SettingsController::setLogDirectory);
+	connect(ui.checkboxUniqueLogs, &QCheckBox::toggled, &m_settingsController, &SettingsController::setUseUniqueLogFiles);
 	connect(ui.buttonClearLogFiles, &QPushButton::clicked, m_actionController.actions().miscActions->clearLogs, &QAction::trigger);
 	//connect(ui.spinboxMaxLogFiles, &QSpinBox::valueChanged, &m_settingsController, &SettingsController::setMaxLogFiles);
 

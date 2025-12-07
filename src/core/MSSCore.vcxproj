@@ -110,6 +110,7 @@
     <ClCompile Include="src\controllers\sessioncontroller.cpp" />
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
     <ClCompile Include="src\controllers\settingscontroller.cpp" />
+    <ClCompile Include="src\logging\logwriterworker.cpp" />
     <ClCompile Include="src\pipeline\sessionpipeline.cpp" />
     <ClCompile Include="src\sdk\plugins\pluginloader.cpp" />
     <ClCompile Include="src\utils\session_utils.cpp" />
@@ -120,6 +121,7 @@
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp" />
     <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp" />
     <ClInclude Include="include\interfaces\capability\irecordablesource.hpp" />
+    <QtMoc Include="include\logging\logwriterworker.hpp" />
     <ClInclude Include="include\models\settings_models.hpp" />
     <ClInclude Include="include\pipeline\bins\recorderbin.hpp" />
     <ClInclude Include="include\pipeline\mime_types.hpp" />
