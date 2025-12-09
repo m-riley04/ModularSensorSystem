@@ -123,6 +123,7 @@
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
     <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
+    <ClCompile Include="widgets\MountControlsWidget\mountcontrolswidget.cpp" />
     <ClCompile Include="widgets\PluginDetailsWidget\plugindetailswidget.cpp" />
     <ClCompile Include="widgets\SourcePreviewWidget\sourcepreviewwidget.cpp" />
     <ClCompile Include="widgets\PresetsWidget\presetswidget.cpp" />
@@ -133,6 +134,7 @@
     <QtUic Include="dialogs\AppSettingsDialog\appsettingsdialog.ui" />
     <QtUic Include="dialogs\PluginsDialog\pluginsdialog.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
+    <QtUic Include="widgets\MountControlsWidget\mountcontrolswidget.ui" />
     <QtUic Include="widgets\PluginDetailsWidget\plugindetailswidget.ui" />
     <QtUic Include="widgets\SourcePreviewWidget\sourcepreviewwidget.ui" />
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui" />
@@ -203,6 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controllers\AppActionController\action_containers.h" />
+    <QtMoc Include="widgets\MountControlsWidget\mountcontrolswidget.h" />
     <QtMoc Include="dialogs\AppSettingsDialog\appsettingsdialog.h" />
     <QtMoc Include="controllers\UiSettingsController\uisettingscontroller.h" />
   </ItemGroup>

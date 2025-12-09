@@ -79,6 +79,9 @@
     <ClCompile Include="dialogs\AppSettingsDialog\appsettingsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\MountControlsWidget\mountcontrolswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -129,6 +132,9 @@
     <QtMoc Include="dialogs\AppSettingsDialog\appsettingsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="widgets\MountControlsWidget\mountcontrolswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
@@ -165,6 +171,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogs\AppSettingsDialog\appsettingsdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="widgets\MountControlsWidget\mountcontrolswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

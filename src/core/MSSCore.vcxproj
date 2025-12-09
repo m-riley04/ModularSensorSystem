@@ -119,6 +119,7 @@
     <QtMoc Include="include\controllers\settingscontroller.hpp" />
     <QtMoc Include="include\controllers\loggingcontroller.hpp" />
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp" />
+    <ClInclude Include="include\interfaces\capability\ipantiltmount.hpp" />
     <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp" />
     <ClInclude Include="include\interfaces\capability\irecordablesource.hpp" />
     <QtMoc Include="include\logging\logwriterworker.hpp" />
