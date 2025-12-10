@@ -23,19 +23,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\interfaces\capability\ianalogsource.hpp">
+    <ClInclude Include="include\interfaces\capability\sources\ianalogsource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\iaudiosource.hpp">
+    <ClInclude Include="include\interfaces\capability\sources\iaudiosource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\idatasource.hpp">
+    <ClInclude Include="include\interfaces\capability\sources\idatasource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\igpssource.hpp">
+    <ClInclude Include="include\interfaces\capability\sources\igpssource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\ivideosource.hpp">
+    <ClInclude Include="include\interfaces\capability\sources\ivideosource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\sdk\plugins\iprocessorplugin.hpp">
@@ -53,7 +53,7 @@
     <ClInclude Include="include\sdk\plugins\imountplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\iconfigurablesource.hpp">
+    <ClInclude Include="include\interfaces\capability\sources\iconfigurablesource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\sdk\plugins\iplugin.hpp">
@@ -74,7 +74,7 @@
     <ClInclude Include="include\pipeline\bins\sourcebin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\iapisource.hpp">
+    <ClInclude Include="include\interfaces\capability\sources\iapisource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\pipeline\sinks\preview_defaults.hpp">
@@ -89,10 +89,10 @@
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\irecordablesource.hpp">
+    <ClInclude Include="include\interfaces\capability\sources\irecordablesource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp">
+    <ClInclude Include="include\interfaces\capability\sources\ipreviewablesource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\pipeline\bins\recorderbin.hpp">
@@ -125,7 +125,7 @@
     <ClInclude Include="include\utils\safer_io_utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\ipantiltmount.hpp">
+    <ClInclude Include="include\interfaces\capability\mounts\ipantiltmount.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

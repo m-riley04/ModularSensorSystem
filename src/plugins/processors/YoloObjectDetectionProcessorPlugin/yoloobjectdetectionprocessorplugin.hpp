@@ -3,7 +3,7 @@
 #include <QObject>
 #include "sdk/plugins/iprocessorplugin.hpp"
 #include "features/sources/source.hpp"
-#include "interfaces/capability/ivideosource.hpp"
+#include "interfaces/capability/sources/ivideosource.hpp"
 #include <boost/dll/alias.hpp>
 
 namespace {

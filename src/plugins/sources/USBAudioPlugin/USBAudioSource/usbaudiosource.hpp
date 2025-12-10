@@ -3,7 +3,7 @@
 #include <QObject>
 #include <chrono>
 #include "features/sources/source.hpp"
-#include "interfaces/capability/ipreviewablesource.hpp"
+#include "interfaces/capability/sources/ipreviewablesource.hpp"
 #include <sdk/plugins/isourceplugin.hpp>
 #include <utils/boost_qt_conversions.hpp>
 #include "utils.hpp"

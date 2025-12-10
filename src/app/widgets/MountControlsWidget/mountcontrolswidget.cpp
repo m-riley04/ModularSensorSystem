@@ -1,68 +1,160 @@
 #include "mountcontrolswidget.h"
-#include <interfaces/capability/ipantiltmount.hpp>
+#include <interfaces/capability/mounts/ipantiltmount.hpp>
 
 MountControlsWidget::MountControlsWidget(Mount* mount, MainController& mc, QWidget *parent)
 	: QWidget(parent), m_mainController(mc), m_mount(mount)
 {
 	ui.setupUi(this);
 
-	// Cast to IPanTiltMount to access pan/tilt specific functionality
-	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
-	if (!panTiltMount) {
-		// Handle error: mount does not support pan/tilt functionality
-		ui.groupBox->setEnabled(false);
-		ui.buttonRecenter->setEnabled(false);
-		ui.buttonSetInitialAngles->setEnabled(false);
+	if (!m_mount) {
+		LoggingController::critical("MountControlsWidget initialized with null mount pointer.");
 		return;
 	}
 
-	// TODO: connect signals to control the mount
-	connect(ui.sliderPan, &QSlider::valueChanged, this, [panTiltMount](int value) {
-		double panAngle = static_cast<double>(value);
-		panTiltMount->moveTo(panAngle, panTiltMount->tiltAngle());
+	// Initialize UI before connections
+	updateUi();
+	updateControls();
+	ui.labelMountName->setText(QString::fromStdString(m_mount->displayName()));
+
+	// Connect mount notify signal to UI update
+	connect(m_mount, &Mount::dataUpdated, this, [this]() {
+		updateUi();
+
+		if (!m_controlsInitialized) {
+			updateControls();
+			m_controlsInitialized = true;
+		}
 		});
-	connect(ui.sliderTilt, &QSlider::valueChanged, this, [panTiltMount](int value) {
-		double tiltAngle = static_cast<double>(value);
-		panTiltMount->moveTo(panTiltMount->panAngle(), tiltAngle);
-		});
-	connect(ui.buttonRecenter, &QPushButton::clicked, this, [panTiltMount]() {
-		panTiltMount->recenter();
-		});
-	connect(ui.buttonSetInitialAngles, &QPushButton::clicked, this, [this, panTiltMount]() {
-		double panAngle = static_cast<double>(ui.sliderPan->value());
-		double tiltAngle = static_cast<double>(ui.sliderTilt->value());
-		panTiltMount->moveTo(panAngle, tiltAngle);
+	connect(m_mount, &QObject::destroyed, this, [this]() {
+		m_mount = nullptr;
 		});
 
+	connect(ui.sliderPan, &QSlider::valueChanged, this, &MountControlsWidget::onPanSliderChanged);
+	connect(ui.sliderTilt, &QSlider::valueChanged, this, &MountControlsWidget::onTiltSliderChanged);
+	connect(ui.buttonRecenter, &QPushButton::clicked, this, &MountControlsWidget::onRecenterClicked);
+	connect(ui.buttonSetInitialAngles, &QPushButton::clicked, this, &MountControlsWidget::onSetInitialAnglesClicked);
+	connect(ui.buttonRefresh, &QPushButton::clicked, this, &MountControlsWidget::onRefreshInfoClicked);
 }
 
 MountControlsWidget::~MountControlsWidget()
-{}
-
-void MountControlsWidget::updateMountInfoUi() {
-	
-
-    IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
-    if (panTiltMount) {
-        ui.labelPanAngle->setText(QString::number(panTiltMount->panAngle()));
-        ui.labelTiltAngle->setText(QString::number(panTiltMount->tiltAngle()));
-		ui.labelPanRange->setText(QString("%1 to %2").arg(panTiltMount->panMinAngle()).arg(panTiltMount->panMaxAngle()));
-		ui.labelTiltRange->setText(QString("%1 to %2").arg(panTiltMount->tiltMinAngle()).arg(panTiltMount->tiltMaxAngle()));
-    }
+{
+	// Disconnect to prevent accessing deleted mount
+	if (m_mount) {
+		disconnect(m_mount, nullptr, this, nullptr);
+		m_mount = nullptr;
+	}
 }
 
-void MountControlsWidget::recenterMount()
+void MountControlsWidget::updateUi()
 {
+    IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
 
+    if (!panTiltMount) {
+		LoggingController::warning("Mount does not support IPanTiltMount interface.");
+        ui.labelPanAngle->setText(QString("N/A"));
+        ui.labelTiltAngle->setText(QString("N/A"));
+		ui.labelPanRange->setText(QString("N/A"));
+		ui.labelTiltRange->setText(QString("N/A"));
+
+		return;
+    }
+	
+    ui.labelPanAngle->setText(QString::number(panTiltMount->panAngle()));
+    ui.labelTiltAngle->setText(QString::number(panTiltMount->tiltAngle()));
+	ui.labelPanRange->setText(QString("%1 to %2").arg(panTiltMount->panMinAngle()).arg(panTiltMount->panMaxAngle()));
+	ui.labelTiltRange->setText(QString("%1 to %2").arg(panTiltMount->tiltMinAngle()).arg(panTiltMount->tiltMaxAngle()));
+}
+
+void MountControlsWidget::updateControls()
+{
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+
+	if (!panTiltMount) {
+		LoggingController::warning("Mount does not support IPanTiltMount interface.");
+
+		// Disable controls
+		ui.groupSliders->setEnabled(false);
+		ui.frameButtons->setEnabled(false);
+
+		// Set slider positions to 0
+		ui.sliderPan->setValue(0);
+		ui.sliderTilt->setValue(0);
+
+		// Set slider ranges to 0-100
+		ui.sliderPan->setMinimum(0);
+		ui.sliderPan->setMaximum(180);
+		ui.sliderTilt->setMinimum(0);
+		ui.sliderTilt->setMaximum(180);
+
+		return;
+	}
+
+	ui.groupSliders->setEnabled(true);
+	ui.frameButtons->setEnabled(true);
+
+	// Set slider positions
+	this->blockSignals(true);
+	ui.sliderPan->setValue(static_cast<int>(panTiltMount->panAngle()));
+	ui.sliderTilt->setValue(static_cast<int>(panTiltMount->tiltAngle()));
+
+	// Set slider ranges
+	ui.sliderPan->setMinimum(static_cast<int>(panTiltMount->panMinAngle()));
+	ui.sliderPan->setMaximum(static_cast<int>(panTiltMount->panMaxAngle()));
+	ui.sliderTilt->setMinimum(static_cast<int>(panTiltMount->tiltMinAngle()));
+	ui.sliderTilt->setMaximum(static_cast<int>(panTiltMount->tiltMaxAngle()));
+	this->blockSignals(false);
+}
+
+void MountControlsWidget::onRefreshInfoClicked()
+{
+	// TODO: Implement better refresh logic for the ui AND DEVICE!
+	updateUi();
+}
+
+void MountControlsWidget::onSetInitialAnglesClicked()
+{
+    IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+    if (!panTiltMount) return;
+
+    double panAngle = static_cast<double>(ui.sliderPan->value());
+    double tiltAngle = static_cast<double>(ui.sliderTilt->value());
+    if (!panTiltMount->moveTo(panAngle, tiltAngle)) {
+        LoggingController::warning("Failed to move to the specified angles.");
+    }
+    updateUi();
+}
+
+void MountControlsWidget::onRecenterClicked()
+{
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	if (!panTiltMount) return;
+
+	if (!panTiltMount->recenter()) {
+		LoggingController::warning("Failed to recenter the mount.");
+	}
+
+	updateUi();
 }
 
 void MountControlsWidget::onPanSliderChanged(int value)
 {
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	if (!panTiltMount) return;
 
+	if (!panTiltMount->moveTo(static_cast<double>(value), panTiltMount->tiltAngle())) {
+		LoggingController::warning("Failed to move pan to the specified value.");
+	}
+	updateUi();
 }
 
 void MountControlsWidget::onTiltSliderChanged(int value)
 {
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	if (!panTiltMount) return;
 
+	if (!panTiltMount->moveTo(panTiltMount->panAngle(), static_cast<double>(value))) {
+		LoggingController::warning("Failed to move tilt to the specified value.");
+	}
+	updateUi();
 }
 

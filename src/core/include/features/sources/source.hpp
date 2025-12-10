@@ -2,8 +2,8 @@
 
 #include <QObject>
 #include "features/element.hpp"
-#include "interfaces/capability/ipreviewablesource.hpp"
-#include "interfaces/capability/irecordablesource.hpp"
+#include "interfaces/capability/sources/ipreviewablesource.hpp"
+#include "interfaces/capability/sources/irecordablesource.hpp"
 #include <gst/gst.h>
 
 /**

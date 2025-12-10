@@ -49,5 +49,8 @@ public:
 
 	virtual const IElement::Type elementType() const noexcept override { return IElement::Type::Mount; }
 
+signals:
+	void dataUpdated();
+
 };
 

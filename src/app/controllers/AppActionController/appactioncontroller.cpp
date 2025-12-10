@@ -162,12 +162,15 @@ void AppActionController::refreshSessionActionStates()
 }
 
 void AppActionController::onElementSelected(ElementTreeNode* node) {
+    if (m_currentSelectedElementNode == node) return;
 	m_currentSelectedElementNode = node;
 
     refreshMountActionStates();
 	refreshSourceActionStates();
     refreshProcessorActionStates();
     refreshSessionActionStates();
+
+    emit elementSelectionChanged(node);
 }
 
 void AppActionController::onElementRemoved()

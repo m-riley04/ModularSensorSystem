@@ -4,7 +4,7 @@
 #include <features/sources/source.hpp>
 #include "testdatasourcebin.hpp"
 #include <sdk/plugins/isourceplugin.hpp>
-#include <interfaces/capability/ipreviewablesource.hpp>
+#include <interfaces/capability/sources/ipreviewablesource.hpp>
 #include "testdatasourcepluginutils.hpp"
 #include <QTimer>
 #include <QRandomGenerator>

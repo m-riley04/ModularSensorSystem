@@ -9,7 +9,7 @@
 #include "controllers/sourcecontroller.hpp"
 #include "controllers/plugincontroller.hpp"
 #include "presets/preset.hpp"
-#include "interfaces/capability/iconfigurablesource.hpp"
+#include "interfaces/capability/sources/iconfigurablesource.hpp"
 
 #include "controllers/settingscontroller.hpp"
 

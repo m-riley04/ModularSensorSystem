@@ -119,9 +119,9 @@
     <QtMoc Include="include\controllers\settingscontroller.hpp" />
     <QtMoc Include="include\controllers\loggingcontroller.hpp" />
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp" />
-    <ClInclude Include="include\interfaces\capability\ipantiltmount.hpp" />
-    <ClInclude Include="include\interfaces\capability\ipreviewablesource.hpp" />
-    <ClInclude Include="include\interfaces\capability\irecordablesource.hpp" />
+    <ClInclude Include="include\interfaces\capability\mounts\ipantiltmount.hpp" />
+    <ClInclude Include="include\interfaces\capability\sources\ipreviewablesource.hpp" />
+    <ClInclude Include="include\interfaces\capability\sources\irecordablesource.hpp" />
     <QtMoc Include="include\logging\logwriterworker.hpp" />
     <ClInclude Include="include\models\settings_models.hpp" />
     <ClInclude Include="include\pipeline\bins\recorderbin.hpp" />
@@ -138,7 +138,7 @@
     <QtMoc Include="include\controllers\sessioncontroller.hpp" />
     <ClInclude Include="include\pipeline\bins\binbase.hpp" />
     <ClInclude Include="include\pipeline\bins\sourcebin.hpp" />
-    <ClInclude Include="include\interfaces\capability\iapisource.hpp" />
+    <ClInclude Include="include\interfaces\capability\sources\iapisource.hpp" />
     <ClInclude Include="include\pipeline\sinks\preview_defaults.hpp" />
     <ClInclude Include="include\utils\boost_qt_conversions.hpp" />
     <ClInclude Include="include\features\ielement.hpp" />
@@ -149,7 +149,7 @@
     <ClInclude Include="include\sdk\plugins\imountplugin.hpp" />
     <ClInclude Include="include\presets\preset.hpp" />
     <ClInclude Include="include\presets\sourcepreset.hpp" />
-    <ClInclude Include="include\interfaces\capability\iconfigurablesource.hpp" />
+    <ClInclude Include="include\interfaces\capability\sources\iconfigurablesource.hpp" />
     <QtMoc Include="include\features\sources\source.hpp" />
     <QtMoc Include="include\features\processors\processor.hpp" />
     <QtMoc Include="include\controllers\maincontroller.hpp" />
@@ -157,11 +157,11 @@
     <QtMoc Include="include\controllers\presetscontroller.hpp" />
     <QtMoc Include="include\controllers\processingcontroller.hpp" />
     <QtMoc Include="include\controllers\sourcecontroller.hpp" />
-    <ClInclude Include="include\interfaces\capability\ianalogsource.hpp" />
-    <ClInclude Include="include\interfaces\capability\iaudiosource.hpp" />
-    <ClInclude Include="include\interfaces\capability\idatasource.hpp" />
-    <ClInclude Include="include\interfaces\capability\igpssource.hpp" />
-    <ClInclude Include="include\interfaces\capability\ivideosource.hpp" />
+    <ClInclude Include="include\interfaces\capability\sources\ianalogsource.hpp" />
+    <ClInclude Include="include\interfaces\capability\sources\iaudiosource.hpp" />
+    <ClInclude Include="include\interfaces\capability\sources\idatasource.hpp" />
+    <ClInclude Include="include\interfaces\capability\sources\igpssource.hpp" />
+    <ClInclude Include="include\interfaces\capability\sources\ivideosource.hpp" />
     <ClInclude Include="include\sdk\plugins\iplugin.hpp" />
     <ClInclude Include="include\sdk\plugins\iprocessorplugin.hpp" />
     <ClInclude Include="include\sdk\plugins\isourceplugin.hpp" />

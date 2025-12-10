@@ -13,8 +13,12 @@ public:
 	~MountControlsWidget();
 
 private slots:
-	void updateMountInfoUi();
-	void recenterMount();
+	void updateUi();
+	void updateControls();
+
+	void onRefreshInfoClicked();
+	void onSetInitialAnglesClicked();
+	void onRecenterClicked();
 	void onPanSliderChanged(int value);
 	void onTiltSliderChanged(int value);
 
@@ -22,5 +26,6 @@ private:
 	Ui::MountControlsWidgetClass ui;
 	MainController& m_mainController;
 	Mount* m_mount;
+	bool m_controlsInitialized = false;
 };
 

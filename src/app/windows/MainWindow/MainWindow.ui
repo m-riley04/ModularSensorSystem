@@ -330,7 +330,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
        <property name="frameShadow">
         <enum>QFrame::Shadow::Raised</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -346,6 +346,9 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
         <property name="bottomMargin">
          <number>0</number>
         </property>
+        <item>
+         <layout class="QVBoxLayout" name="layoutMountWidget"/>
+        </item>
         <item>
          <widget class="SessionControlsWidget" name="sessionControls" native="true"/>
         </item>

@@ -5,9 +5,9 @@
 #include <gst/video/videooverlay.h>
 #include <gst/app/gstappsink.h>
 #include "features/sources/source.hpp"
-#include "interfaces/capability/ianalogsource.hpp"
+#include "interfaces/capability/sources/ianalogsource.hpp"
 #include "pipeline/sinks/preview_defaults.hpp"
-#include <interfaces/capability/ipreviewablesource.hpp>
+#include <interfaces/capability/sources/ipreviewablesource.hpp>
 #include <utils/debug.hpp>
 #include <utils/utils.hpp>
 #include <utils/session_utils.hpp>

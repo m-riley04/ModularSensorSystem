@@ -23,8 +23,7 @@ Mount* MountController::addMount(IMountPlugin* plugin, ElementInfo info)
 	if (!mount) return nullptr;
 
 	mMounts.append(mount);
-	// Assign a controller-managed UUID (do not reinterpret mount->id() as a QUuid)
-	QUuid uid = QUuid::createUuid();
+	QUuid uid = boostUuidToQUuid(mount->uuid());
 	mMountsById[uid] = mount;
 
 	emit mountAdded(mount);
