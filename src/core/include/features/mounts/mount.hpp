@@ -51,6 +51,7 @@ public:
 
 signals:
 	void dataUpdated();
+	void errorOccurred(const QString& errorMessage);
 
 };
 

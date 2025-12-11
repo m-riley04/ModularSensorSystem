@@ -5,16 +5,6 @@
 #include "interfaces/capability/mounts/ipantiltmount.hpp"
 #include <QSerialPort>
 
-struct PanTiltInfo
-{
-	double minPanAngle = 0.0;
-	double maxPanAngle = 0.0;
-	double maxTiltAngle = 0.0;
-	double minTiltAngle = 0.0;
-	double panAngle = 0.0;
-	double tiltAngle = 0.0;
-};
-
 class ArduinoPanTiltMount : public Mount, public IPanTiltMount
 {
 	Q_OBJECT
@@ -38,7 +28,10 @@ public:
 	double tiltAngle() const override final;
 	double tiltMinAngle() const override final;
 	double tiltMaxAngle() const override final;
+	PanTiltInfo info() const override final;
 	bool recenter() override final;
+	bool refreshInfo() { return this->sendInfoCommand(); }
+	PanTiltError error() const override final;
 
 private slots:
 	bool sendCommand(const QString& command);
@@ -47,11 +40,12 @@ private slots:
 
 private:
 	void parseResponse();
+	void setError(const QString& errorMsg);
 
 private:
 	QSerialPort* m_serialPort = nullptr;
 	PanTiltInfo	m_panTiltInfo;
 	QByteArray m_readBuffer;
-
+	PanTiltError m_error;
 };
 

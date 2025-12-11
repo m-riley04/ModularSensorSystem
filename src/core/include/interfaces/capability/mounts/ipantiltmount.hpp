@@ -1,5 +1,20 @@
 #pragma once
 
+#include <string>
+
+struct PanTiltInfo {
+	double minPanAngle = 0.0;
+	double maxPanAngle = 0.0;
+	double maxTiltAngle = 0.0;
+	double minTiltAngle = 0.0;
+	double panAngle = 0.0;
+	double tiltAngle = 0.0;
+};
+
+struct PanTiltError {
+	std::string msg;
+};
+
 class IPanTiltMount
 {
 public:
@@ -54,4 +69,18 @@ public:
 	 * @return True if the command was successful, false otherwise.
 	 */
 	virtual bool recenter() = 0;
+
+	/**
+	 * @brief A combination of all pan-tilt mount info.
+	 * @return 
+	 */
+	virtual PanTiltInfo info() const = 0;
+
+	/**
+	 * @brief Refreshes the mount's info from the hardware.
+	 * @return True if the refresh was successful, false otherwise.
+	 */
+	virtual bool refreshInfo() = 0;
+
+	virtual PanTiltError error() const = 0;
 };

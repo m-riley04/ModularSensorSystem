@@ -13,17 +13,11 @@ MountControlsWidget::MountControlsWidget(Mount* mount, MainController& mc, QWidg
 
 	// Initialize UI before connections
 	updateUi();
-	updateControls();
 	ui.labelMountName->setText(QString::fromStdString(m_mount->displayName()));
 
 	// Connect mount notify signal to UI update
 	connect(m_mount, &Mount::dataUpdated, this, [this]() {
 		updateUi();
-
-		if (!m_controlsInitialized) {
-			updateControls();
-			m_controlsInitialized = true;
-		}
 		});
 	connect(m_mount, &QObject::destroyed, this, [this]() {
 		m_mount = nullptr;
@@ -56,22 +50,6 @@ void MountControlsWidget::updateUi()
 		ui.labelPanRange->setText(QString("N/A"));
 		ui.labelTiltRange->setText(QString("N/A"));
 
-		return;
-    }
-	
-    ui.labelPanAngle->setText(QString::number(panTiltMount->panAngle()));
-    ui.labelTiltAngle->setText(QString::number(panTiltMount->tiltAngle()));
-	ui.labelPanRange->setText(QString("%1 to %2").arg(panTiltMount->panMinAngle()).arg(panTiltMount->panMaxAngle()));
-	ui.labelTiltRange->setText(QString("%1 to %2").arg(panTiltMount->tiltMinAngle()).arg(panTiltMount->tiltMaxAngle()));
-}
-
-void MountControlsWidget::updateControls()
-{
-	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
-
-	if (!panTiltMount) {
-		LoggingController::warning("Mount does not support IPanTiltMount interface.");
-
 		// Disable controls
 		ui.groupSliders->setEnabled(false);
 		ui.frameButtons->setEnabled(false);
@@ -84,30 +62,42 @@ void MountControlsWidget::updateControls()
 		ui.sliderPan->setMinimum(0);
 		ui.sliderPan->setMaximum(180);
 		ui.sliderTilt->setMinimum(0);
-		ui.sliderTilt->setMaximum(180);
 
 		return;
-	}
+    }
+	
+    ui.labelPanAngle->setText(QString::number(panTiltMount->panAngle()));
+    ui.labelTiltAngle->setText(QString::number(panTiltMount->tiltAngle()));
+	ui.labelPanRange->setText(QString("%1 to %2").arg(panTiltMount->panMinAngle()).arg(panTiltMount->panMaxAngle()));
+	ui.labelTiltRange->setText(QString("%1 to %2").arg(panTiltMount->tiltMinAngle()).arg(panTiltMount->tiltMaxAngle()));
 
 	ui.groupSliders->setEnabled(true);
 	ui.frameButtons->setEnabled(true);
 
 	// Set slider positions
-	this->blockSignals(true);
+	ui.sliderPan->blockSignals(true);
 	ui.sliderPan->setValue(static_cast<int>(panTiltMount->panAngle()));
+	ui.sliderPan->blockSignals(false);
+
+	ui.sliderTilt->blockSignals(true);
 	ui.sliderTilt->setValue(static_cast<int>(panTiltMount->tiltAngle()));
+	ui.sliderTilt->blockSignals(false);
 
 	// Set slider ranges
 	ui.sliderPan->setMinimum(static_cast<int>(panTiltMount->panMinAngle()));
 	ui.sliderPan->setMaximum(static_cast<int>(panTiltMount->panMaxAngle()));
 	ui.sliderTilt->setMinimum(static_cast<int>(panTiltMount->tiltMinAngle()));
 	ui.sliderTilt->setMaximum(static_cast<int>(panTiltMount->tiltMaxAngle()));
-	this->blockSignals(false);
+
 }
 
 void MountControlsWidget::onRefreshInfoClicked()
 {
-	// TODO: Implement better refresh logic for the ui AND DEVICE!
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	if (!panTiltMount) return;
+	if (!panTiltMount->refreshInfo()) {
+		LoggingController::warning("Failed to refresh mount info.");
+	}
 	updateUi();
 }
 

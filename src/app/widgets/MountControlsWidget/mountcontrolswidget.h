@@ -14,7 +14,6 @@ public:
 
 private slots:
 	void updateUi();
-	void updateControls();
 
 	void onRefreshInfoClicked();
 	void onSetInitialAnglesClicked();
@@ -26,6 +25,5 @@ private:
 	Ui::MountControlsWidgetClass ui;
 	MainController& m_mainController;
 	Mount* m_mount;
-	bool m_controlsInitialized = false;
 };
 

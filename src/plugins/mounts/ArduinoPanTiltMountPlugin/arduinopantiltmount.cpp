@@ -8,29 +8,35 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 	, m_serialPort(new QSerialPort(QString::fromStdString(element.name), this))
 	, m_panTiltInfo(PanTiltInfo())
 {
-	if (!m_serialPort->open(QIODevice::ReadWrite)) {
-		LoggingController::critical("Failed to open serial port for Arduino Pan-Tilt Mount: " + m_serialPort->errorString());
+	if (!m_serialPort->setBaudRate(QSerialPort::Baud9600)) {
+		setError("Failed to set baud rate for Arduino Pan-Tilt Mount serial port: " + m_serialPort->errorString());
 		return;
 	}
 
-	if (!m_serialPort->setBaudRate(QSerialPort::Baud9600)) {
-		LoggingController::warning("Failed to set baud rate for Arduino Pan-Tilt Mount serial port: " + m_serialPort->errorString());
+	if (!m_serialPort->open(QIODevice::ReadWrite)) {
+		setError("Failed to open serial port for Arduino Pan-Tilt Mount: " + m_serialPort->errorString());
+		return;
 	}
 
 	// Get initial serial port info
 	if (!this->sendInfoCommand()) {
-		LoggingController::warning("Failed to get initial pan-tilt mount info from serial port.");
+		setError("Failed to get initial pan-tilt mount info from serial port.");
 	}
 
 	// Add serial port connections
 	connect(m_serialPort, &QSerialPort::readyRead, this, &ArduinoPanTiltMount::readSerialData);
+	connect(m_serialPort, &QSerialPort::errorOccurred, this, [this](QSerialPort::SerialPortError error) {
+		if (error != QSerialPort::NoError) {
+			setError("Error at the serial port: " + m_serialPort->errorString());
+		}
+		});
 }
 
 bool ArduinoPanTiltMount::moveTo(double panAngle, double tiltAngle)
 {
 	QString command = QString::number(static_cast<int>(panAngle)) + "," + QString::number(static_cast<int>(tiltAngle)) + "\n";
 	if (!sendCommand(command)) {
-		LoggingController::warning("Failed to write move command to serial port.");
+		setError("Failed to send move command to mount.");
 		return false;
 	}
 	return true;
@@ -66,6 +72,11 @@ double ArduinoPanTiltMount::tiltMaxAngle() const
 	return m_panTiltInfo.maxTiltAngle;
 }
 
+PanTiltInfo ArduinoPanTiltMount::info() const
+{
+	return m_panTiltInfo;
+}
+
 bool ArduinoPanTiltMount::recenter()
 {
 	// TODO: do actual advanced recentering logic here
@@ -74,11 +85,16 @@ bool ArduinoPanTiltMount::recenter()
 	return this->moveTo(panBoundsMedian, tiltBoundsMedian);
 }
 
+PanTiltError ArduinoPanTiltMount::error() const
+{
+	return m_error;
+}
+
 bool ArduinoPanTiltMount::sendInfoCommand()
 {
 	QString command = "info\n";
 	if (!sendCommand(command)) {
-		LoggingController::warning("Failed to write info command to serial port.");
+		setError("Failed to send info command to mount.");
 		return false;
 	}
 	
@@ -136,6 +152,14 @@ void ArduinoPanTiltMount::parseResponse()
 	}
 
 	emit dataUpdated();
+}
+
+void ArduinoPanTiltMount::setError(const QString& errorMsg)
+{
+	m_error.msg = errorMsg.toStdString();
+	LoggingController::warning("ArduinoPanTilt error: " + errorMsg);
+
+	emit errorOccurred(errorMsg);
 }
 
 bool ArduinoPanTiltMount::sendCommand(const QString& command)
