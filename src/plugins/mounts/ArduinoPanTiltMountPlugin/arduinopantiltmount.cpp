@@ -8,7 +8,7 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 	, m_serialPort(new QSerialPort(QString::fromStdString(element.name), this))
 	, m_panTiltInfo(PanTiltInfo())
 {
-	if (!m_serialPort->setBaudRate(QSerialPort::Baud9600)) {
+	if (!m_serialPort->setBaudRate(QSerialPort::Baud115200)) {
 		setError("Failed to set baud rate for Arduino Pan-Tilt Mount serial port: " + m_serialPort->errorString());
 		return;
 	}
@@ -147,6 +147,7 @@ void ArduinoPanTiltMount::parseResponse()
 {
 	// Parse response data as query string
 	QUrlQuery query;
+	//query.setQuery(QUrl::fromPercentEncoding(m_readBuffer));
 	query.setQuery(m_readBuffer);
 	if (query.hasQueryItem("minYaw")) {
 		m_panTiltInfo.minPanAngle = query.queryItemValue("minYaw").toDouble();
@@ -164,7 +165,11 @@ void ArduinoPanTiltMount::parseResponse()
 		m_panTiltInfo.panAngle = query.queryItemValue("yaw").toDouble();
 	}
 	if (query.hasQueryItem("pitch")) {
-		m_panTiltInfo.tiltAngle = query.queryItemValue("pitch").toDouble();
+		// TODO: fix this in a better way
+		QString tiltAngleStr = query.queryItemValue("pitch");
+		tiltAngleStr = tiltAngleStr.trimmed();
+		tiltAngleStr = tiltAngleStr.replace("%0D", "");
+		m_panTiltInfo.tiltAngle = tiltAngleStr.toDouble();
 	}
 
 	emit dataUpdated();

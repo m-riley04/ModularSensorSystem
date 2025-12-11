@@ -8,7 +8,6 @@
 #endif
 
 #include <utils/debug.hpp>
-#include <widgets/MountControlsWidget/mountcontrolswidget.h>
 
 AppActions MainWindow::createActions() {
     PresetActions* presetActions = new PresetActions{
@@ -91,11 +90,13 @@ MainWindow::MainWindow(MainController& mc, UiSettingsController& uisc, QWidget *
 
 	// TODO: this logic needs to be re-done and moved elsewhere. This is just a quick and dirty way to get mount controls showing up for now.
 	connect(m_actionController, &AppActionController::elementSelectionChanged, this, [this](ElementTreeNode* node) {
-		// Remove previous mount controls widget
-		QLayoutItem* item;
-        while ((item = ui.layoutMountWidget->takeAt(0)) != nullptr) {
-            item->widget()->deleteLater();
-		}
+        
+        if (m_currentMountControlsWidget != nullptr) {
+            // Remove previous mount controls widget
+            ui.layoutMountWidget->removeWidget(m_currentMountControlsWidget);
+            m_currentMountControlsWidget->deleteLater();
+            m_currentMountControlsWidget = nullptr;
+        }
 
 		// Get mount from node and set in controls widget
         const Mount* mount = this->m_controller.mountController().byId(node->uuid);
@@ -106,9 +107,18 @@ MainWindow::MainWindow(MainController& mc, UiSettingsController& uisc, QWidget *
             });
         
 		// Create new widget for mount controls
-		MountControlsWidget* mountControlsWidget = new MountControlsWidget(const_cast<Mount*>(mount), this->m_controller, this); // TODO: avoid const cast
-		ui.layoutMountWidget->addWidget(mountControlsWidget);
+        m_currentMountControlsWidget = new MountControlsWidget(const_cast<Mount*>(mount), this->m_controller, this); // TODO: avoid const cast
+		ui.layoutMountWidget->addWidget(m_currentMountControlsWidget);
     });
+
+    connect(&m_controller.mountController(), &MountController::mountRemoved, this, [this](QUuid mountId) {
+        if (m_currentMountControlsWidget != nullptr && boostUuidToQUuid(m_currentMountControlsWidget->mount()->uuid()) == mountId) {
+            // Remove current mount controls widget if its mount was removed
+            ui.layoutMountWidget->removeWidget(m_currentMountControlsWidget);
+            m_currentMountControlsWidget->deleteLater();
+            m_currentMountControlsWidget = nullptr;
+        }
+		});
 
     // Load settings
     loadAppSettings();

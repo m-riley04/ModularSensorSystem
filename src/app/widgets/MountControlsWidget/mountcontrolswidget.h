@@ -12,6 +12,8 @@ public:
 	MountControlsWidget(Mount* mount, MainController& mc, QWidget *parent = nullptr);
 	~MountControlsWidget();
 
+	Mount* mount() const { return m_mount; }
+
 private slots:
 	void updateUi();
 
