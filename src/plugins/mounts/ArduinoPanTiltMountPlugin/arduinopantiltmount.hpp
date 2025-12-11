@@ -30,7 +30,7 @@ public:
 	double tiltMaxAngle() const override final;
 	PanTiltInfo info() const override final;
 	bool recenter() override final;
-	bool refreshInfo() { return this->sendInfoCommand(); }
+	bool refreshInfo() override final;
 	PanTiltError error() const override final;
 
 private slots:

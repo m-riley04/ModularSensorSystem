@@ -28,6 +28,7 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 	connect(m_serialPort, &QSerialPort::errorOccurred, this, [this](QSerialPort::SerialPortError error) {
 		if (error != QSerialPort::NoError) {
 			setError("Error at the serial port: " + m_serialPort->errorString());
+			m_serialPort->clearError();
 		}
 		});
 }
@@ -35,11 +36,7 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 bool ArduinoPanTiltMount::moveTo(double panAngle, double tiltAngle)
 {
 	QString command = QString::number(static_cast<int>(panAngle)) + "," + QString::number(static_cast<int>(tiltAngle)) + "\n";
-	if (!sendCommand(command)) {
-		setError("Failed to send move command to mount.");
-		return false;
-	}
-	return true;
+	return sendCommand(command);
 }
 
 double ArduinoPanTiltMount::panAngle() const
@@ -85,6 +82,19 @@ bool ArduinoPanTiltMount::recenter()
 	return this->moveTo(panBoundsMedian, tiltBoundsMedian);
 }
 
+bool ArduinoPanTiltMount::refreshInfo()
+{
+	if (!m_serialPort->isOpen()) {
+		LoggingController::info("Serial port is not open. Attempting to open...");
+		if (!m_serialPort->open(QIODevice::ReadWrite)) {
+			setError("Failed to open serial port for Arduino Pan-Tilt Mount: " + m_serialPort->errorString());
+			return false;
+		}
+	}
+
+	return this->sendInfoCommand();
+}
+
 PanTiltError ArduinoPanTiltMount::error() const
 {
 	return m_error;
@@ -93,16 +103,13 @@ PanTiltError ArduinoPanTiltMount::error() const
 bool ArduinoPanTiltMount::sendInfoCommand()
 {
 	QString command = "info\n";
-	if (!sendCommand(command)) {
-		setError("Failed to send info command to mount.");
-		return false;
-	}
-	
-	return true;
+	return sendCommand(command);
 }
 
 void ArduinoPanTiltMount::readSerialData()
 {
+	LoggingController::debug("Reading serial data from Arduino Pan-Tilt Mount...");
+
 	// Read available data into read buffer
 	m_readBuffer.append(m_serialPort->readAll());
 	if (m_readBuffer.isEmpty() || m_readBuffer.isNull()) {
@@ -124,6 +131,8 @@ void ArduinoPanTiltMount::readSerialData()
 		m_readBuffer = completeMessage;
 		this->parseResponse();
 		m_readBuffer = temp;
+
+		LoggingController::debug("Parsed response from Arduino Pan-Tilt Mount.");
 	}
 }
 
@@ -164,5 +173,10 @@ void ArduinoPanTiltMount::setError(const QString& errorMsg)
 
 bool ArduinoPanTiltMount::sendCommand(const QString& command)
 {
-	return m_serialPort->write(command.toUtf8()) != -1;
+	LoggingController::info("Sending command to Arduino Pan-Tilt Mount: " + command.trimmed());
+	if (m_serialPort->write(command.toUtf8()) == -1) {
+		setError("Failed to write command to serial port.");
+		return false;
+	}
+	return true;
 }
