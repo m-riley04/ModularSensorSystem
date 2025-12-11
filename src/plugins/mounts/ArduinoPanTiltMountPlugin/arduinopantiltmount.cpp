@@ -31,6 +31,13 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 			m_serialPort->clearError();
 		}
 		});
+	connect(m_serialPort, &QSerialPort::bytesWritten, this, [this](qint64 bytes) {
+		if (bytes <= 0) {
+			LoggingController::warning("No bytes were written to Arduino Pan-Tilt Mount serial port.");
+		}
+
+		LoggingController::debug(QString("Wrote %1 bytes to Arduino Pan-Tilt Mount serial port.").arg(bytes));
+		});
 }
 
 bool ArduinoPanTiltMount::moveTo(double panAngle, double tiltAngle)
