@@ -18,6 +18,12 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 		return;
 	}
 
+	// Open data terminal
+	if (!m_serialPort->setDataTerminalReady(true)) {
+		setError("Failed to set DTR");
+		return;
+	}
+
 	// Get initial serial port info
 	if (!this->sendInfoCommand()) {
 		setError("Failed to get initial pan-tilt mount info from serial port.");
@@ -190,5 +196,6 @@ bool ArduinoPanTiltMount::sendCommand(const QString& command)
 		setError("Failed to write command to serial port.");
 		return false;
 	}
+
 	return true;
 }
