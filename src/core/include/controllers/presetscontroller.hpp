@@ -12,8 +12,9 @@
 #include "interfaces/capability/sources/iconfigurablesource.hpp"
 
 #include "controllers/settingscontroller.hpp"
+#include "core_export.hpp"
 
-class PresetsController : public QObject
+class MSS_CORE_API PresetsController : public QObject
 {
 	Q_OBJECT
 

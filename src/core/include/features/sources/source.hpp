@@ -4,13 +4,14 @@
 #include "features/element.hpp"
 #include "interfaces/capability/sources/ipreviewablesource.hpp"
 #include "interfaces/capability/sources/irecordablesource.hpp"
+#include "core_export.hpp"
 #include <gst/gst.h>
 
 /**
  * Represents a data source (e.g., video, audio, data).
  * TODO: rename this to ISource (since I've been working on making this a more pure interface)
  */
-class Source : public Element
+class MSS_CORE_API Source : public Element
 {
 	Q_OBJECT
 

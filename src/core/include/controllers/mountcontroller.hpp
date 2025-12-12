@@ -5,8 +5,9 @@
 #include <QUuid>
 #include "sdk/plugins/imountplugin.hpp"
 #include "utils/boost_qt_conversions.hpp"
+#include "core_export.hpp"
 
-class MountController : public QObject
+class MSS_CORE_API MountController : public QObject
 {
 	Q_OBJECT
 

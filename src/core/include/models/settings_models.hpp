@@ -5,6 +5,9 @@
 #include <string>
 #include <QSize>
 
+// Note: These structs don't need MSS_CORE_API because they are POD-like
+// header-only types with no out-of-line member functions.
+
 struct GeneralSettings
 {
 	bool closeToTray = true;

@@ -10,8 +10,9 @@
 #include <sdk/plugins/isourceplugin.hpp>
 #include "features/sources/source.hpp"
 #include "utils/boost_qt_conversions.hpp"
+#include "core_export.hpp"
 
-class SourceController : public QObject
+class MSS_CORE_API SourceController : public QObject
 {
 	Q_OBJECT
 

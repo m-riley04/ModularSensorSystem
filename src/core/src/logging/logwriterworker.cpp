@@ -124,9 +124,8 @@ void LogWriterWorker::writeMessage(const QString& message)
 		return;
 	}
 
-	QTextStream stream(m_logFile);
-	stream << message << Qt::endl;
-	stream.flush();
+	*m_logStream << message << Qt::endl;
+	m_logStream->flush();
 }
 
 bool LogWriterWorker::openFile(const QString& filePath)
@@ -141,7 +140,9 @@ bool LogWriterWorker::openFile(const QString& filePath)
 		delete m_logFile;
 		m_logFile = nullptr;
 		return false;
-	}
+	}	
+
+	m_logStream = new QTextStream(m_logFile);
 
 	return true;
 }
@@ -154,5 +155,10 @@ void LogWriterWorker::closeFile()
 		}
 		delete m_logFile;
 		m_logFile = nullptr;
+	}
+	if (m_logStream) {
+		m_logStream->flush();
+		delete m_logStream;
+		m_logStream = nullptr;
 	}
 }

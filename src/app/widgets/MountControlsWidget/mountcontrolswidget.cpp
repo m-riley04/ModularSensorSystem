@@ -11,10 +11,6 @@ MountControlsWidget::MountControlsWidget(Mount* mount, MainController& mc, QWidg
 		return;
 	}
 
-	// Initialize UI before connections
-	updateUi();
-	ui.labelMountName->setText(QString::fromStdString(m_mount->displayName()));
-
 	// Connect mount notify signal to UI update
 	connect(m_mount, &Mount::dataUpdated, this, [this]() {
 		updateUi();
@@ -28,6 +24,16 @@ MountControlsWidget::MountControlsWidget(Mount* mount, MainController& mc, QWidg
 	connect(ui.buttonRecenter, &QPushButton::clicked, this, &MountControlsWidget::onRecenterClicked);
 	connect(ui.buttonSetInitialAngles, &QPushButton::clicked, this, &MountControlsWidget::onSetInitialAnglesClicked);
 	connect(ui.buttonRefresh, &QPushButton::clicked, this, &MountControlsWidget::onRefreshInfoClicked);
+
+	// Request fresh data - updateUi will be called via dataUpdated signal when ready
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	if (panTiltMount && !panTiltMount->refreshInfo()) {
+		LoggingController::warning("Failed to request initial mount info refresh.");
+	}
+
+	// Initialize UI
+	ui.labelMountName->setText(QString::fromStdString(m_mount->displayName()));
+	updateUi();
 }
 
 MountControlsWidget::~MountControlsWidget()
@@ -98,7 +104,6 @@ void MountControlsWidget::onRefreshInfoClicked()
 	if (!panTiltMount->refreshInfo()) {
 		LoggingController::warning("Failed to refresh mount info.");
 	}
-	updateUi();
 }
 
 void MountControlsWidget::onSetInitialAnglesClicked()
@@ -111,7 +116,6 @@ void MountControlsWidget::onSetInitialAnglesClicked()
     if (!panTiltMount->moveTo(panAngle, tiltAngle)) {
         LoggingController::warning("Failed to move to the specified angles.");
     }
-    updateUi();
 }
 
 void MountControlsWidget::onRecenterClicked()
@@ -122,8 +126,6 @@ void MountControlsWidget::onRecenterClicked()
 	if (!panTiltMount->recenter()) {
 		LoggingController::warning("Failed to recenter the mount.");
 	}
-
-	updateUi();
 }
 
 void MountControlsWidget::onPanSliderChanged(int value)
@@ -134,7 +136,6 @@ void MountControlsWidget::onPanSliderChanged(int value)
 	if (!panTiltMount->moveTo(static_cast<double>(value), panTiltMount->tiltAngle())) {
 		LoggingController::warning("Failed to move pan to the specified value.");
 	}
-	updateUi();
 }
 
 void MountControlsWidget::onTiltSliderChanged(int value)
@@ -145,6 +146,5 @@ void MountControlsWidget::onTiltSliderChanged(int value)
 	if (!panTiltMount->moveTo(panTiltMount->panAngle(), static_cast<double>(value))) {
 		LoggingController::warning("Failed to move tilt to the specified value.");
 	}
-	updateUi();
 }
 

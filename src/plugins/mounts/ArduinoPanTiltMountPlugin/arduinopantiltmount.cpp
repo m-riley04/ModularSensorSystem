@@ -8,28 +8,7 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 	, m_serialPort(new QSerialPort(QString::fromStdString(element.name), this))
 	, m_panTiltInfo(PanTiltInfo())
 {
-	if (!m_serialPort->setBaudRate(QSerialPort::Baud115200)) {
-		setError("Failed to set baud rate for Arduino Pan-Tilt Mount serial port: " + m_serialPort->errorString());
-		return;
-	}
-
-	if (!m_serialPort->open(QIODevice::ReadWrite)) {
-		setError("Failed to open serial port for Arduino Pan-Tilt Mount: " + m_serialPort->errorString());
-		return;
-	}
-
-	// Open data terminal
-	if (!m_serialPort->setDataTerminalReady(true)) {
-		setError("Failed to set DTR");
-		return;
-	}
-
-	// Get initial serial port info
-	if (!this->sendInfoCommand()) {
-		setError("Failed to get initial pan-tilt mount info from serial port.");
-	}
-
-	// Add serial port connections
+	// Add serial port connections FIRST
 	connect(m_serialPort, &QSerialPort::readyRead, this, &ArduinoPanTiltMount::readSerialData);
 	connect(m_serialPort, &QSerialPort::errorOccurred, this, [this](QSerialPort::SerialPortError error) {
 		if (error != QSerialPort::NoError) {
@@ -41,9 +20,61 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 		if (bytes <= 0) {
 			LoggingController::warning("No bytes were written to Arduino Pan-Tilt Mount serial port.");
 		}
-
 		LoggingController::debug(QString("Wrote %1 bytes to Arduino Pan-Tilt Mount serial port.").arg(bytes));
 		});
+	connect(m_serialPort, &QSerialPort::baudRateChanged, this, [this](qint32 baudRate, QSerialPort::Directions directions) {
+		QString directionsStr;
+		switch (directions) {
+		case QSerialPort::Input:
+			directionsStr = "Input";
+			break;
+		case QSerialPort::Output:
+			directionsStr = "Output";
+			break;
+		case QSerialPort::AllDirections:
+		default:
+			directionsStr = "Input/Output";
+		}
+		LoggingController::info(QString("Baud rate changed to %1 (Directions: %2)").arg(baudRate).arg(directionsStr));
+		});
+	connect(m_serialPort, &QSerialPort::dataTerminalReadyChanged, this, [this](bool set) {
+		LoggingController::info(QString("DTR changed to %1").arg(set));
+		});
+	connect(m_serialPort, &QSerialPort::aboutToClose, this, [this]() {
+		LoggingController::info("Serial port about to close.");
+		});
+	connect(m_serialPort, &QSerialPort::readChannelFinished, this, [this]() {
+		LoggingController::info("Read channel finished.");
+		});
+	connect(m_serialPort, &QSerialPort::requestToSendChanged, this, [this](bool set) {
+		LoggingController::info(QString("RTS changed to %1").arg(set));
+		});
+	connect(m_serialPort, &QSerialPort::breakEnabledChanged, this, [this](bool set) {
+		LoggingController::info(QString("Break enabled changed to %1").arg(set));
+		});
+
+	if (!m_serialPort->open(QIODevice::ReadWrite)) {
+		setError("Failed to open serial port for Arduino Pan-Tilt Mount: " + m_serialPort->errorString());
+		return;
+	}
+
+	if (!m_serialPort->setBaudRate(QSerialPort::Baud115200)) {
+		setError("Failed to set baud rate for Arduino Pan-Tilt Mount serial port: " + m_serialPort->errorString());
+		return;
+	}
+
+	// Open DTR (this is required for initialization of device)
+	if (!m_serialPort->setDataTerminalReady(true)) {
+		setError("Failed to set DTR");
+		return;
+	}
+
+	// Get initial serial port info
+	if (!this->sendInfoCommand()) {
+		setError("Failed to get initial pan-tilt mount info from serial port.");
+	}
+
+	LoggingController::info("Arduino Pan-Tilt Mount initialized on serial port: " + m_serialPort->portName());
 }
 
 bool ArduinoPanTiltMount::moveTo(double panAngle, double tiltAngle)

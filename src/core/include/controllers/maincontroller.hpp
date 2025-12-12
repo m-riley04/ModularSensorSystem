@@ -13,8 +13,9 @@
 #include "controllers/sessioncontroller.hpp"
 #include "controllers/settingscontroller.hpp"
 #include "controllers/loggingcontroller.hpp"
+#include "core_export.hpp"
 
-class MainController  : public QObject
+class MSS_CORE_API MainController  : public QObject
 {
 	Q_OBJECT
 

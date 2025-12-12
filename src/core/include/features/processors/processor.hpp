@@ -4,12 +4,13 @@
 #include "features/sources/source.hpp"
 #include "sdk/plugins/iprocessorplugin.hpp"
 #include "features/element.hpp"
+#include "core_export.hpp"
 
 /**
  * An element that processes data from a source.
  * This class serves as a base for all processors that handle data from a specific source.
  */
-class Processor : public Element
+class MSS_CORE_API Processor : public Element
 {
     Q_OBJECT
 

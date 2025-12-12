@@ -6,8 +6,9 @@
 #include "features/processors/processor.hpp"
 
 #include "utils/boost_qt_conversions.hpp"
+#include "core_export.hpp"
 
-class ProcessingController  : public QObject
+class MSS_CORE_API ProcessingController  : public QObject
 {
 	Q_OBJECT
 

@@ -17,10 +17,11 @@
 #include <utils/session_utils.hpp>
 #include "pipeline/sessionpipeline.hpp"
 #include "settingscontroller.hpp"
+#include "core_export.hpp"
 
 using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
-class SessionController : public QObject
+class MSS_CORE_API SessionController : public QObject
 {
 	Q_OBJECT
 

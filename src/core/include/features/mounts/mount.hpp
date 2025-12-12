@@ -3,11 +3,12 @@
 #include <string>
 #include <optional>
 #include "features/element.hpp"
+#include "core_export.hpp"
 
 /**
  * @brief Mounts represent the physical "mount" that physical sources sit on. They provide data
  */
-class Mount : public Element
+class MSS_CORE_API Mount : public Element
 {
 	Q_OBJECT
 

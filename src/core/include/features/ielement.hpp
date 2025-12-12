@@ -1,12 +1,13 @@
 #pragma once
 
 #include <boost/uuid.hpp>
+#include "core_export.hpp"
 
 /**
  * An element is a generic component of the system that sends and/or recieves data.
  * Ex: mount, source, processor.
  */
-class IElement
+class MSS_CORE_API IElement
 {
 
 public:
