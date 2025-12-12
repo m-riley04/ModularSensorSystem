@@ -2,6 +2,8 @@
 #include <dialogs/AddSourceDialog/addsourcedialog.h>
 #include <dialogs/AddProcessorDialog/addprocessordialog.h>
 #include <dialogs/AddMountDialog/addmountdialog.h>
+#include "dialogs/PluginsDialog/pluginsdialog.h"
+#include "widgets/DockedMountControls/dockedmountcontrols.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -90,14 +92,6 @@ MainWindow::MainWindow(MainController& mc, UiSettingsController& uisc, QWidget *
 
 	// TODO: this logic needs to be re-done and moved elsewhere. This is just a quick and dirty way to get mount controls showing up for now.
 	connect(m_actionController, &AppActionController::elementSelectionChanged, this, [this](ElementTreeNode* node) {
-        
-        if (m_currentMountControlsWidget != nullptr) {
-            // Remove previous mount controls widget
-            ui.layoutMountWidget->removeWidget(m_currentMountControlsWidget);
-            m_currentMountControlsWidget->deleteLater();
-            m_currentMountControlsWidget = nullptr;
-        }
-
 		// Get mount from node and set in controls widget
         const Mount* mount = this->m_controller.mountController().byId(node->uuid);
         if (mount == nullptr) return;
@@ -107,17 +101,11 @@ MainWindow::MainWindow(MainController& mc, UiSettingsController& uisc, QWidget *
             });
         
 		// Create new widget for mount controls
-        m_currentMountControlsWidget = new MountControlsWidget(const_cast<Mount*>(mount), this->m_controller, this); // TODO: avoid const cast
-		ui.layoutMountWidget->addWidget(m_currentMountControlsWidget);
+		ui.dockWidgetMountController->setMount(const_cast<Mount*>(mount)); // TODO: avoid const cast
     });
 
     connect(&m_controller.mountController(), &MountController::mountRemoved, this, [this](QUuid mountId) {
-        if (m_currentMountControlsWidget != nullptr && boostUuidToQUuid(m_currentMountControlsWidget->mount()->uuid()) == mountId) {
-            // Remove current mount controls widget if its mount was removed
-            ui.layoutMountWidget->removeWidget(m_currentMountControlsWidget);
-            m_currentMountControlsWidget->deleteLater();
-            m_currentMountControlsWidget = nullptr;
-        }
+        ui.dockWidgetMountController->setMount(nullptr);
 		});
 
     // Load settings
@@ -156,8 +144,11 @@ void MainWindow::initWidgets()
     ui.presetsWidget->setController(&m_controller);
 
     // Init elements tree
-    ui.dockWidget->setController(&m_controller);
-    ui.dockWidget->setActions(&this->m_actionController->actions());
+    ui.dockWidgetElementManager->setController(&m_controller);
+    ui.dockWidgetElementManager->setActions(&this->m_actionController->actions());
+
+	// Init mount controls dock widget
+	ui.dockWidgetMountController->setMount(nullptr);
 }
 
 void MainWindow::initSignals() {
@@ -171,8 +162,8 @@ void MainWindow::initSignals() {
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, m_actionController, &AppActionController::onPresetElementSelected);
 
 	// Connect dock widget signals
-    connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, m_actionController, &AppActionController::onElementSelected);
-    connect(ui.dockWidget, &DockableElementsManagerWidget::elementRemoved, m_actionController, &AppActionController::onElementRemoved);
+    connect(ui.dockWidgetElementManager, &DockableElementsManagerWidget::elementSelected, m_actionController, &AppActionController::onElementSelected);
+    connect(ui.dockWidgetElementManager, &DockableElementsManagerWidget::elementRemoved, m_actionController, &AppActionController::onElementRemoved);
 
 }
 

@@ -330,7 +330,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
        <property name="frameShadow">
         <enum>QFrame::Shadow::Raised</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -346,9 +346,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
-         <layout class="QVBoxLayout" name="layoutMountWidget"/>
-        </item>
         <item>
          <widget class="SessionControlsWidget" name="sessionControls" native="true"/>
         </item>
@@ -557,11 +554,19 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <addaction name="actionSessionProperties"/>
    <addaction name="actionClipSession"/>
   </widget>
-  <widget class="DockableElementsManagerWidget" name="dockWidget">
+  <widget class="DockableElementsManagerWidget" name="dockWidgetElementManager">
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents"/>
+  </widget>
+  <widget class="DockedMountControls" name="dockWidgetMountController">
+   <property name="allowedAreas">
+    <set>Qt::DockWidgetArea::AllDockWidgetAreas</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
   </widget>
   <action name="actionQuit">
    <property name="icon">
@@ -988,6 +993,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
+  <zorder>dockWidgetMountController</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -1013,6 +1019,12 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <class>DockableElementsManagerWidget</class>
    <extends>QDockWidget</extends>
    <header>widgets/DockableElementsManagerWidget/dockableelementsmanagerwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DockedMountControls</class>
+   <extends>QDockWidget</extends>
+   <header>widgets/DockedMountControls/dockedmountcontrols.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

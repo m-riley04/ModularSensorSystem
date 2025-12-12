@@ -79,7 +79,7 @@
     <ClCompile Include="dialogs\AppSettingsDialog\appsettingsdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\MountControlsWidget\mountcontrolswidget.cpp">
+    <ClCompile Include="widgets\DockedMountControls\dockedmountcontrols.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -132,7 +132,7 @@
     <QtMoc Include="dialogs\AppSettingsDialog\appsettingsdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\MountControlsWidget\mountcontrolswidget.h">
+    <QtMoc Include="widgets\DockedMountControls\dockedmountcontrols.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -173,7 +173,7 @@
     <QtUic Include="dialogs\AppSettingsDialog\appsettingsdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="widgets\MountControlsWidget\mountcontrolswidget.ui">
+    <QtUic Include="widgets\DockedMountControls\dockedmountcontrols.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

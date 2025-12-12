@@ -3,12 +3,8 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
 #include "controllers/maincontroller.hpp"
-#include "controllers/mountcontroller.hpp"
-#include "dialogs/PluginsDialog/pluginsdialog.h"
 #include <controllers/AppActionController/appactioncontroller.h>
 #include <controllers/UiSettingsController/uisettingscontroller.h>
-#include <widgets/MountControlsWidget/mountcontrolswidget.h>
-
 
 class MainWindow : public QMainWindow
 {
@@ -42,5 +38,4 @@ private:
     MainController& m_controller;
     UiSettingsController& m_uiSettingsController;
     AppActionController* m_actionController = nullptr;
-	MountControlsWidget* m_currentMountControlsWidget = nullptr;
 };
