@@ -7,7 +7,7 @@
 #include "features/sources/source.hpp"
 #include "interfaces/capability/sources/ianalogsource.hpp"
 #include "pipeline/sinks/preview_defaults.hpp"
-#include <interfaces/capability/sources/ipreviewablesource.hpp>
+#include <interfaces/capability/general/ipreviewable.hpp>
 #include <utils/debug.hpp>
 #include <utils/utils.hpp>
 #include <utils/session_utils.hpp>
@@ -43,7 +43,7 @@ public slots:
 	void setState(State newState);
 	void startRecording();
 	void stopRecording();
-	bool build(const QList<Source*>&, const QList<IRecordable*>&);
+	bool build(const QList<Element*>&, const QList<IRecordable*>&);
 	bool close();
 
 	void onPipelineError(const QString& errorMessage);
@@ -54,9 +54,9 @@ private:
 	bool stop();
 	bool cleanup();
 
-	bool createSourceElements(Source*);
-	bool createAndLinkPreviewBin(Source*, GstElement*);
-	bool createAndLinkRecordBin(Source*, GstElement*);
+	bool createSourceElements(Element*);
+	bool createAndLinkPreviewBin(Element*, GstElement*);
+	bool createAndLinkRecordBin(Element*, GstElement*);
 
 	bool openRecordingValves(QList<IRecordable*>&);
 	bool closeRecordingValves(QList<IRecordable*>&);

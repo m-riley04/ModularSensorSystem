@@ -29,11 +29,11 @@ const QString generateSessionDirectoryPath(const SessionSettings& props, const Q
 	return outputFolderPath;
 }
 
-const QString generateSessionSourcePath(Source* src, const SessionSettings& props, const ns timestamp)
+const QString generateSessionSourcePath(Element* element, const SessionSettings& props, const ns timestamp)
 {
-	auto recordableSrc = src->asRecordable();
-	if (!src->asRecordable()) {
-		LoggingController::warning("Cannot generate session source path: source is not recordable: " + QString::fromStdString(src->name()));
+	auto recordableSrc = element->asRecordable();
+	if (!recordableSrc) {
+		LoggingController::warning("Cannot generate session source path: source is not recordable: " + QString::fromStdString(element->name()));
 		return QString();
 	}
 
@@ -42,12 +42,12 @@ const QString generateSessionSourcePath(Source* src, const SessionSettings& prop
 
 	// Check output folder path
 	if (outputFolderPath.isEmpty()) {
-		LoggingController::warning("Cannot generate session source path: output folder path is empty for source: " + QString::fromStdString(src->name()));
+		LoggingController::warning("Cannot generate session source path: output folder path is empty for source: " + QString::fromStdString(element->name()));
 		return QString();
 	}
 
 	// Sanitize the file name derived from the source display/name to avoid invalid characters
-	QString baseName = QString::fromStdString(sanitizeFileNameForWindows(src->name()));
+	QString baseName = QString::fromStdString(sanitizeFileNameForWindows(element->name()));
 
 	// Avoid reserved DOS device names
 	static const QStringList reserved = {
@@ -81,7 +81,7 @@ const QString generateSessionSourcePath(Source* src, const SessionSettings& prop
 	const QString cleanedOutputFilePath = candidate.trimmed();
 
 	if (cleanedOutputFilePath.isEmpty()) {
-		LoggingController::warning("Cannot generate session source path: output file path is empty for source: " + QString::fromStdString(src->name()));
+		LoggingController::warning("Cannot generate session source path: output file path is empty for source: " + QString::fromStdString(element->name()));
 		return QString();
 	}
 

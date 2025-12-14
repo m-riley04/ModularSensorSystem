@@ -119,9 +119,10 @@
     <QtMoc Include="include\controllers\settingscontroller.hpp" />
     <QtMoc Include="include\controllers\loggingcontroller.hpp" />
     <ClInclude Include="include\core_export.hpp" />
+    <ClInclude Include="include\interfaces\capability\general\ipipelineelement.hpp" />
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp" />
     <ClInclude Include="include\interfaces\capability\mounts\ipantiltmount.hpp" />
-    <ClInclude Include="include\interfaces\capability\sources\ipreviewablesource.hpp" />
+    <ClInclude Include="include\interfaces\capability\general\ipreviewable.hpp" />
     <ClInclude Include="include\interfaces\capability\general\irecordable.hpp" />
     <QtMoc Include="include\logging\logwriterworker.hpp" />
     <ClInclude Include="include\models\settings_models.hpp" />

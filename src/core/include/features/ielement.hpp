@@ -1,6 +1,9 @@
 #pragma once
 
 #include <boost/uuid.hpp>
+#include <interfaces/capability/general/ipipelineelement.hpp>
+#include <interfaces/capability/general/ipreviewable.hpp>
+#include "interfaces/capability/general/irecordable.hpp"
 #include "core_export.hpp"
 
 /**
@@ -72,6 +75,11 @@ public:
 	 * A hook called when a session stops.
 	 */
 	virtual void onSessionStop() = 0;
+
+	// Converters to capability interfaces
+	virtual IRecordable* asRecordable() = 0;
+	virtual IPipelineElement* asPipelineElement() = 0;
+	virtual IPreviewable* asPreviewable() = 0;
 
 protected:
 	/// These are protected to prevent external modification, but allow derived classes to set them.

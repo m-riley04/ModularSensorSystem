@@ -92,7 +92,7 @@
     <ClInclude Include="include\interfaces\capability\general\irecordable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\sources\ipreviewablesource.hpp">
+    <ClInclude Include="include\interfaces\capability\general\ipreviewable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\pipeline\bins\recorderbin.hpp">
@@ -129,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core_export.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\interfaces\capability\general\ipipelineelement.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

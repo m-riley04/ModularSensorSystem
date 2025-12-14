@@ -53,6 +53,11 @@ public:
 	virtual void setDisplayName(const std::string& newDisplayName) override final { m_displayName = newDisplayName; }
 	virtual const Type elementType() const noexcept override { return Type::Unknown; }
 
+	// Converters to capability interfaces
+	virtual IRecordable* asRecordable() override final { return dynamic_cast<IRecordable*>(this); }
+	virtual IPipelineElement* asPipelineElement() override final { return dynamic_cast<IPipelineElement*>(this); }
+	virtual IPreviewable* asPreviewable() override final { return dynamic_cast<IPreviewable*>(this); }
+
 public slots:
 	virtual void onSessionStart() {}; // nop by default
 	virtual void onSessionStop() {}; // nop by default

@@ -8,9 +8,9 @@ SourceController::SourceController(QObject *parent)
 SourceController::~SourceController()
 {}
 
-const QList<IPreviewableSource*> SourceController::previewableSources() const
+const QList<IPreviewable*> SourceController::previewableSources() const
 {
-	QList<IPreviewableSource*> previewableSourcesList;
+	QList<IPreviewable*> previewableSourcesList;
 	for (Source* source : mSources) {
 		if (!source) continue;
 		if (auto s = source->asPreviewable()) previewableSourcesList.append(s);

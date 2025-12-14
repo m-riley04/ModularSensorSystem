@@ -2,8 +2,7 @@
 
 #include <QObject>
 #include "features/element.hpp"
-#include "interfaces/capability/sources/ipreviewablesource.hpp"
-#include "interfaces/capability/general/irecordable.hpp"
+#include "interfaces/capability/general/ipreviewable.hpp"
 #include "core_export.hpp"
 #include <gst/gst.h>
 
@@ -29,17 +28,6 @@ public:
 public:
 	Source(ElementInfo& element, QObject* parent = nullptr) : Element(element, parent) {}
 	virtual ~Source() = default;
-
-	/**
-	 * Gets the GStreamer bin element representing this source.
-	 * @return
-	 */
-	virtual GstElement* srcBin() = 0;
-
-	/// CAPABILITY INTERFACES ///
-
-	virtual IPreviewableSource* asPreviewable() { return dynamic_cast<IPreviewableSource*>(this); }
-	virtual IRecordable* asRecordable() { return dynamic_cast<IRecordable*>(this); }
 
 	/// OVERRIDES ///
 

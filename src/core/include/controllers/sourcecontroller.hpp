@@ -21,7 +21,7 @@ public:
 	~SourceController();
 
 	const QList<Source*>& sources() const { return mSources; }
-	const QList<IPreviewableSource*> previewableSources() const;
+	const QList<IPreviewable*> previewableSources() const;
 	const QList<IRecordable*> recordableSources() const;
 
 	bool isEmpty() const { return mSources.isEmpty(); }

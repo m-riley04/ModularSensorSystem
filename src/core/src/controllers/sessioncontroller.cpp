@@ -29,7 +29,15 @@ void SessionController::startSession()
 	// Generate a new session timestamp
 	m_lastSessionTimestamp = generateTimestampNs();
 	m_pipeline.setSessionTimestamp(m_lastSessionTimestamp);
-	m_pipeline.build(m_sourceController.sources(), m_sourceController.recordableSources());
+
+	// Convert list of sources to elements
+	// TODO: optimize this, make it more elegant, avoid copying, and move it elsewhere if possible
+	QList<Element*> elements;
+	for (auto& source : m_sourceController.sources()) {
+		elements.append(source);
+	}
+
+	m_pipeline.build(elements, m_sourceController.recordableSources());
 }
 
 void SessionController::stopSession()

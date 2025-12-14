@@ -3,14 +3,16 @@
 #include <QObject>
 #include <chrono>
 #include "features/sources/source.hpp"
-#include "interfaces/capability/sources/ipreviewablesource.hpp"
+#include "interfaces/capability/general/ipreviewable.hpp"
+#include "interfaces/capability/general/ipipelineelement.hpp"
 #include <sdk/plugins/isourceplugin.hpp>
 #include <utils/boost_qt_conversions.hpp>
 #include "utils.hpp"
 #include "usbaudiosourcebin.hpp"
 
 class USBAudioSource : public Source
-	, public IPreviewableSource
+	, public IPreviewable
+	, public IPipelineElement
 {
 	Q_OBJECT
 
@@ -21,7 +23,9 @@ public:
 
 	SourceInfo getSourceInfo(const std::string& id) const;
 	Source::Type type() const override { return m_sourceType; }
-	GstElement* srcBin() override;
+
+	/// IPipelineElement interface
+	GstElement* gstSrcBin() override;
 
 	/// IPreviewableSource interface
 	quintptr windowId() const override { return m_windowId; }

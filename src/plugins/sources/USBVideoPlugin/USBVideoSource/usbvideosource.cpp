@@ -53,7 +53,7 @@ void USBVideoSource::createRecorderBinIfNeeded()
 	}
 }
 
-GstElement* USBVideoSource::srcBin()
+GstElement* USBVideoSource::gstSrcBin()
 {
 	// lazy creation; note m_bin must be mutable
 	createBinIfNeeded();

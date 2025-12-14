@@ -12,7 +12,7 @@
 #include "features/sources/source.hpp"
 #include "interfaces/capability/sources/ianalogsource.hpp"
 #include "pipeline/sinks/preview_defaults.hpp"
-#include <interfaces/capability/sources/ipreviewablesource.hpp>
+#include <interfaces/capability/general/ipreviewable.hpp>
 #include "models/settings_models.hpp"
 #include <utils/session_utils.hpp>
 #include "pipeline/sessionpipeline.hpp"
