@@ -3,7 +3,7 @@
 #include <QObject>
 #include "features/element.hpp"
 #include "interfaces/capability/sources/ipreviewablesource.hpp"
-#include "interfaces/capability/sources/irecordablesource.hpp"
+#include "interfaces/capability/general/irecordable.hpp"
 #include "core_export.hpp"
 #include <gst/gst.h>
 
@@ -39,7 +39,7 @@ public:
 	/// CAPABILITY INTERFACES ///
 
 	virtual IPreviewableSource* asPreviewable() { return dynamic_cast<IPreviewableSource*>(this); }
-	virtual IRecordableSource* asRecordable() { return dynamic_cast<IRecordableSource*>(this); }
+	virtual IRecordable* asRecordable() { return dynamic_cast<IRecordable*>(this); }
 
 	/// OVERRIDES ///
 

@@ -18,9 +18,9 @@ const QList<IPreviewableSource*> SourceController::previewableSources() const
 	return previewableSourcesList;
 }
 
-const QList<IRecordableSource*> SourceController::recordableSources() const
+const QList<IRecordable*> SourceController::recordableSources() const
 {
-	QList<IRecordableSource*> recordableSourcesList;
+	QList<IRecordable*> recordableSourcesList;
 	for (Source* source : mSources) {
 		if (!source) continue;
 		if (auto s = source->asRecordable()) recordableSourcesList.append(s);

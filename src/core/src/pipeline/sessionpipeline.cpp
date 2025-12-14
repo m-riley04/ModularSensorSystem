@@ -57,13 +57,13 @@ static gboolean pipeline_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 	return true;
 }
 
-bool SessionPipeline::build(const QList<Source*>& sources, const QList<IRecordableSource*>& recordableSources)
+bool SessionPipeline::build(const QList<Source*>& sources, const QList<IRecordable*>& recordableElements)
 {
 	// Cleanly tear down any existing pipeline first
 	close();
 
-	// Set session properties
-	m_recordableSources = recordableSources;
+	// Set session recordable elements
+	m_recordableElements = recordableElements;
 
 	// Create the main pipeline
 	m_pipeline.reset(GST_PIPELINE(gst_pipeline_new(MAIN_PIPELINE_NAME)));
@@ -170,10 +170,10 @@ bool SessionPipeline::cleanup()
 	m_sourceBins.clear();
 	m_previewBins.clear();
 	m_recordBins.clear();
-	m_recordableSourceBins.clear();
+	m_recordableElementBins.clear();
 
 	// Sources ptrs list cleanup
-	m_recordableSources.clear();
+	m_recordableElements.clear();
 
 	return true;
 }
@@ -182,7 +182,7 @@ void SessionPipeline::startRecording()
 {
 	m_lastRecordingTimestamp = generateTimestampNs();
 
-	if (!openRecordingValves(m_recordableSources)) {
+	if (!openRecordingValves(m_recordableElements)) {
 		LoggingController::warning("Failed to open recording valves during startRecording.");
 		return;
 	}
@@ -192,7 +192,7 @@ void SessionPipeline::startRecording()
 
 void SessionPipeline::stopRecording()
 {
-	if (!closeRecordingValves(m_recordableSources)) {
+	if (!closeRecordingValves(m_recordableElements)) {
 		LoggingController::warning("Failed to close recording valves during stopRecording.");
 		return;
 	}
@@ -318,7 +318,7 @@ bool SessionPipeline::createAndLinkRecordBin(Source* src, GstElement* tee)
 		return false;
 	}
 
-	IRecordableSource* recSrc = src->asRecordable();
+	IRecordable* recSrc = src->asRecordable();
 
 	if (!recSrc) {
 		LoggingController::warning("Cannot create and link the source and recording bins for '" + QString::fromStdString(src->displayName()) + "': source is not recordable");
@@ -371,11 +371,11 @@ bool SessionPipeline::createAndLinkRecordBin(Source* src, GstElement* tee)
 	return true;
 }
 
-bool SessionPipeline::openRecordingValves(QList<IRecordableSource*>& sources)
+bool SessionPipeline::openRecordingValves(QList<IRecordable*>& elements)
 {
 	// Iterate over all sources and open their valves
-	for (auto& src : sources) {
-		if (!openRecordingValveForSource(src)) {
+	for (auto& element : elements) {
+		if (!openRecordingValveForElement(element)) {
 			LoggingController::warning("Failed to open recording valve for source");
 		}
 	}
@@ -383,11 +383,11 @@ bool SessionPipeline::openRecordingValves(QList<IRecordableSource*>& sources)
 	return true;
 }
 
-bool SessionPipeline::closeRecordingValves(QList<IRecordableSource*>& sources)
+bool SessionPipeline::closeRecordingValves(QList<IRecordable*>& sources)
 {
 	// Iterate over all sources and close their valves
 	for (auto& src : sources) {
-		if (!closeRecordingValveForSource(src)) {
+		if (!closeRecordingValveForElement(src)) {
 			LoggingController::warning("Failed to close recording valve for source");
 		}
 	}
@@ -395,7 +395,7 @@ bool SessionPipeline::closeRecordingValves(QList<IRecordableSource*>& sources)
 	return true;
 }
 
-bool SessionPipeline::openRecordingValveForSource(IRecordableSource* src)
+bool SessionPipeline::openRecordingValveForElement(IRecordable* src)
 {
 	if (!src) {
 		LoggingController::warning("Cannot open recording valve for source: source is not recordable");
@@ -406,7 +406,7 @@ bool SessionPipeline::openRecordingValveForSource(IRecordableSource* src)
 	return true;
 }
 
-bool SessionPipeline::closeRecordingValveForSource(IRecordableSource* src)
+bool SessionPipeline::closeRecordingValveForElement(IRecordable* src)
 {
 	if (!src) {
 		LoggingController::warning("Cannot close recording valve for source: source is not recordable");

@@ -22,7 +22,7 @@ public:
 
 	const QList<Source*>& sources() const { return mSources; }
 	const QList<IPreviewableSource*> previewableSources() const;
-	const QList<IRecordableSource*> recordableSources() const;
+	const QList<IRecordable*> recordableSources() const;
 
 	bool isEmpty() const { return mSources.isEmpty(); }
 

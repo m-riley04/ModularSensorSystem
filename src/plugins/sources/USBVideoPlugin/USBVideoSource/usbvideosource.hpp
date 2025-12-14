@@ -7,6 +7,7 @@
 #include <chrono>
 #include "features/sources/source.hpp"
 #include <sdk/plugins/isourceplugin.hpp>
+#include "interfaces/capability/general/irecordable.hpp"
 #include <utils/boost_qt_conversions.hpp>
 #include "utils.hpp"
 #include "usbvideosourcebin.hpp"
@@ -14,7 +15,7 @@
 
 class USBVideoSource : public Source
 	, public IPreviewableSource
-	, public IRecordableSource
+	, public IRecordable
 {
 	Q_OBJECT
 

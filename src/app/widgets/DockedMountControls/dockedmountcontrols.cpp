@@ -71,35 +71,37 @@ void DockedMountControls::updateUi()
 
 		// Set slider ranges to 0-100
 		ui.sliderPan->setMinimum(0);
-		ui.sliderPan->setMaximum(180);
+		ui.sliderPan->setMaximum(0);
 		ui.sliderTilt->setMinimum(0);
+		ui.sliderTilt->setMaximum(0);
 
 		return;
 	}
 	ui.labelMountName->setText(QString::fromStdString(m_mount->displayName()));
 
-	ui.labelPanAngle->setText(QString::number(panTiltMount->panAngle()));
-	ui.labelTiltAngle->setText(QString::number(panTiltMount->tiltAngle()));
-	ui.labelPanRange->setText(QString("%1 to %2").arg(panTiltMount->panMinAngle()).arg(panTiltMount->panMaxAngle()));
-	ui.labelTiltRange->setText(QString("%1 to %2").arg(panTiltMount->tiltMinAngle()).arg(panTiltMount->tiltMaxAngle()));
+	Pose pose = panTiltMount->pose();
+	ui.labelPanAngle->setText(QString::number(pose.yaw));
+	ui.labelTiltAngle->setText(QString::number(pose.pitch));
+	ui.labelPanRange->setText(QString("%1 to %2").arg(pose.bounds.yaw.min).arg(pose.bounds.yaw.max));
+	ui.labelTiltRange->setText(QString("%1 to %2").arg(pose.bounds.pitch.min).arg(pose.bounds.pitch.max));
 
 	ui.groupSliders->setEnabled(true);
 	ui.frameButtons->setEnabled(true);
 
 	// Set slider positions
 	ui.sliderPan->blockSignals(true);
-	ui.sliderPan->setValue(static_cast<int>(panTiltMount->panAngle()));
+	ui.sliderPan->setValue(static_cast<int>(pose.yaw));
 	ui.sliderPan->blockSignals(false);
 
 	ui.sliderTilt->blockSignals(true);
-	ui.sliderTilt->setValue(static_cast<int>(panTiltMount->tiltAngle()));
+	ui.sliderTilt->setValue(static_cast<int>(pose.pitch));
 	ui.sliderTilt->blockSignals(false);
 
 	// Set slider ranges
-	ui.sliderPan->setMinimum(static_cast<int>(panTiltMount->panMinAngle()));
-	ui.sliderPan->setMaximum(static_cast<int>(panTiltMount->panMaxAngle()));
-	ui.sliderTilt->setMinimum(static_cast<int>(panTiltMount->tiltMinAngle()));
-	ui.sliderTilt->setMaximum(static_cast<int>(panTiltMount->tiltMaxAngle()));
+	ui.sliderPan->setMinimum(static_cast<int>(pose.bounds.yaw.min));
+	ui.sliderPan->setMaximum(static_cast<int>(pose.bounds.yaw.max));
+	ui.sliderTilt->setMinimum(static_cast<int>(pose.bounds.pitch.min));
+	ui.sliderTilt->setMaximum(static_cast<int>(pose.bounds.pitch.max));
 
 }
 
@@ -139,7 +141,8 @@ void DockedMountControls::onPanSliderChanged(int value)
 	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
 	if (!panTiltMount) return;
 
-	if (!panTiltMount->moveTo(static_cast<double>(value), panTiltMount->tiltAngle())) {
+	Pose pose = panTiltMount->pose();
+	if (!panTiltMount->moveTo(static_cast<double>(value), pose.pitch)) {
 		LoggingController::warning("Failed to move pan to the specified value.");
 	}
 }
@@ -149,7 +152,8 @@ void DockedMountControls::onTiltSliderChanged(int value)
 	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
 	if (!panTiltMount) return;
 
-	if (!panTiltMount->moveTo(panTiltMount->panAngle(), static_cast<double>(value))) {
+	Pose pose = panTiltMount->pose();
+	if (!panTiltMount->moveTo(pose.yaw, static_cast<double>(value))) {
 		LoggingController::warning("Failed to move tilt to the specified value.");
 	}
 }

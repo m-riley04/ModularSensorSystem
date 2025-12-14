@@ -6,7 +6,7 @@
 ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* parent)
 	: Mount(element, parent)
 	, m_serialPort(new QSerialPort(QString::fromStdString(element.name), this))
-	, m_panTiltInfo(PanTiltInfo())
+	, m_panTiltInfo(Pose())
 {
 	// Add serial port connections FIRST
 	connect(m_serialPort, &QSerialPort::readyRead, this, &ArduinoPanTiltMount::readSerialData);
@@ -83,37 +83,7 @@ bool ArduinoPanTiltMount::moveTo(double panAngle, double tiltAngle)
 	return sendCommand(command);
 }
 
-double ArduinoPanTiltMount::panAngle() const
-{
-	return m_panTiltInfo.panAngle;
-}
-
-double ArduinoPanTiltMount::panMinAngle() const
-{
-	return m_panTiltInfo.minPanAngle;
-}
-
-double ArduinoPanTiltMount::panMaxAngle() const
-{
-	return m_panTiltInfo.maxPanAngle;
-}
-
-double ArduinoPanTiltMount::tiltAngle() const
-{
-	return m_panTiltInfo.tiltAngle;
-}
-
-double ArduinoPanTiltMount::tiltMinAngle() const
-{
-	return m_panTiltInfo.minTiltAngle;
-}
-
-double ArduinoPanTiltMount::tiltMaxAngle() const
-{
-	return m_panTiltInfo.maxTiltAngle;
-}
-
-PanTiltInfo ArduinoPanTiltMount::info() const
+Pose ArduinoPanTiltMount::pose() const
 {
 	return m_panTiltInfo;
 }
@@ -121,9 +91,9 @@ PanTiltInfo ArduinoPanTiltMount::info() const
 bool ArduinoPanTiltMount::recenter()
 {
 	// TODO: do actual advanced recentering logic here
-	double panBoundsMedian = (m_panTiltInfo.minPanAngle + m_panTiltInfo.maxPanAngle) / 2.0;
-	double tiltBoundsMedian = (m_panTiltInfo.minTiltAngle + m_panTiltInfo.maxTiltAngle) / 2.0;
-	return this->moveTo(panBoundsMedian, tiltBoundsMedian);
+	double yawBoundsMedian = (m_panTiltInfo.bounds.yaw.min + m_panTiltInfo.bounds.yaw.max) / 2.0;
+	double pitchBoundsMedian = (m_panTiltInfo.bounds.pitch.min + m_panTiltInfo.bounds.pitch.max) / 2.0;
+	return this->moveTo(yawBoundsMedian, pitchBoundsMedian);
 }
 
 bool ArduinoPanTiltMount::refreshInfo()
@@ -139,7 +109,7 @@ bool ArduinoPanTiltMount::refreshInfo()
 	return this->sendInfoCommand();
 }
 
-PanTiltError ArduinoPanTiltMount::error() const
+MountError ArduinoPanTiltMount::error() const
 {
 	return m_error;
 }
@@ -187,26 +157,26 @@ void ArduinoPanTiltMount::parseResponse()
 	//query.setQuery(QUrl::fromPercentEncoding(m_readBuffer));
 	query.setQuery(m_readBuffer);
 	if (query.hasQueryItem("minYaw")) {
-		m_panTiltInfo.minPanAngle = query.queryItemValue("minYaw").toDouble();
+		m_panTiltInfo.bounds.yaw.min = query.queryItemValue("minYaw").toDouble();
 	}
 	if (query.hasQueryItem("maxYaw")) {
-		m_panTiltInfo.maxPanAngle = query.queryItemValue("maxYaw").toDouble();
+		m_panTiltInfo.bounds.yaw.max = query.queryItemValue("maxYaw").toDouble();
 	}
 	if (query.hasQueryItem("minPitch")) {
-		m_panTiltInfo.minTiltAngle = query.queryItemValue("minPitch").toDouble();
+		m_panTiltInfo.bounds.pitch.min = query.queryItemValue("minPitch").toDouble();
 	}
 	if (query.hasQueryItem("maxPitch")) {
-		m_panTiltInfo.maxTiltAngle = query.queryItemValue("maxPitch").toDouble();
+		m_panTiltInfo.bounds.pitch.max = query.queryItemValue("maxPitch").toDouble();
 	}
 	if (query.hasQueryItem("yaw")) {
-		m_panTiltInfo.panAngle = query.queryItemValue("yaw").toDouble();
+		m_panTiltInfo.yaw = query.queryItemValue("yaw").toDouble();
 	}
 	if (query.hasQueryItem("pitch")) {
 		// TODO: fix this in a better way
 		QString tiltAngleStr = query.queryItemValue("pitch");
 		tiltAngleStr = tiltAngleStr.trimmed();
 		tiltAngleStr = tiltAngleStr.replace("%0D", "");
-		m_panTiltInfo.tiltAngle = tiltAngleStr.toDouble();
+		m_panTiltInfo.pitch = tiltAngleStr.toDouble();
 	}
 
 	emit dataUpdated();

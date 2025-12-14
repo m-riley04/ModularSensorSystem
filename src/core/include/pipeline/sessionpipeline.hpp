@@ -43,7 +43,7 @@ public slots:
 	void setState(State newState);
 	void startRecording();
 	void stopRecording();
-	bool build(const QList<Source*>& sources, const QList<IRecordableSource*>& recSources);
+	bool build(const QList<Source*>&, const QList<IRecordable*>&);
 	bool close();
 
 	void onPipelineError(const QString& errorMessage);
@@ -54,14 +54,14 @@ private:
 	bool stop();
 	bool cleanup();
 
-	bool createSourceElements(Source* source);
-	bool createAndLinkPreviewBin(Source* src, GstElement* srcBin);
-	bool createAndLinkRecordBin(Source* src, GstElement* srcBin);
+	bool createSourceElements(Source*);
+	bool createAndLinkPreviewBin(Source*, GstElement*);
+	bool createAndLinkRecordBin(Source*, GstElement*);
 
-	bool openRecordingValves(QList<IRecordableSource*>&);
-	bool closeRecordingValves(QList<IRecordableSource*>&);
-	bool openRecordingValveForSource(IRecordableSource* source);
-	bool closeRecordingValveForSource(IRecordableSource* source);
+	bool openRecordingValves(QList<IRecordable*>&);
+	bool closeRecordingValves(QList<IRecordable*>&);
+	bool openRecordingValveForElement(IRecordable*);
+	bool closeRecordingValveForElement(IRecordable*);
 
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
 	State m_state = State::STOPPED;
@@ -72,8 +72,8 @@ private:
 	QList<GstElement*> m_sourceBins;
 	QList<GstElement*> m_previewBins;
 	QList<GstElement*> m_recordBins;
-	QList<GstElement*> m_recordableSourceBins;
-	QList<IRecordableSource*> m_recordableSources;
+	QList<GstElement*> m_recordableElementBins;
+	QList<IRecordable*> m_recordableElements;
 	SessionSettings& m_sessionSettings; // ptr to session settings owned by settings controller
 	guint m_pipelineBusWatchId = 0;
 

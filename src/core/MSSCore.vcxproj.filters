@@ -89,7 +89,7 @@
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\sources\irecordablesource.hpp">
+    <ClInclude Include="include\interfaces\capability\general\irecordable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\interfaces\capability\sources\ipreviewablesource.hpp">
