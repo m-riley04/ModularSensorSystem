@@ -181,7 +181,10 @@ void ArduinoPanTiltMount::parseResponse()
 		m_panTiltInfo.bounds.pitch.max = query.queryItemValue("maxPitch").toDouble();
 	}
 	if (query.hasQueryItem("yaw")) {
-		m_panTiltInfo.yaw = query.queryItemValue("yaw").toDouble();
+		QString panAngleStr = query.queryItemValue("yaw");
+		panAngleStr = panAngleStr.trimmed();
+		panAngleStr = panAngleStr.replace("%0D", "");
+		m_panTiltInfo.yaw = panAngleStr.toDouble();
 	}
 	if (query.hasQueryItem("pitch")) {
 		// TODO: fix this in a better way
