@@ -126,6 +126,61 @@ MountError ArduinoPanTiltMount::error() const
 	return m_error;
 }
 
+GstElement* ArduinoPanTiltMount::gstSrcBin()
+{
+	// lazy creation; note m_bin must be mutable
+	createBinIfNeeded();
+	return m_bin->bin();
+}
+
+GstElement* ArduinoPanTiltMount::recorderSinkBin()
+{
+	createRecorderBinIfNeeded();
+	return m_recorderBin->bin();
+}
+
+std::string ArduinoPanTiltMount::recorderFileExtension() const
+{
+	return "csv";
+}
+
+bool ArduinoPanTiltMount::setRecordingFilePath(const std::string& filePath)
+{
+	if (!m_recorderBin) return false;
+
+	return m_recorderBin->setRecordingFilePath(filePath);
+}
+
+bool ArduinoPanTiltMount::startRecording()
+{
+	if (!m_recorderBin) {
+		createRecorderBinIfNeeded();
+	}
+	return m_recorderBin->setRecordingEnabled(true);
+}
+
+bool ArduinoPanTiltMount::stopRecording()
+{
+	if (!m_recorderBin) {
+		createRecorderBinIfNeeded();
+	}
+	return m_recorderBin->setRecordingEnabled(false);
+}
+
+void ArduinoPanTiltMount::createBinIfNeeded()
+{
+	if (!m_bin) {
+		m_bin = std::make_unique<ArduinoPanTiltMountBin>(this->uuid(), this->id());
+	}
+}
+
+void ArduinoPanTiltMount::createRecorderBinIfNeeded()
+{
+	if (!m_recorderBin) {
+		m_recorderBin = std::make_unique<ArduinoPanTiltMountRecorderBin>(this->uuid(), this->id());
+	}
+}
+
 bool ArduinoPanTiltMount::sendInfoCommand()
 {
 	QString command = "info\n";

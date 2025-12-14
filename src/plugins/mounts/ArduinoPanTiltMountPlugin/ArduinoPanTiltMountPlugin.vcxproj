@@ -109,6 +109,10 @@
   <ItemGroup>
     <ClCompile Include="arduinopantiltmount.cpp" />
     <ClCompile Include="arduinopantiltmountplugin.cpp" />
+    <ClCompile Include="arduinopantiltmountbin.cpp" />
+    <ClCompile Include="arduinopantiltmountrecorderbin.cpp" />
+    <ClInclude Include="arduinopantiltmountbin.hpp" />
+    <ClInclude Include="arduinopantiltmountrecorderbin.hpp" />
     <QtMoc Include="arduinopantiltmount.hpp" />
     <ClInclude Include="arduinopantiltmountplugin.hpp" />
   </ItemGroup>

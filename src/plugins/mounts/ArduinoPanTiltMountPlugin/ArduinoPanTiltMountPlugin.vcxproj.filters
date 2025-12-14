@@ -26,12 +26,24 @@
     <ClInclude Include="arduinopantiltmountplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="arduinopantiltmountbin.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arduinopantiltmountrecorderbin.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arduinopantiltmount.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="arduinopantiltmountplugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arduinopantiltmountbin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arduinopantiltmountrecorderbin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
