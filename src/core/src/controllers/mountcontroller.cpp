@@ -18,7 +18,7 @@ MountController::~MountController()
 
 }
 
-const Mount* MountController::byId(const QUuid& id) const
+Mount* MountController::byId(const QUuid& id) const
 {
 	return mMountsById.value(id, nullptr);
 }

@@ -3,7 +3,7 @@
 #include <controllers/loggingcontroller.hpp>
 
 DockedMountControls::DockedMountControls(QWidget* parent)
-	: QDockWidget(parent), m_mount(nullptr)
+	: QDockWidget(parent)
 {
 	ui.setupUi(this);
 
@@ -20,51 +20,57 @@ DockedMountControls::DockedMountControls(QWidget* parent)
 }
 
 DockedMountControls::~DockedMountControls()
+{}
+
+void DockedMountControls::setController(MainController* mc)
 {
-	// Disconnect to prevent accessing deleted mount
-	if (m_mount) {
-		disconnect(m_mount, nullptr, this, nullptr);
-		m_mount = nullptr;
-	}
+	if (m_controller == mc) return;
+	m_controller = mc;
+
+	refreshMountIdInfo();
 }
 
-void DockedMountControls::setMount(Mount* mount)
+void DockedMountControls::setMountId(const QUuid& mountId)
 {
-	if (m_mount == mount) return;
-	if (m_mount) {
-		// Disconnect from previous mount
-		disconnect(m_mount, nullptr, this, nullptr);
+	if (m_mountId == mountId) return;
+
+	m_mountId = mountId;
+
+	if (!m_controller) {
+		LoggingController::warning("Cannot set mount ID: MainController is null.");
+		return;
 	}
 
-	m_mount = mount;
+	refreshMountIdInfo();
+}
 
-	if (m_mount) {
-		// Connect mount notify signal to UI update
-		connect(m_mount, &QObject::destroyed, this, [this]() {
-			m_mount = nullptr;
-			updateUi();
-			});
-		connect(m_mount, &Mount::dataUpdated, this, [this]() {
-			updateUi();
-			});
+void DockedMountControls::refreshMountIdInfo()
+{
+	// Set the new mount
+	Mount* mount = m_controller->mountController().byId(m_mountId);
+	if (!mount) {
+		LoggingController::warning("Mount with the specified ID not found.");
+		return;
 	}
+
+	connect(mount, &Mount::dataUpdated, this, &DockedMountControls::updateUi, Qt::UniqueConnection);
 
 	updateUi();
 }
 
 void DockedMountControls::updateUi()
 {
-
-	if (!m_mount) {
+	Mount* mount = m_controller ? m_controller->mountController().byId(m_mountId) : nullptr;
+	if (!mount) {
 		LoggingController::warning("Mount is null or does not support IPanTiltMount interface.");
 		ui.labelMountName->setText("N/A");
 		ui.stack->setCurrentWidget(ui.pageNone);
 		return;
 	}
-	ui.labelMountName->setText(QString::fromStdString(m_mount->displayName()));
+	ui.labelMountName->setText(QString::fromStdString(mount->displayName()));
 	
 	// Select appropriate page
-	if (dynamic_cast<IPanTiltMount*>(m_mount)) {
+	if (dynamic_cast<IPanTiltMount*>(mount)) {
 		ui.stack->setCurrentWidget(ui.pagePanTilt);
 		updatePanTiltUi();
 		return;
@@ -77,9 +83,10 @@ void DockedMountControls::updateUi()
 
 void DockedMountControls::updatePanTiltUi()
 {
-	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	Mount* mount = m_controller ? m_controller->mountController().byId(m_mountId) : nullptr;
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(mount);
 
-	if (!m_mount || !panTiltMount) {
+	if (!mount || !panTiltMount) {
 		LoggingController::warning("Could not update pan-tilt UI: mount is null or does not support IPanTiltMount interface.");
 		ui.labelPanAngle->setText("N/A");
 		ui.labelTiltAngle->setText("N/A");
@@ -129,7 +136,8 @@ void DockedMountControls::updatePanTiltUi()
 
 void DockedMountControls::onRefreshInfoClicked()
 {
-	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	Mount* mount = m_controller ? m_controller->mountController().byId(m_mountId) : nullptr;
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(mount);
 	if (!panTiltMount) return;
 	if (!panTiltMount->refreshInfo()) {
 		LoggingController::warning("Failed to refresh mount info.");
@@ -138,7 +146,8 @@ void DockedMountControls::onRefreshInfoClicked()
 
 void DockedMountControls::onSetInitialAnglesClicked()
 {
-	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	Mount* mount = m_controller ? m_controller->mountController().byId(m_mountId) : nullptr;
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(mount);
 	if (!panTiltMount) return;
 
 	double panAngle = static_cast<double>(ui.sliderPan->value());
@@ -150,7 +159,8 @@ void DockedMountControls::onSetInitialAnglesClicked()
 
 void DockedMountControls::onRecenterClicked()
 {
-	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	Mount* mount = m_controller ? m_controller->mountController().byId(m_mountId) : nullptr;
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(mount);
 	if (!panTiltMount) return;
 
 	if (!panTiltMount->recenter()) {
@@ -160,7 +170,8 @@ void DockedMountControls::onRecenterClicked()
 
 void DockedMountControls::onPanSliderChanged(int value)
 {
-	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	Mount* mount = m_controller ? m_controller->mountController().byId(m_mountId) : nullptr;
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(mount);
 	if (!panTiltMount) return;
 
 	Pose pose = panTiltMount->pose();
@@ -171,7 +182,8 @@ void DockedMountControls::onPanSliderChanged(int value)
 
 void DockedMountControls::onTiltSliderChanged(int value)
 {
-	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
+	Mount* mount = m_controller ? m_controller->mountController().byId(m_mountId) : nullptr;
+	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(mount);
 	if (!panTiltMount) return;
 
 	Pose pose = panTiltMount->pose();

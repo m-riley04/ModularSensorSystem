@@ -17,7 +17,7 @@ public:
 
 	const QList<Mount*>& mounts() const { return mMounts; }
 
-	const Mount* byId(const QUuid& id) const;
+	Mount* byId(const QUuid& id) const;
 
 public slots:
 	Mount* addMount(IMountPlugin* plugin, ElementInfo mount);

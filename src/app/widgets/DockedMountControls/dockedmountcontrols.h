@@ -3,6 +3,7 @@
 #include <QDockWidget>
 #include "ui_dockedmountcontrols.h"
 #include "features/mounts/mount.hpp"
+#include <controllers/maincontroller.hpp>
 
 class DockedMountControls : public QDockWidget
 {
@@ -12,12 +13,13 @@ public:
 	DockedMountControls(QWidget *parent = nullptr);
 	~DockedMountControls();
 
-	Mount* mount() const { return m_mount; }
-	void setMount(Mount* mount);
+	void setController(MainController*);
+	void setMountId(const QUuid& mountId);
 
 private slots:
-	void updateUi();
+	void refreshMountIdInfo();
 
+	void updateUi();
 	void updatePanTiltUi();
 
 	void onRefreshInfoClicked();
@@ -28,6 +30,7 @@ private slots:
 
 private:
 	Ui::DockedMountControlsClass ui;
-	Mount* m_mount = nullptr;
+	QUuid m_mountId;
+	MainController* m_controller = nullptr;
 };
 

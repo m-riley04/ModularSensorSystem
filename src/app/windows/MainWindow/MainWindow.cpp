@@ -93,15 +93,15 @@ MainWindow::MainWindow(MainController& mc, UiSettingsController& uisc, QWidget *
 	// TODO: this logic needs to be re-done and moved elsewhere. This is just a quick and dirty way to get mount controls showing up for now.
 	connect(m_actionController, &AppActionController::elementSelectionChanged, this, [this](ElementTreeNode* node) {
 		// Get mount from node and set in controls widget
-        const Mount* mount = this->m_controller.mountController().byId(node->uuid);
+        Mount* mount = this->m_controller.mountController().byId(node->uuid);
         if (mount == nullptr) return;
         
 		// Create new widget for mount controls
-		ui.dockWidgetMountController->setMount(const_cast<Mount*>(mount)); // TODO: avoid const cast
+		ui.dockWidgetMountController->setMountId(boostUuidToQUuid(mount->uuid())); // TODO: avoid const cast
     });
 
     connect(&m_controller.mountController(), &MountController::mountRemoved, this, [this](QUuid mountId) {
-        ui.dockWidgetMountController->setMount(nullptr);
+        ui.dockWidgetMountController->setMountId(QUuid());
 		});
 
     // Load settings
@@ -143,8 +143,8 @@ void MainWindow::initWidgets()
     ui.dockWidgetElementManager->setController(&m_controller);
     ui.dockWidgetElementManager->setActions(&this->m_actionController->actions());
 
-	// Init mount controls dock widget
-	ui.dockWidgetMountController->setMount(nullptr);
+    // Init mount controls dock widget
+    ui.dockWidgetMountController->setController(&this->m_controller);
 }
 
 void MainWindow::initSignals() {
