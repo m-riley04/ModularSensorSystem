@@ -54,5 +54,6 @@ protected:
 
 private:
 	GstElement* m_parse = nullptr;
+	GstElement* m_encoder = nullptr;
 	GstElement* m_muxer = nullptr;
 };

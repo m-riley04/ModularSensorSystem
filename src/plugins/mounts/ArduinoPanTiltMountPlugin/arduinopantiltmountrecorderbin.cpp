@@ -20,12 +20,9 @@ bool ArduinoPanTiltMountRecorderBin::build()
 
     m_inputQueue = gst_bin_get_by_name(GST_BIN(m_bin), "queue");
     m_valveElement = gst_bin_get_by_name(GST_BIN(m_bin), "valve");
-    m_encoder = gst_bin_get_by_name(GST_BIN(m_bin), "encoder");
-    m_parse = gst_bin_get_by_name(GST_BIN(m_bin), "parser");
-    m_muxer = gst_bin_get_by_name(GST_BIN(m_bin), "muxer");
     m_filesinkElement = gst_bin_get_by_name(GST_BIN(m_bin), "filesink");
 
-    if (!m_inputQueue || !m_valveElement || !m_encoder || !m_parse || !m_muxer || !m_filesinkElement) {
+    if (!m_inputQueue || !m_valveElement || !m_filesinkElement) {
 		LoggingController::warning("Failed to get one or more elements from recorder bin");
         return false;
 	}

@@ -1,10 +1,41 @@
 #include "arduinopantiltmountbin.hpp"
 #include <controllers/loggingcontroller.hpp>
+#include <QJsonObject>
 
 ArduinoPanTiltMountBin::ArduinoPanTiltMountBin(const boost::uuids::uuid& uuid, const std::string& id)
-	: SourceBin(uuid, id, Source::Type::VIDEO, "src")
+	: SourceBin(uuid, id, Source::Type::DATA, "src")
 {
 	build();
+}
+
+void ArduinoPanTiltMountBin::pushSample(QByteArray json)
+{
+    if (!m_appsrc) return;
+
+	// Convert JsonDocument to raw data
+	std::string jsonStr = json.toStdString();
+
+    // Get timestamp
+	GstClockTime timestamp = gst_util_get_timestamp();
+
+    // Construct wrapping JSON with timestamp and payload
+	QJsonObject wrapperObj;
+	wrapperObj.insert("timestamp", static_cast<qint64>(timestamp));
+	wrapperObj.insert("payload", QJsonDocument::fromJson(json).object());
+	QJsonDocument wrapperDoc(wrapperObj);
+
+    // Create buffer and copy payload
+    gsize payloadSize = jsonStr.size();
+    GstBuffer* buf = gst_buffer_new_allocate(nullptr, payloadSize, nullptr);
+    GstMapInfo map;
+    gst_buffer_map(buf, &map, GST_MAP_WRITE);
+    memcpy(map.data, &jsonStr, payloadSize);
+    gst_buffer_unmap(buf, &map);
+
+    // No explicit PTS/DTS: appsrc will timestamp for us
+    GstFlowReturn ret = GST_FLOW_OK;
+    g_signal_emit_by_name(m_appsrc, "push-buffer", buf, &ret);
+    gst_buffer_unref(buf);
 }
 
 bool ArduinoPanTiltMountBin::build()
@@ -16,40 +47,32 @@ bool ArduinoPanTiltMountBin::build()
     
 	// TODO: implement actual Arduino Pan-Tilt source element here
 
-    // Initialize source
-    GstElement* src = gst_element_factory_make("appsrc", (gstElementPrefix + "_src_" + deviceName).c_str()); // TODO: make this dynamic and cross-platform
+    m_appsrc = gst_element_factory_make("appsrc", (gstElementPrefix + "_src_" + deviceName).c_str());
+    GstElement* q = gst_element_factory_make("queue", (gstElementPrefix + "_queue_" + deviceName).c_str());
+    if (!m_appsrc || !q) return false;
 
-    // Initialize queue and converter
-    GstElement* queue = gst_element_factory_make("queue", (gstElementPrefix + "_queue_" + deviceName).c_str());
+	GstCaps* caps = gst_caps_new_simple("application/mss-json", // TODO: define proper mime type
+        "format", G_TYPE_STRING, "string",
+        nullptr);
 
-    // Check validity of each
-    if (!src || !queue) {
-        LoggingController::warning("Failed to create one or more elements");
-        if (src)  gst_object_unref(src);
-        if (queue) gst_object_unref(queue);
+    g_object_set(G_OBJECT(m_appsrc),
+        "caps", caps,
+        "is-live", TRUE,
+        "format", GST_FORMAT_TIME,
+        "do-timestamp", TRUE,
+        nullptr);
+    gst_caps_unref(caps);
+
+    if (!this->addMany(m_appsrc, q)) {
         return false;
     }
 
-    // Add elements to bin, and clean up if failed
-    if (!this->addMany(src, queue)) {
-        LoggingController::warning("Failed to add elements to source bin");
-        gst_object_unref(src);
-        gst_object_unref(queue);
+    if (!gst_element_link(m_appsrc, q)) {
         return false;
     }
 
-    // Link elements, and clean up if failed
-    if (!gst_element_link_many(src, queue, NULL)) {
-        LoggingController::warning("Failed to link appsrc -> queue");
-        gst_bin_remove_many(GST_BIN(m_bin), src, queue, NULL);
-        return false;
-    }
-
-    // Create ghost source pads, and clean up if failed
-    if (!this->createSrcGhostPad(queue, "src")) {
-        LoggingController::warning("Failed to create ghost source pads");
-        gst_element_unlink_many(src, queue, NULL);
-        gst_bin_remove_many(GST_BIN(m_bin), src, queue, NULL);
+    // Expose the source ghost pad directly from the queue src pad
+    if (!createSrcGhostPad(q, "src")) {
         return false;
     }
 

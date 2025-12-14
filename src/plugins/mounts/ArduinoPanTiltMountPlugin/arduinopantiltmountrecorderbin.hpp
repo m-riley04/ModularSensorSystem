@@ -40,18 +40,15 @@ public:
 
 	bool finalizeRecording() override {
 		// Send EOS to the muxer to finalize the file
-		if (!m_encoder) {
+		if (!m_filesinkElement) {
 			return false;
 		}
 		
-		return gst_element_send_event(m_encoder, gst_event_new_eos());
+		return gst_element_send_event(m_filesinkElement, gst_event_new_eos());
 		
 	}
 
 protected:
 	virtual bool build() override;
 
-private:
-	GstElement* m_parse = nullptr;
-	GstElement* m_muxer = nullptr;
 };

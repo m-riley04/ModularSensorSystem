@@ -10,7 +10,7 @@ struct MountError {
 };
 
 /**
- * @brief Mounts represent the physical "mount" that physical sources sit on. They provide data
+ * @brief Mounts represent the physical "mount" that physical sources sit on. They can provide data
  */
 class MSS_CORE_API Mount : public Element
 {
@@ -25,7 +25,7 @@ public:
 	virtual const IElement::Type elementType() const noexcept override final { return IElement::Type::Mount; }
 
 signals:
-	void dataUpdated();
+	void dataUpdated(QByteArray data);
 	void errorOccurred(const QString& errorMessage);
 
 };

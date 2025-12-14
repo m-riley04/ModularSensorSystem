@@ -2,11 +2,14 @@
 #include <controllers/loggingcontroller.hpp>
 #include <QUrl>
 #include <QUrlQuery>
+#include <QJsonObject>
 
 ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* parent)
 	: Mount(element, parent)
 	, m_serialPort(new QSerialPort(QString::fromStdString(element.name), this))
 	, m_panTiltInfo(Pose())
+	, m_bin(std::make_unique<ArduinoPanTiltMountBin>(this->uuid(), element.id))
+
 {
 	// Add serial port connections FIRST
 	connect(m_serialPort, &QSerialPort::readyRead, this, &ArduinoPanTiltMount::readSerialData);
@@ -249,7 +252,24 @@ void ArduinoPanTiltMount::parseResponse()
 		m_panTiltInfo.pitch = tiltAngleStr.toDouble();
 	}
 
-	emit dataUpdated();
+	// Create JSON document for pushing to source bin
+	// TODO: move this to a utility function if needed elsewhere?
+	QJsonObject jsonObj;
+	jsonObj.insert("minYaw", m_panTiltInfo.bounds.yaw.min);
+	jsonObj.insert("maxYaw", m_panTiltInfo.bounds.yaw.max);
+	jsonObj.insert("minPitch", m_panTiltInfo.bounds.pitch.min);
+	jsonObj.insert("maxPitch", m_panTiltInfo.bounds.pitch.max);
+	jsonObj.insert("yaw", m_panTiltInfo.yaw);
+	jsonObj.insert("pitch", m_panTiltInfo.pitch);
+	QJsonDocument jsonDoc(jsonObj);
+
+	// Convert to QByteArray
+	QByteArray jsonData = jsonDoc.toJson();
+
+	// Push to source bin
+	m_bin->pushSample(jsonData);
+
+	emit dataUpdated(jsonData);
 }
 
 void ArduinoPanTiltMount::setError(const QString& errorMsg)
