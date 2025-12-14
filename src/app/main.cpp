@@ -70,10 +70,10 @@ int main(int argc, char *argv[])
 	}
 
 	// Clean up and exit
-	settings.deleteLater();
-	mainController.deleteLater();
+	/*settings.deleteLater();
 	uiSettingsController.deleteLater();
-	w.deleteLater();
+	mainController.deleteLater();
+	w.deleteLater();*/
 
     return ret;
 }

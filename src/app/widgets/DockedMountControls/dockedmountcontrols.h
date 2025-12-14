@@ -18,6 +18,8 @@ public:
 private slots:
 	void updateUi();
 
+	void updatePanTiltUi();
+
 	void onRefreshInfoClicked();
 	void onSetInitialAnglesClicked();
 	void onRecenterClicked();

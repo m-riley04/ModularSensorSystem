@@ -11,7 +11,7 @@ USBVideoSource::USBVideoSource(SourceInfo sourceInfo, QObject* parent)
 
 USBVideoSource::~USBVideoSource()
 {
-    // TODO: Implement(?)
+	LoggingController::info("Tearing down USBVideoSource: " + QString::fromStdString(this->displayName()));
 }
 
 SourceInfo USBVideoSource::getSourceInfo(const std::string& id) const

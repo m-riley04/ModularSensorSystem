@@ -38,4 +38,5 @@ private:
     MainController& m_controller;
     UiSettingsController& m_uiSettingsController;
     AppActionController* m_actionController = nullptr;
+    
 };

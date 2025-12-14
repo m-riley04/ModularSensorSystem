@@ -67,7 +67,6 @@ void SourceController::removeSource(Source* source)
 	// Remove source from the list
 	mSources.removeAll(source);
 	mSourcesById.remove(sourceId);
-	source->deleteLater();
 
 	emit sourceRemoved(sourceId); // TODO: Emit the source's ID instead of the source itself
 }
@@ -96,13 +95,13 @@ Source* SourceController::getSource(QByteArray id) const
 
 void SourceController::clearSources()
 {
+	// Emit signals first, without modifying the list during ranged-for
 	for (Source* source : mSources) {
-		if (source) {
-			QUuid sourceId = boostUuidToQUuid(source->uuid());
-			source->deleteLater();
-			emit sourceRemoved(sourceId);
-		}
+		if (!source) continue;
+		QUuid sourceId = boostUuidToQUuid(source->uuid());
+		emit sourceRemoved(sourceId);
 	}
 
 	mSources.clear();
+	mSourcesById.clear();
 }

@@ -6,7 +6,17 @@ MountController::MountController(QObject *parent)
 {}
 
 MountController::~MountController()
-{}
+{
+	// Clean up mounts
+	/*for (Mount* mount : mMounts) {
+		if (!mount) continue;
+		disconnect(mount, nullptr, this, nullptr);
+		mount->deleteLater();
+	}*/
+	mMounts.clear();
+	mMountsById.clear();
+
+}
 
 const Mount* MountController::byId(const QUuid& id) const
 {
@@ -39,8 +49,12 @@ void MountController::removeMount(Mount* mount)
 
 	QUuid uid = boostUuidToQUuid(mount->uuid());
 	
+	// Disconnect all signals from mount
+	disconnect(mount, nullptr, this, nullptr);
+
 	// Remove from lists/maps
 	mMounts.removeAll(mount);
+	mMounts.squeeze();
 	mMountsById.remove(uid);
 
 	emit mountRemoved(uid);

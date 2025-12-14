@@ -38,32 +38,56 @@ void DockedMountControls::setMount(Mount* mount)
 
 	m_mount = mount;
 
-	// Connect mount notify signal to UI update
-	connect(m_mount, &Mount::dataUpdated, this, [this]() {
-		updateUi();
-		});
-	connect(m_mount, &QObject::destroyed, this, [this]() {
-		m_mount = nullptr;
-		});
+	if (m_mount) {
+		// Connect mount notify signal to UI update
+		connect(m_mount, &QObject::destroyed, this, [this]() {
+			m_mount = nullptr;
+			updateUi();
+			});
+		connect(m_mount, &Mount::dataUpdated, this, [this]() {
+			updateUi();
+			});
+	}
 
 	updateUi();
 }
 
 void DockedMountControls::updateUi()
 {
+
+	if (!m_mount) {
+		LoggingController::warning("Mount is null or does not support IPanTiltMount interface.");
+		ui.labelMountName->setText("N/A");
+		ui.stack->setCurrentWidget(ui.pageNone);
+		return;
+	}
+	ui.labelMountName->setText(QString::fromStdString(m_mount->displayName()));
+	
+	// Select appropriate page
+	if (dynamic_cast<IPanTiltMount*>(m_mount)) {
+		ui.stack->setCurrentWidget(ui.pagePanTilt);
+		updatePanTiltUi();
+		return;
+	}
+
+	// Select static page stack
+	ui.stack->setCurrentWidget(ui.pageStatic);
+
+}
+
+void DockedMountControls::updatePanTiltUi()
+{
 	IPanTiltMount* panTiltMount = dynamic_cast<IPanTiltMount*>(m_mount);
 
 	if (!m_mount || !panTiltMount) {
-		LoggingController::warning("Mount is null or does not support IPanTiltMount interface.");
-		ui.labelMountName->setText("N/A");
+		LoggingController::warning("Could not update pan-tilt UI: mount is null or does not support IPanTiltMount interface.");
 		ui.labelPanAngle->setText("N/A");
 		ui.labelTiltAngle->setText("N/A");
 		ui.labelPanRange->setText("N/A");
 		ui.labelTiltRange->setText("N/A");
 
-		// Disable controls
-		ui.groupSliders->setEnabled(false);
-		ui.frameButtons->setEnabled(false);
+		// Disable pan tilt page
+		ui.pagePanTilt->setEnabled(false);
 
 		// Set slider positions to 0
 		ui.sliderPan->setValue(0);
@@ -77,16 +101,12 @@ void DockedMountControls::updateUi()
 
 		return;
 	}
-	ui.labelMountName->setText(QString::fromStdString(m_mount->displayName()));
 
 	Pose pose = panTiltMount->pose();
 	ui.labelPanAngle->setText(QString::number(pose.yaw));
 	ui.labelTiltAngle->setText(QString::number(pose.pitch));
 	ui.labelPanRange->setText(QString("%1 to %2").arg(pose.bounds.yaw.min).arg(pose.bounds.yaw.max));
 	ui.labelTiltRange->setText(QString("%1 to %2").arg(pose.bounds.pitch.min).arg(pose.bounds.pitch.max));
-
-	ui.groupSliders->setEnabled(true);
-	ui.frameButtons->setEnabled(true);
 
 	// Set slider positions
 	ui.sliderPan->blockSignals(true);
@@ -103,6 +123,8 @@ void DockedMountControls::updateUi()
 	ui.sliderTilt->setMinimum(static_cast<int>(pose.bounds.pitch.min));
 	ui.sliderTilt->setMaximum(static_cast<int>(pose.bounds.pitch.max));
 
+	// Enable pan tilt page
+	ui.pagePanTilt->setEnabled(true);
 }
 
 void DockedMountControls::onRefreshInfoClicked()

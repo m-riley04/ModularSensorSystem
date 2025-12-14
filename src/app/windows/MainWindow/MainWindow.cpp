@@ -95,10 +95,6 @@ MainWindow::MainWindow(MainController& mc, UiSettingsController& uisc, QWidget *
 		// Get mount from node and set in controls widget
         const Mount* mount = this->m_controller.mountController().byId(node->uuid);
         if (mount == nullptr) return;
-
-        connect(mount, &Mount::errorOccurred, this, [this](const QString& msg) {
-			QMessageBox::critical(this, tr("Mount Error"), tr("An error occurred in the mount:\n%1").arg(msg));
-            });
         
 		// Create new widget for mount controls
 		ui.dockWidgetMountController->setMount(const_cast<Mount*>(mount)); // TODO: avoid const cast
