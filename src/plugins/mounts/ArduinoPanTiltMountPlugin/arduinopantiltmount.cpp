@@ -77,6 +77,18 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 	LoggingController::info("Arduino Pan-Tilt Mount initialized on serial port: " + m_serialPort->portName());
 }
 
+ArduinoPanTiltMount::~ArduinoPanTiltMount()
+{
+	// Close serial port before destruction
+	if (m_serialPort) {
+		if (m_serialPort->isOpen()) {
+			m_serialPort->close();
+		}
+		// Disconnect all signals from serial port
+		disconnect(m_serialPort, nullptr, this, nullptr);
+	}
+}
+
 bool ArduinoPanTiltMount::moveTo(double panAngle, double tiltAngle)
 {
 	QString command = QString::number(static_cast<int>(panAngle)) + "," + QString::number(static_cast<int>(tiltAngle)) + "\n";

@@ -69,11 +69,5 @@ int main(int argc, char *argv[])
 		ret = EXIT_FAILURE;
 	}
 
-	// Clean up and exit
-	/*settings.deleteLater();
-	uiSettingsController.deleteLater();
-	mainController.deleteLater();
-	w.deleteLater();*/
-
     return ret;
 }

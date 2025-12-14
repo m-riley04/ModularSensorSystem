@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDockWidget>
+#include <QPointer>
 #include "ui_dockedmountcontrols.h"
 #include "features/mounts/mount.hpp"
 #include <controllers/maincontroller.hpp>
@@ -31,6 +32,6 @@ private slots:
 private:
 	Ui::DockedMountControlsClass ui;
 	QUuid m_mountId;
-	MainController* m_controller = nullptr;
+	QPointer<MainController> m_controller;
 };
 

@@ -28,7 +28,7 @@ struct LoadedPlugin {
 class PluginRegistry {
 public:
     PluginRegistry(SettingsController& settingsController);
-    ~PluginRegistry() { unloadAll(); }
+    ~PluginRegistry() = default;
 
     /**
 	 * @brief Scans the specified directories for plugins (collects metadata only).

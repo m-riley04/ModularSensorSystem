@@ -6,6 +6,7 @@
 #include "sdk/plugins/imountplugin.hpp"
 #include "utils/boost_qt_conversions.hpp"
 #include "core_export.hpp"
+#include <QPointer>
 
 class MSS_CORE_API MountController : public QObject
 {
@@ -15,7 +16,7 @@ public:
 	MountController(QObject *parent);
 	~MountController();
 
-	const QList<Mount*>& mounts() const { return mMounts; }
+	const QList<QPointer<Mount>>& mounts() const { return mMounts; }
 
 	Mount* byId(const QUuid& id) const;
 
@@ -23,10 +24,11 @@ public slots:
 	Mount* addMount(IMountPlugin* plugin, ElementInfo mount);
 	void removeMount(Mount* mount);
 	void removeMount(const QUuid& id);
+	void clearMounts();
 
 private:
-	QList<Mount*> mMounts;
-	QHash<QUuid, Mount*> mMountsById;
+	QList<QPointer<Mount>> mMounts;
+	QHash<QUuid, QPointer<Mount>> mMountsById;
 
 signals:
 	void mountAdded(Mount*);

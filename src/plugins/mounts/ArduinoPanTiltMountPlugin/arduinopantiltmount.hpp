@@ -11,7 +11,7 @@ class ArduinoPanTiltMount : public Mount, public IPanTiltMount
 
 public:
 	ArduinoPanTiltMount(const ElementInfo& element, QObject* parent);
-	~ArduinoPanTiltMount() = default;
+	~ArduinoPanTiltMount();
 
 	// IPanTiltMount implementations
 	bool moveTo(double panAngle, double tiltAngle) override final;

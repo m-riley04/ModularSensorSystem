@@ -6,7 +6,10 @@ SourceController::SourceController(QObject *parent)
 {}
 
 SourceController::~SourceController()
-{}
+{
+	mSources.clear();
+	mSourcesById.clear();
+}
 
 const QList<IPreviewable*> SourceController::previewableSources() const
 {
@@ -69,6 +72,9 @@ void SourceController::removeSource(Source* source)
 	mSourcesById.remove(sourceId);
 
 	emit sourceRemoved(sourceId); // TODO: Emit the source's ID instead of the source itself
+
+	// Schedule the source for deletion (safe, deferred deletion)
+	source->deleteLater();
 }
 
 void SourceController::removeSource(const QUuid& uuid)
@@ -96,12 +102,11 @@ Source* SourceController::getSource(QByteArray id) const
 void SourceController::clearSources()
 {
 	// Emit signals first, without modifying the list during ranged-for
-	for (Source* source : mSources) {
+	QList<Source*> sourcesCopy = mSources;
+	for (Source* source : sourcesCopy) {
 		if (!source) continue;
-		QUuid sourceId = boostUuidToQUuid(source->uuid());
-		emit sourceRemoved(sourceId);
+		removeSource(source);
 	}
-
 	mSources.clear();
 	mSourcesById.clear();
 }
