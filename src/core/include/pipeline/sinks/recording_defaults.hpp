@@ -75,17 +75,17 @@ inline GstElement* createDefaultAudioRecordingSink(const char* binName = nullptr
 	GstElement* bin = gst_bin_new(binName);
 
 	// Elements: queue (from tee) -> valve -> x264enc -> h264parse -> mp4mux -> filesink
-	GstElement* queue = gst_element_factory_make("queue", nullptr);
-	GstElement* valve = gst_element_factory_make("valve", nullptr);
-	GstElement* enc = gst_element_factory_make("wavenc", nullptr); // TODO: consider changing encoder/parser/muxer based on source capabilities
-	GstElement* filesink = gst_element_factory_make("filesink", nullptr);
+	GstElement* queue = gst_element_factory_make("queue", "queue");
+	GstElement* valve = gst_element_factory_make("valve", "valve");
+	GstElement* enc = gst_element_factory_make("wavenc", "encoder"); // TODO: consider changing encoder/parser/muxer based on source capabilities
+	GstElement* filesink = gst_element_factory_make("filesink", "filesink");
 
 	// Validate elements
 	if (!queue || !valve || !enc || !filesink) {
 		LoggingController::warning("Failed to create one or more elements for default recording sink bin");
-		if (queue) { gst_object_unref(queue);      queue = nullptr; }
-		if (valve) { gst_object_unref(valve);    valve = nullptr; }
-		if (enc) { gst_object_unref(enc);         enc = nullptr; }
+		if (queue) { gst_object_unref(queue); queue = nullptr; }
+		if (valve) { gst_object_unref(valve); valve = nullptr; }
+		if (enc) { gst_object_unref(enc);  enc = nullptr; }
 		if (filesink) { gst_object_unref(filesink); filesink = nullptr; }
 		return nullptr;
 	}

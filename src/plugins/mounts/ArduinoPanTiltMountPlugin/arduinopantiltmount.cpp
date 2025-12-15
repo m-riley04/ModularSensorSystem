@@ -167,7 +167,7 @@ bool ArduinoPanTiltMount::stopRecording()
 	if (!m_recorderBin) {
 		createRecorderBinIfNeeded();
 	}
-	return m_recorderBin->setRecordingEnabled(false);
+	return m_recorderBin->setRecordingEnabled(false) && m_recorderBin->finalizeRecording();;
 }
 
 void ArduinoPanTiltMount::createBinIfNeeded()
