@@ -36,7 +36,7 @@ void TestDataSource::createBinIfNeeded()
 	}
 }
 
-GstElement* TestDataSource::srcBin()
+GstElement* TestDataSource::gstSrcBin()
 {
 	createBinIfNeeded();
 	return m_bin->bin();

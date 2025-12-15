@@ -8,8 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		ATTRIBUTIONS.md = ATTRIBUTIONS.md
-		README.md = README.md
 		docs\development_journal.md = docs\development_journal.md
+		README.md = README.md
 		vcpkg-configuration.json = vcpkg-configuration.json
 		vcpkg.json = vcpkg.json
 	EndProjectSection
@@ -33,6 +33,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSGstPlugin", "src\MSSGstPlugin\MSSGstPlugin.vcxproj", "{4AD1DDDA-4E6E-491D-AB08-571CA4FB17FF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSFrontendWidgetsPlugin", "src\MSSFrontendWidgetsPlugin\MSSFrontendWidgetsPlugin.vcxproj", "{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArduinoPanTiltMountPlugin", "src\plugins\mounts\ArduinoPanTiltMountPlugin\ArduinoPanTiltMountPlugin.vcxproj", "{962A658E-0719-4970-8B68-9CE8C63B4626}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +82,10 @@ Global
 		{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}.Debug|x64.Build.0 = Debug|x64
 		{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}.Release|x64.ActiveCfg = Release|x64
 		{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}.Release|x64.Build.0 = Release|x64
+		{962A658E-0719-4970-8B68-9CE8C63B4626}.Debug|x64.ActiveCfg = Debug|x64
+		{962A658E-0719-4970-8B68-9CE8C63B4626}.Debug|x64.Build.0 = Debug|x64
+		{962A658E-0719-4970-8B68-9CE8C63B4626}.Release|x64.ActiveCfg = Release|x64
+		{962A658E-0719-4970-8B68-9CE8C63B4626}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

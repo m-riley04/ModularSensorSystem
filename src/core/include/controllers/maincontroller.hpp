@@ -13,8 +13,9 @@
 #include "controllers/sessioncontroller.hpp"
 #include "controllers/settingscontroller.hpp"
 #include "controllers/loggingcontroller.hpp"
+#include "core_export.hpp"
 
-class MainController  : public QObject
+class MSS_CORE_API MainController  : public QObject
 {
 	Q_OBJECT
 
@@ -31,8 +32,12 @@ public:
 	SettingsController& settingsController() { return m_settingsController; }
 	LoggingController& loggingController() { return m_loggingController; }
 
+	/**
+	 * @brief The main shutdown procedure to clean up resources before application exit.
+	 */
+	void shutdown();
+
 private:
-	// IMPORTANT: Construct settings first so dependent controllers receive a valid reference
 	SettingsController m_settingsController;
 	LoggingController m_loggingController;
 	SourceController m_sourceController;

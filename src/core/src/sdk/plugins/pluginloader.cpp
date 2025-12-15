@@ -124,12 +124,21 @@ bool PluginRegistry::unload(const std::string& pluginPath) {
     auto it = m_loadedByPath.find(pluginPath);
     if (it == m_loadedByPath.end()) return false;
     auto plugin = it->second;
+
+    // Pass to internal unload
+    return unload(plugin);
+}
+
+bool PluginRegistry::unload(LoadedPlugin* plugin) {
     if (!plugin) return false;
+    if (!plugin->lib.is_loaded()) return false;
+    std::string pluginPath = plugin->path;
+	if (!plugin->instance) return false;
     auto pluginType = plugin->instance ? plugin->instance->type() : IElement::Type::Source;
     if (plugin->instance && plugin->destroy) {
         try { plugin->destroy(plugin->instance); }
         catch (...) {
-			LoggingController::warning("Exception occurred while destroying plugin instance for " + QString::fromStdString(pluginPath));
+            LoggingController::warning("Exception occurred while destroying plugin instance for " + QString::fromStdString(pluginPath));
         }
         plugin->instance = nullptr;
     }
@@ -158,8 +167,10 @@ void PluginRegistry::loadAll() {
 }
 
 void PluginRegistry::unloadAll() {
-    for (auto& p : m_loaded) {
-        if (p.instance && p.destroy) { p.destroy(p.instance); p.instance = nullptr; }
+    while (!m_loaded.empty()) {
+        // Always take a stable pointer to the first element
+        LoadedPlugin* plugin = &m_loaded.front();
+        unload(plugin);
     }
     m_loaded.clear();
     m_loadedByPath.clear();

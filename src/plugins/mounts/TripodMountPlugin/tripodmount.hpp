@@ -11,11 +11,6 @@ public:
 	TripodMount(const ElementInfo& element, QObject* parent);
 	~TripodMount() = default;
 
-	bool isDynamic() const override { return false; }
-	bool isPosable() const override { return true; }
-	bool isAutomaticallyPosed() const override { return false; }
-
-	std::optional<Pose> pose() const override { return std::nullopt; }
-	bool setPose(const Pose& newPose) override { return false; }
+	MountError error() const override final { return MountError{}; }
 };
 

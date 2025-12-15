@@ -28,7 +28,7 @@ struct LoadedPlugin {
 class PluginRegistry {
 public:
     PluginRegistry(SettingsController& settingsController);
-    ~PluginRegistry() { unloadAll(); }
+    ~PluginRegistry() = default;
 
     /**
 	 * @brief Scans the specified directories for plugins (collects metadata only).
@@ -44,6 +44,7 @@ public:
     const std::vector<LoadedPlugin*>& mounts() const { return byType(IElement::Type::Mount); }
 
     bool load(const std::string& pluginPath, uint32_t requiredApi);
+    bool unload(LoadedPlugin* plugin);
     bool unload(const std::string& pluginPath);
 
     void loadAll();

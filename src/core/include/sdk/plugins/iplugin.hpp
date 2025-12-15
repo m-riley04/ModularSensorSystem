@@ -2,6 +2,7 @@
 
 #include <string>
 #include "features/ielement.hpp"
+#include "core_export.hpp"
 
 #define MSS_DEFAULT_PLUGIN_AUTHOR "Unknown Author"
 #define MSS_DEFAULT_PLUGIN_NAME "Unnamed Plugin"
@@ -12,7 +13,7 @@
  * @brief Represents a plugin that can be loaded into the system.
  * Contains boilerplate metadata about the plugin.
  */
-class IPlugin {
+class MSS_CORE_API IPlugin {
 public:
     virtual ~IPlugin() = default;
     virtual const std::string name() const = 0; // Let it return by value.

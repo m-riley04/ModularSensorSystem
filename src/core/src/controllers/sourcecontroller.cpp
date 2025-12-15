@@ -6,11 +6,14 @@ SourceController::SourceController(QObject *parent)
 {}
 
 SourceController::~SourceController()
-{}
-
-const QList<IPreviewableSource*> SourceController::previewableSources() const
 {
-	QList<IPreviewableSource*> previewableSourcesList;
+	mSources.clear();
+	mSourcesById.clear();
+}
+
+const QList<IPreviewable*> SourceController::previewableSources() const
+{
+	QList<IPreviewable*> previewableSourcesList;
 	for (Source* source : mSources) {
 		if (!source) continue;
 		if (auto s = source->asPreviewable()) previewableSourcesList.append(s);
@@ -18,9 +21,9 @@ const QList<IPreviewableSource*> SourceController::previewableSources() const
 	return previewableSourcesList;
 }
 
-const QList<IRecordableSource*> SourceController::recordableSources() const
+const QList<IRecordable*> SourceController::recordableSources() const
 {
-	QList<IRecordableSource*> recordableSourcesList;
+	QList<IRecordable*> recordableSourcesList;
 	for (Source* source : mSources) {
 		if (!source) continue;
 		if (auto s = source->asRecordable()) recordableSourcesList.append(s);
@@ -67,9 +70,11 @@ void SourceController::removeSource(Source* source)
 	// Remove source from the list
 	mSources.removeAll(source);
 	mSourcesById.remove(sourceId);
-	source->deleteLater();
 
 	emit sourceRemoved(sourceId); // TODO: Emit the source's ID instead of the source itself
+
+	// Schedule the source for deletion (safe, deferred deletion)
+	source->deleteLater();
 }
 
 void SourceController::removeSource(const QUuid& uuid)
@@ -96,13 +101,12 @@ Source* SourceController::getSource(QByteArray id) const
 
 void SourceController::clearSources()
 {
-	for (Source* source : mSources) {
-		if (source) {
-			QUuid sourceId = boostUuidToQUuid(source->uuid());
-			source->deleteLater();
-			emit sourceRemoved(sourceId);
-		}
+	// Emit signals first, without modifying the list during ranged-for
+	QList<Source*> sourcesCopy = mSources;
+	for (Source* source : sourcesCopy) {
+		if (!source) continue;
+		removeSource(source);
 	}
-
 	mSources.clear();
+	mSourcesById.clear();
 }

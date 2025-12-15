@@ -11,7 +11,7 @@ USBVideoSource::USBVideoSource(SourceInfo sourceInfo, QObject* parent)
 
 USBVideoSource::~USBVideoSource()
 {
-    // TODO: Implement(?)
+	LoggingController::info("Tearing down USBVideoSource: " + QString::fromStdString(this->displayName()));
 }
 
 SourceInfo USBVideoSource::getSourceInfo(const std::string& id) const
@@ -53,7 +53,7 @@ void USBVideoSource::createRecorderBinIfNeeded()
 	}
 }
 
-GstElement* USBVideoSource::srcBin()
+GstElement* USBVideoSource::gstSrcBin()
 {
 	// lazy creation; note m_bin must be mutable
 	createBinIfNeeded();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QPointer>
 #include "ui_sourcepreviewwidget.h"
 #include "features/sources/source.hpp"
 #include <QPainter>
@@ -17,6 +18,6 @@ public:
 
 private:
 	Ui::SourcePreviewWidgetClass ui;
-	Source* m_source;
+	QPointer<Source> m_source;
 	
 };

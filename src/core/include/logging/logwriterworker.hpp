@@ -8,6 +8,7 @@
 #include <QMutex>
 #include <QTimer>
 #include <atomic>
+#include "core_export.hpp"
 
 /**
  * @brief Worker class that handles asynchronous log file writing on a dedicated thread.
@@ -16,7 +17,7 @@
  * to disk by the worker thread. Call start() to begin processing and stop() to 
  * gracefully shut down (flushes remaining messages before stopping).
  */
-class LogWriterWorker : public QObject
+class MSS_CORE_API LogWriterWorker : public QObject
 {
 	Q_OBJECT
 
@@ -80,6 +81,7 @@ private:
 	void closeFile();
 
 	QFile* m_logFile = nullptr;
+	QTextStream* m_logStream = nullptr;
 	QQueue<QString> m_queue;
 	mutable QMutex m_queueMutex;
 	QTimer* m_processTimer = nullptr;

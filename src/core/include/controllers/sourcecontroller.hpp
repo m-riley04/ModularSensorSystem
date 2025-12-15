@@ -10,8 +10,9 @@
 #include <sdk/plugins/isourceplugin.hpp>
 #include "features/sources/source.hpp"
 #include "utils/boost_qt_conversions.hpp"
+#include "core_export.hpp"
 
-class SourceController : public QObject
+class MSS_CORE_API SourceController : public QObject
 {
 	Q_OBJECT
 
@@ -20,8 +21,8 @@ public:
 	~SourceController();
 
 	const QList<Source*>& sources() const { return mSources; }
-	const QList<IPreviewableSource*> previewableSources() const;
-	const QList<IRecordableSource*> recordableSources() const;
+	const QList<IPreviewable*> previewableSources() const;
+	const QList<IRecordable*> recordableSources() const;
 
 	bool isEmpty() const { return mSources.isEmpty(); }
 

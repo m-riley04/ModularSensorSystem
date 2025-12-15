@@ -3,10 +3,12 @@
 #include <QObject>
 #include <QSettings>
 #include "models/settings_models.hpp"
+#include "core_export.hpp"
 
+// Note: constexpr values are compile-time constants and don't need dllexport
 constexpr const char* MSS_SETTINGS_GROUP_BACKEND = "core";
 
-class SettingsController : public QObject
+class MSS_CORE_API SettingsController : public QObject
 {
 	Q_OBJECT
 

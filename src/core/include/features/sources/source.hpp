@@ -2,15 +2,15 @@
 
 #include <QObject>
 #include "features/element.hpp"
-#include "interfaces/capability/ipreviewablesource.hpp"
-#include "interfaces/capability/irecordablesource.hpp"
+#include "interfaces/capability/general/ipreviewable.hpp"
+#include "core_export.hpp"
 #include <gst/gst.h>
 
 /**
  * Represents a data source (e.g., video, audio, data).
  * TODO: rename this to ISource (since I've been working on making this a more pure interface)
  */
-class Source : public Element
+class MSS_CORE_API Source : public Element
 {
 	Q_OBJECT
 
@@ -28,17 +28,6 @@ public:
 public:
 	Source(ElementInfo& element, QObject* parent = nullptr) : Element(element, parent) {}
 	virtual ~Source() = default;
-
-	/**
-	 * Gets the GStreamer bin element representing this source.
-	 * @return
-	 */
-	virtual GstElement* srcBin() = 0;
-
-	/// CAPABILITY INTERFACES ///
-
-	virtual IPreviewableSource* asPreviewable() { return dynamic_cast<IPreviewableSource*>(this); }
-	virtual IRecordableSource* asRecordable() { return dynamic_cast<IRecordableSource*>(this); }
 
 	/// OVERRIDES ///
 

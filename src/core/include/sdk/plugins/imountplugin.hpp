@@ -4,8 +4,9 @@
 #include <vector>
 #include "sdk/plugins/iplugin.hpp"
 #include "features/mounts/mount.hpp"
+#include "core_export.hpp"
 
-class IMountPlugin : public IPlugin
+class MSS_CORE_API IMountPlugin : public IPlugin
 {
 public:
     virtual const std::vector<ElementInfo> discover() const = 0;

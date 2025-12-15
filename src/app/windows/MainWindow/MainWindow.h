@@ -3,8 +3,6 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
 #include "controllers/maincontroller.hpp"
-#include "controllers/mountcontroller.hpp"
-#include "dialogs/PluginsDialog/pluginsdialog.h"
 #include <controllers/AppActionController/appactioncontroller.h>
 #include <controllers/UiSettingsController/uisettingscontroller.h>
 
@@ -36,8 +34,8 @@ private:
     void syncViewActionChecks();
 
     Ui::MainWindowClass ui;
-    QSettings m_appSettings;
     MainController& m_controller;
     UiSettingsController& m_uiSettingsController;
     AppActionController* m_actionController = nullptr;
+    
 };

@@ -10,17 +10,18 @@
 #include "controllers/processingcontroller.hpp"
 #include "controllers/mountcontroller.hpp"
 #include "features/sources/source.hpp"
-#include "interfaces/capability/ianalogsource.hpp"
+#include "interfaces/capability/sources/ianalogsource.hpp"
 #include "pipeline/sinks/preview_defaults.hpp"
-#include <interfaces/capability/ipreviewablesource.hpp>
+#include <interfaces/capability/general/ipreviewable.hpp>
 #include "models/settings_models.hpp"
 #include <utils/session_utils.hpp>
 #include "pipeline/sessionpipeline.hpp"
 #include "settingscontroller.hpp"
+#include "core_export.hpp"
 
 using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
 
-class SessionController : public QObject
+class MSS_CORE_API SessionController : public QObject
 {
 	Q_OBJECT
 

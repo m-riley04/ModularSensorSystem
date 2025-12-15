@@ -9,12 +9,13 @@
 #include <QMutex>
 #include <atomic>
 #include "logging/logwriterworker.hpp"
+#include "core_export.hpp"
 
 /**
  * @brief A controller class for logging messages at various severity levels.
  * Uses a dedicated worker thread for non-blocking file I/O. Log messages are enqueued and written asynchronously, so logging calls never block on disk I/O.
  */
-class LoggingController : public QObject
+class MSS_CORE_API LoggingController : public QObject
 {
 	Q_OBJECT
 

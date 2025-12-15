@@ -15,4 +15,20 @@ MainController::MainController(QSettings& settings, QObject *parent)
 {}
 
 MainController::~MainController()
-{}
+{
+	shutdown();
+}
+
+void MainController::shutdown()
+{
+	// Remove plugin-created QObjects from controllers to avoid dangling pointers
+	m_mountController.clearMounts();
+	m_sourceController.clearSources();
+	m_processingController.clearProcessors();
+
+	// Flush deferred deletes
+	QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+
+	// LASTLY, unload plugins
+	m_pluginController.unloadPlugins();
+}

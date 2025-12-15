@@ -3,6 +3,7 @@
 #include <QString>
 #include <QDir>
 #include <gst/gst.h>
+#include "features/element.hpp"
 
 typedef unsigned long long ns;
 struct SessionSettings;
@@ -10,7 +11,7 @@ class Source;
 
 const QString generateSessionDirectoryPath(const SessionSettings& props, const QString suffix);
 
-const QString generateSessionSourcePath(Source* src, const SessionSettings& props, const ns timestamp);
+const QString generateSessionSourcePath(Element*, const SessionSettings& props, const ns timestamp);
 
 /**
  * @brief Sanitizes a file name to be safe for use on Windows file systems.

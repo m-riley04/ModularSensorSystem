@@ -2,7 +2,10 @@
 
 #include <QObject>
 #include "ielement.hpp"
+#include "core_export.hpp"
 
+// Note: ElementInfo doesn't need MSS_CORE_API - it's a simple POD struct
+// defined entirely in the header with no out-of-line member functions.
 struct ElementInfo {
 	std::string id;
 	std::string name;
@@ -14,7 +17,7 @@ struct ElementInfo {
  * @brief The base implementation of an element.
  * Stores common/boilerplate data and functionality for all elements.
  */
-class Element : public QObject, public IElement
+class MSS_CORE_API Element : public QObject, public IElement
 {
 	Q_OBJECT
 
@@ -49,6 +52,11 @@ public:
 	virtual const std::string& pluginId() const override final { return m_pluginId; }
 	virtual void setDisplayName(const std::string& newDisplayName) override final { m_displayName = newDisplayName; }
 	virtual const Type elementType() const noexcept override { return Type::Unknown; }
+
+	// Converters to capability interfaces
+	virtual IRecordable* asRecordable() override final { return dynamic_cast<IRecordable*>(this); }
+	virtual IPipelineElement* asPipelineElement() override final { return dynamic_cast<IPipelineElement*>(this); }
+	virtual IPreviewable* asPreviewable() override final { return dynamic_cast<IPreviewable*>(this); }
 
 public slots:
 	virtual void onSessionStart() {}; // nop by default

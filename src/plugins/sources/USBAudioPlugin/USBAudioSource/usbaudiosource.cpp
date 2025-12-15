@@ -46,7 +46,7 @@ void USBAudioSource::createBinIfNeeded()
 	}
 }
 
-GstElement* USBAudioSource::srcBin()
+GstElement* USBAudioSource::gstSrcBin()
 {
 	// lazy creation; note m_bin must be mutable
 	createBinIfNeeded();

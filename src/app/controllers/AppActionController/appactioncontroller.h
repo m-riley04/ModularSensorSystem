@@ -81,6 +81,9 @@ private:
     void refreshProcessorActionStates();
     void refreshSessionActionStates();
 
+signals:
+	void elementSelectionChanged(ElementTreeNode* node);
+
 private:
     QWidget* m_parentWidget;
 	UiSettingsController& m_uiSettingsController;

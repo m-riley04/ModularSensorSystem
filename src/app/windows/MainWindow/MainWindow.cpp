@@ -2,6 +2,8 @@
 #include <dialogs/AddSourceDialog/addsourcedialog.h>
 #include <dialogs/AddProcessorDialog/addprocessordialog.h>
 #include <dialogs/AddMountDialog/addmountdialog.h>
+#include "dialogs/PluginsDialog/pluginsdialog.h"
+#include "widgets/DockedMountControls/dockedmountcontrols.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -88,6 +90,20 @@ MainWindow::MainWindow(MainController& mc, UiSettingsController& uisc, QWidget *
     AppActions actions = createActions();
     m_actionController = new AppActionController(&actions, m_uiSettingsController, m_controller, this, this);
 
+	// TODO: this logic needs to be re-done and moved elsewhere. This is just a quick and dirty way to get mount controls showing up for now.
+	connect(m_actionController, &AppActionController::elementSelectionChanged, this, [this](ElementTreeNode* node) {
+		// Get mount from node and set in controls widget
+        Mount* mount = this->m_controller.mountController().byId(node->uuid);
+        if (mount == nullptr) return;
+        
+		// Create new widget for mount controls
+		ui.dockWidgetMountController->setMountId(boostUuidToQUuid(mount->uuid())); // TODO: avoid const cast
+    });
+
+    connect(&m_controller.mountController(), &MountController::mountRemoved, this, [this](QUuid mountId) {
+        ui.dockWidgetMountController->setMountId(QUuid());
+		});
+
     // Load settings
     loadAppSettings();
 
@@ -124,8 +140,11 @@ void MainWindow::initWidgets()
     ui.presetsWidget->setController(&m_controller);
 
     // Init elements tree
-    ui.dockWidget->setController(&m_controller);
-    ui.dockWidget->setActions(&this->m_actionController->actions());
+    ui.dockWidgetElementManager->setController(&m_controller);
+    ui.dockWidgetElementManager->setActions(&this->m_actionController->actions());
+
+    // Init mount controls dock widget
+    ui.dockWidgetMountController->setController(&this->m_controller);
 }
 
 void MainWindow::initSignals() {
@@ -139,8 +158,8 @@ void MainWindow::initSignals() {
     connect(ui.presetsWidget, &PresetsWidget::selectedPresetChanged, m_actionController, &AppActionController::onPresetElementSelected);
 
 	// Connect dock widget signals
-    connect(ui.dockWidget, &DockableElementsManagerWidget::elementSelected, m_actionController, &AppActionController::onElementSelected);
-    connect(ui.dockWidget, &DockableElementsManagerWidget::elementRemoved, m_actionController, &AppActionController::onElementRemoved);
+    connect(ui.dockWidgetElementManager, &DockableElementsManagerWidget::elementSelected, m_actionController, &AppActionController::onElementSelected);
+    connect(ui.dockWidgetElementManager, &DockableElementsManagerWidget::elementRemoved, m_actionController, &AppActionController::onElementRemoved);
 
 }
 

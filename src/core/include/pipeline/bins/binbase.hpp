@@ -2,6 +2,7 @@
 
 #include <gst/gst.h>
 #include <string>
+#include <boost/uuid.hpp>
 
 class BinBase {
 public:

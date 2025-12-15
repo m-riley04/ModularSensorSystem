@@ -40,7 +40,6 @@ protected:
 
 	GstElement* m_inputQueue = nullptr;
 	GstElement* m_valveElement = nullptr;
-	GstElement* m_encoder = nullptr;
 	GstElement* m_filesinkElement = nullptr;
 
 };

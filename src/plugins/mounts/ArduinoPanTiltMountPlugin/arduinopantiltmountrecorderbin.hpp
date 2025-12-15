@@ -1,0 +1,53 @@
+#pragma once
+
+#include <QObject>
+#include <pipeline/bins/recorderbin.hpp>
+#include <pipeline/sinks/recording_defaults.hpp>
+
+class ArduinoPanTiltMountRecorderBin : public RecorderBin {
+public:
+	ArduinoPanTiltMountRecorderBin(const boost::uuids::uuid& uuid, const std::string& id);
+	virtual ~ArduinoPanTiltMountRecorderBin() = default;
+
+	bool setRecordingEnabled(bool enabled) {
+		if (!m_valveElement) {
+			return false;
+		}
+		
+		g_object_set(m_valveElement, "drop", !enabled, nullptr);
+		return true;
+	}
+
+	bool setRecordingFilePath(const std::string& filePath) {
+		if (!m_filesinkElement) {
+			return false;
+		}
+
+		if (filePath.empty()) {
+			LoggingController::warning("Empty file path provided to setRecordingFilePath");
+			return false;
+		}
+
+		// Debug: log and assert path length
+		LoggingController::debug("Setting recording file path to: " + QString::fromUtf8(filePath.c_str()));
+		LoggingController::debug("RecorderBin: path string =" + QString::fromUtf8(filePath.c_str()));
+
+		// Ensure non-empty sanitized path gets applied before any state changes
+		g_object_set(m_filesinkElement, "location", filePath.c_str(), nullptr);
+		return true;
+	}
+
+	bool finalizeRecording() override {
+		// Send EOS to the muxer to finalize the file
+		if (!m_filesinkElement) {
+			return false;
+		}
+		
+		return gst_element_send_event(m_filesinkElement, gst_event_new_eos());
+		
+	}
+
+protected:
+	virtual bool build() override;
+
+};

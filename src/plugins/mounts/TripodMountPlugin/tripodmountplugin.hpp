@@ -23,8 +23,8 @@ public:
 };
 
 // Export proper factory functions that create/destroy the plugin instance
-static IPlugin* make_impl() { return new TripodPlugin(); }
-static void destroy_impl(IPlugin* p) { delete p; }
+static IMountPlugin* make_impl() { return new TripodPlugin(); }
+static void destroy_impl(IMountPlugin* p) { delete p; }
 static uint32_t api_impl() { return MSS_API; }
 
 BOOST_DLL_ALIAS(make_impl, mss_make)    // exports symbol "mss_make"

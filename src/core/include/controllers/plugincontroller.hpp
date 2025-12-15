@@ -10,8 +10,9 @@
 #include "sdk/plugins/imountplugin.hpp"
 #include <string>
 #include "settingscontroller.hpp"
+#include "core_export.hpp"
 
-class PluginController : public QObject
+class MSS_CORE_API PluginController : public QObject
 {
     Q_OBJECT
 

@@ -1,14 +1,15 @@
 #pragma once
 
 #include <gst/gst.h>
+#include <string>
 
 /**
  * @brief Capability interface for elements that provide a preview.
  * Without overriding this interface, elements will use a default preview mechanism.
  */
-class IPreviewableSource {
+class IPreviewable {
 public:
-	virtual ~IPreviewableSource() = default;
+	virtual ~IPreviewable() = default;
 
 	/**
 	 * @brief Method to retrieve the preview bin sink.
