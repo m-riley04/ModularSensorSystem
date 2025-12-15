@@ -120,14 +120,16 @@ inline GstElement* createDefaultAudioRecordingSink(const char* binName = nullptr
 	return bin;
 }
 
+/**
+ * @brief By default, the data recording sink simply writes raw data to a file.
+ * @param binName 
+ * @return 
+ */
 inline GstElement* createDefaultDataRecordingSink(const char* binName = nullptr) {
 	GstElement* bin = gst_bin_new(binName);
-
-	// Elements: queue (from tee) -> valve -> x264enc -> h264parse -> mp4mux -> filesink
-	GstElement* queue = gst_element_factory_make("queue", nullptr);
-	GstElement* valve = gst_element_factory_make("valve", nullptr);
-	//GstElement* enc = gst_element_factory_make("x264enc", nullptr); // TODO: consider adding encoder/parser/muxer based on source capabilities
-	GstElement* filesink = gst_element_factory_make("filesink", nullptr);
+	GstElement* queue = gst_element_factory_make("queue", "queue");
+	GstElement* valve = gst_element_factory_make("valve", "valve");
+	GstElement* filesink = gst_element_factory_make("filesink", "filesink");
 
 	// Validate elements
 	if (!queue || !valve || !filesink) {

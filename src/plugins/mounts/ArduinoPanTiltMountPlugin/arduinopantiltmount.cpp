@@ -144,7 +144,7 @@ GstElement* ArduinoPanTiltMount::recorderSinkBin()
 
 std::string ArduinoPanTiltMount::recorderFileExtension() const
 {
-	return "csv";
+	return "json";
 }
 
 bool ArduinoPanTiltMount::setRecordingFilePath(const std::string& filePath)
@@ -264,7 +264,8 @@ void ArduinoPanTiltMount::parseResponse()
 	QJsonDocument jsonDoc(jsonObj);
 
 	// Convert to QByteArray
-	QByteArray jsonData = jsonDoc.toJson();
+	QByteArray jsonData = jsonDoc.toJson(QJsonDocument::Compact);
+	jsonData.append('\n'); // Append newline for separation
 
 	// Push to source bin
 	m_bin->pushSample(jsonData);

@@ -1,6 +1,7 @@
 #include "arduinopantiltmountbin.hpp"
 #include <controllers/loggingcontroller.hpp>
 #include <QJsonObject>
+#include <gst/app/gstappsrc.h>
 
 ArduinoPanTiltMountBin::ArduinoPanTiltMountBin(const boost::uuids::uuid& uuid, const std::string& id)
 	: SourceBin(uuid, id, Source::Type::DATA, "src")
@@ -12,9 +13,6 @@ void ArduinoPanTiltMountBin::pushSample(QByteArray json)
 {
     if (!m_appsrc) return;
 
-	// Convert JsonDocument to raw data
-	std::string jsonStr = json.toStdString();
-
     // Get timestamp
 	GstClockTime timestamp = gst_util_get_timestamp();
 
@@ -24,18 +22,24 @@ void ArduinoPanTiltMountBin::pushSample(QByteArray json)
 	wrapperObj.insert("payload", QJsonDocument::fromJson(json).object());
 	QJsonDocument wrapperDoc(wrapperObj);
 
+	// Stream-friendly NDJSON format
+    QByteArray out = wrapperDoc.toJson(QJsonDocument::Compact);
+    out.append('\n');
+
     // Create buffer and copy payload
-    gsize payloadSize = jsonStr.size();
-    GstBuffer* buf = gst_buffer_new_allocate(nullptr, payloadSize, nullptr);
-    GstMapInfo map;
-    gst_buffer_map(buf, &map, GST_MAP_WRITE);
-    memcpy(map.data, &jsonStr, payloadSize);
-    gst_buffer_unmap(buf, &map);
+    GstBuffer* buf = gst_buffer_new_allocate(nullptr, out.size(), nullptr);
+
+    // IMPORTANT: because gst_buffer_new_allocate() memory is not cleared,
+    // clearing is a safe guard against any mismatch during refactors.
+    gst_buffer_memset(buf, 0, 0x00, out.size());  // fill all bytes with 0
+    gst_buffer_fill(buf, 0, out.constData(), out.size());
 
     // No explicit PTS/DTS: appsrc will timestamp for us
-    GstFlowReturn ret = GST_FLOW_OK;
-    g_signal_emit_by_name(m_appsrc, "push-buffer", buf, &ret);
-    gst_buffer_unref(buf);
+	// Push buffer to appsrc
+    GstFlowReturn ret = gst_app_src_push_buffer(GST_APP_SRC(m_appsrc), buf);
+    if (ret != GST_FLOW_OK) {
+        LoggingController::warning(QString("appsrc push failed: %1").arg(ret));
+    }
 }
 
 bool ArduinoPanTiltMountBin::build()
@@ -51,8 +55,8 @@ bool ArduinoPanTiltMountBin::build()
     GstElement* q = gst_element_factory_make("queue", (gstElementPrefix + "_queue_" + deviceName).c_str());
     if (!m_appsrc || !q) return false;
 
-	GstCaps* caps = gst_caps_new_simple("application/mss-json", // TODO: define proper mime type
-        "format", G_TYPE_STRING, "string",
+	GstCaps* caps = gst_caps_new_simple("text/x-raw", // TODO: define proper mime type
+        "format", G_TYPE_STRING, "utf8",
         nullptr);
 
     g_object_set(G_OBJECT(m_appsrc),

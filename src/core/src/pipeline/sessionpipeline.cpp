@@ -88,8 +88,8 @@ bool SessionPipeline::build(const QList<Element*>& elements, const QList<IRecord
 
 		// Link start and stop hooks
 		// TODO: fix connect syntax
-		/*connect(this, &SessionPipeline::started, element, &IElement::onSessionStart);
-		connect(this, &SessionPipeline::stopped, element, &IElement::onSessionStop);*/
+		connect(this, &SessionPipeline::started, element, &Element::onSessionStart);
+		connect(this, &SessionPipeline::stopped, element, &Element::onSessionStop);
 	}
 
 	if (!start()) {
@@ -349,6 +349,7 @@ bool SessionPipeline::createAndLinkRecordBin(Element* element, GstElement* tee)
 	}
 
 	// Set sink's output directory and prefix from session properties
+	// TODO: rename away from "sources" and towards "elements"
 	const QString outputFilePath = generateSessionSourcePath(element, m_sessionSettings, m_lastSessionTimestamp);
 	if (outputFilePath.isEmpty()) {
 		LoggingController::warning("Cannot set recording file path: output file path is empty for source:" + QString::fromStdString(element->name()));

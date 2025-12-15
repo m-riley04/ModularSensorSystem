@@ -1,18 +1,16 @@
 #include "arduinopantiltmountrecorderbin.hpp"
 
 ArduinoPanTiltMountRecorderBin::ArduinoPanTiltMountRecorderBin(const boost::uuids::uuid& uuid, const std::string& id)
-   : RecorderBin(uuid, id, Source::Type::VIDEO, "sink")
+   : RecorderBin(uuid, id, Source::Type::DATA, "sink")
 {
     build();
 }
 
 bool ArduinoPanTiltMountRecorderBin::build()
 {
-	// TODO: customize recorder bin for Arduino Pan-Tilt mount (csv)
-
     std::string deviceUuid = boost::uuids::to_string(m_uuid);
 
-    m_bin = createDefaultVideoRecordingSink(("pan_tilt_recorder_sink_bin_" + deviceUuid).c_str());
+    m_bin = createDefaultDataRecordingSink(("pan_tilt_recorder_sink_bin_" + deviceUuid).c_str());
     if (!m_bin) {
 		LoggingController::warning("Failed to create recorder bin");
         return false;

@@ -5,8 +5,8 @@ SessionController::SessionController(SettingsController& settingsController, Sou
 	MountController& mountController, QObject* parent)
 	: QObject(parent)
 	, m_settingsController(settingsController)
-	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), this)), m_sourceController(sourceController), m_processingController(processingController),
-	m_mountController(mountController)
+	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), this)), m_sourceController(sourceController), m_processingController(processingController)
+	, m_mountController(mountController)
 {
 	// Connect signals for error handling
 	connect(&m_pipeline, &SessionPipeline::errorOccurred, this, &SessionController::errorOccurred);
@@ -33,11 +33,21 @@ void SessionController::startSession()
 	// Convert list of sources to elements
 	// TODO: optimize this, make it more elegant, avoid copying, and move it elsewhere if possible
 	QList<Element*> elements;
+	QList<IRecordable*> recordableElements;
 	for (auto& source : m_sourceController.sources()) {
+		if (!source->asPipelineElement()) continue; // Skip sources that can't be pipeline elements (vast majority should be able to)
+		if (auto rec = source->asRecordable()) recordableElements.append(rec);
 		elements.append(source);
 	}
 
-	m_pipeline.build(elements, m_sourceController.recordableSources());
+	// Also add mounts as GST elements (if they have bins)
+	for (auto& mount : m_mountController.mounts()) {
+		if (!mount->asPipelineElement()) continue; // Skip mounts that can't be pipeline elements
+		if (auto rec = mount->asRecordable()) recordableElements.append(rec);
+		elements.append(mount);
+	}
+
+	m_pipeline.build(elements, recordableElements);
 }
 
 void SessionController::stopSession()
