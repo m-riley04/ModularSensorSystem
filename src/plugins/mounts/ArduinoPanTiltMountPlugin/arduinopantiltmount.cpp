@@ -80,18 +80,6 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 	LoggingController::info("Arduino Pan-Tilt Mount initialized on serial port: " + m_serialPort->portName());
 }
 
-ArduinoPanTiltMount::~ArduinoPanTiltMount()
-{
-	// Close serial port before destruction
-	if (m_serialPort) {
-		if (m_serialPort->isOpen()) {
-			m_serialPort->close();
-		}
-		// Disconnect all signals from serial port
-		disconnect(m_serialPort, nullptr, this, nullptr);
-	}
-}
-
 bool ArduinoPanTiltMount::moveTo(double panAngle, double tiltAngle)
 {
 	QString command = QString::number(static_cast<int>(panAngle)) + "," + QString::number(static_cast<int>(tiltAngle)) + "\n";
@@ -239,37 +227,14 @@ void ArduinoPanTiltMount::parseResponse()
 		m_panTiltInfo.bounds.pitch.max = query.queryItemValue("maxPitch").toDouble();
 	}
 	if (query.hasQueryItem("yaw")) {
-		QString panAngleStr = query.queryItemValue("yaw");
-		panAngleStr = panAngleStr.trimmed();
-		panAngleStr = panAngleStr.replace("%0D", "");
-		m_panTiltInfo.yaw = panAngleStr.toDouble();
+		m_panTiltInfo.yaw = cleanUriField(query.queryItemValue("yaw")).toDouble();
 	}
 	if (query.hasQueryItem("pitch")) {
-		// TODO: fix this in a better way
-		QString tiltAngleStr = query.queryItemValue("pitch");
-		tiltAngleStr = tiltAngleStr.trimmed();
-		tiltAngleStr = tiltAngleStr.replace("%0D", "");
-		m_panTiltInfo.pitch = tiltAngleStr.toDouble();
+		m_panTiltInfo.pitch = cleanUriField(query.queryItemValue("pitch")).toDouble();
 	}
 
-	// Create JSON document for pushing to source bin
-	// TODO: move this to a utility function if needed elsewhere?
-	QJsonObject jsonObj;
-	jsonObj.insert("minYaw", m_panTiltInfo.bounds.yaw.min);
-	jsonObj.insert("maxYaw", m_panTiltInfo.bounds.yaw.max);
-	jsonObj.insert("minPitch", m_panTiltInfo.bounds.pitch.min);
-	jsonObj.insert("maxPitch", m_panTiltInfo.bounds.pitch.max);
-	jsonObj.insert("yaw", m_panTiltInfo.yaw);
-	jsonObj.insert("pitch", m_panTiltInfo.pitch);
-	QJsonDocument jsonDoc(jsonObj);
-
-	// Convert to QByteArray
-	QByteArray jsonData = jsonDoc.toJson(QJsonDocument::Compact);
-	jsonData.append('\n'); // Append newline for separation
-
-	// Push to source bin
-	m_bin->pushSample(jsonData);
-
+	// Emit dataUpdated signal with the created JSON document
+	QByteArray jsonData = createNdjsonPayload(m_panTiltInfo);
 	emit dataUpdated(jsonData);
 }
 
@@ -281,6 +246,29 @@ void ArduinoPanTiltMount::setError(const QString& errorMsg)
 	emit errorOccurred(errorMsg);
 }
 
+QByteArray ArduinoPanTiltMount::createNdjsonPayload(Pose& pose)
+{
+	QJsonObject jsonObj;
+	jsonObj.insert("minYaw", pose.bounds.yaw.min);
+	jsonObj.insert("maxYaw", pose.bounds.yaw.max);
+	jsonObj.insert("minPitch", pose.bounds.pitch.min);
+	jsonObj.insert("maxPitch", pose.bounds.pitch.max);
+	jsonObj.insert("yaw", pose.yaw);
+	jsonObj.insert("pitch", pose.pitch);
+	QJsonDocument jsonDoc(jsonObj);
+
+	return jsonDoc.toJson(QJsonDocument::Compact).append('\n'); // newline for separation
+}
+
+QString ArduinoPanTiltMount::cleanUriField(const QString& field)
+{
+	QString cleaned = field;
+	cleaned = cleaned.trimmed();
+	cleaned = cleaned.replace("%0D", ""); // TODO: add more robust cleaning if needed
+
+	return cleaned;
+}
+
 bool ArduinoPanTiltMount::sendCommand(const QString& command)
 {
 	LoggingController::info("Sending command to Arduino Pan-Tilt Mount: " + command.trimmed());
@@ -288,6 +276,10 @@ bool ArduinoPanTiltMount::sendCommand(const QString& command)
 		setError("Failed to write command to serial port.");
 		return false;
 	}
+
+	// Push NDJSON payload to source bin for recording/streaming
+	QByteArray ndjsonPayload = createNdjsonPayload(m_panTiltInfo);
+	m_bin->pushSample(ndjsonPayload);
 
 	return true;
 }

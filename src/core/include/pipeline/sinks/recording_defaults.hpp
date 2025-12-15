@@ -134,8 +134,8 @@ inline GstElement* createDefaultDataRecordingSink(const char* binName = nullptr)
 	// Validate elements
 	if (!queue || !valve || !filesink) {
 		LoggingController::warning("Failed to create one or more elements for default recording sink bin");
-		if (queue) { gst_object_unref(queue);      queue = nullptr; }
-		if (valve) { gst_object_unref(valve);    valve = nullptr; }
+		if (queue) { gst_object_unref(queue); queue = nullptr; }
+		if (valve) { gst_object_unref(valve);  valve = nullptr; }
 		if (filesink) { gst_object_unref(filesink); filesink = nullptr; }
 		return nullptr;
 	}

@@ -7,7 +7,6 @@
 class ArduinoPanTiltMountRecorderBin : public RecorderBin {
 public:
 	ArduinoPanTiltMountRecorderBin(const boost::uuids::uuid& uuid, const std::string& id);
-
 	virtual ~ArduinoPanTiltMountRecorderBin() = default;
 
 	bool setRecordingEnabled(bool enabled) {

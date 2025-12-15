@@ -17,7 +17,7 @@ class ArduinoPanTiltMount
 
 public:
 	ArduinoPanTiltMount(const ElementInfo& element, QObject* parent);
-	~ArduinoPanTiltMount();
+	virtual ~ArduinoPanTiltMount() = default;
 
 	// IPanTiltMount implementations
 	bool moveTo(double panAngle, double tiltAngle) override final;
@@ -46,6 +46,14 @@ private:
 	void createRecorderBinIfNeeded();
 	void parseResponse();
 	void setError(const QString& errorMsg);
+
+	/**
+	 * @brief Creates an NDJSON payload from the given Pose object.
+	 * @param pose The Pose object containing pan-tilt information.
+	 * @return The NDJSON-formatted QByteArray payload.
+	 */
+	static QByteArray createNdjsonPayload(Pose& pose);
+	static QString cleanUriField(const QString& field);
 
 private:
 	QSerialPort* m_serialPort = nullptr;

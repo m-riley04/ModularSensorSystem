@@ -2,6 +2,7 @@
 #include <controllers/loggingcontroller.hpp>
 #include <QJsonObject>
 #include <gst/app/gstappsrc.h>
+#include <pipeline/utils.hpp>
 
 ArduinoPanTiltMountBin::ArduinoPanTiltMountBin(const boost::uuids::uuid& uuid, const std::string& id)
 	: SourceBin(uuid, id, Source::Type::DATA, "src")
@@ -9,30 +10,19 @@ ArduinoPanTiltMountBin::ArduinoPanTiltMountBin(const boost::uuids::uuid& uuid, c
 	build();
 }
 
-void ArduinoPanTiltMountBin::pushSample(QByteArray json)
+void ArduinoPanTiltMountBin::pushSample(QByteArray payload)
 {
     if (!m_appsrc) return;
-
-    // Get timestamp
-	GstClockTime timestamp = gst_util_get_timestamp();
-
-    // Construct wrapping JSON with timestamp and payload
-	QJsonObject wrapperObj;
-	wrapperObj.insert("timestamp", static_cast<qint64>(timestamp));
-	wrapperObj.insert("payload", QJsonDocument::fromJson(json).object());
-	QJsonDocument wrapperDoc(wrapperObj);
-
-	// Stream-friendly NDJSON format
-    QByteArray out = wrapperDoc.toJson(QJsonDocument::Compact);
-    out.append('\n');
+    QByteArray json = createTimestampedNdjson(payload);
 
     // Create buffer and copy payload
-    GstBuffer* buf = gst_buffer_new_allocate(nullptr, out.size(), nullptr);
+    GstBuffer* buf = gst_buffer_new_allocate(nullptr, json.size(), nullptr);
 
     // IMPORTANT: because gst_buffer_new_allocate() memory is not cleared,
     // clearing is a safe guard against any mismatch during refactors.
-    gst_buffer_memset(buf, 0, 0x00, out.size());  // fill all bytes with 0
-    gst_buffer_fill(buf, 0, out.constData(), out.size());
+    size_t buffer_size = json.size();
+    gst_buffer_memset(buf, 0, 0x00, buffer_size); // fill all bytes with 0
+    gst_buffer_fill(buf, 0, json.constData(), buffer_size);
 
     // No explicit PTS/DTS: appsrc will timestamp for us
 	// Push buffer to appsrc
@@ -49,8 +39,6 @@ bool ArduinoPanTiltMountBin::build()
 
     if (!this->create((gstElementPrefix + "_" + deviceName).c_str())) return false;
     
-	// TODO: implement actual Arduino Pan-Tilt source element here
-
     m_appsrc = gst_element_factory_make("appsrc", (gstElementPrefix + "_src_" + deviceName).c_str());
     GstElement* q = gst_element_factory_make("queue", (gstElementPrefix + "_queue_" + deviceName).c_str());
     if (!m_appsrc || !q) return false;
