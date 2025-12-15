@@ -26,12 +26,13 @@ static inline bool safeDeleteDirectoryContents(const QDir& dir, const QStringLis
 
 		// Directory case
 		if (entryInfo.isDir()) {
+
 			QDir subDir(entryInfo.absoluteFilePath());
-			safeDeleteDirectoryContents(subDir, nameFilters);
-			if (!subDir.rmdir(".")) {
-				LoggingController::warning(QString("Failed to remove directory: %1").arg(subDir.absolutePath()));
+			if (!subDir.removeRecursively()) { // Use built-in recursive removal first
+				LoggingController::warning(QString("Failed to recursively remove directory: %1. Attempting manual deletion...").arg(subDir.absolutePath()));
 				ret = false;
 			}
+
 			continue;
 		}
 
