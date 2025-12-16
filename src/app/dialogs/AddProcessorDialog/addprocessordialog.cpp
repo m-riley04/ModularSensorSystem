@@ -8,6 +8,7 @@ AddProcessorDialog::AddProcessorDialog(PluginController& pc, ElementsController&
 	ui.setupUi(this);
 
 	populateProcessorsDropdown();
+	populateSourcesDropdown();
 
 	// Connect signals
 	connect(ui.dropdownProcessor, &QComboBox::currentIndexChanged, this, &AddProcessorDialog::onProcessorSelected);
@@ -29,6 +30,9 @@ void AddProcessorDialog::onProcessorSelected(int index) {
 	ProcessorInfo processorInfo = ui.dropdownProcessor->itemData(index).value<ProcessorInfo>();
 	mSelectedProcessor = processorInfo;
 	emit processorSelected(pSelectedProcessorPlugin);
+
+	// Repopulate sources dropdown based on selected processor
+	populateSourcesDropdown();
 }
 
 void AddProcessorDialog::populateProcessorsDropdown()
@@ -72,7 +76,7 @@ void AddProcessorDialog::populateSourcesDropdown()
 	for (auto* src : sources) {
 		if (!src) continue;
 		if (src->type() != validType) continue; // Skip incompatible source types
-		ui.dropdownProcessor->addItem(QString::fromStdString(src->displayName()), QVariant::fromValue(src));
+		ui.dropdownSources->addItem(QString::fromStdString(src->displayName()), QVariant::fromValue(src));
 	}
 
 	// Check if there are any sources available
@@ -83,7 +87,7 @@ void AddProcessorDialog::populateSourcesDropdown()
 
 	// Set the first source as selected by default
 	ui.dropdownSources->setCurrentIndex(0);
-	pSelectedProcessorPlugin = m_pluginController.processorPlugins().first();
+	m_selectedSource = ui.dropdownSources->itemData(0).value<Source*>();
 }
 
 void AddProcessorDialog::onSourceSelected(int index)
