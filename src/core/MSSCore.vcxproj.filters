@@ -131,7 +131,22 @@
     <ClInclude Include="include\core_export.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaces\capability\general\ipipelineelement.hpp">
+    <ClInclude Include="include\interfaces\capability\general\ipipelinesource.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pipeline\utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\interfaces\capability\processors\iobjectdetectioncapable.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\interfaces\capability\general\ipipelinefilter.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pipeline\filters\default_processors.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pipeline\bins\filterbin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

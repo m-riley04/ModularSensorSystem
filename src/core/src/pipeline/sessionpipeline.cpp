@@ -210,7 +210,7 @@ bool SessionPipeline::createSourceElements(Element* element)
 	}
 
 	// Cast to pipeline element
-	IPipelineElement* pipelineElem = element->asPipelineElement();
+	IPipelineSource* pipelineElem = element->asPipelineElement();
 	if (!pipelineElem) {
 		LoggingController::warning("Cannot create source elements for element '" + QString::fromStdString(element->displayName()) + "': element is not a pipeline element");
 		return false;

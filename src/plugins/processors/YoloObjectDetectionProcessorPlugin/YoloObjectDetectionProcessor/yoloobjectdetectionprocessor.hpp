@@ -4,27 +4,31 @@
 #include <QImage>
 #include <QVideoFrame>
 #include "features/processors/processor.hpp"
+#include "interfaces/capability/processors/iobjectdetectioncapable.hpp"
+#include "interfaces/capability/general/ipipelinefilter.hpp"
+#include "yoloprocessorbin.h"
 
-class Processor;
-
-class YoloObjectDetectionProcessor : public Processor
+class YoloObjectDetectionProcessor
+	: public Processor
+    , public IObjectDetectionCapable
 {
 	Q_OBJECT
 
 public:
-	YoloObjectDetectionProcessor(const ElementInfo& element, Source* src, QObject *parent);
+	YoloObjectDetectionProcessor(const ElementInfo& element, QObject *parent);
 	~YoloObjectDetectionProcessor();
 
-    // ProcessorBase API
+    // Processor API
     void startProcessing() override { mEnabled = true; }
     void stopProcessing() override { mEnabled = false; }
+    GstElement* processorFilterBin() override;
+
+    // IObjectDetectionCapable API
+	void onObjectDetected(DetectionInfo detection) override;
 
 private:
     bool mEnabled = true;
-    QImage mPreview;
-
-public slots:
-	void processFrame(const QVideoFrame& frame);
+	std::unique_ptr<YoloProcessorBin> m_processorBin;
 
 signals:
     void objectDetected(Source* source);

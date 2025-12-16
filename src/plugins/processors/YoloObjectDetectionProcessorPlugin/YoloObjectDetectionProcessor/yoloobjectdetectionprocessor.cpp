@@ -1,12 +1,23 @@
 #include "yoloobjectdetectionprocessor.hpp"
 
-YoloObjectDetectionProcessor::YoloObjectDetectionProcessor(const ElementInfo& element, Source* src, QObject *parent)
-	: Processor(element, src, parent)
+YoloObjectDetectionProcessor::YoloObjectDetectionProcessor(const ElementInfo& element, QObject *parent)
+	: Processor(element, parent)
+	, m_processorBin(std::make_unique<YoloProcessorBin>(this->uuid(), element.id))
 {}
 
 YoloObjectDetectionProcessor::~YoloObjectDetectionProcessor()
 {}
 
-void YoloObjectDetectionProcessor::processFrame(const QVideoFrame& frame) {
+GstElement* YoloObjectDetectionProcessor::processorFilterBin()
+{
+	// Lazy initialization
+	if (!m_processorBin) {
+		std::make_unique<YoloProcessorBin>(this->uuid(), this->id());
+	}
+	return m_processorBin->bin();
+}
+
+void YoloObjectDetectionProcessor::onObjectDetected(DetectionInfo detection)
+{
 
 }

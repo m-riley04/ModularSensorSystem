@@ -2,10 +2,10 @@
 
 #include <gst/gst.h>
 
-class IPipelineElement {
+class IPipelineSource {
 
 public:
-	virtual ~IPipelineElement() = default;
+	virtual ~IPipelineSource() = default;
 
 	/**
 	 * @brief Returns the GStreamer source bin element for this pipeline element.

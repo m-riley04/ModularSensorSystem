@@ -5,14 +5,14 @@
 #include "testdatasourcebin.hpp"
 #include <sdk/plugins/isourceplugin.hpp>
 #include <interfaces/capability/general/ipreviewable.hpp>
-#include "interfaces/capability/general/ipipelineelement.hpp"
+#include "interfaces/capability/general/ipipelinesource.hpp"
 #include "testdatasourcepluginutils.hpp"
 #include <QTimer>
 #include <QRandomGenerator>
 
 class TestDataSource : public Source
 	, public IPreviewable
-	, public IPipelineElement
+	, public IPipelineSource
 {
 	Q_OBJECT
 
@@ -32,7 +32,7 @@ public:
 	SourceInfo getSourceInfo(const std::string& id) const;
 	Source::Type type() const override { return m_sourceType; }
 
-	/// IPipelineElement interface
+	/// IPipelineSource interface
 	GstElement* gstSrcBin() override;
 
 	/// IPreviewableSource interface

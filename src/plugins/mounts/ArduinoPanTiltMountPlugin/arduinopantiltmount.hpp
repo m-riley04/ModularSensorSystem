@@ -10,7 +10,7 @@
 class ArduinoPanTiltMount 
 	: public Mount
 	, public IPanTiltMount
-	, public IPipelineElement
+	, public IPipelineSource
 	, public IRecordable
 {
 	Q_OBJECT
@@ -26,7 +26,7 @@ public:
 	bool refreshInfo() override final;
 	MountError error() const override final;
 
-	// IPipelineElement implementations
+	// IPipelineSource implementations
 	GstElement* gstSrcBin() override final;
 
 	// IRecordable implementations
