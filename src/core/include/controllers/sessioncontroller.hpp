@@ -6,11 +6,7 @@
 #include <QThread>
 #include <QCoreApplication>
 
-#include "controllers/sourcecontroller.hpp"
-#include "controllers/processingcontroller.hpp"
-#include "controllers/mountcontroller.hpp"
-#include "features/sources/source.hpp"
-#include "interfaces/capability/sources/ianalogsource.hpp"
+#include "controllers/elementscontroller.hpp"
 #include "pipeline/sinks/preview_defaults.hpp"
 #include <interfaces/capability/general/ipreviewable.hpp>
 #include "models/settings_models.hpp"
@@ -19,20 +15,15 @@
 #include "settingscontroller.hpp"
 #include "core_export.hpp"
 
-using OneToManyIdMap = QHash<QUuid, std::vector<QUuid>>;
-
 class MSS_CORE_API SessionController : public QObject
 {
 	Q_OBJECT
 
 public:
-	SessionController(SettingsController& settingsController, SourceController& sourceController, ProcessingController& processingController, 
-		MountController& mountController, QObject* parent);
+	SessionController(SettingsController& settingsController, ElementsController& ec, QObject* parent);
 	~SessionController();
 
 	const SessionPipeline& pipeline() { return m_pipeline; }
-	const QList<const Source*> getSourcesByMount(QUuid mountId) const;
-	const QList<const Processor*> getProcessorsBySource(QUuid sourceId) const;
 
 public slots:
 	void startSession();
@@ -48,13 +39,8 @@ private:
 	SessionPipeline m_pipeline;
 	ns m_lastSessionTimestamp = 0;
 
-	SourceController& m_sourceController;
-	ProcessingController& m_processingController;
-	MountController& m_mountController;
+	ElementsController& m_elementsController;
 	SettingsController& m_settingsController;
-
-	OneToManyIdMap m_mountToSources;
-	OneToManyIdMap m_sourceToProcessors;
 
 signals:
 	void sessionStarted();

@@ -21,14 +21,20 @@ public:
 	ElementsController(SettingsController& setc, MountController& mc, SourceController& sc, ProcessingController& pc, QObject* parent);
 	~ElementsController();
 
+	SourceController& sourceController() const { return m_sourceController; }
+	MountController& mountController() const { return m_mountController; }
+	ProcessingController& processingController() const{ return m_processingController; }
+
 	void attachSourceToMount(const QUuid& mountId, const QUuid& sourceId);
 	void detachSourceFromMount(const QUuid& mountId, const QUuid& sourceId);
 	void attachProcessorToSource(const QUuid& sourceId, const QUuid& processorId);
 	void detachProcessorFromSource(const QUuid& sourceId, const QUuid& processorId);
 
 	// TODO/CONSIDER: make these refs or pointers? only reason we're copying is because could be empty.
-	QList<QUuid> sourcesForMount(const QUuid& mountId);
-	QList<QUuid> processorsForSource(const QUuid& sourceId);
+	const QList<Source*> sourcesForMount(const QUuid& mountId) const;
+	const QList<Processor*> processorsForSource(const QUuid& sourceId) const;
+	const QList<QUuid> sourceIdsForMount(const QUuid& mountId) const;
+	const QList<QUuid> processorIdsForSource(const QUuid& sourceId) const;
 
 private:
 	SourceController& m_sourceController;

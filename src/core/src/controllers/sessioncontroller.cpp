@@ -1,12 +1,11 @@
 ﻿#include "controllers/sessioncontroller.hpp"
 #include <utils/safer_io_utils.hpp>
 
-SessionController::SessionController(SettingsController& settingsController, SourceController& sourceController, ProcessingController& processingController,
-	MountController& mountController, QObject* parent)
+SessionController::SessionController(SettingsController& settingsController, ElementsController& ec, QObject* parent)
 	: QObject(parent)
 	, m_settingsController(settingsController)
-	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), this)), m_sourceController(sourceController), m_processingController(processingController)
-	, m_mountController(mountController)
+	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), this))
+	, m_elementsController(ec)
 {
 	// Connect signals for error handling
 	connect(&m_pipeline, &SessionPipeline::errorOccurred, this, &SessionController::errorOccurred);
@@ -34,21 +33,21 @@ void SessionController::startSession()
 	// TODO: optimize this, make it more elegant, avoid copying, and move it elsewhere if possible
 	QList<Element*> elements;
 	QList<IRecordable*> recordableElements;
-	for (auto& source : m_sourceController.sources()) {
+	for (auto& source : m_elementsController.sourceController().sources()) {
 		if (!source->asPipelineElement()) continue; // Skip sources that can't be pipeline elements (vast majority should be able to)
 		if (auto rec = source->asRecordable()) recordableElements.append(rec);
 		elements.append(source);
 	}
 
 	// Also add mounts as GST elements (if they have bins)
-	for (auto& mount : m_mountController.mounts()) {
+	for (auto& mount : m_elementsController.mountController().mounts()) {
 		if (!mount->asPipelineElement()) continue; // Skip mounts that can't be pipeline elements
 		if (auto rec = mount->asRecordable()) recordableElements.append(rec);
 		elements.append(mount);
 	}
 
 	// Finally, add processors as GST elements
-	for (auto& processor : m_processingController.processors()) {
+	for (auto& processor : m_elementsController.processingController().processors()) {
 		if (!processor->asPipelineElement()) continue; // Skip processors that can't be pipeline elements
 		if (auto rec = processor->asRecordable()) recordableElements.append(rec);
 		elements.append(processor);
@@ -80,26 +79,4 @@ void SessionController::clearRecordings()
 		m_settingsController.sessionSettings().outputDirectory
 		, QStringList() << sessionRecordingPrefix << "*"
 		, QDir::Dirs);
-}
-
-const QList<const Source*> SessionController::getSourcesByMount(QUuid mountId) const
-{
-	QList<const Source*> sources;
-	const auto sourceIds = m_mountToSources.value(mountId);
-	for (auto& id : sourceIds) {
-		const Source* source = m_sourceController.byId(id);
-		sources.push_back(source);
-	}
-	return sources;
-}
-
-const QList<const Processor*> SessionController::getProcessorsBySource(QUuid sourceId) const
-{
-	QList<const Processor*> processors;
-	const auto processorIds = m_sourceToProcessors.value(sourceId);
-	for (auto& id : processorIds) {
-		const Processor* source = m_processingController.byId(id);
-		processors.push_back(source);
-	}
-	return processors;
 }

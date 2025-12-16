@@ -189,7 +189,7 @@ void ElementTreeModel::buildHierarchical()
         ElementTreeNode* mountNode = &m_nodeMap[mId];
         m_rootNodes.append(mountNode);
 
-        for (auto s : m_mainController.sessionController().getSourcesByMount(mId)) {
+        for (auto s : m_mainController.elementsController().sourcesForMount(mId)) {
             QUuid sId = boostUuidToQUuid(s->uuid());
             m_nodeMap.insert(sId, ElementTreeNode{
                 .uuid = sId,
@@ -200,7 +200,7 @@ void ElementTreeModel::buildHierarchical()
             ElementTreeNode* sourceNode = &m_nodeMap[sId];
             mountNode->children.append(sourceNode);
 
-            for (auto p : m_mainController.sessionController().getProcessorsBySource(sId)) {
+            for (auto p : m_mainController.elementsController().processorsForSource(sId)) {
                 QUuid pId = boostUuidToQUuid(p->uuid());
                 m_nodeMap.insert(pId, ElementTreeNode{
                     .uuid = pId,
