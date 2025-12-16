@@ -47,6 +47,13 @@ void SessionController::startSession()
 		elements.append(mount);
 	}
 
+	// Finally, add processors as GST elements
+	for (auto& processor : m_processingController.processors()) {
+		if (!processor->asPipelineElement()) continue; // Skip processors that can't be pipeline elements
+		if (auto rec = processor->asRecordable()) recordableElements.append(rec);
+		elements.append(processor);
+	}
+
 	m_pipeline.build(elements, recordableElements);
 }
 

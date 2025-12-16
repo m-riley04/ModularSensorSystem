@@ -5,12 +5,13 @@
 #include <QVideoFrame>
 #include "features/processors/processor.hpp"
 #include "interfaces/capability/processors/iobjectdetectioncapable.hpp"
-#include "interfaces/capability/general/ipipelinefilter.hpp"
+#include "interfaces/capability/general/ipipelineelement.hpp"
 #include "yoloprocessorbin.h"
 
 class YoloObjectDetectionProcessor
 	: public Processor
     , public IObjectDetectionCapable
+    , public IPipelineElement
 {
 	Q_OBJECT
 
@@ -21,7 +22,11 @@ public:
     // Processor API
     void startProcessing() override { mEnabled = true; }
     void stopProcessing() override { mEnabled = false; }
-    GstElement* processorFilterBin() override;
+
+    // IPipelineElement API
+    GstElement* gstSrcBin() override final { return nullptr; }
+    GstElement* gstFilterBin() override final;
+    GstElement* gstSinkBin() override final { return nullptr; }
 
     // IObjectDetectionCapable API
 	void onObjectDetected(DetectionInfo detection) override;

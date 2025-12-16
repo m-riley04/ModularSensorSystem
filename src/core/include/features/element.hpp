@@ -55,7 +55,7 @@ public:
 
 	// Converters to capability interfaces
 	virtual IRecordable* asRecordable() override final { return dynamic_cast<IRecordable*>(this); }
-	virtual IPipelineSource* asPipelineElement() override final { return dynamic_cast<IPipelineSource*>(this); }
+	virtual IPipelineElement* asPipelineElement() override final { return dynamic_cast<IPipelineElement*>(this); }
 	virtual IPreviewable* asPreviewable() override final { return dynamic_cast<IPreviewable*>(this); }
 
 public slots:

@@ -4,7 +4,7 @@
 #include <chrono>
 #include "features/sources/source.hpp"
 #include "interfaces/capability/general/ipreviewable.hpp"
-#include "interfaces/capability/general/ipipelinesource.hpp"
+#include "interfaces/capability/general/ipipelineelement.hpp"
 #include <sdk/plugins/isourceplugin.hpp>
 #include <utils/boost_qt_conversions.hpp>
 #include "utils.hpp"
@@ -12,7 +12,7 @@
 
 class USBAudioSource : public Source
 	, public IPreviewable
-	, public IPipelineSource
+	, public IPipelineElement
 {
 	Q_OBJECT
 
@@ -24,8 +24,10 @@ public:
 	SourceInfo getSourceInfo(const std::string& id) const;
 	Source::Type type() const override { return m_sourceType; }
 
-	/// IPipelineSource interface
+	/// IPipelineElement interface
 	GstElement* gstSrcBin() override;
+	GstElement* gstFilterBin() override final { return nullptr; }
+	GstElement* gstSinkBin() override final { return nullptr; }
 
 	/// IPreviewableSource interface
 	quintptr windowId() const override { return m_windowId; }

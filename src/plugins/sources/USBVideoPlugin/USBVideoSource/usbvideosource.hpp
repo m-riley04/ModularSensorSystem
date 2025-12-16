@@ -8,7 +8,7 @@
 #include "features/sources/source.hpp"
 #include <sdk/plugins/isourceplugin.hpp>
 #include "interfaces/capability/general/irecordable.hpp"
-#include "interfaces/capability/general/ipipelinesource.hpp"
+#include "interfaces/capability/general/ipipelineelement.hpp"
 #include <utils/boost_qt_conversions.hpp>
 #include "utils.hpp"
 #include "usbvideosourcebin.hpp"
@@ -17,7 +17,7 @@
 class USBVideoSource : public Source
 	, public IPreviewable
 	, public IRecordable
-	, public IPipelineSource
+	, public IPipelineElement
 {
 	Q_OBJECT
 
@@ -29,8 +29,10 @@ public:
 	SourceInfo getSourceInfo(const std::string& id) const;
 	Source::Type type() const override { return m_sourceType; }
 
-	/// IPipelineSource interface
+	/// IPipelineElement interface
 	GstElement* gstSrcBin() override;
+	GstElement* gstFilterBin() override final { return nullptr; }
+	GstElement* gstSinkBin() override final { return nullptr; }
 
 	/// IPreviewableSource interface
 	quintptr windowId() const override { return m_windowId; }

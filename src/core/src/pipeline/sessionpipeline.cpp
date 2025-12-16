@@ -210,7 +210,7 @@ bool SessionPipeline::createSourceElements(Element* element)
 	}
 
 	// Cast to pipeline element
-	IPipelineSource* pipelineElem = element->asPipelineElement();
+	IPipelineElement* pipelineElem = element->asPipelineElement();
 	if (!pipelineElem) {
 		LoggingController::warning("Cannot create source elements for element '" + QString::fromStdString(element->displayName()) + "': element is not a pipeline element");
 		return false;
@@ -393,8 +393,9 @@ bool SessionPipeline::insertProcessorBins(Processor* processor)
 		return false;
 	}
 
-	// Init elements
-	GstElement* filter = processor->processorFilterBin();
+	// Dynamic cast to pipeline element and init gst element
+	IPipelineElement* pipelineElem = processor->asPipelineElement();
+	GstElement* filter = pipelineElem->gstFilterBin();
 
 	// Check validity of filter
 	if (!filter) {

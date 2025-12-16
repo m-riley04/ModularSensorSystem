@@ -8,7 +8,7 @@ YoloObjectDetectionProcessor::YoloObjectDetectionProcessor(const ElementInfo& el
 YoloObjectDetectionProcessor::~YoloObjectDetectionProcessor()
 {}
 
-GstElement* YoloObjectDetectionProcessor::processorFilterBin()
+GstElement* YoloObjectDetectionProcessor::gstFilterBin()
 {
 	// Lazy initialization
 	if (!m_processorBin) {

@@ -20,9 +20,6 @@ public:
     virtual void startProcessing() = 0;
     virtual void stopProcessing() = 0;
 
-	// TODO/CONSIDER: move gst/pipeline related methods to IPipelineFilter interface?
-    virtual GstElement* processorFilterBin() = 0;
-
     // Element implementations
     virtual const IElement::Type elementType() const noexcept override { return IElement::Type::Processor; }
 
