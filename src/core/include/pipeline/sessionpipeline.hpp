@@ -12,6 +12,7 @@
 #include <utils/utils.hpp>
 #include <utils/session_utils.hpp>
 #include <features/processors/processor.hpp>
+#include <controllers/elementscontroller.hpp>
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
 
@@ -27,7 +28,7 @@ public:
 	};
 
 public:
-	explicit SessionPipeline(SessionSettings& settings, QObject* parent = nullptr);
+	explicit SessionPipeline(SessionSettings& settings, ElementsController& ec, QObject* parent = nullptr);
 	virtual ~SessionPipeline() = default;
 
 	const GstElement* bin() const { return GST_ELEMENT(m_pipeline.get()); }
@@ -64,7 +65,7 @@ private:
 	 * Inserts the processor bins into the pipeline for the given element.
 	 * // TODO/CONSIDER: move this into the main source elements creation somehow?
 	 */
-	bool insertProcessorBins(Processor*);
+	GstElement* insertProcessorBins(Processor*, GstElement*);
 
 	bool openRecordingValves(QList<IRecordable*>&);
 	bool closeRecordingValves(QList<IRecordable*>&);
@@ -83,7 +84,8 @@ private:
 	QList<GstElement*> m_processorBins;
 	QList<GstElement*> m_recordableElementBins;
 	QList<IRecordable*> m_recordableElements;
-	SessionSettings& m_sessionSettings; // ptr to session settings owned by settings controller
+	ElementsController& m_elementsController;
+	SessionSettings& m_sessionSettings;
 	guint m_pipelineBusWatchId = 0;
 
 signals:

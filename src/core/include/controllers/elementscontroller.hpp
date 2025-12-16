@@ -45,4 +45,7 @@ private:
 	OneToManyIdMap m_mountToSources;
 	OneToManyIdMap m_sourceToProcessors;
 
+	void removeSourceMappings(const QUuid& sourceId);
+	void removeProcessorMappings(const QUuid& processorId);
+
 };

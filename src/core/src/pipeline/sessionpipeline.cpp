@@ -1,10 +1,11 @@
 #include "pipeline/sessionpipeline.hpp"
 #include <controllers/loggingcontroller.hpp>
 
-SessionPipeline::SessionPipeline(SessionSettings& settings, QObject* parent)
+SessionPipeline::SessionPipeline(SessionSettings& settings, ElementsController& ec, QObject* parent)
 	: QObject(parent)
 	, m_pipeline(nullptr, &gst_object_unref)
 	, m_sessionSettings(settings)
+	, m_elementsController(ec)
 {
 	if (!gst_is_initialized()) {
 		gst_init(nullptr, nullptr);
@@ -82,7 +83,7 @@ bool SessionPipeline::build(const QList<Element*>& elements, const QList<IRecord
 	for (auto& element : elements) {
 		if (!createSourceElements(element)) {
 			emit errorOccurred("Failed to create source elements for element '" + QString::fromStdString(element->name()) + "'");
-			close();
+			close(); // TODO/CONSIDER: handle this more gracefully? And check if close succeeded?
 			return false;
 		}
 
@@ -257,7 +258,25 @@ bool SessionPipeline::createSourceElements(Element* element)
 
 	// Attempt to add/link preview
 	if (element->asPreviewable() != nullptr) {
-		if (!createAndLinkPreviewBin(element, tee)) {
+		// TODO: add processors somewhere else so they can be had without previewing
+		// find processors for this element and insert them
+		auto& procs = m_elementsController.processorsForSource(boostUuidToQUuid(element->uuid()));
+
+		// Link processors together one after the other
+		GstElement* lastElem = tee;
+		for (auto& proc : procs) {
+			lastElem = insertProcessorBins(proc, lastElem);
+			if (!lastElem) { // TODO: make this waaaaaayy safer and cleaner
+				LoggingController::warning("Failed to insert processor bins for processor '"
+					+ QString::fromStdString(proc->displayName())
+					+ "' into element '"
+					+ QString::fromStdString(element->displayName())
+					+ "'");
+			}
+		}
+
+		// Link preview bin to last element in chain
+		if (!createAndLinkPreviewBin(element, lastElem)) {
 			LoggingController::warning("Failed to create and link preview bin for element:"
 				+ QString::fromStdString(element->name()));
 		}
@@ -386,11 +405,16 @@ bool SessionPipeline::createAndLinkRecordBin(Element* element, GstElement* tee)
 	return true;
 }
 
-bool SessionPipeline::insertProcessorBins(Processor* processor)
+GstElement* SessionPipeline::insertProcessorBins(Processor* processor, GstElement* prevElement)
 {
 	if (!processor) {
 		LoggingController::warning("Cannot insert processor GST elements: processor is null");
-		return false;
+		return nullptr;
+	}
+
+	if (!prevElement) {
+		LoggingController::warning("Cannot insert processor GST elements: previous element is null");
+		return nullptr;
 	}
 
 	// Dynamic cast to pipeline element and init gst element
@@ -399,18 +423,29 @@ bool SessionPipeline::insertProcessorBins(Processor* processor)
 
 	// Check validity of filter
 	if (!filter) {
-		LoggingController::warning("Failed to create filter for '" + QString::fromStdString(processor->displayName()) + "'; creating default filter");
-		return false;
+		LoggingController::warning("Failed to create filter for '" + QString::fromStdString(processor->displayName()) + "'");
+		return nullptr;
 	}
 
 	// TODO: configure gst processor elements (when properties are added like cpu vs gpu)	
 	
-	// TODO: add processor bin to pipeline
+	// Add processor bin to pipeline
+	if (!gst_bin_add(GST_BIN(m_pipeline.get()), filter)) {
+		LoggingController::warning("Failed to add processor filter for '" + QString::fromStdString(processor->displayName()) + "' to pipeline.");
+		return nullptr;
+	}
+
+	// Link previous element to processor filter
+	if (!gst_element_link(prevElement, filter)) {
+		LoggingController::warning("Failed to link previous element to processor filter for '" + QString::fromStdString(processor->displayName()) + "'.");
+		gst_bin_remove(GST_BIN(m_pipeline.get()), filter);
+		return nullptr;
+	}
 
 	// Add processor bin tracking list
 	m_processorBins.append(filter);
 
-	return true;
+	return filter;
 }
 
 bool SessionPipeline::openRecordingValves(QList<IRecordable*>& elements)

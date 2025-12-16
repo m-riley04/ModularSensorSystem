@@ -9,6 +9,7 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(const char* binNam
 	// Initialize elements
 	GstElement* bin = gst_bin_new(binName);
 	GstElement* startQueue = gst_element_factory_make("queue", "inputQueue");
+	GstElement* videoConvert = gst_element_factory_make("videoconvert", "videoConvert");
 	GstElement* onnxinference = gst_element_factory_make("onnxinference", "inference");
 	GstElement* detector = gst_element_factory_make("ssdobjectdetector", "detector");
 	GstElement* overlay = gst_element_factory_make("objectdetectionoverlay", "overlay");
@@ -16,10 +17,11 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(const char* binNam
 	GstElement* endQueue = gst_element_factory_make("queue", "outputQueue");
 
 	// Check validity of each
-	if (!bin || !startQueue || !onnxinference || !detector || !overlay || !endQueue) {
+	if (!bin || !startQueue || !videoConvert || !onnxinference || !detector || !overlay || !endQueue) {
 		LoggingController::warning("Failed to create one or more elements");
 		if (bin) gst_object_unref(bin);
 		if (startQueue) gst_object_unref(startQueue);
+		if (videoConvert) gst_object_unref(videoConvert);
 		if (onnxinference) gst_object_unref(onnxinference);
 		if (detector) gst_object_unref(detector);
 		if (overlay) gst_object_unref(overlay);
@@ -28,10 +30,10 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(const char* binNam
 	}
 
 	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(bin), startQueue, onnxinference, detector, overlay, endQueue, nullptr);
+	gst_bin_add_many(GST_BIN(bin), startQueue, videoConvert, onnxinference, detector, overlay, endQueue, nullptr);
 
 	// Link source bin to elements
-	if (!gst_element_link_many(startQueue, onnxinference, detector, overlay, endQueue, nullptr)) {
+	if (!gst_element_link_many(startQueue, videoConvert, onnxinference, detector, overlay, endQueue, nullptr)) {
 		LoggingController::warning("Failed to link source bin to elements.");
 		gst_object_unref(bin);
 		return nullptr;

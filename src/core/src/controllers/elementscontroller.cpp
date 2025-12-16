@@ -5,6 +5,24 @@ ElementsController::ElementsController(SettingsController& setc, MountController
 	: QObject(parent)
 	, m_sourceController(sc), m_processingController(pc), m_mountController(mc), m_settingsController(setc)
 {
+
+	// Add notifiers to clear mappings when elements are removed
+	connect(&m_mountController, &MountController::mountRemoved, this, [this](const QUuid& mountId) {
+		m_mountToSources.remove(mountId);
+		LoggingController::info(QString("Removed all sources mapped to mount %1").arg(mountId.toString()));
+		});
+	connect(&m_sourceController, &SourceController::sourceRemoved, this, [this](const QUuid& sourceId) {
+		// Remove sourceId from all mount mappings
+		removeSourceMappings(sourceId);
+
+		// Remove all processor mappings for this source
+		m_sourceToProcessors.remove(sourceId);
+		LoggingController::info(QString("Removed all processors mapped to source %1").arg(sourceId.toString()));
+		});
+
+	connect(&m_processingController, &ProcessingController::processorRemoved, this, [this](const QUuid& processorId) {
+		removeProcessorMappings(processorId);
+		});
 }
 
 ElementsController::~ElementsController()
@@ -65,4 +83,20 @@ const QList<QUuid> ElementsController::sourceIdsForMount(const QUuid& mountId) c
 const QList<QUuid> ElementsController::processorIdsForSource(const QUuid& sourceId) const
 {
 	return m_sourceToProcessors.value(sourceId);
+}
+
+void ElementsController::removeSourceMappings(const QUuid& sourceId) {
+	// Remove sourceId from all mount mappings
+	for (auto& mountId : m_mountToSources.keys()) {
+		m_mountToSources[mountId].removeAll(sourceId);
+	}
+	LoggingController::info(QString("Removed source %1 from all mount mappings").arg(sourceId.toString()));
+}
+
+void ElementsController::removeProcessorMappings(const QUuid& processorId) {
+	// Remove processorId from all source mappings
+	for (auto& sourceId : m_sourceToProcessors.keys()) {
+		m_sourceToProcessors[sourceId].removeAll(processorId);
+	}
+	LoggingController::info(QString("Removed processor %1 from all source mappings").arg(processorId.toString()));
 }

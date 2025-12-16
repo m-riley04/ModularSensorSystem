@@ -4,8 +4,8 @@
 SessionController::SessionController(SettingsController& settingsController, ElementsController& ec, QObject* parent)
 	: QObject(parent)
 	, m_settingsController(settingsController)
-	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), this))
 	, m_elementsController(ec)
+	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), m_elementsController, this))
 {
 	// Connect signals for error handling
 	connect(&m_pipeline, &SessionPipeline::errorOccurred, this, &SessionController::errorOccurred);
