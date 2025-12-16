@@ -421,7 +421,24 @@ void AppActionController::onOpenAddProcessorDialog()
     AddProcessorDialog* addProcessorDialog = new AddProcessorDialog(m_controller.pluginController(), m_controller.elementsController(), m_parentWidget);
     addProcessorDialog->setWindowModality(Qt::WindowModal);
 
-    connect(addProcessorDialog, &AddProcessorDialog::processorConfirmed, &m_controller.processingController(), &ProcessingController::addProcessor);
+    connect(addProcessorDialog, &AddProcessorDialog::processorConfirmed, &m_controller.processingController(), [this](IProcessorPlugin* plugin, Source* source) {
+        if (!plugin) {
+            QMessageBox::warning(m_parentWidget, tr("Processor Creation Failed"), tr("The selected processor could not be created."));
+			return;
+        };
+
+        if (!source) {
+            QMessageBox::warning(m_parentWidget, tr("No Source Selected"), tr("Please select a source to attach the processor to."));
+            return;
+		}
+
+		// Create processor and move ownership to processing controller
+        auto* processor = plugin->createProcessor(this);
+        m_controller.processingController().addProcessor(processor);
+
+		// Attach processor to source
+		m_controller.elementsController().attachProcessorToSource(boostUuidToQUuid(source->uuid()), boostUuidToQUuid(processor->uuid()));
+        });
 
     addProcessorDialog->show();
 }

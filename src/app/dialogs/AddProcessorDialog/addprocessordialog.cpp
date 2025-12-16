@@ -60,10 +60,18 @@ void AddProcessorDialog::populateSourcesDropdown()
 	// Clear the existing items in the dropdown
 	ui.dropdownSources->clear();
 
+	if (!pSelectedProcessorPlugin) {
+		LoggingController::warning("No selected processor plugin when populating sources dropdown");
+		return;
+	}
+
+	auto validType = pSelectedProcessorPlugin->supportedSourceType();
+
 	// Populate the source type dropdown with available source types
 	// TODO: filter sources based on compatibility with selected processor
 	for (auto* src : sources) {
 		if (!src) continue;
+		if (src->type() != validType) continue; // Skip incompatible source types
 		ui.dropdownProcessor->addItem(QString::fromStdString(src->displayName()), QVariant::fromValue(src));
 	}
 
@@ -98,7 +106,7 @@ void AddProcessorDialog::onConfirmButtonClicked() {
 	}
 
 	// Get the selected processor plugin and info
-	emit processorConfirmed(pSelectedProcessorPlugin);
+	emit processorConfirmed(pSelectedProcessorPlugin, m_selectedSource);
 	this->accept(); // TODO: Maybe do more here?
 }
 

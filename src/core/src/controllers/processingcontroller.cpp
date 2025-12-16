@@ -14,10 +14,8 @@ Processor* ProcessingController::byId(const QUuid& id) const {
 	return mProcessorsById.value(id);
 }
 
-void ProcessingController::addProcessor(IProcessorPlugin* plugin)
+void ProcessingController::addProcessor(Processor* processor)
 {
-	if (!plugin) return; // Ensure valid pointers
-	auto processor = plugin->createProcessor(this); // TODO/CONSIDER: Pass a valid Device pointer if needed?
 	if (!processor) return; // Failed to create processor
 	mProcessors.append(processor);
 	emit processorAdded(processor);

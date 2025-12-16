@@ -39,6 +39,6 @@ private slots:
 signals:
 	void sourceSelected(Source* source);
 	void processorSelected(IProcessorPlugin* plugin);
-	void processorConfirmed(IProcessorPlugin* plugin);
+	void processorConfirmed(IProcessorPlugin* plugin, Source* source);
 };
 
