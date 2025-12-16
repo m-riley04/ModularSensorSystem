@@ -17,14 +17,7 @@ public:
     Processor(const ElementInfo& element, QObject* parent = nullptr) : Element(element, parent) {}
     virtual ~Processor() = default;
     
-    /**
-     * @brief Starts the processing operation.
-     */
     virtual void startProcessing() = 0;
-
-    /**
-	 * @brief Stops the processing operation.
-     */
     virtual void stopProcessing() = 0;
 
 	// TODO/CONSIDER: move gst/pipeline related methods to IPipelineFilter interface?

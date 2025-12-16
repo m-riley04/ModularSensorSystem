@@ -386,6 +386,32 @@ bool SessionPipeline::createAndLinkRecordBin(Element* element, GstElement* tee)
 	return true;
 }
 
+bool SessionPipeline::insertProcessorBins(Processor* processor)
+{
+	if (!processor) {
+		LoggingController::warning("Cannot insert processor GST elements: processor is null");
+		return false;
+	}
+
+	// Init elements
+	GstElement* filter = processor->processorFilterBin();
+
+	// Check validity of filter
+	if (!filter) {
+		LoggingController::warning("Failed to create filter for '" + QString::fromStdString(processor->displayName()) + "'; creating default filter");
+		return false;
+	}
+
+	// TODO: configure gst processor elements (when properties are added like cpu vs gpu)	
+	
+	// TODO: add processor bin to pipeline
+
+	// Add processor bin tracking list
+	m_processorBins.append(filter);
+
+	return true;
+}
+
 bool SessionPipeline::openRecordingValves(QList<IRecordable*>& elements)
 {
 	// Iterate over all sources and open their valves

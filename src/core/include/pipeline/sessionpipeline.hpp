@@ -11,6 +11,7 @@
 #include <utils/debug.hpp>
 #include <utils/utils.hpp>
 #include <utils/session_utils.hpp>
+#include <features/processors/processor.hpp>
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
 
@@ -58,6 +59,13 @@ private:
 	bool createAndLinkPreviewBin(Element*, GstElement*);
 	bool createAndLinkRecordBin(Element*, GstElement*);
 
+	
+	/**
+	 * Inserts the processor bins into the pipeline for the given element.
+	 * // TODO/CONSIDER: move this into the main source elements creation somehow?
+	 */
+	bool insertProcessorBins(Processor*);
+
 	bool openRecordingValves(QList<IRecordable*>&);
 	bool closeRecordingValves(QList<IRecordable*>&);
 	bool openRecordingValveForElement(IRecordable*);
@@ -72,6 +80,7 @@ private:
 	QList<GstElement*> m_sourceBins;
 	QList<GstElement*> m_previewBins;
 	QList<GstElement*> m_recordBins;
+	QList<GstElement*> m_processorBins;
 	QList<GstElement*> m_recordableElementBins;
 	QList<IRecordable*> m_recordableElements;
 	SessionSettings& m_sessionSettings; // ptr to session settings owned by settings controller
