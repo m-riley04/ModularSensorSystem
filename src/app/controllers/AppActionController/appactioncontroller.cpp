@@ -418,7 +418,7 @@ void AppActionController::onOpenEditSourceDialog()
 
 void AppActionController::onOpenAddProcessorDialog()
 {
-    AddProcessorDialog* addProcessorDialog = new AddProcessorDialog(&m_controller.pluginController(), m_parentWidget);
+    AddProcessorDialog* addProcessorDialog = new AddProcessorDialog(m_controller.pluginController(), m_controller.elementsController(), m_parentWidget);
     addProcessorDialog->setWindowModality(Qt::WindowModal);
 
     connect(addProcessorDialog, &AddProcessorDialog::processorConfirmed, &m_controller.processingController(), &ProcessingController::addProcessor);

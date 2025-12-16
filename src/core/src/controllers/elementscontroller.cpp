@@ -1,4 +1,5 @@
 #include "controllers/elementscontroller.hpp"
+#include "controllers/loggingcontroller.hpp"
 
 ElementsController::ElementsController(SettingsController& setc, MountController& mc, SourceController& sc, ProcessingController& pc, QObject* parent)
 	: QObject(parent)
@@ -12,19 +13,26 @@ ElementsController::~ElementsController()
 
 void ElementsController::attachSourceToMount(const QUuid& mountId, const QUuid& sourceId)
 {
-
+	m_mountToSources.value(mountId).append(sourceId);
+	LoggingController::info(QString("Attached source %1 to mount %2").arg(sourceId.toString(), mountId.toString()));
 }
 
 void ElementsController::detachSourceFromMount(const QUuid& mountId, const QUuid& sourceId)
 {
+	m_mountToSources.value(mountId).removeAll(sourceId);
+	LoggingController::info(QString("Detached source %1 from mount %2").arg(sourceId.toString(), mountId.toString()));
 }
 
 void ElementsController::attachProcessorToSource(const QUuid& sourceId, const QUuid& processorId)
 {
+	m_sourceToProcessors.value(sourceId).append(processorId);
+	LoggingController::info(QString("Attached processor %1 to source %2").arg(processorId.toString(), sourceId.toString()));
 }
 
 void ElementsController::detachProcessorFromSource(const QUuid& sourceId, const QUuid& processorId)
 {
+	m_sourceToProcessors.value(sourceId).removeAll(processorId);
+	LoggingController::info(QString("Detached processor %1 from source %2").arg(processorId.toString(), sourceId.toString()));
 }
 
 const QList<Source*> ElementsController::sourcesForMount(const QUuid& mountId) const
