@@ -22,9 +22,9 @@ bool YoloProcessorBin::build()
 
     m_inputQueue = gst_bin_get_by_name(GST_BIN(m_bin), "inputQueue");
     m_inference = gst_bin_get_by_name(GST_BIN(m_bin), "inference");
-    m_detector = gst_bin_get_by_name(GST_BIN(m_bin), "detector");
+    m_detector = gst_bin_get_by_name(GST_BIN(m_bin), "tensorDecoder");
     m_overlay = gst_bin_get_by_name(GST_BIN(m_bin), "overlay");
-    m_outputQueue = gst_bin_get_by_name(GST_BIN(m_bin), "inputQueue");
+    m_outputQueue = gst_bin_get_by_name(GST_BIN(m_bin), "outputQueue");
 
     if (!m_inputQueue || !m_inference || !m_detector || !m_overlay || !m_outputQueue) {
         LoggingController::warning("Failed to get one or more elements from processor bin");

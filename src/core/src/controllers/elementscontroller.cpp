@@ -6,6 +6,10 @@ ElementsController::ElementsController(SettingsController& setc, MountController
 	, m_sourceController(sc), m_processingController(pc), m_mountController(mc), m_settingsController(setc)
 {
 
+	// Init hash maps
+	m_mountToSources = OneToManyIdMap();
+	m_sourceToProcessors = OneToManyIdMap();
+
 	// Add notifiers to clear mappings when elements are removed
 	connect(&m_mountController, &MountController::mountRemoved, this, [this](const QUuid& mountId) {
 		m_mountToSources.remove(mountId);
@@ -43,14 +47,21 @@ void ElementsController::detachSourceFromMount(const QUuid& mountId, const QUuid
 
 void ElementsController::attachProcessorToSource(const QUuid& sourceId, const QUuid& processorId)
 {
-	m_sourceToProcessors.value(sourceId).append(processorId);
+	if (!m_sourceToProcessors.contains(sourceId)) {
+		m_sourceToProcessors[sourceId] = QList<QUuid>();
+	}
+	m_sourceToProcessors[sourceId].append(processorId);
 	LoggingController::info(QString("Attached processor %1 to source %2").arg(processorId.toString(), sourceId.toString()));
 }
 
 void ElementsController::detachProcessorFromSource(const QUuid& sourceId, const QUuid& processorId)
 {
-	m_sourceToProcessors.value(sourceId).removeAll(processorId);
-	LoggingController::info(QString("Detached processor %1 from source %2").arg(processorId.toString(), sourceId.toString()));
+	if (m_sourceToProcessors.contains(sourceId)) {
+		m_sourceToProcessors[sourceId].removeAll(processorId);
+		LoggingController::info(QString("Detached processor %1 from source %2").arg(processorId.toString(), sourceId.toString()));
+	} else {
+		LoggingController::info(QString("Source %1 does not have processor %2 attached").arg(sourceId.toString(), processorId.toString()));
+	}
 }
 
 const QList<Source*> ElementsController::sourcesForMount(const QUuid& mountId) const
@@ -69,8 +80,12 @@ const QList<Processor*> ElementsController::processorsForSource(const QUuid& sou
 	QList<Processor*> processors;
 	const auto processorIds = m_sourceToProcessors.value(sourceId);
 	for (auto& id : processorIds) {
-		Processor* source = m_processingController.byId(id);
-		processors.push_back(source);
+		Processor* proc = m_processingController.byId(id);
+		if (!proc) {
+			LoggingController::warning(QString("Processor with ID %1 not found in ProcessingController").arg(id.toString()));
+			continue;
+		}
+		processors.push_back(proc);
 	}
 	return processors;
 }

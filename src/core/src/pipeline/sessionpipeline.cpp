@@ -125,6 +125,8 @@ bool SessionPipeline::start()
 		return false;
 	}
 
+	debugDisplayGstBin(GST_ELEMENT(m_pipeline.get()), true);
+
 	// Step through states to surface potential errors
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_READY) == GST_STATE_CHANGE_FAILURE) {
 		LoggingController::warning("Failed to set pipeline to READY");
@@ -265,6 +267,13 @@ bool SessionPipeline::createSourceElements(Element* element)
 		// Link processors together one after the other
 		GstElement* lastElem = tee;
 		for (auto& proc : procs) {
+			if (!proc) {
+				LoggingController::warning("Null processor found for element '"
+					+ QString::fromStdString(element->displayName())
+					+ "'; skipping processor insertion.");
+				continue;
+			}
+
 			lastElem = insertProcessorBins(proc, lastElem);
 			if (!lastElem) { // TODO: make this waaaaaayy safer and cleaner
 				LoggingController::warning("Failed to insert processor bins for processor '"

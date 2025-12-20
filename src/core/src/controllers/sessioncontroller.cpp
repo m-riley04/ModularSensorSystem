@@ -5,7 +5,7 @@ SessionController::SessionController(SettingsController& settingsController, Ele
 	: QObject(parent)
 	, m_settingsController(settingsController)
 	, m_elementsController(ec)
-	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), m_elementsController, this))
+	, m_pipeline(settingsController.sessionSettings(), m_elementsController, this)
 {
 	// Connect signals for error handling
 	connect(&m_pipeline, &SessionPipeline::errorOccurred, this, &SessionController::errorOccurred);
@@ -47,11 +47,11 @@ void SessionController::startSession()
 	}
 
 	// Finally, add processors as GST elements
-	for (auto& processor : m_elementsController.processingController().processors()) {
-		if (!processor->asPipelineElement()) continue; // Skip processors that can't be pipeline elements
-		if (auto rec = processor->asRecordable()) recordableElements.append(rec);
-		elements.append(processor);
-	}
+	//for (auto& processor : m_elementsController.processingController().processors()) {
+	//	if (!processor->asPipelineElement()) continue; // Skip processors that can't be pipeline elements
+	//	if (auto rec = processor->asRecordable()) recordableElements.append(rec);
+	//	elements.append(processor);
+	//}
 
 	m_pipeline.build(elements, recordableElements);
 }

@@ -36,11 +36,10 @@ public slots:
 	void clearRecordings();
 
 private:
-	SessionPipeline m_pipeline;
-	ns m_lastSessionTimestamp = 0;
-
 	ElementsController& m_elementsController;
 	SettingsController& m_settingsController;
+	SessionPipeline m_pipeline;
+	ns m_lastSessionTimestamp = 0;
 
 signals:
 	void sessionStarted();

@@ -18,6 +18,7 @@ void ProcessingController::addProcessor(Processor* processor)
 {
 	if (!processor) return; // Failed to create processor
 	mProcessors.append(processor);
+	mProcessorsById[boostUuidToQUuid(processor->uuid())] = processor;
 	emit processorAdded(processor);
 }
 

@@ -3,15 +3,15 @@
 
 MainController::MainController(QSettings& settings, QObject *parent)
 	: QObject(parent)
-	, m_settingsController(SettingsController(settings, this))
-	, m_loggingController(LoggingController(m_settingsController, this))
-	, m_sourceController(SourceController(this))
-	, m_processingController(ProcessingController(this))
-	, m_mountController(MountController(this))
-	, m_elementsController(ElementsController(m_settingsController, m_mountController, m_sourceController, m_processingController, this))
-	, m_pluginController(PluginController(m_settingsController, this))
-	, m_presetsController(PresetsController(m_settingsController, this))
-	, m_sessionController(SessionController(m_settingsController, m_elementsController, this))
+	, m_settingsController(settings, this)
+	, m_loggingController(m_settingsController, this)
+	, m_sourceController(this)
+	, m_processingController(this)
+	, m_mountController(this)
+	, m_elementsController(m_settingsController, m_mountController, m_sourceController, m_processingController, this)
+	, m_pluginController(m_settingsController, this)
+	, m_presetsController(m_settingsController, this)
+	, m_sessionController(m_settingsController, m_elementsController, this)
 	
 {}
 
@@ -22,6 +22,8 @@ MainController::~MainController()
 
 void MainController::shutdown()
 {
+	LoggingController::info("=== Shutting down MainController ===");
+
 	// Remove plugin-created QObjects from controllers to avoid dangling pointers
 	m_mountController.clearMounts();
 	m_sourceController.clearSources();
