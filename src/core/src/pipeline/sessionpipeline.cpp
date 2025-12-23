@@ -125,7 +125,7 @@ bool SessionPipeline::start()
 		return false;
 	}
 
-	debugDisplayGstBin(GST_ELEMENT(m_pipeline.get()), true);
+	//debugDisplayGstBin(GST_ELEMENT(m_pipeline.get()), true);
 
 	// Step through states to surface potential errors
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_READY) == GST_STATE_CHANGE_FAILURE) {

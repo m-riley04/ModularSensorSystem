@@ -3,6 +3,7 @@
 
 #include <gst/gst.h>
 #include <gst/video/videooverlay.h>
+#include <QCoreApplication>
 #include <controllers/loggingcontroller.hpp>
 
 inline GstElement* createDefaultObjectDetectorProcessorFilter(const char* binName = nullptr) {
@@ -11,7 +12,7 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(const char* binNam
 	GstElement* startQueue = gst_element_factory_make("queue", "inputQueue");
 	GstElement* videoConvert = gst_element_factory_make("videoconvert", "videoConvert");
 	GstElement* onnxinference = gst_element_factory_make("onnxinference", "inference");
-	GstElement* tensorDecoder = gst_element_factory_make("yolov8tensordec", "tensorDecoder");
+	GstElement* tensorDecoder = gst_element_factory_make("ssdobjectdetector", "tensorDecoder");
 	GstElement* overlay = gst_element_factory_make("objectdetectionoverlay", "overlay");
 	// TODO/CONSIDER: add a video converter here if needed?
 	GstElement* endQueue = gst_element_factory_make("queue", "outputQueue");
@@ -34,7 +35,8 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(const char* binNam
 
 	/// CONFIGURATION
 	// onnx
-	QString yoloModel = "yolo11n"; // TODO: make configurable
+	QString appPath = QCoreApplication::applicationDirPath();
+	QString yoloModel = "ssd_mobilenet_v1_coco"; // TODO: make configurable
 	QString yoloPath = "C:/Users/vex10/Desktop/Local_Repos/ModularSensorSystem/src/core/yolo_models/" + yoloModel + ".onnx"; //QDir::currentPath() + "/../core/yolo_models/" + yoloModel + ".onnx";
 	if (!QFile::exists(yoloPath)) {
 		LoggingController::warning("ONNX model file does not exist at path: " + yoloPath);
@@ -45,14 +47,15 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(const char* binNam
 	g_object_set(onnxinference, "execution-provider", 0, nullptr); // CPU execution provider. TODO: make configurable
 
 	// yolo tensor decoder
-	QString yoloClassesPath = "C:/Users/vex10/Desktop/Local_Repos/ModularSensorSystem/src/core/yolo_models/default_labels.txt";
+	QString yoloClassesFile = "COCO_classes.txt"; // TODO: make configurable
+	QString yoloClassesPath = "C:/Users/vex10/Desktop/Local_Repos/ModularSensorSystem/src/core/yolo_models/" + yoloClassesFile;
 	if (!QFile::exists(yoloClassesPath)) {
 		LoggingController::warning("Label file does not exist: " + yoloPath);
 		gst_object_unref(bin);
 		return nullptr; // TODO/CONSIDER: handle better?
 	}
 	g_object_set(tensorDecoder, "label-file", yoloClassesPath.toStdString().c_str(), nullptr); // TODO: make configurable
-	g_object_set(tensorDecoder, "max-detections", 100, nullptr); // TODO: make configurable
+	//g_object_set(tensorDecoder, "max-detections", 100, nullptr); // TODO: make configurable
 
 	// Link source bin to elements
 	if (!gst_element_link_many(startQueue, videoConvert, onnxinference, tensorDecoder, overlay, endQueue, nullptr)) {
