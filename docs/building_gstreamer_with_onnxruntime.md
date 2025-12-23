@@ -40,7 +40,7 @@ The most notable changes are:
 
 ```bash
 
-cd C:\dev\
+cd %DEV_ROOT%
 git clone --recursive https://github.com/microsoft/onnxruntime.git
 cd onnxruntime
 git checkout -b v1.23.0 refs/tags/v1.23.0
@@ -59,7 +59,7 @@ You may need to modify gstonnxprovider.cpp on Windows before running these.
 
 ```bash
 
-cd C:\dev\gstreamer
+cd %GST_ROOT%
 rmdir /s /q builddir
 
 set "INCLUDE=%ORT_ROOT%\include\onnxruntime;%INCLUDE%"
