@@ -11,8 +11,8 @@ IF NOT EXIST "%GST_SRC%" (
 	git clone --recursive https://gitlab.freedesktop.org/gstreamer/gstreamer.git "%GST_SRC%" || exit /b 1
 )
 pushd "%GST_SRC%" || exit /b 1
-set "gst_version=1.26.9"
-set "gst_version_short=1.26"
+set "gst_version=1.27.50"
+set "gst_version_short=1.27"
 git fetch --tags || exit /b 1
 git checkout "%gst_version%" || exit /b 1
 
