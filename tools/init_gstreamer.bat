@@ -11,8 +11,8 @@ IF NOT EXIST "%GST_SRC%" (
 	git clone --recursive https://gitlab.freedesktop.org/gstreamer/gstreamer.git "%GST_SRC%" || exit /b 1
 )
 pushd "%GST_SRC%" || exit /b 1
-set "gst_version=1.27.50"
-set "gst_version_short=1.27"
+set "gst_version=1.26.9"
+set "gst_version_short=1.26"
 git fetch --tags || exit /b 1
 git checkout "%gst_version%" || exit /b 1
 
@@ -25,6 +25,7 @@ if exist "%meson_build_dir%" rmdir /s /q "%meson_build_dir%"
 meson setup "%meson_build_dir%" ^
   --prefix "%GST_ROOT%" ^
   --buildtype=debugoptimized ^
+  -Dcpp_std=c++17 ^
   -Dpkg_config_path="%ORT_PKGCFG%" ^
   -Dintrospection=disabled ^
   -Dgpl=enabled ^

@@ -22,7 +22,16 @@ if exist "%ORT_BUILD%" (
   echo onnxruntime already built, skipping build step.
   goto onnxruntime_install
 )
-call .\build.bat --config RelWithDebInfo --build_shared_lib --parallel --compile_no_warning_as_error --skip_submodule_sync
+
+REM TODO: make these options configurable
+call ".\build.bat" ^
+  --config RelWithDebInfo ^
+  --build_shared_lib ^
+  --parallel ^
+  --compile_no_warning_as_error ^
+  --minimal_build ^
+  --skip_submodule_sync ^
+  --skip_tests
 REM check for error message
 set "rc=%errorlevel%"
 
