@@ -29,7 +29,6 @@ call ".\build.bat" ^
   --build_shared_lib ^
   --parallel ^
   --compile_no_warning_as_error ^
-  --minimal_build ^
   --skip_submodule_sync ^
   --skip_tests
 REM check for error message

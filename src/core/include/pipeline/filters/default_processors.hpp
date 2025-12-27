@@ -11,7 +11,8 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(const char* binNam
 	GstElement* startQueue = gst_element_factory_make("queue", "inputQueue");
 	GstElement* videoConvert = gst_element_factory_make("videoconvert", "videoConvert");
 	GstElement* onnxinference = gst_element_factory_make("onnxinference", "inference");
-	GstElement* tensorDecoder = gst_element_factory_make("yolov8tensordec", "tensorDecoder");
+	GstElement* tensorDecoder = gst_element_factory_make("ssdobjectdetector", "tensorDecoder");
+	//GstElement* tensorDecoder = gst_element_factory_make("yolov8tensordec", "tensorDecoder");
 	GstElement* overlay = gst_element_factory_make("objectdetectionoverlay", "overlay");
 	// TODO/CONSIDER: add a video converter here if needed?
 	GstElement* endQueue = gst_element_factory_make("queue", "outputQueue");
@@ -34,7 +35,8 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(const char* binNam
 
 	/// CONFIGURATION
 	// onnx
-	QByteArray yoloModel = "yolov8s"; // TODO: make configurable
+	QByteArray yoloModel = "ssd_mobilenet_v1_coco"; // TODO: make configurable
+	//QByteArray yoloModel = "yolov8s"; // TODO: make configurable
 	QByteArray yoloPath = "C:/Users/vex10/Desktop/Local_Repos/ModularSensorSystem/src/core/yolo_models/" + yoloModel + ".onnx"; //QDir::currentPath() + "/../core/yolo_models/" + yoloModel + ".onnx";
 	if (!QFile::exists(yoloPath)) {
 		LoggingController::warning("ONNX model file does not exist at path: " + yoloPath);
@@ -43,7 +45,6 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(const char* binNam
 	}
 	gchar* model_file = yoloPath.data();
 	g_object_set(onnxinference, "model-file", model_file, nullptr);
-	LoggingController::warning(QString("onnxinference model-file = %1").arg(model_file ? model_file : "(null)"));
 	g_object_set(onnxinference, "execution-provider", 0, nullptr); // CPU execution provider. TODO: make configurable
 
 	// yolo tensor decoder
