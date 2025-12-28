@@ -57,6 +57,10 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	gst_bin_add_many(GST_BIN(bin), startQueue, videoConvert, onnxinference, tensorDecoder, overlay, endQueue, nullptr);
 
 	/// CONFIGURATION
+	// queues
+	//g_object_set(startQueue, "leaky", 2, nullptr); // LEAK downstream
+	//g_object_set(endQueue, "leaky", 2, nullptr); // LEAK downstream
+
 	// onnx
 	QDir current = QDir::current();
 	current.cdUp();
@@ -70,6 +74,7 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	gchar* model_file = yoloPath.data();
 	g_object_set(onnxinference, "model-file", model_file, nullptr);
 	g_object_set(onnxinference, "execution-provider", 0, nullptr); // CPU execution provider. TODO: make configurable
+	g_object_set(onnxinference, "optimization-level", 3, nullptr);
 
 	// yolo tensor decoder
 	QByteArray yoloClassesPath = yoloFolderPath + QByteArray(labelFilenameStr);

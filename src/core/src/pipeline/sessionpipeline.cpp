@@ -260,6 +260,59 @@ bool SessionPipeline::createSourceElements(Element* element)
 
 	// Attempt to add/link preview
 	if (element->asPreviewable() != nullptr) {
+		// Create compositor bin to handle previewing
+		std::string compositorName = "compositor_" + boost::uuids::to_string(element->uuid());
+		std::string compositorQueueName = "compositor_queue_" + boost::uuids::to_string(element->uuid());
+		std::string compositorQueueSrcName = "compositor_queue_src_" + boost::uuids::to_string(element->uuid());
+		std::string compositorOutQueueName = "compositor_queue_out_" + boost::uuids::to_string(element->uuid());
+		GstElement* compositor = gst_element_factory_make("compositor", compositorName.c_str());
+		GstElement* compositorQueue = gst_element_factory_make("queue", compositorQueueName.c_str());
+		GstElement* compositorQueueSrc = gst_element_factory_make("queue", compositorQueueSrcName.c_str());
+		GstElement* compositorQueueOut = gst_element_factory_make("queue", compositorOutQueueName.c_str());
+
+		if (!compositor || !compositorQueue || !compositorQueueSrc || !compositorQueueOut) {
+			LoggingController::warning("Failed to create compositor element(s) for element:" + QString::fromStdString(element->name()));
+			gst_object_unref(compositor);
+			gst_object_unref(compositorQueue);
+			gst_object_unref(compositorQueueSrc);
+			gst_object_unref(compositorQueueOut);
+			return false;
+		}
+
+		// Modify compositor properties
+		g_object_set(compositor, "background", 0, nullptr);
+		g_object_set(compositor, "ignore-inactive-pads", false, nullptr);
+
+		// Add compositor to pipeline
+		gst_bin_add_many(GST_BIN(m_pipeline.get()), compositor, compositorQueue, compositorQueueSrc, compositorQueueOut, nullptr);
+
+		// Link src queue to compositor
+		if (!gst_element_link_many(compositorQueueSrc, compositor, compositorQueueOut, nullptr)) {
+			LoggingController::warning("Failed to link compositor source queue to compositor for element:" + QString::fromStdString(element->name()));
+			gst_bin_remove_many(GST_BIN(m_pipeline.get()), compositor, compositorQueue, compositorQueueSrc, compositorQueueOut, nullptr);
+			return false;
+		}
+
+		// Link proc queue to compositor
+		if (!gst_element_link(compositorQueue, compositor)) {
+			LoggingController::warning("Failed to link compositor queue to compositor for element:" + QString::fromStdString(element->name()));
+			gst_bin_remove_many(GST_BIN(m_pipeline.get()), compositor, compositorQueue, compositorQueueSrc, compositorQueueOut, nullptr);
+			return false;
+		}
+
+		// Link tee to src queue
+		if (!gst_element_link(tee, compositorQueueSrc)) {
+			LoggingController::warning("Failed to link tee to compositor source queue for element:" + QString::fromStdString(element->name()));
+			gst_bin_remove_many(GST_BIN(m_pipeline.get()), compositor, compositorQueue, compositorQueueSrc, compositorQueueOut, nullptr);
+			return false;
+		}
+
+		// Link preview bin to tee
+		if (!createAndLinkPreviewBin(element, compositorQueueOut)) {
+			LoggingController::warning("Failed to create and link preview bin for element:"
+				+ QString::fromStdString(element->name()));
+		}
+
 		// TODO: add processors somewhere else so they can be had without previewing
 		// find processors for this element and insert them
 		auto& procs = m_elementsController.processorsForSource(boostUuidToQUuid(element->uuid()));
@@ -284,10 +337,29 @@ bool SessionPipeline::createSourceElements(Element* element)
 			}
 		}
 
-		// Link preview bin to last element in chain
-		if (!createAndLinkPreviewBin(element, lastElem)) {
-			LoggingController::warning("Failed to create and link preview bin for element:"
-				+ QString::fromStdString(element->name()));
+		// Modify compositor pad properties
+		GstPad* compSrcSinkPad = gst_element_get_static_pad(compositor, "sink_0");
+		GstPad* compProcSinkPad = gst_element_get_static_pad(compositor, "sink_1");
+		if (!compProcSinkPad || !compSrcSinkPad) {
+			LoggingController::warning("Failed to get compositor sink pad(s) for element:'"
+				+ QString::fromStdString(element->displayName())
+				+ "'");
+			return false;
+		}
+
+		g_object_set(compSrcSinkPad, "operator", 0, nullptr);
+		g_object_set(compSrcSinkPad, "zorder", 1, nullptr);
+		g_object_set(compProcSinkPad, "operator", 1, nullptr);
+		g_object_set(compProcSinkPad, "zorder", 2, nullptr);
+		gst_object_unref(compSrcSinkPad);
+		gst_object_unref(compProcSinkPad);
+
+		// Finally, link the last processor to the compositor
+		if (!gst_element_link(lastElem, compositorQueue)) {
+			LoggingController::warning("Failed to link last processor to compositor for element:'"
+				+ QString::fromStdString(element->displayName())
+				+ "'");
+			return false;
 		}
 	}
 
