@@ -4,12 +4,11 @@ ver >nul REM resets errorlevel
 
 REM start stopwatch
 set "startTime=%time: =0%"
-timeout /t 5 /nobreak >nul
 
 echo Cleaning dependencies...
 
 REM initialize environment
-call .\tools\init_env.bat || exit /b 1
+call "%~dp0init_env.bat" || exit /b 1
 
 REM clean ONNX Runtime
 echo Removing ONNX Runtime installation...

@@ -4,7 +4,6 @@ ver >nul REM resets errorlevel
 
 REM start stopwatch
 set "startTime=%time: =0%"
-timeout /t 5 /nobreak >nul
 
 echo Initializing build_deps.bat script...
 
@@ -13,7 +12,7 @@ REM TODO: call tools\check_env.bat || exit /b 1
 REM TODO: call tools\check_tools.bat || exit /b 1
 
 REM initialize environment
-call tools\init_env.bat || exit /b 1
+call "%~dp0init_env.bat" || exit /b 1
 
 REM have the user confirm before proceeding
 echo The following dependencies will be built and installed to:
@@ -25,8 +24,10 @@ if /i not "%confirm%"=="y" (
   exit /b 1
 )
 
-call tools\init_onnxruntime.bat || exit /b 1
-call tools\init_gstreamer.bat || exit /b 1
+call "%~dp0init_onnxruntime.bat" || exit /b 1
+call "%~dp0init_gstreamer.bat" || exit /b 1
+
+REM copy required files to where they need to be
 
 echo Done.
 
