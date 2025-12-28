@@ -2,6 +2,7 @@
 
 
 #include <gst/gst.h>
+#include <qcoreapplication.h>
 #include <controllers/loggingcontroller.hpp>
 
 enum class ObjectDetectorModelType {
@@ -57,7 +58,10 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 
 	/// CONFIGURATION
 	// onnx
-	QByteArray yoloPath = "C:/Users/vex10/Desktop/Local_Repos/ModularSensorSystem/src/core/yolo_models/" + QByteArray(modelFilenameStr) + ".onnx"; //QDir::currentPath() + "/../core/yolo_models/" + yoloModel + ".onnx";
+	QDir current = QDir::current();
+	current.cdUp();
+	QByteArray yoloFolderPath = current.absolutePath().toUtf8() + "/core/yolo_models/";
+	QByteArray yoloPath = yoloFolderPath + QByteArray(modelFilenameStr) + ".onnx"; //QDir::currentPath() + "/../core/yolo_models/" + yoloModel + ".onnx";
 	if (!QFile::exists(yoloPath)) {
 		LoggingController::warning("ONNX model file does not exist at path: " + yoloPath);
 		gst_object_unref(bin);
@@ -68,7 +72,7 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	g_object_set(onnxinference, "execution-provider", 0, nullptr); // CPU execution provider. TODO: make configurable
 
 	// yolo tensor decoder
-	QByteArray yoloClassesPath = "C:/Users/vex10/Desktop/Local_Repos/ModularSensorSystem/src/core/yolo_models/" + QByteArray(labelFilenameStr);
+	QByteArray yoloClassesPath = yoloFolderPath + QByteArray(labelFilenameStr);
 	if (!QFile::exists(yoloClassesPath)) {
 		LoggingController::warning("Label file does not exist: " + yoloClassesPath);
 		gst_object_unref(bin);
