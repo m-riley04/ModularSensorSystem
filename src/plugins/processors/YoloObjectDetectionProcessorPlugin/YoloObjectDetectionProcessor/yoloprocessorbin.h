@@ -8,7 +8,7 @@
 class YoloProcessorBin : public FilterBin {
 public:
 	YoloProcessorBin(const boost::uuids::uuid& uuid, const std::string& id);
-	virtual ~YoloProcessorBin() = default;
+	~YoloProcessorBin();
 
 protected:
 	virtual bool build() override;

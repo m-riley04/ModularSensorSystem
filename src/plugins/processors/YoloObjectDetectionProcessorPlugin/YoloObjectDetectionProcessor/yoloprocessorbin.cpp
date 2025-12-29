@@ -8,6 +8,16 @@ YoloProcessorBin::YoloProcessorBin(const boost::uuids::uuid& uuid, const std::st
 	build();
 }
 
+YoloProcessorBin::~YoloProcessorBin()
+{
+	// Even though bins manage their children, we still need to unref the elements we got through gst_bin_get_by_name
+	gst_object_unref(m_inputQueue);
+	gst_object_unref(m_inference);
+	gst_object_unref(m_detector);
+	gst_object_unref(m_overlay);
+	gst_object_unref(m_outputQueue);
+}
+
 bool YoloProcessorBin::build()
 {
     std::string binName = "yolo_processor_bin";
