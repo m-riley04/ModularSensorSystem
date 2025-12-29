@@ -30,6 +30,13 @@ call ".\build.bat" ^
   --parallel ^
   --compile_no_warning_as_error ^
   --skip_submodule_sync ^
+  REM --use_cuda ^
+  REM --cudnn_home "%CUDNN_HOME%" ^
+  REM --cuda_home "%CUDA_PATH%" ^
+  REM --cmake_extra_defines ^
+    REM CUDNN_INCLUDE_DIR="%CUDNN_HOME%\include\13.1" ^
+    REM cudnn_LIBRARY="%CUDNN_HOME%\lib\13.1\x64\cudnn.lib" ^
+    REM CMAKE_CUDA_ARCHITECTURES=89 ^
   --skip_tests
 REM check for error message
 set "rc=%errorlevel%"
@@ -45,8 +52,7 @@ if "%rc%"=="0" (
 
 :onnxruntime_install
 echo Building and installing with CMake...
-cmake -S "%ORT_SRC%\cmake" -B "%ORT_BUILD%" -DCMAKE_INSTALL_PREFIX="%ORT_INSTALL_PREFIX%" || exit /b 1
-cmake --install "%ORT_BUILD%" --config RelWithDebInfo || exit /b 1
+cmake --install "%ORT_BUILD%" --config RelWithDebInfo --prefix "%ORT_INSTALL_PREFIX%" || exit /b 1
 
 REM add pkg-config file for libonnxruntime
 if not exist "%ORT_PKGCFG%" (
