@@ -475,10 +475,12 @@ void AppActionController::onOpenEditProcessorDialog()
     QMessageBox::information(m_parentWidget, tr("Feature Not Implemented"), tr("This feature has not been implemented yet."));
 }
 
-void AppActionController::onToggleProcessing()
+void AppActionController::onToggleProcessing(bool checked)
 {
-	// TODO: implement
-	QMessageBox::information(m_parentWidget, tr("Feature Not Implemented"), tr("This feature has not been implemented yet."));
+    if (checked) m_controller.sessionController().startProcessing();
+    else m_controller.sessionController().stopProcessing();
+
+    refreshSessionActionStates();
 }
 
 void AppActionController::onToggleSession(bool checked)

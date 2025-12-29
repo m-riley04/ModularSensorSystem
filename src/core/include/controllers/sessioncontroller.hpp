@@ -33,6 +33,9 @@ public slots:
 	void startRecording();
 	void stopRecording();
 
+	void startProcessing();
+	void stopProcessing();
+
 	void clearRecordings();
 
 private:

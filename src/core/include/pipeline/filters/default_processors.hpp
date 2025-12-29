@@ -32,18 +32,20 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 
 	// Initialize elements
 	GstElement* bin = gst_bin_new(binName);
-	GstElement* startQueue = gst_element_factory_make("queue", "inputQueue");
+	GstElement* valve = gst_element_factory_make("valve", "valve");
+	GstElement* startQueue = gst_element_factory_make("queue2", "inputQueue");
 	GstElement* videoConvert = gst_element_factory_make("videoconvert", "videoConvert");
 	GstElement* onnxinference = gst_element_factory_make("onnxinference", "inference");
 	GstElement* tensorDecoder = gst_element_factory_make(decoderElementStr.c_str(), "tensorDecoder");
 	GstElement* overlay = gst_element_factory_make("objectdetectionoverlay", "overlay");
 	// TODO/CONSIDER: add a video converter here if needed?
-	GstElement* endQueue = gst_element_factory_make("queue", "outputQueue");
+	GstElement* endQueue = gst_element_factory_make("queue2", "outputQueue");
 
 	// Check validity of each
-	if (!bin || !startQueue || !videoConvert || !onnxinference || !tensorDecoder || !overlay || !endQueue) {
+	if (!bin || !valve || !startQueue || !videoConvert || !onnxinference || !tensorDecoder || !overlay || !endQueue) {
 		LoggingController::warning("Failed to create one or more elements");
 		if (bin) gst_object_unref(bin);
+		if (valve) gst_object_unref(valve);
 		if (startQueue) gst_object_unref(startQueue);
 		if (videoConvert) gst_object_unref(videoConvert);
 		if (onnxinference) gst_object_unref(onnxinference);
@@ -54,7 +56,7 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	}
 
 	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(bin), startQueue, videoConvert, onnxinference, tensorDecoder, overlay, endQueue, nullptr);
+	gst_bin_add_many(GST_BIN(bin), valve, startQueue, videoConvert, onnxinference, tensorDecoder, overlay, endQueue, nullptr);
 
 	/// CONFIGURATION
 	// queues
@@ -74,7 +76,7 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	gchar* model_file = yoloPath.data();
 	g_object_set(onnxinference, "model-file", model_file, nullptr);
 	g_object_set(onnxinference, "execution-provider", 0, nullptr); // CPU execution provider. TODO: make configurable
-	g_object_set(onnxinference, "optimization-level", 3, nullptr);
+	g_object_set(onnxinference, "optimization-level", 0, nullptr);
 
 	// yolo tensor decoder
 	QByteArray yoloClassesPath = yoloFolderPath + QByteArray(labelFilenameStr);
@@ -87,14 +89,14 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	//g_object_set(tensorDecoder, "max-detections", 100, nullptr); // TODO: make configurable
 
 	// Link source bin to elements
-	if (!gst_element_link_many(startQueue, videoConvert, onnxinference, tensorDecoder, overlay, endQueue, nullptr)) {
+	if (!gst_element_link_many(valve, startQueue, videoConvert, onnxinference, tensorDecoder, overlay, endQueue, nullptr)) {
 		LoggingController::warning("Failed to link source bin to elements.");
 		gst_object_unref(bin);
 		return nullptr;
 	}
 
 	// Add input ghost pad
-	GstPad* inputPad = gst_element_get_static_pad(startQueue, "sink");
+	GstPad* inputPad = gst_element_get_static_pad(valve, "sink");
 	GstPad* ghostPad = gst_ghost_pad_new("sink", inputPad);
 	gst_object_unref(inputPad);
 	gst_element_add_pad(bin, ghostPad);

@@ -45,6 +45,8 @@ public slots:
 	void setState(State newState);
 	void startRecording();
 	void stopRecording();
+	void startProcessing();
+	void stopProcessing();
 	bool build(const QList<Element*>&, const QList<IRecordable*>&);
 	bool close();
 
@@ -72,6 +74,10 @@ private:
 	bool openRecordingValveForElement(IRecordable*);
 	bool closeRecordingValveForElement(IRecordable*);
 
+
+	bool openProcessingValveForElement(Processor*);
+	bool closeProcessingValveForElement(Processor*);
+
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
 	State m_state = State::STOPPED;
 	ns m_lastSessionTimestamp = 0;
@@ -83,6 +89,7 @@ private:
 	QList<GstElement*> m_recordBins;
 	QList<GstElement*> m_processorBins;
 	QList<GstElement*> m_recordableElementBins;
+	QList<Processor*> m_processorElements;
 	QList<IRecordable*> m_recordableElements;
 	ElementsController& m_elementsController;
 	SessionSettings& m_sessionSettings;

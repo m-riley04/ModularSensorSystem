@@ -34,4 +34,6 @@ protected:
 	std::string m_srcPadName;
 	std::string m_sinkPadName;
 
+	GstElement* m_valveElement = nullptr;
+
 };

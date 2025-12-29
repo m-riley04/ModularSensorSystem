@@ -21,3 +21,17 @@ void YoloObjectDetectionProcessor::onObjectDetected(DetectionInfo detection)
 {
 
 }
+
+void YoloObjectDetectionProcessor::startProcessing()
+{
+	if (!m_processorBin) return;
+
+	return m_processorBin->setProcessingEnabled(true);
+}
+
+void YoloObjectDetectionProcessor::stopProcessing()
+{
+	if (!m_processorBin) return;
+	// Close the valve FIRST, THEN send the EOS to finalize the file
+	return m_processorBin->setProcessingEnabled(false);
+}

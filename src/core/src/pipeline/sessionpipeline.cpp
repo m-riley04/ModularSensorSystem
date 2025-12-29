@@ -63,7 +63,7 @@ bool SessionPipeline::build(const QList<Element*>& elements, const QList<IRecord
 	// Cleanly tear down any existing pipeline first
 	close();
 
-	// Set session recordable elements
+	// Set session elements
 	m_recordableElements = recordableElements;
 
 	// Create the main pipeline
@@ -204,6 +204,30 @@ void SessionPipeline::stopRecording()
 	setState(State::STARTED);
 }
 
+void SessionPipeline::startProcessing()
+{
+	QList<QPointer<Processor>> processors = m_elementsController.processingController().processors();
+
+	// Iterate over all sources and open their valves
+	for (auto& proc : processors) {
+		if (!openProcessingValveForElement(proc)) {
+			LoggingController::warning("Failed to open processing valve for source");
+		}
+	}
+}
+
+void SessionPipeline::stopProcessing()
+{
+	QList<QPointer<Processor>> processors = m_elementsController.processingController().processors();
+
+	// Iterate over all sources and close their valves
+	for (auto& proc : processors) {
+		if (!closeProcessingValveForElement(proc)) {
+			LoggingController::warning("Failed to close processing valve for source");
+		}
+	}
+}
+
 bool SessionPipeline::createSourceElements(Element* element)
 {
 	// Check source
@@ -280,8 +304,9 @@ bool SessionPipeline::createSourceElements(Element* element)
 		}
 
 		// Modify compositor properties
-		g_object_set(compositor, "background", 0, nullptr);
+		g_object_set(compositor, "background", 3, nullptr);
 		g_object_set(compositor, "ignore-inactive-pads", false, nullptr);
+		//g_object_set(compositor, "force-live", true, nullptr);
 
 		// Add compositor to pipeline
 		gst_bin_add_many(GST_BIN(m_pipeline.get()), compositor, compositorQueue, compositorQueueSrc, compositorQueueOut, nullptr);
@@ -559,9 +584,8 @@ bool SessionPipeline::openRecordingValveForElement(IRecordable* src)
 		LoggingController::warning("Cannot open recording valve for source: source is not recordable");
 		return false;
 	}
-
-	src->startRecording();
-	return true;
+	
+	return src->startRecording();
 }
 
 bool SessionPipeline::closeRecordingValveForElement(IRecordable* src)
@@ -571,7 +595,27 @@ bool SessionPipeline::closeRecordingValveForElement(IRecordable* src)
 		return false;
 	}
 
-	src->stopRecording();
+	return src->stopRecording();
+}
+
+bool SessionPipeline::openProcessingValveForElement(Processor* proc)
+{
+	if (!proc) {
+		LoggingController::warning("Cannot close valve for processor: processor is null");
+		return false;
+	}
+
+	proc->startProcessing();
+	return true;}
+
+bool SessionPipeline::closeProcessingValveForElement(Processor* proc)
+{
+	if (!proc) {
+		LoggingController::warning("Cannot close valve for processor: processor is null");
+		return false;
+	}
+
+	proc->stopProcessing();
 	return true;
 }
 

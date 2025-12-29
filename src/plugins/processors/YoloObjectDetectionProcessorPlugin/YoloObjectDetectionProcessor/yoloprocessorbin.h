@@ -10,6 +10,8 @@ public:
 	YoloProcessorBin(const boost::uuids::uuid& uuid, const std::string& id);
 	~YoloProcessorBin();
 
+	void setProcessingEnabled(bool enabled);
+
 protected:
 	virtual bool build() override;
 

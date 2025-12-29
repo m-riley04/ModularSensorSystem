@@ -71,6 +71,16 @@ void SessionController::stopRecording()
 	m_pipeline.stopRecording();
 }
 
+void SessionController::startProcessing()
+{
+	m_pipeline.startProcessing();
+}
+
+void SessionController::stopProcessing()
+{
+	m_pipeline.stopProcessing();
+}
+
 void SessionController::clearRecordings()
 {
 	QString sessionRecordingPrefix = m_settingsController.sessionSettings().outputPrefix;

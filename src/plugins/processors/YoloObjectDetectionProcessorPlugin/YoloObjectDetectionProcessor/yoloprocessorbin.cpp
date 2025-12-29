@@ -18,6 +18,13 @@ YoloProcessorBin::~YoloProcessorBin()
 	gst_object_unref(m_outputQueue);
 }
 
+void YoloProcessorBin::setProcessingEnabled(bool enabled)
+{
+    if (!m_valveElement) return;
+
+    g_object_set(m_valveElement, "drop", !enabled, nullptr);
+}
+
 bool YoloProcessorBin::build()
 {
     std::string binName = "yolo_processor_bin";
@@ -31,6 +38,7 @@ bool YoloProcessorBin::build()
         return false;
     }
 
+	m_valveElement = gst_bin_get_by_name(GST_BIN(m_bin), "valve");
     m_inputQueue = gst_bin_get_by_name(GST_BIN(m_bin), "inputQueue");
     m_inference = gst_bin_get_by_name(GST_BIN(m_bin), "inference");
     m_detector = gst_bin_get_by_name(GST_BIN(m_bin), "tensorDecoder");

@@ -20,8 +20,8 @@ public:
 	~YoloObjectDetectionProcessor();
 
     // Processor API
-    void startProcessing() override { mEnabled = true; }
-    void stopProcessing() override { mEnabled = false; }
+    void startProcessing() override;
+    void stopProcessing() override;
 
     // IPipelineElement API
     GstElement* gstSrcBin() override final { return nullptr; }

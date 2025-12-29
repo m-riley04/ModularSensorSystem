@@ -55,7 +55,7 @@ private slots:
     void onOpenAddProcessorDialog();
     void onOpenRemoveProcessorDialog();
     void onOpenEditProcessorDialog();
-	void onToggleProcessing();
+	void onToggleProcessing(bool);
 
     void onToggleSession(bool);
     void onToggleRecording(bool);
