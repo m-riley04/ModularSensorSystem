@@ -258,6 +258,21 @@ bool SessionPipeline::createSourceElements(Element* element)
 		return false;
 	}
 
+	// If we succeed all paths above, add to our tracking list
+	m_sourceBins.append(srcBin);
+
+	// Create and link branches
+	if (!createSourceBranches(element, srcBin)) {
+		LoggingController::warning("Failed to create source branches for element:" + QString::fromStdString(element->name()));
+		gst_bin_remove(GST_BIN(m_pipeline.get()), srcBin);
+		return false;
+	}
+
+	return true;
+}
+
+bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
+{
 	// Create a tee element to split the source output
 	std::string teeName = "tee_" + boost::uuids::to_string(element->uuid());
 	GstElement* tee = gst_element_factory_make("tee", teeName.c_str());
@@ -279,69 +294,67 @@ bool SessionPipeline::createSourceElements(Element* element)
 		return false;
 	}
 
-	// If we succeed all paths above, add to our tracking list
-	m_sourceBins.append(srcBin);
-
 	// Attempt to add/link preview
+	GstElement* compositor = nullptr;
 	if (element->asPreviewable() != nullptr) {
-		// Create compositor bin to handle previewing
+		// Create compositor bin to handle potential preview overlays
 		std::string compositorName = "compositor_" + boost::uuids::to_string(element->uuid());
-		std::string compositorQueueName = "compositor_queue_" + boost::uuids::to_string(element->uuid());
-		std::string compositorQueueSrcName = "compositor_queue_src_" + boost::uuids::to_string(element->uuid());
-		std::string compositorOutQueueName = "compositor_queue_out_" + boost::uuids::to_string(element->uuid());
-		GstElement* compositor = gst_element_factory_make("compositor", compositorName.c_str());
-		GstElement* compositorQueue = gst_element_factory_make("queue", compositorQueueName.c_str());
-		GstElement* compositorQueueSrc = gst_element_factory_make("queue", compositorQueueSrcName.c_str());
-		GstElement* compositorQueueOut = gst_element_factory_make("queue", compositorOutQueueName.c_str());
-
-		if (!compositor || !compositorQueue || !compositorQueueSrc || !compositorQueueOut) {
+		compositor = gst_element_factory_make("compositor", compositorName.c_str());
+		if (!compositor) {
 			LoggingController::warning("Failed to create compositor element(s) for element:" + QString::fromStdString(element->name()));
 			gst_object_unref(compositor);
-			gst_object_unref(compositorQueue);
-			gst_object_unref(compositorQueueSrc);
-			gst_object_unref(compositorQueueOut);
 			return false;
 		}
-
-		// Modify compositor properties
 		g_object_set(compositor, "background", 3, nullptr);
 		g_object_set(compositor, "ignore-inactive-pads", false, nullptr);
-		//g_object_set(compositor, "force-live", true, nullptr);
 
 		// Add compositor to pipeline
-		gst_bin_add_many(GST_BIN(m_pipeline.get()), compositor, compositorQueue, compositorQueueSrc, compositorQueueOut, nullptr);
-
-		// Link src queue to compositor
-		if (!gst_element_link_many(compositorQueueSrc, compositor, compositorQueueOut, nullptr)) {
-			LoggingController::warning("Failed to link compositor source queue to compositor for element:" + QString::fromStdString(element->name()));
-			gst_bin_remove_many(GST_BIN(m_pipeline.get()), compositor, compositorQueue, compositorQueueSrc, compositorQueueOut, nullptr);
+		if (!gst_bin_add(GST_BIN(m_pipeline.get()), compositor)) {
+			LoggingController::warning("Failed to add compositor element to pipeline for element:" + QString::fromStdString(element->name()));
+			gst_object_unref(compositor);
 			return false;
 		}
 
-		// Link proc queue to compositor
-		if (!gst_element_link(compositorQueue, compositor)) {
-			LoggingController::warning("Failed to link compositor queue to compositor for element:" + QString::fromStdString(element->name()));
-			gst_bin_remove_many(GST_BIN(m_pipeline.get()), compositor, compositorQueue, compositorQueueSrc, compositorQueueOut, nullptr);
+		// Create queue between tee and compositor
+		std::string queueName = "preview_comp_queue_" + boost::uuids::to_string(element->uuid());
+		GstElement* queue = gst_element_factory_make("queue", queueName.c_str());
+		if (!queue) {
+			LoggingController::warning("Failed to create preview compositor queue for element:" + QString::fromStdString(element->name()));
+			gst_bin_remove(GST_BIN(m_pipeline.get()), compositor);
 			return false;
 		}
 
-		// Link tee to src queue
-		if (!gst_element_link(tee, compositorQueueSrc)) {
-			LoggingController::warning("Failed to link tee to compositor source queue for element:" + QString::fromStdString(element->name()));
-			gst_bin_remove_many(GST_BIN(m_pipeline.get()), compositor, compositorQueue, compositorQueueSrc, compositorQueueOut, nullptr);
+		if (!gst_bin_add(GST_BIN(m_pipeline.get()), queue)) {
+			LoggingController::warning("Failed to add preview compositor queue to pipeline for element:" + QString::fromStdString(element->name()));
+			gst_bin_remove(GST_BIN(m_pipeline.get()), compositor);
+			return false;
+		}
+
+		if (!gst_element_link(queue, compositor)) {
+			LoggingController::warning("Failed to link preview compositor queue to compositor for element:" + QString::fromStdString(element->name()));
+			gst_bin_remove_many(GST_BIN(m_pipeline.get()), compositor, queue, nullptr);
+			return false;
+		}
+
+		// Link tee to compositor
+		if (!gst_element_link(tee, queue)) {
+			LoggingController::warning("Failed to link tee to preview compositor queue for element:" + QString::fromStdString(element->name()));
+			gst_bin_remove_many(GST_BIN(m_pipeline.get()), compositor, queue, nullptr);
 			return false;
 		}
 
 		// Link preview bin to tee
-		if (!createAndLinkPreviewBin(element, compositorQueueOut)) {
+		if (!createAndLinkPreviewBin(element, compositor)) {
 			LoggingController::warning("Failed to create and link preview bin for element:"
 				+ QString::fromStdString(element->name()));
 		}
+	}
 
-		// TODO: add processors somewhere else so they can be had without previewing
-		// find processors for this element and insert them
-		auto& procs = m_elementsController.processorsForSource(boostUuidToQUuid(element->uuid()));
+	// TODO: add processors differently so they can be had without previewing
+	auto& procs = m_elementsController.processorsForSource(boostUuidToQUuid(element->uuid()));
 
+	// Attempt to create and link processors
+	if (!procs.isEmpty()) {
 		// Link processors together one after the other
 		GstElement* lastElem = tee;
 		for (auto& proc : procs) {
@@ -362,6 +375,30 @@ bool SessionPipeline::createSourceElements(Element* element)
 			}
 		}
 
+		// Create queue between last processor and compositor
+		std::string queueName = "proc_comp_queue_" + boost::uuids::to_string(element->uuid());
+		GstElement* queue = gst_element_factory_make("queue", queueName.c_str());
+		if (!queue) {
+			LoggingController::warning("Failed to create processor compositor queue for element:'"
+				+ QString::fromStdString(element->displayName())
+				+ "'");
+			return false;
+		}
+		if (!gst_bin_add(GST_BIN(m_pipeline.get()), queue)) {
+			LoggingController::warning("Failed to add processor compositor queue to pipeline for element:'"
+				+ QString::fromStdString(element->displayName())
+				+ "'");
+			gst_object_unref(queue);
+			return false;
+		}
+		if (!gst_element_link(queue, compositor)) {
+			LoggingController::warning("Failed to link processor compositor queue to compositor for element:'"
+				+ QString::fromStdString(element->displayName())
+				+ "'");
+			gst_bin_remove(GST_BIN(m_pipeline.get()), queue);
+			return false;
+		}
+
 		// Modify compositor pad properties
 		GstPad* compSrcSinkPad = gst_element_get_static_pad(compositor, "sink_0");
 		GstPad* compProcSinkPad = gst_element_get_static_pad(compositor, "sink_1");
@@ -380,13 +417,14 @@ bool SessionPipeline::createSourceElements(Element* element)
 		gst_object_unref(compProcSinkPad);
 
 		// Finally, link the last processor to the compositor
-		if (!gst_element_link(lastElem, compositorQueue)) {
+		if (!gst_element_link(lastElem, queue)) {
 			LoggingController::warning("Failed to link last processor to compositor for element:'"
 				+ QString::fromStdString(element->displayName())
 				+ "'");
 			return false;
 		}
 	}
+	
 
 	// Attempt to add/link recording bin
 	if (element->asRecordable() != nullptr) {

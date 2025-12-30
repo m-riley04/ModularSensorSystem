@@ -59,9 +59,12 @@ private:
 	bool cleanup();
 
 	bool createSourceElements(Element*);
+	bool createSourceBranches(Element*, GstElement*);
+	/*bool createPreviewBranch(Element*, GstElement*);
+	bool createRecordBranch(Element*, GstElement*);
+	bool createProcessorBranch(Processor*, GstElement*);*/
 	bool createAndLinkPreviewBin(Element*, GstElement*);
 	bool createAndLinkRecordBin(Element*, GstElement*);
-
 	
 	/**
 	 * Inserts the processor bins into the pipeline for the given element.

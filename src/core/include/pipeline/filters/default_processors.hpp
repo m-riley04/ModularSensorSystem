@@ -33,13 +33,13 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	// Initialize elements
 	GstElement* bin = gst_bin_new(binName);
 	GstElement* valve = gst_element_factory_make("valve", "valve");
-	GstElement* startQueue = gst_element_factory_make("queue2", "inputQueue");
+	GstElement* startQueue = gst_element_factory_make("queue", "inputQueue");
 	GstElement* videoConvert = gst_element_factory_make("videoconvert", "videoConvert");
 	GstElement* onnxinference = gst_element_factory_make("onnxinference", "inference");
 	GstElement* tensorDecoder = gst_element_factory_make(decoderElementStr.c_str(), "tensorDecoder");
 	GstElement* overlay = gst_element_factory_make("objectdetectionoverlay", "overlay");
 	// TODO/CONSIDER: add a video converter here if needed?
-	GstElement* endQueue = gst_element_factory_make("queue2", "outputQueue");
+	GstElement* endQueue = gst_element_factory_make("queue", "outputQueue");
 
 	// Check validity of each
 	if (!bin || !valve || !startQueue || !videoConvert || !onnxinference || !tensorDecoder || !overlay || !endQueue) {
