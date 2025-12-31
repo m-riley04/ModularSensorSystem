@@ -32,7 +32,7 @@ bool YoloProcessorBin::build()
     std::string binFullName = binName + "_" + processorUuidStr;
 
     // TODO: change this to be yolo
-    m_bin = createDefaultObjectDetectorProcessorFilter(ObjectDetectorModelType::SSD, binFullName.c_str());
+    m_bin = createDefaultObjectDetectorProcessorFilter(ObjectDetectorModelType::YOLO, binFullName.c_str());
     if (!m_bin) {
         LoggingController::warning("Failed to create processor filter bin");
         return false;

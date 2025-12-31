@@ -5,6 +5,7 @@
 
 /**
  * @brief Represents a branch in a GStreamer tee element, managing the data flow with a controllable prefix.
+ * A branch consists of elements/bins.
  */
 class TeeBranch : public BinBase {
 private:
