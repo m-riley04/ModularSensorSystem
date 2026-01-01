@@ -13,7 +13,7 @@ private:
 	GstElement* m_queue;
 
 public:
-	TeeBranchPrefix(boost::uuids::uuid&, std::string&);
+	TeeBranchPrefix(Element*);
 	virtual ~TeeBranchPrefix();
 
 	GstElement* valve() const { return m_valve; }

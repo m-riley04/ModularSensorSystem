@@ -13,6 +13,8 @@
 #include <utils/session_utils.hpp>
 #include <features/processors/processor.hpp>
 #include <controllers/elementscontroller.hpp>
+#include <pipeline/branches/previewbranch.hpp>
+#include <pipeline/branches/recorderbranch.hpp>
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
 
@@ -60,9 +62,8 @@ private:
 
 	bool createSourceElements(Element*);
 	bool createSourceBranches(Element*, GstElement*);
-	/*bool createPreviewBranch(Element*, GstElement*);
-	bool createRecordBranch(Element*, GstElement*);
-	bool createProcessorBranch(Processor*, GstElement*);*/
+	bool createPreviewBranch(Element*, GstElement*);
+	bool createRecorderBranch(Element*, GstElement*);
 	bool createAndLinkPreviewBin(Element*, GstElement*);
 	bool createAndLinkRecordBin(Element*, GstElement*);
 	
@@ -92,6 +93,8 @@ private:
 	QList<GstElement*> m_recordBins;
 	QList<GstElement*> m_processorBins;
 	QList<GstElement*> m_recordableElementBins;
+	QList<PreviewBranch*> m_previewBranches;
+	QList<RecorderBranch*> m_recordBranches;
 	QList<Processor*> m_processorElements;
 	QList<IRecordable*> m_recordableElements;
 	ElementsController& m_elementsController;

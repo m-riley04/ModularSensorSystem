@@ -297,6 +297,8 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 	// Attempt to add/link preview
 	GstElement* compositor = nullptr;
 	if (element->asPreviewable() != nullptr) {
+		// TODO: replace this with createPreviewBranch call
+
 		// Create compositor bin to handle potential preview overlays
 		std::string compositorName = "compositor_" + boost::uuids::to_string(element->uuid());
 		compositor = gst_element_factory_make("compositor", compositorName.c_str());
@@ -428,10 +430,40 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 
 	// Attempt to add/link recording bin
 	if (element->asRecordable() != nullptr) {
-		if (!createAndLinkRecordBin(element, tee)) {
-			LoggingController::warning("Failed to create and link recording bin for element:"
-				+ QString::fromStdString(element->name()));
-		}
+		createRecorderBranch(element, tee);
+	}
+
+	return true;
+}
+
+bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee)
+{
+	PreviewBranch* previewBranch = new PreviewBranch(element);
+
+	// TODO: store preview branch somewhere
+
+	// TODO: add preview BIN to preview BRANCH
+
+	// TODO: link preview branch to tee
+
+	// TODO: add cleanup somewhere for preview branches
+
+	// Link preview bin to tee
+	if (!createAndLinkPreviewBin(element, compositor)) {
+		LoggingController::warning("Failed to create and link preview bin for element:" + QString::fromStdString(element->name()));
+	}
+
+	return true;
+}
+
+bool SessionPipeline::createRecorderBranch(Element* element, GstElement* tee)
+{
+	RecorderBranch* recorderBranch = new RecorderBranch(element, element->sourceType());
+
+	// TODO: add cleanup somewhere for record branches
+
+	if (!createAndLinkRecordBin(element, tee)) {
+		LoggingController::warning("Failed to create and link recording bin for element:" + QString::fromStdString(element->name()));
 	}
 
 	return true;

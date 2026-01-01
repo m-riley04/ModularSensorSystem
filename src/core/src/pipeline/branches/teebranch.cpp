@@ -1,8 +1,8 @@
 #include <pipeline/branches/teebranch.hpp>
 #include <memory>
 
-TeeBranch::TeeBranch(boost::uuids::uuid& uuid, std::string& id) 
-	: BinBase(uuid, id), m_body(nullptr), m_prefix(uuid, id)
+TeeBranch::TeeBranch(Element* element)
+	: BinBase(element), m_body(nullptr), m_prefix(element)
 {
 	// Create the sink pad for the branch
 	makeGhostPad("sink", m_prefix.bin(), "sink");

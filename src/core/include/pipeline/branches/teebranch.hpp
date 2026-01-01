@@ -2,6 +2,7 @@
 
 #include <pipeline/bins/binbase.hpp>
 #include <pipeline/branches/teebranchprefix.hpp>
+#include <features/element.hpp>
 
 /**
  * @brief Represents a branch in a GStreamer tee element, managing the data flow with a controllable prefix.
@@ -13,9 +14,12 @@ private:
 	GstElement* m_body = nullptr;
 
 public:
-	TeeBranch(boost::uuids::uuid& uuid, std::string& id);
+	TeeBranch(Element* element);
 	virtual ~TeeBranch();
 
+	GstElement* body() const { return m_body; }
 	TeeBranchPrefix& prefix() { return m_prefix; }
-	bool setValveClosed(bool closed) { return m_prefix.setValveClosed(closed);  }
+	void setBody(GstElement* body) { m_body = body; }
+	bool setValveClosed(bool closed) { return m_prefix.setValveClosed(closed); }
+
 };

@@ -3,6 +3,7 @@
 #include <gst/gst.h>
 #include <string>
 #include <boost/uuid.hpp>
+#include <features/element.hpp>
 
 class BinBase {
 public:
@@ -11,8 +12,16 @@ public:
 	GstElement* bin() const { return m_bin; }
 
 protected:
-	explicit BinBase(const boost::uuids::uuid& uuid, const std::string& id) : m_uuid(uuid), m_id(id)
+	explicit BinBase(Element* element)
 	{
+		if (!element) {
+			m_bin = nullptr;
+			return;
+		}
+
+		m_uuid = element->uuid();
+		m_id = element->id();
+
 		create(m_id.c_str());
 	}
 

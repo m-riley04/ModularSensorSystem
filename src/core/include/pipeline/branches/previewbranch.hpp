@@ -1,11 +1,11 @@
 #pragma once
 
 #include <gst/gst.h>
-#include <pipeline/branches/teebranch.hpp>
+#include <pipeline/branches/CompositedBranch.hpp>
 #include <features/sources/source.hpp>
 
-class PreviewBranch : public TeeBranch {
+class PreviewBranch : public CompositedBranch {
 public:
-	PreviewBranch(boost::uuids::uuid& uuid, std::string& id);
+	PreviewBranch(Element*);
 	virtual ~PreviewBranch();
 };

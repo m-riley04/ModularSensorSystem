@@ -10,7 +10,7 @@ private:
 	GstElement* m_compositor = nullptr;
 
 public:
-	CompositedBranch(boost::uuids::uuid& uuid, std::string& id);
+	CompositedBranch(Element* element);
 	virtual ~CompositedBranch();
 
 	GstElement* compositor() const { return m_compositor; }

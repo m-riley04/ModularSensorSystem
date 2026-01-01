@@ -8,7 +8,7 @@ private:
 
 
 public:
-	RecorderBranch(boost::uuids::uuid& uuid, std::string& id, Source::Type sourceType);
+	RecorderBranch(Element* element, Source::Type sourceType);
 	virtual ~RecorderBranch();
 
 	/**

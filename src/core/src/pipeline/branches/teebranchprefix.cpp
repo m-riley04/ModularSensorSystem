@@ -1,7 +1,7 @@
 #include <pipeline/branches/teebranchprefix.hpp>
 
-TeeBranchPrefix::TeeBranchPrefix(boost::uuids::uuid& uuid, std::string& id)
-	: BinBase(uuid, id)
+TeeBranchPrefix::TeeBranchPrefix(Element* element)
+	: BinBase(element)
 {
 	// Create source and sink pads
 	this->makeGhostPad("src", m_valve, "src");
