@@ -226,6 +226,9 @@
     <ClCompile Include="src\pipeline\branches\compositedbranch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\pipeline\branches\processingbranch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="include\controllers\maincontroller.hpp">

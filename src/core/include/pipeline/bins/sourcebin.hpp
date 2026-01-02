@@ -2,6 +2,7 @@
 
 #include "features/sources/source.hpp"
 #include "pipeline/bins/binbase.hpp"
+#include <core_export.hpp>
 
 class SourceBin : public BinBase {
 public:
@@ -16,8 +17,8 @@ public:
 	const char* srcPadName() const { return m_srcPadName.c_str(); }
 
 protected:
-	SourceBin(const boost::uuids::uuid& uuid, const std::string& id, Source::Type sourceType, std::string srcPadName)
-		: BinBase(uuid, id),
+	SourceBin(Element* element, Source::Type sourceType, std::string srcPadName)
+		: BinBase(element),
 		m_type(sourceType), m_srcPadName(std::move(srcPadName))
 	{}
 

@@ -438,7 +438,7 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 
 bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee)
 {
-	PreviewBranch* previewBranch = new PreviewBranch(element);
+	//PreviewBranch* previewBranch = new PreviewBranch(element);
 
 	// TODO: store preview branch somewhere
 
@@ -449,16 +449,16 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee)
 	// TODO: add cleanup somewhere for preview branches
 
 	// Link preview bin to tee
-	if (!createAndLinkPreviewBin(element, compositor)) {
+	/*if (!createAndLinkPreviewBin(element, compositor)) {
 		LoggingController::warning("Failed to create and link preview bin for element:" + QString::fromStdString(element->name()));
-	}
+	}*/
 
 	return true;
 }
 
 bool SessionPipeline::createRecorderBranch(Element* element, GstElement* tee)
 {
-	RecorderBranch* recorderBranch = new RecorderBranch(element, element->sourceType());
+	//RecorderBranch* recorderBranch = new RecorderBranch(element, element->sourceType());
 
 	// TODO: add cleanup somewhere for record branches
 

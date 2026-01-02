@@ -13,8 +13,8 @@ public:
 	const char* srcPadName() const { return m_srcPadName.c_str(); }
 
 protected:
-	FilterBin(const boost::uuids::uuid& uuid, const std::string& id, std::string srcPadName, std::string sinkPadName)
-		: BinBase(uuid, id)
+	FilterBin(Element* element, std::string srcPadName, std::string sinkPadName)
+		: BinBase(element)
 		, m_srcPadName(std::move(srcPadName)), m_sinkPadName(std::move(sinkPadName))
 	{
 	}

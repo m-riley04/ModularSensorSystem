@@ -114,6 +114,7 @@
     <ClCompile Include="src\logging\logwriterworker.cpp" />
     <ClCompile Include="src\pipeline\branches\compositedbranch.cpp" />
     <ClCompile Include="src\pipeline\branches\previewbranch.cpp" />
+    <ClCompile Include="src\pipeline\branches\processingbranch.cpp" />
     <ClCompile Include="src\pipeline\branches\recorderbranch.cpp" />
     <ClCompile Include="src\pipeline\branches\teebranch.cpp" />
     <ClCompile Include="src\pipeline\branches\teebranchprefix.cpp" />

@@ -3,10 +3,6 @@
 TeeBranchPrefix::TeeBranchPrefix(Element* element)
 	: BinBase(element)
 {
-	// Create source and sink pads
-	this->makeGhostPad("src", m_valve, "src");
-	this->makeGhostPad("sink", m_queue, "sink");
-
 	m_valve = gst_element_factory_make("valve", nullptr);
 	m_queue = gst_element_factory_make("queue", nullptr);
 
@@ -19,6 +15,10 @@ TeeBranchPrefix::TeeBranchPrefix(Element* element)
 	if (!gst_element_link(m_valve, m_queue)) {
 		// TODO: proper error handling
 	}
+
+	// Create source and sink pads
+	this->makeGhostPad("src", m_valve, "src");
+	this->makeGhostPad("sink", m_queue, "sink");
 }
 
 TeeBranchPrefix::~TeeBranchPrefix() {

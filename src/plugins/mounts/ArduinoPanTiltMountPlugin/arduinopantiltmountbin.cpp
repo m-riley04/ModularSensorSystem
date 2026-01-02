@@ -4,8 +4,8 @@
 #include <gst/app/gstappsrc.h>
 #include <pipeline/utils.hpp>
 
-ArduinoPanTiltMountBin::ArduinoPanTiltMountBin(const boost::uuids::uuid& uuid, const std::string& id)
-	: SourceBin(uuid, id, Source::Type::DATA, "src")
+ArduinoPanTiltMountBin::ArduinoPanTiltMountBin(Element* element)
+	: SourceBin(element, Source::Type::DATA, "src")
 {
 	build();
 }

@@ -22,8 +22,8 @@ public:
 	virtual bool finalizeRecording() = 0;
 
 protected:
-	RecorderBin(const boost::uuids::uuid& uuid, const std::string& id, Source::Type sourceType, std::string sinkPadName)
-		: BinBase(uuid, id),
+	RecorderBin(Element* element , Source::Type sourceType, std::string sinkPadName)
+		: BinBase(element),
 		m_type(sourceType), m_sinkPadName(std::move(sinkPadName))
 	{
 	}

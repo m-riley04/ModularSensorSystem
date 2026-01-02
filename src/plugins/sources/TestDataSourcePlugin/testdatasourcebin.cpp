@@ -3,8 +3,8 @@
 #include <gst/gstbuffer.h>
 #include <pipeline/mime_types.hpp>
 
-TestDataSourceBin::TestDataSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
-    : SourceBin(uuid, id, Source::Type::DATA, "src")
+TestDataSourceBin::TestDataSourceBin(Element* element)
+    : SourceBin(element, Source::Type::DATA, "src")
 {
 	build();
 }

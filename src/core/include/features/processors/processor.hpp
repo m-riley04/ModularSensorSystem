@@ -17,8 +17,8 @@ public:
     Processor(const ElementInfo& element, QObject* parent = nullptr) : Element(element, parent) {}
     virtual ~Processor() = default;
     
-    virtual void startProcessing() = 0;
-    virtual void stopProcessing() = 0;
+    virtual bool startProcessing() = 0;
+    virtual bool stopProcessing() = 0;
 
     // Element implementations
     virtual const IElement::Type elementType() const noexcept override { return IElement::Type::Processor; }

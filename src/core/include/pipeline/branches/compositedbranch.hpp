@@ -1,11 +1,12 @@
 #pragma once
 
 #include <pipeline/branches/teebranch.hpp>
+#include <core_export.hpp>
 
 /**
  * @brief A branch that has a composite element before the prefix.
  */
-class CompositedBranch : public TeeBranch {
+class MSS_CORE_API CompositedBranch : public TeeBranch {
 private:
 	GstElement* m_compositor = nullptr;
 

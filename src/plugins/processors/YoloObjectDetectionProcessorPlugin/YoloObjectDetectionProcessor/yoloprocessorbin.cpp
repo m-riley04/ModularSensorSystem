@@ -2,30 +2,21 @@
 #include <pipeline/filters/default_processors.hpp>
 #include <utils/boost_qt_conversions.hpp>
 
-YoloProcessorBin::YoloProcessorBin(const boost::uuids::uuid& uuid, const std::string& id)
-	: FilterBin(uuid, id, "src", "sink")
+YoloProcessorBin::YoloProcessorBin(Element* element)
+	: ProcessingBranch(element)
 {
-	build();
+	buildBodyBin();
 }
 
 YoloProcessorBin::~YoloProcessorBin()
 {
 	// Even though bins manage their children, we still need to unref the elements we got through gst_bin_get_by_name
-	gst_object_unref(m_inputQueue);
 	gst_object_unref(m_inference);
 	gst_object_unref(m_detector);
 	gst_object_unref(m_overlay);
-	gst_object_unref(m_outputQueue);
 }
 
-void YoloProcessorBin::setProcessingEnabled(bool enabled)
-{
-    if (!m_valveElement) return;
-
-    g_object_set(m_valveElement, "drop", !enabled, nullptr);
-}
-
-bool YoloProcessorBin::build()
+bool YoloProcessorBin::buildBodyBin()
 {
     std::string binName = "yolo_processor_bin";
     std::string processorUuidStr = boostUuidToQUuid(m_uuid).toString().toStdString();
@@ -38,14 +29,11 @@ bool YoloProcessorBin::build()
         return false;
     }
 
-	m_valveElement = gst_bin_get_by_name(GST_BIN(m_bin), "valve");
-    m_inputQueue = gst_bin_get_by_name(GST_BIN(m_bin), "inputQueue");
     m_inference = gst_bin_get_by_name(GST_BIN(m_bin), "inference");
     m_detector = gst_bin_get_by_name(GST_BIN(m_bin), "tensorDecoder");
     m_overlay = gst_bin_get_by_name(GST_BIN(m_bin), "overlay");
-    m_outputQueue = gst_bin_get_by_name(GST_BIN(m_bin), "outputQueue");
 
-    if (!m_inputQueue || !m_inference || !m_detector || !m_overlay || !m_outputQueue) {
+    if (!m_inference || !m_detector || !m_overlay ) {
         LoggingController::warning("Failed to get one or more elements from processor bin");
         return false;
     }

@@ -4,6 +4,7 @@
 #include <string>
 #include <boost/uuid.hpp>
 #include <features/element.hpp>
+#include <core_export.hpp>
 
 class BinBase {
 public:

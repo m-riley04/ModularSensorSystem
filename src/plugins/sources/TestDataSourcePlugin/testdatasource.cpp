@@ -6,7 +6,7 @@ TestDataSource::TestDataSource(const std::string& hardwareId, QObject* parent)
 
 TestDataSource::TestDataSource(SourceInfo sourceInfo, QObject* parent)
 	: Source(sourceInfo.elementInfo, parent),
-	m_bin(std::make_unique<TestDataSourceBin>(this->uuid(), sourceInfo.elementInfo.id))
+	m_bin(std::make_unique<TestDataSourceBin>(this))
 {
 	m_cfg.sensorId = sourceInfo.elementInfo.id;
 
@@ -32,7 +32,7 @@ SourceInfo TestDataSource::getSourceInfo(const std::string& id) const
 void TestDataSource::createBinIfNeeded()
 {
 	if (!m_bin) {
-		m_bin = std::make_unique<TestDataSourceBin>(this->uuid(), this->id());
+		m_bin = std::make_unique<TestDataSourceBin>(this);
 	}
 }
 

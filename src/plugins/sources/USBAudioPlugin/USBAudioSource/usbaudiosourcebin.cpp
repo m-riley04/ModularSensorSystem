@@ -1,8 +1,8 @@
 #include "usbaudiosourcebin.hpp"
 #include <controllers/loggingcontroller.hpp>
 
-USBAudioSourceBin::USBAudioSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
-	: SourceBin(uuid, id, Source::Type::AUDIO, "src")
+USBAudioSourceBin::USBAudioSourceBin(Element* element)
+	: SourceBin(element, Source::Type::AUDIO, "src")
 {
 	build();
 }

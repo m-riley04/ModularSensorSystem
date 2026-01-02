@@ -7,7 +7,7 @@ USBAudioSource::USBAudioSource(const std::string& hardwareId, QObject* parent)
 USBAudioSource::USBAudioSource(SourceInfo sourceInfo, QObject* parent)
 	: Source(sourceInfo.elementInfo, parent)
 {
-	m_bin = std::make_unique<USBAudioSourceBin>(this->uuid(), sourceInfo.elementInfo.id);
+	m_bin = std::make_unique<USBAudioSourceBin>(this);
 }
 
 USBAudioSource::~USBAudioSource()
@@ -42,7 +42,7 @@ void USBAudioSource::onSessionStop()
 void USBAudioSource::createBinIfNeeded()
 {
 	if (!m_bin) {
-		m_bin = std::make_unique<USBAudioSourceBin>(this->uuid(), this->id());
+		m_bin = std::make_unique<USBAudioSourceBin>(this);
 	}
 }
 

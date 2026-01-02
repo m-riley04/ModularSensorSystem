@@ -20,8 +20,8 @@ public:
 	~YoloObjectDetectionProcessor();
 
     // Processor API
-    void startProcessing() override;
-    void stopProcessing() override;
+    bool startProcessing() override;
+    bool stopProcessing() override;
 
     // IPipelineElement API
     GstElement* gstSrcBin() override final { return nullptr; }
@@ -32,7 +32,6 @@ public:
 	void onObjectDetected(DetectionInfo detection) override;
 
 private:
-    bool mEnabled = true;
 	std::unique_ptr<YoloProcessorBin> m_processorBin;
 
 signals:

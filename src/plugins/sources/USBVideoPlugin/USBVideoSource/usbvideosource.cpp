@@ -6,7 +6,7 @@ USBVideoSource::USBVideoSource(const std::string& hardwareId, QObject* parent)
 
 USBVideoSource::USBVideoSource(SourceInfo sourceInfo, QObject* parent)
 	: Source(sourceInfo.elementInfo, parent),
-	m_bin(std::make_unique<USBVideoSourceBin>(this->uuid(), sourceInfo.elementInfo.id))
+	m_bin(std::make_unique<USBVideoSourceBin>(this))
 {}
 
 USBVideoSource::~USBVideoSource()
@@ -42,14 +42,14 @@ void USBVideoSource::onSessionStop()
 void USBVideoSource::createBinIfNeeded()
 {
 	if (!m_bin) {
-		m_bin = std::make_unique<USBVideoSourceBin>(this->uuid(), this->id());
+		m_bin = std::make_unique<USBVideoSourceBin>(this);
 	}
 }
 
 void USBVideoSource::createRecorderBinIfNeeded()
 {
 	if (!m_recorderBin) {
-		m_recorderBin = std::make_unique<USBVideoSourceRecorderBin>(this->uuid(), this->id());
+		m_recorderBin = std::make_unique<USBVideoSourceRecorderBin>(this);
 	}
 }
 

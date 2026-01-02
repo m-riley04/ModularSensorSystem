@@ -1,8 +1,8 @@
 #include "usbvideosourcebin.hpp"
 #include <controllers/loggingcontroller.hpp>
 
-USBVideoSourceBin::USBVideoSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
-	: SourceBin(uuid, id, Source::Type::VIDEO, "src")
+USBVideoSourceBin::USBVideoSourceBin(Element* element)
+	: SourceBin(element, Source::Type::VIDEO, "src")
 {
 	build();
 }
