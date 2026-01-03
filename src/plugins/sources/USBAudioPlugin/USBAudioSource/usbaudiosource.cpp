@@ -33,16 +33,36 @@ void USBAudioSource::onSessionStart()
 
 }
 
+PreviewBranch* USBAudioSource::previewBranch()
+{
+	createPreviewBranchIfNeeded();
+	return m_previewBranch.get();
+}
+
+GstElement* USBAudioSource::previewSinkBin()
+{
+	createPreviewBranchIfNeeded();
+	return m_previewBranch->bin();
+}
+
 void USBAudioSource::onSessionStop()
 {
 	// Reset bin
 	m_bin.reset(nullptr);
+	m_previewBranch.reset(nullptr);
 }
 
 void USBAudioSource::createBinIfNeeded()
 {
 	if (!m_bin) {
 		m_bin = std::make_unique<USBAudioSourceBin>(this);
+	}
+}
+
+void USBAudioSource::createPreviewBranchIfNeeded()
+{
+	if (!m_previewBranch) {
+		m_previewBranch = std::make_unique<USBAudioSourcePreviewBranch>(this);
 	}
 }
 

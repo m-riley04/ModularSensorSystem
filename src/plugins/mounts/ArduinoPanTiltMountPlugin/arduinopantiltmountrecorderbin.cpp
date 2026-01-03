@@ -8,7 +8,7 @@ ArduinoPanTiltMountRecorderBin::ArduinoPanTiltMountRecorderBin(Element* element)
 
 bool ArduinoPanTiltMountRecorderBin::buildBodyBin()
 {
-    std::string deviceUuid = boost::uuids::to_string(m_uuid);
+    std::string deviceUuid = boost::uuids::to_string(m_element->uuid());
 
     m_body = createDefaultDataRecordingSink(("pan_tilt_recorder_sink_bin_" + deviceUuid).c_str());
     if (!m_body) {
@@ -23,19 +23,5 @@ bool ArduinoPanTiltMountRecorderBin::buildBodyBin()
         return false;
 	}
 
-	// Add and link body bin to this bin
-	if (!addMany(m_body))
-	{
-		LoggingController::warning("Failed to add recorder body bin to recorder branch bin");
-		return false;
-	}
-
-	// Link the prefix bin to the body bin
-	if (!gst_element_link(m_prefix.bin(), m_body))
-	{
-		LoggingController::warning("Failed to link recorder branch prefix bin to body bin");
-		return false;
-	}
-
-    return true;
+    return this->attachBody();
 }

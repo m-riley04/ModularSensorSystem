@@ -14,11 +14,13 @@
     <ClCompile Include="usbaudioplugin.cpp" />
     <ClCompile Include="USBAudioSource\usbaudiosource.cpp" />
     <ClCompile Include="USBAudioSource\usbaudiosourcebin.cpp" />
+    <ClCompile Include="USBAudioSource\usbaudiosourcepreviewbranch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="usbaudioplugin.hpp" />
     <QtMoc Include="USBAudioSource\usbaudiosource.hpp" />
     <ClInclude Include="USBAudioSource\usbaudiosourcebin.hpp" />
+    <ClInclude Include="USBAudioSource\usbaudiosourcepreviewbranch.hpp" />
     <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <ItemGroup>

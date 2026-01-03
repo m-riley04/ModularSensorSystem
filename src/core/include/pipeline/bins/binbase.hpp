@@ -19,16 +19,11 @@ public:
 
 protected:
 	explicit BinBase(Element* element)
+		: m_bin(nullptr), m_element(element)
 	{
-		if (!element) {
-			m_bin = nullptr;
-			return;
-		}
+		if (!element) return;
 
-		m_uuid = element->uuid();
-		m_id = element->id();
-
-		create(m_id.c_str());
+		create(element->id().c_str());
 	}
 
 	/**
@@ -78,6 +73,5 @@ protected:
 	}
 
 	GstElement* m_bin = nullptr;
-	boost::uuids::uuid m_uuid;
-	std::string m_id;
+	Element* m_element = nullptr;
 };

@@ -13,6 +13,7 @@
 #include "utils.hpp"
 #include "usbvideosourcebin.hpp"
 #include "usbvideosourcerecorderbranch.hpp"
+#include "usbvideosourcepreviewbranch.hpp"
 
 class USBVideoSource : public Source
 	, public IPreviewable
@@ -37,7 +38,8 @@ public:
 	/// IPreviewableSource interface
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
-	GstElement* previewSinkBin() override { return nullptr; } // Use default sink
+	PreviewBranch* previewBranch() override;
+	GstElement* previewSinkBin() override;
 	std::string previewSinkElementName() const override { return "preview_" + boost::uuids::to_string(uuid()); }
 
 	/// IRecordableSource interface
@@ -54,12 +56,14 @@ public slots:
 
 private:
 	void createBinIfNeeded();
-	void createRecorderBinIfNeeded();
+	void createRecorderBranchIfNeeded();
+	void createPreviewBranchIfNeeded();
 
 	Source::Type m_sourceType = Source::Type::VIDEO;
 	quintptr m_windowId = 0;
-	std::unique_ptr<USBVideoSourceBin> m_bin;
-	std::unique_ptr<USBVideoSourceRecorderBranch> m_recorderBin;
+	std::unique_ptr<USBVideoSourceBin> m_sourceBin;
+	std::unique_ptr<USBVideoSourcePreviewBranch> m_previewBranch;
+	std::unique_ptr<USBVideoSourceRecorderBranch> m_recorderBranch;
 
 	std::string m_recordingFilePath;
 };

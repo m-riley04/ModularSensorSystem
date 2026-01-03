@@ -8,7 +8,7 @@ USBVideoSourceRecorderBranch::USBVideoSourceRecorderBranch(Element* element)
 
 bool USBVideoSourceRecorderBranch::buildBodyBin()
 {
-    std::string deviceUuid = boost::uuids::to_string(m_uuid);
+    std::string deviceUuid = boost::uuids::to_string(m_element->uuid());
 
     m_body = createDefaultVideoRecordingSink(("usb_vid_recorder_sink_bin_" + deviceUuid).c_str());
     if (!m_body) {

@@ -34,7 +34,7 @@ void ArduinoPanTiltMountBin::pushSample(QByteArray payload)
 
 bool ArduinoPanTiltMountBin::build()
 {
-    std::string deviceName = boost::uuids::to_string(m_uuid);
+    std::string deviceName = boost::uuids::to_string(m_element->uuid());
     std::string gstElementPrefix = "arduino_pan_tilt";
 
     if (!this->create((gstElementPrefix + "_" + deviceName).c_str())) return false;

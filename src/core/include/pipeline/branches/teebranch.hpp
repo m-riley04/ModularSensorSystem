@@ -10,13 +10,24 @@
  * A branch consists of elements/bins, mostly composed of:
  * 1. A prefix
  * 2. A body
+ * A "branch" is really just a bin with a specific structure.
  */
 class MSS_CORE_API TeeBranch : public BinBase {
 protected:
 	TeeBranchPrefix m_prefix;
 	GstElement* m_body = nullptr;
 
+	/**
+	 * @brief Builds the body bin for this branch.
+	 * @return 
+	 */
 	virtual bool buildBodyBin() = 0;
+
+	/**
+	 * @brief Adds and links the body bin to this branch bin.
+	 * @return 
+	 */
+	virtual bool attachBody();
 
 public:
 	TeeBranch(Element* element);

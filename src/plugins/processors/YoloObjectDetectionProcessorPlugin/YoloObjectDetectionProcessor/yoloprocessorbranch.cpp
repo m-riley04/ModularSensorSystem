@@ -19,7 +19,7 @@ YoloProcessorBranch::~YoloProcessorBranch()
 bool YoloProcessorBranch::buildBodyBin()
 {
     std::string binName = "yolo_processor_bin";
-    std::string processorUuidStr = boostUuidToQUuid(m_uuid).toString().toStdString();
+    std::string processorUuidStr = boostUuidToQUuid(m_element->uuid()).toString().toStdString();
     std::string binFullName = binName + "_" + processorUuidStr;
 
     // TODO: change this to be yolo
@@ -38,19 +38,5 @@ bool YoloProcessorBranch::buildBodyBin()
         return false;
     }
 
-    // Add and link body bin to this bin
-    if (!addMany(m_body))
-    {
-        LoggingController::warning("Failed to add recorder body bin to recorder branch bin");
-        return false;
-    }
-
-    // Link the prefix bin to the body bin
-    if (!gst_element_link(m_prefix.bin(), m_body))
-    {
-        LoggingController::warning("Failed to link recorder branch prefix bin to body bin");
-        return false;
-    }
-
-    return true;
+    return attachBody();
 }

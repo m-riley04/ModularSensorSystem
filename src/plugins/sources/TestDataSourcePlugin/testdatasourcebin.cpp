@@ -31,7 +31,7 @@ void TestDataSourceBin::pushRandomSample(uint64_t seq, double value)
 }
 
 bool TestDataSourceBin::build() {
-	std::string binName = boost::uuids::to_string(m_uuid);
+	std::string binName = boost::uuids::to_string(m_element->uuid());
 
     if (!this->create(("rand_data_bin_" + binName).c_str())) {
         return false;

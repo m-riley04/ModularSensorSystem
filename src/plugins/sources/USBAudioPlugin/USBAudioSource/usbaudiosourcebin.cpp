@@ -9,14 +9,14 @@ USBAudioSourceBin::USBAudioSourceBin(Element* element)
 
 bool USBAudioSourceBin::build()
 {
-    std::string deviceName = boost::uuids::to_string(m_uuid);
+    std::string deviceName = boost::uuids::to_string(m_element->uuid());
 
     if (!this->create(("usb_aud_bin_" + deviceName).c_str())) return false;
 
     // Initialize source
     // TODO: make this dynamic and cross-platform
     GstElement* src = gst_element_factory_make("wasapi2src", ("usb_aud_src_" + deviceName).c_str()); 
-    g_object_set(src, "device", m_id.c_str(), NULL);
+    g_object_set(src, "device", m_element->id().c_str(), NULL);
 	g_object_set(src, "low-latency", TRUE, NULL); // TODO: make sure this doesn't affect anything
 
     // Initialize queue and converter

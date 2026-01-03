@@ -32,6 +32,9 @@
     <ClCompile Include="testdatasource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="testdatasourcepreviewbranch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testdatasourceplugin.hpp">
@@ -41,6 +44,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="testdatasourcepluginutils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testdatasourcepreviewbranch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

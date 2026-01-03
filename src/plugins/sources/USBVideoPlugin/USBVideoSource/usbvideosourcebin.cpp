@@ -9,13 +9,13 @@ USBVideoSourceBin::USBVideoSourceBin(Element* element)
 
 bool USBVideoSourceBin::build()
 {
-    std::string deviceName = boost::uuids::to_string(m_uuid);
+    std::string deviceName = boost::uuids::to_string(m_element->uuid());
 
     if (!this->create(("usb_vid_bin_" + deviceName).c_str())) return false;
 
     // Initialize source
     GstElement* src = gst_element_factory_make("mfvideosrc", ("usb_vid_src_" + deviceName).c_str()); // TODO: make this dynamic and cross-platform
-    g_object_set(src, "device-path", m_id.c_str(), NULL); // TODO/CONSIDER: m_id should probably be better labeled to indicate it's the source id
+    g_object_set(src, "device-path", m_element->id().c_str(), NULL); // TODO/CONSIDER: m_id should probably be better labeled to indicate it's the source id
 
     // Initialize queue and converter
     GstElement* conv = gst_element_factory_make("videoconvert", ("usb_vid_conv_" + deviceName).c_str());

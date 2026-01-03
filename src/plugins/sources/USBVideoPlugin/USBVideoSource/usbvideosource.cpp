@@ -6,7 +6,7 @@ USBVideoSource::USBVideoSource(const std::string& hardwareId, QObject* parent)
 
 USBVideoSource::USBVideoSource(SourceInfo sourceInfo, QObject* parent)
 	: Source(sourceInfo.elementInfo, parent),
-	m_bin(std::make_unique<USBVideoSourceBin>(this))
+	m_sourceBin(std::make_unique<USBVideoSourceBin>(this))
 {}
 
 USBVideoSource::~USBVideoSource()
@@ -35,35 +35,55 @@ void USBVideoSource::onSessionStart()
 void USBVideoSource::onSessionStop()
 {
 	// Reset bins
-	m_bin.reset(nullptr);
-	m_recorderBin.reset(nullptr);
+	m_sourceBin.reset(nullptr);
+	m_recorderBranch.reset(nullptr);
+	m_previewBranch.reset(nullptr);
 }
 
 void USBVideoSource::createBinIfNeeded()
 {
-	if (!m_bin) {
-		m_bin = std::make_unique<USBVideoSourceBin>(this);
+	if (!m_sourceBin) {
+		m_sourceBin = std::make_unique<USBVideoSourceBin>(this);
 	}
 }
 
-void USBVideoSource::createRecorderBinIfNeeded()
+void USBVideoSource::createRecorderBranchIfNeeded()
 {
-	if (!m_recorderBin) {
-		m_recorderBin = std::make_unique<USBVideoSourceRecorderBranch>(this);
+	if (!m_recorderBranch) {
+		m_recorderBranch = std::make_unique<USBVideoSourceRecorderBranch>(this);
+	}
+}
+
+void USBVideoSource::createPreviewBranchIfNeeded()
+{
+	if (!m_previewBranch) {
+		m_previewBranch = std::make_unique<USBVideoSourcePreviewBranch>(this);
 	}
 }
 
 GstElement* USBVideoSource::gstSrcBin()
 {
-	// lazy creation; note m_bin must be mutable
+	// lazy creation; note m_sourceBin must be mutable
 	createBinIfNeeded();
-	return m_bin->bin();
+	return m_sourceBin->bin();
+}
+
+PreviewBranch* USBVideoSource::previewBranch()
+{
+	createPreviewBranchIfNeeded();
+	return m_previewBranch.get();
+}
+
+GstElement* USBVideoSource::previewSinkBin()
+{
+	createPreviewBranchIfNeeded();
+	return m_previewBranch->bin();
 }
 
 GstElement* USBVideoSource::recorderSinkBin()
 {
-	createRecorderBinIfNeeded();
-	return m_recorderBin->bin();
+	createRecorderBranchIfNeeded();
+	return m_recorderBranch->bin();
 }
 
 std::string USBVideoSource::recorderFileExtension() const
@@ -73,21 +93,21 @@ std::string USBVideoSource::recorderFileExtension() const
 
 bool USBVideoSource::setRecordingFilePath(const std::string& filePath)
 {
-	if (!m_recorderBin) return false;
+	if (!m_recorderBranch) return false;
 
-	return m_recorderBin->setRecordingFilePath(filePath);
+	return m_recorderBranch->setRecordingFilePath(filePath);
 }
 
 bool USBVideoSource::startRecording()
 {
-	if (!m_recorderBin) return false;
+	if (!m_recorderBranch) return false;
 
-	return m_recorderBin->setRecordingEnabled(true);
+	return m_recorderBranch->setRecordingEnabled(true);
 }
 
 bool USBVideoSource::stopRecording()
 {
-	if (!m_recorderBin) return false;
+	if (!m_recorderBranch) return false;
 	// Close the valve FIRST, THEN send the EOS to finalize the file
-	return m_recorderBin->setRecordingEnabled(false) && m_recorderBin->finalizeRecording();
+	return m_recorderBranch->setRecordingEnabled(false) && m_recorderBranch->finalizeRecording();
 }

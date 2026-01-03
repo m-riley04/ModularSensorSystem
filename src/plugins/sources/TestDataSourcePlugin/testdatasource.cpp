@@ -36,6 +36,13 @@ void TestDataSource::createBinIfNeeded()
 	}
 }
 
+void TestDataSource::createPreviewBranchIfNeeded()
+{
+	if (!m_previewBranch) {
+		m_previewBranch = std::make_unique<TestDataSourcePreviewBranch>(this);
+	}
+}
+
 GstElement* TestDataSource::gstSrcBin()
 {
 	createBinIfNeeded();
@@ -48,12 +55,25 @@ void TestDataSource::onSessionStart()
 	scheduleNextTick();
 }
 
+PreviewBranch* TestDataSource::previewBranch()
+{
+	createPreviewBranchIfNeeded();
+	return m_previewBranch.get();
+}
+
+GstElement* TestDataSource::previewSinkBin()
+{
+	createPreviewBranchIfNeeded();
+	return m_previewBranch->bin();
+}
+
 void TestDataSource::onSessionStop()
 {
 	m_timer.stop();
 
 	// Reset bin
 	m_bin.reset(nullptr);
+	m_previewBranch.reset(nullptr);
 }
 
 void TestDataSource::onTimerTimeout()

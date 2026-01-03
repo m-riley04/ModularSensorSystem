@@ -127,7 +127,7 @@ GstElement* ArduinoPanTiltMount::gstSrcBin()
 GstElement* ArduinoPanTiltMount::recorderSinkBin()
 {
 	createRecorderBinIfNeeded();
-	return m_recorderBin->bin();
+	return m_recorderBranch->bin();
 }
 
 std::string ArduinoPanTiltMount::recorderFileExtension() const
@@ -137,25 +137,25 @@ std::string ArduinoPanTiltMount::recorderFileExtension() const
 
 bool ArduinoPanTiltMount::setRecordingFilePath(const std::string& filePath)
 {
-	if (!m_recorderBin) return false;
+	if (!m_recorderBranch) return false;
 
-	return m_recorderBin->setRecordingFilePath(filePath);
+	return m_recorderBranch->setRecordingFilePath(filePath);
 }
 
 bool ArduinoPanTiltMount::startRecording()
 {
-	if (!m_recorderBin) {
+	if (!m_recorderBranch) {
 		createRecorderBinIfNeeded();
 	}
-	return m_recorderBin->setRecordingEnabled(true);
+	return m_recorderBranch->setRecordingEnabled(true);
 }
 
 bool ArduinoPanTiltMount::stopRecording()
 {
-	if (!m_recorderBin) {
+	if (!m_recorderBranch) {
 		createRecorderBinIfNeeded();
 	}
-	return m_recorderBin->setRecordingEnabled(false) && m_recorderBin->finalizeRecording();;
+	return m_recorderBranch->setRecordingEnabled(false) && m_recorderBranch->finalizeRecording();;
 }
 
 void ArduinoPanTiltMount::createBinIfNeeded()
@@ -167,8 +167,8 @@ void ArduinoPanTiltMount::createBinIfNeeded()
 
 void ArduinoPanTiltMount::createRecorderBinIfNeeded()
 {
-	if (!m_recorderBin) {
-		m_recorderBin = std::make_unique<ArduinoPanTiltMountRecorderBin>(this);
+	if (!m_recorderBranch) {
+		m_recorderBranch = std::make_unique<ArduinoPanTiltMountRecorderBin>(this);
 	}
 }
 

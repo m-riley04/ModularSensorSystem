@@ -32,6 +32,9 @@
     <ClCompile Include="usbaudioplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="USBAudioSource\usbaudiosourcepreviewbranch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="USBAudioSource\usbaudiosourcebin.hpp">
@@ -41,6 +44,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="USBAudioSource\usbaudiosourcepreviewbranch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

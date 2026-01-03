@@ -109,7 +109,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="testdatasourcepreviewbranch.cpp" />
     <ClInclude Include="testdatasourcepluginutils.hpp" />
+    <ClInclude Include="testdatasourcepreviewbranch.hpp" />
     <QtMoc Include="testdatasource.hpp" />
     <ClInclude Include="testdatasourcebin.hpp" />
     <ClInclude Include="testdatasourceplugin.hpp" />

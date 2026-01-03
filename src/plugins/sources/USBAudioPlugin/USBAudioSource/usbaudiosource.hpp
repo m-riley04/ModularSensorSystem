@@ -9,6 +9,7 @@
 #include <utils/boost_qt_conversions.hpp>
 #include "utils.hpp"
 #include "usbaudiosourcebin.hpp"
+#include "usbaudiosourcepreviewbranch.hpp"
 
 class USBAudioSource : public Source
 	, public IPreviewable
@@ -32,7 +33,8 @@ public:
 	/// IPreviewableSource interface
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
-	GstElement* previewSinkBin() override { return nullptr; } // Use default sink
+	PreviewBranch* previewBranch() override;
+	GstElement* previewSinkBin() override;
 	std::string previewSinkElementName() const override { return "preview_" + boost::uuids::to_string(uuid()); }
 
 public slots:
@@ -41,7 +43,9 @@ public slots:
 
 private:
 	void createBinIfNeeded();
+	void createPreviewBranchIfNeeded();
 	Source::Type m_sourceType = Source::Type::AUDIO;
 	quintptr m_windowId = 0;
 	std::unique_ptr<USBAudioSourceBin> m_bin;
+	std::unique_ptr<USBAudioSourcePreviewBranch> m_previewBranch;
 };
