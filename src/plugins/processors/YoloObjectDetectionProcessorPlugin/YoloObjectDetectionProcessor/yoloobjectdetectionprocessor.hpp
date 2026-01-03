@@ -6,7 +6,7 @@
 #include "features/processors/processor.hpp"
 #include "interfaces/capability/processors/iobjectdetectioncapable.hpp"
 #include "interfaces/capability/general/ipipelineelement.hpp"
-#include "yoloprocessorbin.h"
+#include "yoloprocessorbranch.h"
 
 class YoloObjectDetectionProcessor
 	: public Processor
@@ -32,7 +32,7 @@ public:
 	void onObjectDetected(DetectionInfo detection) override;
 
 private:
-	std::unique_ptr<YoloProcessorBin> m_processorBin;
+	std::unique_ptr<YoloProcessorBranch> m_processorBin;
 
 signals:
     void objectDetected(Source* source);

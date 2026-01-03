@@ -29,7 +29,7 @@
     <QtMoc Include="YoloObjectDetectionProcessor\yoloobjectdetectionprocessor.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClCompile Include="YoloObjectDetectionProcessor\yoloprocessorbin.cpp">
+    <ClCompile Include="YoloObjectDetectionProcessor\yoloprocessorbranch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -42,7 +42,7 @@
     <ClInclude Include="yoloobjectdetectionprocessorplugin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="YoloObjectDetectionProcessor\yoloprocessorbin.h">
+    <ClInclude Include="YoloObjectDetectionProcessor\yoloprocessorbranch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

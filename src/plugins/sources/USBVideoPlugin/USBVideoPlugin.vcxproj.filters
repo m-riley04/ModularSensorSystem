@@ -32,7 +32,7 @@
     <ClCompile Include="USBVideoSource\usbvideosourcebin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="USBVideoSource\usbvideosourcerecorderbin.cpp">
+    <ClCompile Include="USBVideoSource\usbvideosourcerecorderbranch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,7 +51,7 @@
     <ClInclude Include="USBVideoSource\usbvideosourcebin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="USBVideoSource\usbvideosourcerecorderbin.hpp">
+    <ClInclude Include="USBVideoSource\usbvideosourcerecorderbranch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

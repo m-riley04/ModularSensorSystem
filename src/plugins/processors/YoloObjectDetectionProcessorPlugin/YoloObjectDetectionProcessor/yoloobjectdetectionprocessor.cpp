@@ -2,7 +2,7 @@
 
 YoloObjectDetectionProcessor::YoloObjectDetectionProcessor(const ElementInfo& element, QObject *parent)
 	: Processor(element, parent)
-	, m_processorBin(std::make_unique<YoloProcessorBin>(this))
+	, m_processorBin(std::make_unique<YoloProcessorBranch>(this))
 {}
 
 YoloObjectDetectionProcessor::~YoloObjectDetectionProcessor()
@@ -12,7 +12,7 @@ GstElement* YoloObjectDetectionProcessor::gstFilterBin()
 {
 	// Lazy initialization
 	if (!m_processorBin) {
-		std::make_unique<YoloProcessorBin>(this);
+		std::make_unique<YoloProcessorBranch>(this);
 	}
 	return m_processorBin->bin();
 }

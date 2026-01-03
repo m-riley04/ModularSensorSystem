@@ -1,14 +1,14 @@
-#include "yoloprocessorbin.h"
+#include "yoloprocessorbranch.h"
 #include <pipeline/filters/default_processors.hpp>
 #include <utils/boost_qt_conversions.hpp>
 
-YoloProcessorBin::YoloProcessorBin(Element* element)
+YoloProcessorBranch::YoloProcessorBranch(Element* element)
 	: ProcessingBranch(element)
 {
 	buildBodyBin();
 }
 
-YoloProcessorBin::~YoloProcessorBin()
+YoloProcessorBranch::~YoloProcessorBranch()
 {
 	// Even though bins manage their children, we still need to unref the elements we got through gst_bin_get_by_name
 	gst_object_unref(m_inference);
@@ -16,7 +16,7 @@ YoloProcessorBin::~YoloProcessorBin()
 	gst_object_unref(m_overlay);
 }
 
-bool YoloProcessorBin::buildBodyBin()
+bool YoloProcessorBranch::buildBodyBin()
 {
     std::string binName = "yolo_processor_bin";
     std::string processorUuidStr = boostUuidToQUuid(m_uuid).toString().toStdString();

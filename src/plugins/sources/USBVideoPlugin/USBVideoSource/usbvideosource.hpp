@@ -12,7 +12,7 @@
 #include <utils/boost_qt_conversions.hpp>
 #include "utils.hpp"
 #include "usbvideosourcebin.hpp"
-#include "usbvideosourcerecorderbin.hpp"
+#include "usbvideosourcerecorderbranch.hpp"
 
 class USBVideoSource : public Source
 	, public IPreviewable
@@ -59,7 +59,7 @@ private:
 	Source::Type m_sourceType = Source::Type::VIDEO;
 	quintptr m_windowId = 0;
 	std::unique_ptr<USBVideoSourceBin> m_bin;
-	std::unique_ptr<USBVideoSourceRecorderBin> m_recorderBin;
+	std::unique_ptr<USBVideoSourceRecorderBranch> m_recorderBin;
 
 	std::string m_recordingFilePath;
 };

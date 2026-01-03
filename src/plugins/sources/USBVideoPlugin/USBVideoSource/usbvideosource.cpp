@@ -49,7 +49,7 @@ void USBVideoSource::createBinIfNeeded()
 void USBVideoSource::createRecorderBinIfNeeded()
 {
 	if (!m_recorderBin) {
-		m_recorderBin = std::make_unique<USBVideoSourceRecorderBin>(this);
+		m_recorderBin = std::make_unique<USBVideoSourceRecorderBranch>(this);
 	}
 }
 

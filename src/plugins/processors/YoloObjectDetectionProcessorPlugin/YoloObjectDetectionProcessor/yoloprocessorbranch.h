@@ -5,10 +5,10 @@
 #include <pipeline/branches/processingbranch.hpp>
 #include <QJsonDocument>
 
-class YoloProcessorBin : public ProcessingBranch {
+class YoloProcessorBranch : public ProcessingBranch {
 public:
-	YoloProcessorBin(Element* element);
-	~YoloProcessorBin();
+	YoloProcessorBranch(Element* element);
+	~YoloProcessorBranch();
 
 protected:
 	virtual bool buildBodyBin() override;

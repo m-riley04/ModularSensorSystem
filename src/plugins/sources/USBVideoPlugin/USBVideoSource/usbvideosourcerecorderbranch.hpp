@@ -5,7 +5,7 @@
 #include <gst/video/videooverlay.h>
 #include <pipeline/sinks/recording_defaults.hpp>
 
-class USBVideoSourceRecorderBin : public RecorderBranch {
+class USBVideoSourceRecorderBranch : public RecorderBranch {
 private:
 	GstElement* m_parse = nullptr;
 	GstElement* m_encoder = nullptr;
@@ -15,9 +15,9 @@ protected:
 	bool buildBodyBin() override;
 
 public:
-	USBVideoSourceRecorderBin(Element* element);
+	USBVideoSourceRecorderBranch(Element* element);
 
-	virtual ~USBVideoSourceRecorderBin() = default;
+	virtual ~USBVideoSourceRecorderBranch() = default;
 
 	bool finalizeRecording() override {
 		// Send EOS to the muxer to finalize the file

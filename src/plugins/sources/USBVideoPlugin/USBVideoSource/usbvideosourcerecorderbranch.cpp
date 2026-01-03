@@ -1,12 +1,12 @@
-#include "usbvideosourcerecorderbin.hpp"
+#include "usbvideosourcerecorderbranch.hpp"
 
-USBVideoSourceRecorderBin::USBVideoSourceRecorderBin(Element* element)
+USBVideoSourceRecorderBranch::USBVideoSourceRecorderBranch(Element* element)
    : RecorderBranch(element, Source::Type::VIDEO)
 {
     buildBodyBin();
 }
 
-bool USBVideoSourceRecorderBin::buildBodyBin()
+bool USBVideoSourceRecorderBranch::buildBodyBin()
 {
     std::string deviceUuid = boost::uuids::to_string(m_uuid);
 

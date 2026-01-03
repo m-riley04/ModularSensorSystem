@@ -440,6 +440,18 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee)
 {
 	//PreviewBranch* previewBranch = new PreviewBranch(element);
 
+	IPreviewable* prevElem = element->asPreviewable();
+	if (!prevElem) {
+		LoggingController::warning("Element is not previewable for element:" + QString::fromStdString(element->name()));
+		return false;
+	}
+
+	// Init elemets
+	guintptr windowId = static_cast<guintptr>(prevElem->windowId());
+	GstElement* sink = prevElem->previewSinkBin();
+
+	// TODO: continue from here
+
 	// TODO: store preview branch somewhere
 
 	// TODO: add preview BIN to preview BRANCH
