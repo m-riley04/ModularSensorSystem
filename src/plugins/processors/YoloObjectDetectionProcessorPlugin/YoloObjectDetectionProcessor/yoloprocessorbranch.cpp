@@ -23,18 +23,32 @@ bool YoloProcessorBranch::buildBodyBin()
     std::string binFullName = binName + "_" + processorUuidStr;
 
     // TODO: change this to be yolo
-    m_bin = createDefaultObjectDetectorProcessorFilter(ObjectDetectorModelType::YOLO, binFullName.c_str());
-    if (!m_bin) {
+    m_body = createDefaultObjectDetectorProcessorFilter(ObjectDetectorModelType::YOLO, binFullName.c_str());
+    if (!m_body) {
         LoggingController::warning("Failed to create processor filter bin");
         return false;
     }
 
-    m_inference = gst_bin_get_by_name(GST_BIN(m_bin), "inference");
-    m_detector = gst_bin_get_by_name(GST_BIN(m_bin), "tensorDecoder");
-    m_overlay = gst_bin_get_by_name(GST_BIN(m_bin), "overlay");
+    m_inference = gst_bin_get_by_name(GST_BIN(m_body), "inference");
+    m_detector = gst_bin_get_by_name(GST_BIN(m_body), "tensorDecoder");
+    m_overlay = gst_bin_get_by_name(GST_BIN(m_body), "overlay");
 
     if (!m_inference || !m_detector || !m_overlay ) {
         LoggingController::warning("Failed to get one or more elements from processor bin");
+        return false;
+    }
+
+    // Add and link body bin to this bin
+    if (!addMany(m_body))
+    {
+        LoggingController::warning("Failed to add recorder body bin to recorder branch bin");
+        return false;
+    }
+
+    // Link the prefix bin to the body bin
+    if (!gst_element_link(m_prefix.bin(), m_body))
+    {
+        LoggingController::warning("Failed to link recorder branch prefix bin to body bin");
         return false;
     }
 

@@ -8,7 +8,12 @@
 
 class BinBase {
 public:
-	virtual ~BinBase() = default;
+	virtual ~BinBase() {
+		if (m_bin) {
+			gst_object_unref(m_bin);
+			m_bin = nullptr;
+		}
+	}
 
 	GstElement* bin() const { return m_bin; }
 
