@@ -22,11 +22,9 @@ TeeBranchPrefix::TeeBranchPrefix(Element* element)
 }
 
 TeeBranchPrefix::~TeeBranchPrefix() {
-	if (m_bin) {
-		gst_object_unref(m_bin);
-		m_bin = nullptr;
-	}
+	// TODO/CONSIDER: proper unref and cleanup? GstBin should handle this already though
 
+	m_bin = nullptr;
 	m_valve = nullptr;
 	m_queue = nullptr;
 };

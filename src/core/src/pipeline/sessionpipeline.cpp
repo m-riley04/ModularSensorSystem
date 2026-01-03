@@ -446,32 +446,23 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee)
 
 	// Init elemets
 	guintptr windowId = static_cast<guintptr>(prevElem->windowId());
-	GstElement* sink = prevElem->previewSinkBin();
-
-	// dynamic cast to source
-	// TODO: this should be reworked to not assume element is a Source. Currently needed for "createDefaultPreviewSink" function
-	Source* srcElem = dynamic_cast<Source*>(element);
-	if (!srcElem) {
-		LoggingController::warning("Cannot create and link the source and preview bins for '" + QString::fromStdString(element->displayName()) + "': element is not a source");
+	PreviewBranch* branch = prevElem->previewBranch();
+	GstElement* branchBin = branch ? branch->bin() : nullptr;
+	if (!branchBin) {
+		LoggingController::warning("Failed to get preview branch bin for element:" + QString::fromStdString(element->name()));
 		return false;
 	}
-
-	// Check validity of each
-	if (!sink) {
-		LoggingController::warning("Failed to create custom sink element for '" + QString::fromStdString(element->displayName()) + "'; creating default sink");
-		sink = createDefaultPreviewSink(srcElem->type(), windowId, prevElem->previewSinkElementName().c_str());
-	}
-
+	
 	// Add preview element(s) to pipeline
-	if (!gst_bin_add(GST_BIN(m_pipeline.get()), sink)) {
+	if (!gst_bin_add(GST_BIN(m_pipeline.get()), branchBin)) {
 		LoggingController::warning("Failed to add preview sink for '" + QString::fromStdString(element->displayName()) + "' to pipeline.");
 		return false;
 	}
 
 	// Link source bin to sink
-	if (!gst_element_link(tee, sink)) {
+	if (!gst_element_link(tee, branchBin)) {
 		LoggingController::warning("Failed to link source bin to preview sink for '" + QString::fromStdString(element->displayName()) + "'.");
-		gst_bin_remove(GST_BIN(m_pipeline.get()), sink);
+		gst_bin_remove(GST_BIN(m_pipeline.get()), branchBin);
 		return false;
 	}
 
