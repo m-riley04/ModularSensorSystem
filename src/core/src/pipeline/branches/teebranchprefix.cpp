@@ -1,62 +1,102 @@
 #include <pipeline/branches/teebranchprefix.hpp>
+#include <controllers/loggingcontroller.hpp>
 
-TeeBranchPrefix::TeeBranchPrefix(Element* element)
+TeeBranchPrefix::TeeBranchPrefix(Element* element, bool enableOverlay)
 	: BinBase(element)
+	, m_hasOverlay(enableOverlay)
 {
-	// Create elements
+	// Create common elements
 	m_srcQueue = gst_element_factory_make("queue", "srcQueue");
-	m_overlayQueue = gst_element_factory_make("queue", "overlayQueue");
-	m_compositor = gst_element_factory_make("compositor", "compositor");
-	m_valve = gst_element_factory_make("valve", nullptr);
-	if (!m_srcQueue || !m_overlayQueue || !m_compositor || !m_valve) {
-		// TODO: logging
+	m_valve = gst_element_factory_make("valve", "valve");
+	
+	if (!m_srcQueue || !m_valve) {
+		LoggingController::warning("TeeBranchPrefix: Failed to create queue or valve element");
 		return;
 	}
 
-	gst_bin_add_many(GST_BIN(m_bin), m_srcQueue, m_overlayQueue, m_compositor, m_valve, nullptr);
+	if (enableOverlay) {
+		// Create overlay elements
+		m_overlayQueue = gst_element_factory_make("queue", "overlayQueue");
+		m_compositor = gst_element_factory_make("compositor", "compositor");
+		
+		if (!m_overlayQueue || !m_compositor) {
+			LoggingController::warning("TeeBranchPrefix: Failed to create overlay elements");
+			gst_object_unref(m_srcQueue);
+			gst_object_unref(m_valve);
+			m_srcQueue = nullptr;
+			m_valve = nullptr;
+			return;
+		}
 
-	// Link queues to compositor
-	if (!gst_element_link(m_srcQueue, m_compositor)
-		|| !gst_element_link(m_overlayQueue, m_compositor)) {
-		gst_bin_remove(GST_BIN(m_bin), m_compositor);
-		m_srcQueue = nullptr;
-		m_overlayQueue = nullptr;
-		m_compositor = nullptr;
-		m_valve = nullptr;
-		return;
+		// Add all elements to bin
+		gst_bin_add_many(GST_BIN(m_bin), m_srcQueue, m_overlayQueue, m_compositor, m_valve, nullptr);
+
+		// Link queues to compositor
+		if (!gst_element_link(m_srcQueue, m_compositor)
+			|| !gst_element_link(m_overlayQueue, m_compositor)) {
+			LoggingController::warning("TeeBranchPrefix: Failed to link queues to compositor");
+			return;
+		}
+
+		// Link compositor to valve
+		if (!gst_element_link(m_compositor, m_valve)) {
+			LoggingController::warning("TeeBranchPrefix: Failed to link compositor to valve");
+			return;
+		}
+
+		// Configure compositor
+		g_object_set(m_compositor, "background", 3, nullptr); // transparent background
+
+		// Modify compositor pad properties
+		GstPad* compSrcSinkPad = gst_element_get_static_pad(m_compositor, "sink_0");
+		GstPad* compOverlaySinkPad = gst_element_get_static_pad(m_compositor, "sink_1");
+		if (compSrcSinkPad && compOverlaySinkPad) {
+			g_object_set(compSrcSinkPad, "zorder", 0, nullptr);
+			g_object_set(compOverlaySinkPad, "zorder", 1, nullptr);
+			gst_object_unref(compSrcSinkPad);
+			gst_object_unref(compOverlaySinkPad);
+		}
+
+		// Create ghost pads - main sink, overlay sink, and src
+		m_sinkPad = this->makeSometimesSinkGhostPad("sink", m_srcQueue, "sink");
+		m_sinkOverlayPad = this->makeSometimesSinkGhostPad("sink_overlay", m_overlayQueue, "sink");
+		m_srcPad = this->makeSometimesSrcGhostPad("src", m_valve, "src");
 	}
+	else {
+		// Simple passthrough: queue -> valve
+		gst_bin_add_many(GST_BIN(m_bin), m_srcQueue, m_valve, nullptr);
 
-	// Link compositor to valve
-	if (!gst_element_link(m_compositor, m_valve)) {
-		gst_bin_remove(GST_BIN(m_bin), m_compositor);
-		m_srcQueue = nullptr;
-		m_overlayQueue = nullptr;
-		m_compositor = nullptr;
-		m_valve = nullptr;
-		return;
+		// Link queue directly to valve
+		if (!gst_element_link(m_srcQueue, m_valve)) {
+			LoggingController::warning("TeeBranchPrefix: Failed to link queue to valve");
+			return;
+		}
+
+		// Create ghost pads - just sink and src (no overlay)
+		m_sinkPad = this->makeSometimesSinkGhostPad("sink", m_srcQueue, "sink");
+		m_srcPad = this->makeSometimesSrcGhostPad("src", m_valve, "src");
 	}
-
-	// Properties
-	g_object_set(m_compositor, "background", 3, nullptr);
-	// TODO: modify pad properties as needed (z-order, operators, etc)
-
-	// Add ghost pads
-	// 2 inputs (src and overlay), 1 output (to body)
-	this->makeRequestGhostPad("sink_src", m_srcQueue, "sink_src");
-	this->makeRequestGhostPad("sink_overlay", m_overlayQueue, "sink_overlay");
-	this->makeGhostPad("src", m_valve, "src");
 }
 
 TeeBranchPrefix::~TeeBranchPrefix() {
-	// TODO/CONSIDER: proper unref and cleanup? GstBin should handle this already though
+	// Ghost pads are owned by the bin and will be cleaned up when the bin is destroyed
+	m_sinkPad = nullptr;
+	m_sinkOverlayPad = nullptr;
+	m_srcPad = nullptr;
+
+	// Elements are owned by the bin
 	m_srcQueue = nullptr;
 	m_overlayQueue = nullptr;
 	m_compositor = nullptr;
 	m_valve = nullptr;
-};
+}
 
 bool TeeBranchPrefix::linkToOverlay(GstElement* overlayElem)
 {
+	if (!m_hasOverlay) {
+		LoggingController::warning("TeeBranchPrefix::linkToOverlay: Overlay not enabled for this prefix");
+		return false;
+	}
 	if (!overlayElem || !m_overlayQueue) return false;
 	return gst_element_link(overlayElem, m_overlayQueue);
 }

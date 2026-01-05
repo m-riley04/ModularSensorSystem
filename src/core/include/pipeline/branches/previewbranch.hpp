@@ -10,6 +10,11 @@ protected:
 	virtual bool buildBodyBin() = 0;
 
 public:
-	PreviewBranch(Element*);
+	/**
+	 * @brief Constructs a PreviewBranch.
+	 * @param element The parent element
+	 * @param enableOverlay If true, enables compositor for overlay support
+	 */
+	PreviewBranch(Element* element, bool enableOverlay = false);
 	virtual ~PreviewBranch();
 };

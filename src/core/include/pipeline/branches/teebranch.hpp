@@ -11,11 +11,14 @@
  * 1. A prefix
  * 2. A body
  * A "branch" is really just a bin with a specific structure.
+ * 
+ * This bin exposes a "sometimes" sink pad that connects to the prefix.
  */
 class MSS_CORE_API TeeBranch : public BinBase {
 protected:
 	TeeBranchPrefix m_prefix;
 	GstElement* m_body = nullptr;
+	GstPad* m_sinkPad = nullptr; // Sometimes ghost pad
 
 	/**
 	 * @brief Builds the body bin for this branch.
@@ -30,11 +33,17 @@ protected:
 	virtual bool attachBody();
 
 public:
-	TeeBranch(Element* element);
+	/**
+	 * @brief Constructs a TeeBranch.
+	 * @param element The parent element
+	 * @param enableOverlay If true, the prefix will include compositor for overlay support
+	 */
+	TeeBranch(Element* element, bool enableOverlay = false);
 	virtual ~TeeBranch();
 
 	GstElement* body() const { return m_body; }
 	TeeBranchPrefix& prefix() { return m_prefix; }
+	GstPad* sinkPad() const { return m_sinkPad; }
 	void setBody(GstElement* body) { m_body = body; }
 	bool setValveClosed(bool closed) { return m_prefix.setValveClosed(closed); }
 

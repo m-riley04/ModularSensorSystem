@@ -2,32 +2,30 @@
 #include <controllers/loggingcontroller.hpp>
 #include <memory>
 
-TeeBranch::TeeBranch(Element* element)
+TeeBranch::TeeBranch(Element* element, bool enableOverlay)
 	: BinBase(element)
-	, m_prefix(element)
+	, m_prefix(element, enableOverlay)
 	, m_body(nullptr)
+	, m_sinkPad(nullptr)
 {
-	// Create the sink pad for the branch
-	if (!makeGhostPad("sink", m_prefix.bin(), "sink")) {
-		// TODO: logging
-	}
-
 	// Add the prefix bin to this bin
 	if (!addMany(m_prefix.bin()))
 	{
-		// TODO: logging
+		LoggingController::warning("TeeBranch: Failed to add prefix bin");
+		return;
 	}
 
-	// Link the ghost pad of this bin to the prefix bin
-	if (!gst_element_link(m_bin, m_prefix.bin()))
-	{
-		// TODO: logging
+	// Create a "sometimes" sink ghost pad that targets the prefix's sink pad
+	m_sinkPad = makeSometimesSinkGhostPad("sink", m_prefix.bin(), "sink");
+	if (!m_sinkPad) {
+		LoggingController::warning("TeeBranch: Failed to create sink ghost pad");
 	}
 }
 
 TeeBranch::~TeeBranch()
 {
-	
+	// Ghost pad is owned by the bin and will be cleaned up when the bin is destroyed
+	m_sinkPad = nullptr;
 }
 
 bool TeeBranch::attachBody()
