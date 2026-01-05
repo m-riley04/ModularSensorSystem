@@ -112,7 +112,6 @@
     <ClCompile Include="src\controllers\mountcontroller.cpp" />
     <ClCompile Include="src\controllers\settingscontroller.cpp" />
     <ClCompile Include="src\logging\logwriterworker.cpp" />
-    <ClCompile Include="src\pipeline\branches\compositedbranch.cpp" />
     <ClCompile Include="src\pipeline\branches\previewbranch.cpp" />
     <ClCompile Include="src\pipeline\branches\processingbranch.cpp" />
     <ClCompile Include="src\pipeline\branches\recorderbranch.cpp" />
@@ -135,7 +134,6 @@
     <QtMoc Include="include\logging\logwriterworker.hpp" />
     <ClInclude Include="include\interfaces\capability\processors\iobjectdetectioncapable.hpp" />
     <ClInclude Include="include\models\settings_models.hpp" />
-    <ClInclude Include="include\pipeline\branches\compositedbranch.hpp" />
     <ClInclude Include="include\pipeline\branches\previewbranch.hpp" />
     <ClInclude Include="include\pipeline\branches\processingbranch.hpp" />
     <ClInclude Include="include\pipeline\branches\recorderbranch.hpp" />

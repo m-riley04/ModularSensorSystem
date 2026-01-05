@@ -6,18 +6,25 @@
 
 /**
  * @brief Contains the prefix elements for a TeeBranch.
- * Currently, has a valve and a queue element.
  */
 class MSS_CORE_API TeeBranchPrefix : public BinBase {
 private:
+	GstElement* m_srcQueue;
+	GstElement* m_overlayQueue;
+	GstElement* m_compositor;
 	GstElement* m_valve;
-	GstElement* m_queue;
 
 public:
 	TeeBranchPrefix(Element*);
 	virtual ~TeeBranchPrefix();
 
+	/**
+	 * @brief Links the passed element to the overlay input of the compositor.
+	 * @param overlayElem 
+	 * @return 
+	 */
+	bool linkToOverlay(GstElement* overlayElem);
+
 	GstElement* valve() const { return m_valve; }
-	GstElement* queue() const { return m_queue; }
 	bool setValveClosed(bool drop);
 };

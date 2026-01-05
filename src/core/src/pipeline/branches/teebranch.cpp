@@ -19,7 +19,7 @@ TeeBranch::TeeBranch(Element* element)
 	}
 
 	// Link the ghost pad of this bin to the prefix bin
-	if (!gst_element_link(this->bin(), m_prefix.bin()))
+	if (!gst_element_link(m_bin, m_prefix.bin()))
 	{
 		// TODO: logging
 	}

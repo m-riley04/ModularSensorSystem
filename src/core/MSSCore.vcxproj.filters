@@ -152,9 +152,6 @@
     <ClInclude Include="include\pipeline\branches\previewbranch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pipeline\branches\compositedbranch.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\pipeline\branches\processingbranch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -215,9 +212,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\pipeline\branches\recorderbranch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\pipeline\branches\compositedbranch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\pipeline\branches\processingbranch.cpp">

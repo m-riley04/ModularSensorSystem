@@ -72,6 +72,16 @@ protected:
 		return ghost;
 	}
 
+	GstPad* makeRequestGhostPad(const char* ghostName, GstElement* element, const char* padName) {
+		GstPad* pad = gst_element_get_request_pad(element, padName);
+		if (!pad) return nullptr;
+		GstPad* ghost = gst_ghost_pad_new(ghostName, pad);
+		gst_object_unref(pad);
+		if (!ghost) return nullptr;
+		gst_element_add_pad(m_bin, ghost);
+		return ghost;
+	}
+
 	GstElement* m_bin = nullptr;
 	Element* m_element = nullptr;
 };

@@ -15,6 +15,7 @@
 #include <controllers/elementscontroller.hpp>
 #include <pipeline/branches/previewbranch.hpp>
 #include <pipeline/branches/recorderbranch.hpp>
+#include <pipeline/branches/processingbranch.hpp>
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
 
@@ -64,6 +65,7 @@ private:
 	bool createSourceBranches(Element*, GstElement*);
 	bool createPreviewBranch(Element*, GstElement*);
 	bool createRecorderBranch(Element*, GstElement*);
+	bool createProcessingBranch(Element*, GstElement*);
 	bool createAndLinkPreviewBin(Element*, GstElement*);
 	bool createAndLinkRecordBin(Element*, GstElement*);
 	
@@ -95,6 +97,7 @@ private:
 	QList<GstElement*> m_recordableElementBins;
 	QList<PreviewBranch*> m_previewBranches;
 	QList<RecorderBranch*> m_recordBranches;
+	QList<ProcessingBranch*> m_processingBranches;
 	QList<Processor*> m_processorElements;
 	QList<IRecordable*> m_recordableElements;
 	ElementsController& m_elementsController;
