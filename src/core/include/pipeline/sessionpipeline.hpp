@@ -63,9 +63,10 @@ private:
 
 	bool createSourceElements(Element*);
 	bool createSourceBranches(Element*, GstElement*);
-	bool createPreviewBranch(Element*, GstElement*);
+	bool createPreviewBranch(Element*, GstElement*, bool enableOverlay = false, ProcessingBranch* processorBranch = nullptr);
 	bool createRecorderBranch(Element*, GstElement*);
 	bool createProcessingBranch(Element*, GstElement*);
+	ProcessingBranch* createProcessorBranch(Element* sourceElement, Processor* processor, GstElement* tee);
 	bool createAndLinkPreviewBin(Element*, GstElement*);
 	bool createAndLinkRecordBin(Element*, GstElement*);
 	

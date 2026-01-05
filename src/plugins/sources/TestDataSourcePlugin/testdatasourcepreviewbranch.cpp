@@ -3,8 +3,8 @@
 #include <pipeline/sinks/preview_defaults.hpp>
 #include <utils/boost_qt_conversions.hpp>
 
-TestDataSourcePreviewBranch::TestDataSourcePreviewBranch(Element* element)
-	: PreviewBranch(element)
+TestDataSourcePreviewBranch::TestDataSourcePreviewBranch(Element* element, bool enableOverlay)
+	: PreviewBranch(element, enableOverlay)
 {
 	buildBodyBin();
 }

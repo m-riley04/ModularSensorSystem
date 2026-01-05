@@ -28,6 +28,7 @@ private:
 	GstPad* m_srcPad = nullptr;
 
 	bool m_hasOverlay = false;
+	bool m_overlayEnabled = false;
 
 public:
 	/**
@@ -40,14 +41,32 @@ public:
 	virtual ~TeeBranchPrefix();
 
 	/**
-	 * @brief Links the passed element to the overlay input of the compositor.
+	 * @brief Links the passed element's src pad to the overlay input of the compositor.
 	 * Only valid if overlay was enabled during construction.
-	 * @param overlayElem 
-	 * @return 
+	 * @param overlayElem The element to link (its "src" pad will be linked)
+	 * @return true if successful
 	 */
 	bool linkToOverlay(GstElement* overlayElem);
 
+	/**
+	 * @brief Links a specific pad to the overlay input.
+	 * @param srcPad The source pad to link to the overlay input
+	 * @return true if successful
+	 */
+	bool linkPadToOverlay(GstPad* srcPad);
+
+	/**
+	 * @brief Enables or disables the overlay input.
+	 * When disabled, only the main source input is composited.
+	 * @param enabled Whether to enable the overlay
+	 * @return true if successful
+	 */
+	bool setOverlayEnabled(bool enabled);
+	bool isOverlayEnabled() const { return m_overlayEnabled; }
+
 	GstElement* valve() const { return m_valve; }
+	GstElement* compositor() const { return m_compositor; }
+	GstElement* overlayQueue() const { return m_overlayQueue; }
 	bool setValveClosed(bool drop);
 	bool hasOverlay() const { return m_hasOverlay; }
 

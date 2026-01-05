@@ -2,6 +2,8 @@
 
 #include <gst/gst.h>
 
+class ProcessingBranch;
+
 class IPipelineElement {
 
 public:
@@ -24,4 +26,11 @@ public:
 	 * @return Pointer to the GstElement representing the sink bin. Nullptr if not applicable.
 	 */
 	virtual GstElement* gstSinkBin() = 0;
+
+	/**
+	 * @brief Returns the ProcessingBranch associated with this element, if any.
+	 * This is primarily used by processors to expose their branch for overlay linking.
+	 * @return Pointer to the ProcessingBranch, or nullptr if not applicable.
+	 */
+	virtual ProcessingBranch* processingBranch() { return nullptr; }
 };

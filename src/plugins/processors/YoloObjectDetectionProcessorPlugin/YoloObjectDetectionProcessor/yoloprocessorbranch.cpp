@@ -11,9 +11,9 @@ YoloProcessorBranch::YoloProcessorBranch(Element* element)
 YoloProcessorBranch::~YoloProcessorBranch()
 {
 	// Even though bins manage their children, we still need to unref the elements we got through gst_bin_get_by_name
-	gst_object_unref(m_inference);
-	gst_object_unref(m_detector);
-	gst_object_unref(m_overlay);
+	if (m_inference) gst_object_unref(m_inference);
+	if (m_detector) gst_object_unref(m_detector);
+	if (m_overlay) gst_object_unref(m_overlay);
 }
 
 bool YoloProcessorBranch::buildBodyBin()
@@ -38,5 +38,16 @@ bool YoloProcessorBranch::buildBodyBin()
         return false;
     }
 
-    return attachBody();
+    if (!attachBody()) {
+        LoggingController::warning("Failed to attach body to processor branch");
+        return false;
+    }
+
+    // Create output pad for linking to preview overlay
+    if (!createOutputPad()) {
+        LoggingController::warning("Failed to create output pad for processor branch");
+        return false;
+    }
+
+    return true;
 }

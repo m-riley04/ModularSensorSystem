@@ -33,9 +33,9 @@ void USBAudioSource::onSessionStart()
 
 }
 
-PreviewBranch* USBAudioSource::previewBranch()
+PreviewBranch* USBAudioSource::previewBranch(bool enableOverlay)
 {
-	createPreviewBranchIfNeeded();
+	createPreviewBranchIfNeeded(enableOverlay);
 	return m_previewBranch.get();
 }
 
@@ -59,10 +59,10 @@ void USBAudioSource::createBinIfNeeded()
 	}
 }
 
-void USBAudioSource::createPreviewBranchIfNeeded()
+void USBAudioSource::createPreviewBranchIfNeeded(bool enableOverlay)
 {
 	if (!m_previewBranch) {
-		m_previewBranch = std::make_unique<USBAudioSourcePreviewBranch>(this);
+		m_previewBranch = std::make_unique<USBAudioSourcePreviewBranch>(this, enableOverlay);
 	}
 }
 

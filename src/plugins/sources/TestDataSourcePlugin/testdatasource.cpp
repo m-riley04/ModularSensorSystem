@@ -36,10 +36,10 @@ void TestDataSource::createBinIfNeeded()
 	}
 }
 
-void TestDataSource::createPreviewBranchIfNeeded()
+void TestDataSource::createPreviewBranchIfNeeded(bool enableOverlay)
 {
 	if (!m_previewBranch) {
-		m_previewBranch = std::make_unique<TestDataSourcePreviewBranch>(this);
+		m_previewBranch = std::make_unique<TestDataSourcePreviewBranch>(this, enableOverlay);
 	}
 }
 
@@ -55,9 +55,9 @@ void TestDataSource::onSessionStart()
 	scheduleNextTick();
 }
 
-PreviewBranch* TestDataSource::previewBranch()
+PreviewBranch* TestDataSource::previewBranch(bool enableOverlay)
 {
-	createPreviewBranchIfNeeded();
+	createPreviewBranchIfNeeded(enableOverlay);
 	return m_previewBranch.get();
 }
 

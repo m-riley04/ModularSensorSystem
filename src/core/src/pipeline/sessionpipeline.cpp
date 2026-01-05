@@ -175,9 +175,16 @@ bool SessionPipeline::cleanup()
 	m_previewBins.clear();
 	m_recordBins.clear();
 	m_recordableElementBins.clear();
+	m_processorBins.clear();
 
-	// Sources ptrs list cleanup
+	// Branch lists cleanup
+	m_previewBranches.clear();
+	m_recordBranches.clear();
+	m_processingBranches.clear();
+
+	// Element ptrs list cleanup
 	m_recordableElements.clear();
+	m_processorElements.clear();
 
 	return true;
 }
@@ -206,24 +213,34 @@ void SessionPipeline::stopRecording()
 
 void SessionPipeline::startProcessing()
 {
-	QList<QPointer<Processor>> processors = m_elementsController.processingController().processors();
+	// Enable overlay on all preview branches that have processors attached
+	for (auto& previewBranch : m_previewBranches) {
+		if (previewBranch && previewBranch->linkedProcessor()) {
+			previewBranch->setOverlayEnabled(true);
+		}
+	}
 
-	// Iterate over all sources and open their valves
-	for (auto& proc : processors) {
-		if (!openProcessingValveForElement(proc)) {
-			LoggingController::warning("Failed to open processing valve for source");
+	// Enable processing on all processor branches
+	for (auto& processingBranch : m_processingBranches) {
+		if (processingBranch) {
+			processingBranch->setProcessingEnabled(true);
 		}
 	}
 }
 
 void SessionPipeline::stopProcessing()
 {
-	QList<QPointer<Processor>> processors = m_elementsController.processingController().processors();
+	// Disable processing on all processor branches
+	for (auto& processingBranch : m_processingBranches) {
+		if (processingBranch) {
+			processingBranch->setProcessingEnabled(false);
+		}
+	}
 
-	// Iterate over all sources and close their valves
-	for (auto& proc : processors) {
-		if (!closeProcessingValveForElement(proc)) {
-			LoggingController::warning("Failed to close processing valve for source");
+	// Disable overlay on all preview branches
+	for (auto& previewBranch : m_previewBranches) {
+		if (previewBranch && previewBranch->linkedProcessor()) {
+			previewBranch->setOverlayEnabled(false);
 		}
 	}
 }
@@ -294,11 +311,28 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 		return false;
 	}
 
-	// TODO: add processor branches
+	// Check if this source has processors attached
+	QUuid sourceId = boostUuidToQUuid(element->uuid());
+	QList<Processor*> processors = m_elementsController.processorsForSource(sourceId);
+	bool hasProcessors = !processors.isEmpty();
 
-	// Attempt to add/link preview
+	// Create processor branches first (they need to be in the pipeline before linking to preview)
+	ProcessingBranch* processorBranch = nullptr;
+	if (hasProcessors) {
+		// For now, we only support one processor per source
+		// TODO: Support chaining multiple processors
+		Processor* processor = processors.first();
+		processorBranch = createProcessorBranch(element, processor, tee);
+		if (!processorBranch) {
+			LoggingController::warning("Failed to create processor branch for element:" + QString::fromStdString(element->name()));
+			// Continue without processor - preview will still work
+			hasProcessors = false;
+		}
+	}
+
+	// Attempt to add/link preview (with overlay support if processors exist)
 	if (element->asPreviewable() != nullptr) {
-		if (!createPreviewBranch(element, tee)) {
+		if (!createPreviewBranch(element, tee, hasProcessors, processorBranch)) {
 			LoggingController::warning("Failed to create preview branch for element:" + QString::fromStdString(element->name()));
 			return false;
 		}
@@ -315,7 +349,7 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 	return true;
 }
 
-bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee)
+bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, bool enableOverlay, ProcessingBranch* processorBranch)
 {
 	IPreviewable* prevElem = element->asPreviewable();
 	if (!prevElem) {
@@ -323,40 +357,131 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee)
 		return false;
 	}
 
-	// Init elemets
-	guintptr windowId = static_cast<guintptr>(prevElem->windowId());
-	PreviewBranch* branch = prevElem->previewBranch();
+	// Get or create the preview branch with overlay support if processors are attached
+	PreviewBranch* branch = prevElem->previewBranch(enableOverlay);
 	GstElement* branchBin = branch ? branch->bin() : nullptr;
 	if (!branchBin) {
 		LoggingController::warning("Failed to get preview branch bin for element:" + QString::fromStdString(element->name()));
 		return false;
 	}
 
-	// TODO: store preview branch (non-owning)
-	m_previewBranches.append(branch); // TODO: add cleanup somewhere for preview branches
+	// Store preview branch (non-owning)
+	m_previewBranches.append(branch);
 
-	// TODO: add preview branch to pipeline
+	// Add preview branch to pipeline
 	if (!gst_bin_add(GST_BIN(m_pipeline.get()), branchBin)) {
 		LoggingController::warning("Failed to add preview sink for '" + QString::fromStdString(element->displayName()) + "' to pipeline.");
 		return false;
 	}
 
-	// TODO: link preview branch to tee
+	// Link preview branch to tee
 	if (!gst_element_link(tee, branchBin)) {
 		LoggingController::warning("Failed to link source bin to preview sink for '" + QString::fromStdString(element->displayName()) + "'.");
 		gst_bin_remove(GST_BIN(m_pipeline.get()), branchBin);
 		return false;
 	}
 
+	// If we have a processor branch, link its output to the preview's overlay input
+	if (processorBranch && enableOverlay) {
+		// Get the processor's output pad
+		GstPad* processorSrcPad = processorBranch->srcPad();
+		if (!processorSrcPad) {
+			LoggingController::warning("Failed to get src pad from processor branch for '" + QString::fromStdString(element->displayName()) + "'.");
+			// Continue without processor overlay - preview will still work
+		}
+		else {
+			// Get the preview's overlay sink pad (exposed on the branch bin)
+			GstPad* overlaySinkPad = branch->sinkOverlayPad();
+			if (!overlaySinkPad) {
+				LoggingController::warning("Failed to get overlay sink pad from preview branch for '" + QString::fromStdString(element->displayName()) + "'.");
+			}
+			else {
+				// Log pad info for debugging
+				LoggingController::debug("Linking processor src pad '" + QString(GST_PAD_NAME(processorSrcPad)) 
+					+ "' to preview overlay sink pad '" + QString(GST_PAD_NAME(overlaySinkPad)) + "'");
+
+				// Link processor output to preview overlay input
+				GstPadLinkReturn linkResult = gst_pad_link(processorSrcPad, overlaySinkPad);
+				if (linkResult != GST_PAD_LINK_OK) {
+					QString errorMsg;
+					switch (linkResult) {
+					case GST_PAD_LINK_WRONG_HIERARCHY: errorMsg = "WRONG_HIERARCHY"; break;
+					case GST_PAD_LINK_WAS_LINKED: errorMsg = "WAS_LINKED"; break;
+					case GST_PAD_LINK_WRONG_DIRECTION: errorMsg = "WRONG_DIRECTION"; break;
+					case GST_PAD_LINK_NOFORMAT: errorMsg = "NOFORMAT"; break;
+					case GST_PAD_LINK_NOSCHED: errorMsg = "NOSCHED"; break;
+					case GST_PAD_LINK_REFUSED: errorMsg = "REFUSED"; break;
+					default: errorMsg = QString::number(linkResult);
+					}
+					LoggingController::warning("Failed to link processor output to preview overlay for '" 
+						+ QString::fromStdString(element->displayName()) 
+						+ "'. Error: " + errorMsg);
+				}
+				else {
+					// Store the linked processor in the preview branch
+					branch->setLinkedProcessor(processorBranch);
+					LoggingController::debug("Successfully linked processor to preview overlay for '" + QString::fromStdString(element->displayName()) + "'");
+				}
+			}
+		}
+	}
+
 	return true;
+}
+
+ProcessingBranch* SessionPipeline::createProcessorBranch(Element* sourceElement, Processor* processor, GstElement* tee)
+{
+	if (!processor) {
+		LoggingController::warning("Cannot create processor branch: processor is null");
+		return nullptr;
+	}
+
+	// Get the processor's pipeline element interface
+	IPipelineElement* pipelineElem = processor->asPipelineElement();
+	if (!pipelineElem) {
+		LoggingController::warning("Processor '" + QString::fromStdString(processor->displayName()) + "' is not a pipeline element");
+		return nullptr;
+	}
+
+	// Get the ProcessingBranch from the processor
+	ProcessingBranch* processorBranch = pipelineElem->processingBranch();
+	if (!processorBranch) {
+		LoggingController::warning("Processor '" + QString::fromStdString(processor->displayName()) + "' does not expose a ProcessingBranch");
+		return nullptr;
+	}
+
+	// Get the processor's bin
+	GstElement* filterBin = processorBranch->bin();
+	if (!filterBin) {
+		LoggingController::warning("Failed to get filter bin for processor '" + QString::fromStdString(processor->displayName()) + "'");
+		return nullptr;
+	}
+
+	// Add processor bin to pipeline
+	if (!gst_bin_add(GST_BIN(m_pipeline.get()), filterBin)) {
+		LoggingController::warning("Failed to add processor bin for '" + QString::fromStdString(processor->displayName()) + "' to pipeline.");
+		return nullptr;
+	}
+
+	// Link tee to processor bin
+	if (!gst_element_link(tee, filterBin)) {
+		LoggingController::warning("Failed to link tee to processor bin for '" + QString::fromStdString(processor->displayName()) + "'.");
+		gst_bin_remove(GST_BIN(m_pipeline.get()), filterBin);
+		return nullptr;
+	}
+
+	// Store references
+	m_processorElements.append(processor);
+	m_processorBins.append(filterBin);
+	m_processingBranches.append(processorBranch);
+
+	LoggingController::debug("Created processor branch for '" + QString::fromStdString(processor->displayName()) + "'");
+
+	return processorBranch;
 }
 
 bool SessionPipeline::createRecorderBranch(Element* element, GstElement* tee)
 {
-	//RecorderBranch* recorderBranch = new RecorderBranch(element, element->sourceType());
-
-	// TODO: add cleanup somewhere for record branches
-
 	if (!createAndLinkRecordBin(element, tee)) {
 		LoggingController::warning("Failed to create and link recording bin for element:" + QString::fromStdString(element->name()));
 	}
@@ -366,81 +491,7 @@ bool SessionPipeline::createRecorderBranch(Element* element, GstElement* tee)
 
 bool SessionPipeline::createProcessingBranch(Element* element, GstElement* tee)
 {
-	//// TODO: add processors differently so they can be had without previewing
-	//auto& procs = m_elementsController.processorsForSource(boostUuidToQUuid(element->uuid()));
-
-	//// Attempt to create and link processors
-	//if (!procs.isEmpty()) {
-	//	// Link processors together one after the other
-	//	GstElement* lastElem = tee;
-	//	for (auto& proc : procs) {
-	//		if (!proc) {
-	//			LoggingController::warning("Null processor found for element '"
-	//				+ QString::fromStdString(element->displayName())
-	//				+ "'; skipping processor insertion.");
-	//			continue;
-	//		}
-
-	//		lastElem = insertProcessorBins(proc, lastElem);
-	//		if (!lastElem) { // TODO: make this waaaaaayy safer and cleaner
-	//			LoggingController::warning("Failed to insert processor bins for processor '"
-	//				+ QString::fromStdString(proc->displayName())
-	//				+ "' into element '"
-	//				+ QString::fromStdString(element->displayName())
-	//				+ "'");
-	//		}
-	//	}
-
-	//	// Create queue between last processor and compositor
-	//	std::string queueName = "proc_comp_queue_" + boost::uuids::to_string(element->uuid());
-	//	GstElement* queue = gst_element_factory_make("queue", queueName.c_str());
-	//	if (!queue) {
-	//		LoggingController::warning("Failed to create processor compositor queue for element:'"
-	//			+ QString::fromStdString(element->displayName())
-	//			+ "'");
-	//		return false;
-	//	}
-	//	if (!gst_bin_add(GST_BIN(m_pipeline.get()), queue)) {
-	//		LoggingController::warning("Failed to add processor compositor queue to pipeline for element:'"
-	//			+ QString::fromStdString(element->displayName())
-	//			+ "'");
-	//		gst_object_unref(queue);
-	//		return false;
-	//	}
-	//	if (!gst_element_link(queue, compositor)) {
-	//		LoggingController::warning("Failed to link processor compositor queue to compositor for element:'"
-	//			+ QString::fromStdString(element->displayName())
-	//			+ "'");
-	//		gst_bin_remove(GST_BIN(m_pipeline.get()), queue);
-	//		return false;
-	//	}
-
-	//	// Modify compositor pad properties
-	//	GstPad* compSrcSinkPad = gst_element_get_static_pad(compositor, "sink_0");
-	//	GstPad* compProcSinkPad = gst_element_get_static_pad(compositor, "sink_1");
-	//	if (!compProcSinkPad || !compSrcSinkPad) {
-	//		LoggingController::warning("Failed to get compositor sink pad(s) for element:'"
-	//			+ QString::fromStdString(element->displayName())
-	//			+ "'");
-	//		return false;
-	//	}
-
-	//	g_object_set(compSrcSinkPad, "operator", 0, nullptr);
-	//	g_object_set(compSrcSinkPad, "zorder", 1, nullptr);
-	//	g_object_set(compProcSinkPad, "operator", 1, nullptr);
-	//	g_object_set(compProcSinkPad, "zorder", 2, nullptr);
-	//	gst_object_unref(compSrcSinkPad);
-	//	gst_object_unref(compProcSinkPad);
-
-	//	// Finally, link the last processor to the compositor
-	//	if (!gst_element_link(lastElem, queue)) {
-	//		LoggingController::warning("Failed to link last processor to compositor for element:'"
-	//			+ QString::fromStdString(element->displayName())
-	//			+ "'");
-	//		return false;
-	//	}
-	//}
-
+	// This is the old implementation - now handled in createSourceBranches
 	return true;
 }
 

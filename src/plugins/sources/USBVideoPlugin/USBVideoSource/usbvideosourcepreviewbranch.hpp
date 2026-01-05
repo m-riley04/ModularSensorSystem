@@ -8,6 +8,6 @@ protected:
 	bool buildBodyBin() override final;
 
 public:
-	explicit USBVideoSourcePreviewBranch(Element*);
+	explicit USBVideoSourcePreviewBranch(Element* element, bool enableOverlay = false);
 	~USBVideoSourcePreviewBranch() override;
 };

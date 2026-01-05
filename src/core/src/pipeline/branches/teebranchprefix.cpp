@@ -4,6 +4,7 @@
 TeeBranchPrefix::TeeBranchPrefix(Element* element, bool enableOverlay)
 	: BinBase(element)
 	, m_hasOverlay(enableOverlay)
+	, m_overlayEnabled(false)
 {
 	// Create common elements
 	m_srcQueue = gst_element_factory_make("queue", "srcQueue");
@@ -31,10 +32,15 @@ TeeBranchPrefix::TeeBranchPrefix(Element* element, bool enableOverlay)
 		// Add all elements to bin
 		gst_bin_add_many(GST_BIN(m_bin), m_srcQueue, m_overlayQueue, m_compositor, m_valve, nullptr);
 
-		// Link queues to compositor
-		if (!gst_element_link(m_srcQueue, m_compositor)
-			|| !gst_element_link(m_overlayQueue, m_compositor)) {
-			LoggingController::warning("TeeBranchPrefix: Failed to link queues to compositor");
+		// Link source queue to compositor
+		if (!gst_element_link(m_srcQueue, m_compositor)) {
+			LoggingController::warning("TeeBranchPrefix: Failed to link source queue to compositor");
+			return;
+		}
+
+		// Link overlay queue to compositor - this creates sink_1 on compositor
+		if (!gst_element_link(m_overlayQueue, m_compositor)) {
+			LoggingController::warning("TeeBranchPrefix: Failed to link overlay queue to compositor");
 			return;
 		}
 
@@ -47,13 +53,17 @@ TeeBranchPrefix::TeeBranchPrefix(Element* element, bool enableOverlay)
 		// Configure compositor
 		g_object_set(m_compositor, "background", 3, nullptr); // transparent background
 
-		// Modify compositor pad properties
+		// Configure the compositor sink pads
 		GstPad* compSrcSinkPad = gst_element_get_static_pad(m_compositor, "sink_0");
 		GstPad* compOverlaySinkPad = gst_element_get_static_pad(m_compositor, "sink_1");
-		if (compSrcSinkPad && compOverlaySinkPad) {
+		
+		if (compSrcSinkPad) {
 			g_object_set(compSrcSinkPad, "zorder", 0, nullptr);
-			g_object_set(compOverlaySinkPad, "zorder", 1, nullptr);
 			gst_object_unref(compSrcSinkPad);
+		}
+		
+		if (compOverlaySinkPad) {
+			g_object_set(compOverlaySinkPad, "zorder", 1, nullptr);
 			gst_object_unref(compOverlaySinkPad);
 		}
 
@@ -61,6 +71,9 @@ TeeBranchPrefix::TeeBranchPrefix(Element* element, bool enableOverlay)
 		m_sinkPad = this->makeSometimesSinkGhostPad("sink", m_srcQueue, "sink");
 		m_sinkOverlayPad = this->makeSometimesSinkGhostPad("sink_overlay", m_overlayQueue, "sink");
 		m_srcPad = this->makeSometimesSrcGhostPad("src", m_valve, "src");
+		
+		// Mark overlay as enabled since everything is connected
+		m_overlayEnabled = true;
 	}
 	else {
 		// Simple passthrough: queue -> valve
@@ -99,6 +112,31 @@ bool TeeBranchPrefix::linkToOverlay(GstElement* overlayElem)
 	}
 	if (!overlayElem || !m_overlayQueue) return false;
 	return gst_element_link(overlayElem, m_overlayQueue);
+}
+
+bool TeeBranchPrefix::linkPadToOverlay(GstPad* srcPad)
+{
+	if (!m_hasOverlay) {
+		LoggingController::warning("TeeBranchPrefix::linkPadToOverlay: Overlay not enabled for this prefix");
+		return false;
+	}
+	if (!srcPad || !m_sinkOverlayPad) return false;
+	
+	GstPadLinkReturn ret = gst_pad_link(srcPad, m_sinkOverlayPad);
+	return ret == GST_PAD_LINK_OK;
+}
+
+bool TeeBranchPrefix::setOverlayEnabled(bool enabled)
+{
+	if (!m_hasOverlay) {
+		LoggingController::warning("TeeBranchPrefix::setOverlayEnabled: Overlay not supported for this prefix");
+		return false;
+	}
+
+	// With the current design, overlay is always connected when hasOverlay is true
+	// This method now just tracks the logical state for potential future use
+	m_overlayEnabled = enabled;
+	return true;
 }
 
 bool TeeBranchPrefix::setValveClosed(bool drop) {

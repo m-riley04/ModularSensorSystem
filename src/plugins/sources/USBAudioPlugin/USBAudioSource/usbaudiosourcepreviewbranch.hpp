@@ -8,6 +8,6 @@ protected:
 	bool buildBodyBin() override final;
 
 public:
-	explicit USBAudioSourcePreviewBranch(Element*);
+	explicit USBAudioSourcePreviewBranch(Element* element, bool enableOverlay = false);
 	~USBAudioSourcePreviewBranch() override;
 };

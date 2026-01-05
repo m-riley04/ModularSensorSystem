@@ -41,7 +41,7 @@ public:
 	/// IPreviewableSource interface
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
-	PreviewBranch* previewBranch() override;
+	PreviewBranch* previewBranch(bool enableOverlay = false) override;
 	GstElement* previewSinkBin() override;
 	std::string previewSinkElementName() const override { return "preview_" + boost::uuids::to_string(uuid()); }
 
@@ -55,7 +55,7 @@ private slots:
 private:
 	void scheduleNextTick();
 	void createBinIfNeeded();
-	void createPreviewBranchIfNeeded();
+	void createPreviewBranchIfNeeded(bool enableOverlay = false);
 	Source::Type m_sourceType = Source::Type::DATA;
 	quintptr m_windowId = 0;
 	std::unique_ptr<TestDataSourceBin> m_bin;

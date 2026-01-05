@@ -27,6 +27,7 @@ public:
     GstElement* gstSrcBin() override final { return nullptr; }
     GstElement* gstFilterBin() override final;
     GstElement* gstSinkBin() override final { return nullptr; }
+    ProcessingBranch* processingBranch() override final { return m_processorBin.get(); }
 
     // IObjectDetectionCapable API
 	void onObjectDetected(DetectionInfo detection) override;
