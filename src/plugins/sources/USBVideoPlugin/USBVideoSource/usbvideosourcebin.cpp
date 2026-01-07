@@ -20,10 +20,10 @@ bool USBVideoSourceBin::build()
     // Initialize queue and converter
     GstElement* conv = gst_element_factory_make("videoconvert", ("usb_vid_conv_" + deviceName).c_str());
     GstElement* queue = gst_element_factory_make("queue", ("usb_vid_queue_" + deviceName).c_str());
-    //GstElement* capsf = gst_element_factory_make("capsfilter", ("usb_vid_caps_" + deviceName).c_str()); // TODO: do we need this?
+	GstElement* capsFilter = gst_element_factory_make("capsfilter", ("usb_vid_caps_" + deviceName).c_str()); // TODO: make this dynamic based on settings
 
     // Check validity of each
-    if (!src || !conv || !queue) {
+    if (!src || !conv || !queue || !capsFilter) {
         LoggingController::warning("Failed to create one or more elements");
         if (src)  gst_object_unref(src);
         if (conv) gst_object_unref(conv);
@@ -31,27 +31,38 @@ bool USBVideoSourceBin::build()
         return false;
     }
 
+    GstCaps* caps = gst_caps_new_simple(
+        "video/x-raw",
+        "format", G_TYPE_STRING, "NV12",
+        "width", G_TYPE_INT, 1600,
+        "height", G_TYPE_INT, 1200,
+        "framerate", GST_TYPE_FRACTION, 30, 1,
+        NULL);
+    g_object_set(G_OBJECT(capsFilter), "caps", caps, nullptr);
+    gst_caps_unref(caps);
+
     // Add elements to bin, and clean up if failed
-    if (!this->addMany(src, conv, queue)) {
+    if (!this->addMany(src, capsFilter, conv, queue)) {
         LoggingController::warning("Failed to add elements to source bin");
         gst_object_unref(src);
+        gst_object_unref(capsFilter);
         gst_object_unref(conv);
         gst_object_unref(queue);
         return false;
     }
 
     // Link elements, and clean up if failed
-    if (!gst_element_link_many(src, conv, queue, NULL)) {
-        LoggingController::warning("Failed to link mfvideosrc -> queue -> videoconvert");
-        gst_bin_remove_many(GST_BIN(m_bin), src, conv, queue, NULL);
+    if (!gst_element_link_many(src, capsFilter, conv, queue, NULL)) {
+        LoggingController::warning("Failed to link mfvideosrc -> capsfilter -> queue -> videoconvert");
+        gst_bin_remove_many(GST_BIN(m_bin), src, capsFilter, conv, queue, NULL);
         return false;
     }
 
     // Create ghost source pads, and clean up if failed
     if (!this->createSrcGhostPad(queue, "src")) {
         LoggingController::warning("Failed to create ghost source pads");
-        gst_element_unlink_many(src, conv, queue, NULL);
-        gst_bin_remove_many(GST_BIN(m_bin), src, conv, queue, NULL);
+        gst_element_unlink_many(src, capsFilter, conv, queue, NULL);
+        gst_bin_remove_many(GST_BIN(m_bin), src, capsFilter, conv, queue, NULL);
         return false;
     }
 

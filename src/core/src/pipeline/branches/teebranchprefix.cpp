@@ -17,12 +17,16 @@ TeeBranchPrefix::TeeBranchPrefix(Element* element, bool enableOverlay)
 
 	if (enableOverlay) {
 		// Create overlay elements
-		m_overlayQueue = gst_element_factory_make("queue", "overlayQueue");
-		m_compositor = gst_element_factory_make("compositor", "compositor");
-		
-		if (!m_overlayQueue || !m_compositor) {
+		m_overlayQueue = gst_element_factory_make("queue", nullptr);
+		m_compositor = gst_element_factory_make("compositor", nullptr);
+		GstElement* videoConvertSrc = gst_element_factory_make("videoconvert", nullptr);
+		GstElement* videoConvertOverlay = gst_element_factory_make("videoconvert", nullptr);
+
+		if (!m_overlayQueue || !videoConvertSrc || !videoConvertOverlay || !m_compositor) {
 			LoggingController::warning("TeeBranchPrefix: Failed to create overlay elements");
 			gst_object_unref(m_srcQueue);
+			gst_object_unref(videoConvertSrc);
+			gst_object_unref(videoConvertOverlay);
 			gst_object_unref(m_valve);
 			m_srcQueue = nullptr;
 			m_valve = nullptr;
@@ -30,22 +34,22 @@ TeeBranchPrefix::TeeBranchPrefix(Element* element, bool enableOverlay)
 		}
 
 		// Add all elements to bin
-		gst_bin_add_many(GST_BIN(m_bin), m_srcQueue, m_overlayQueue, m_compositor, m_valve, nullptr);
+		gst_bin_add_many(GST_BIN(m_bin), m_srcQueue, m_overlayQueue, videoConvertSrc, videoConvertOverlay, m_compositor, m_valve, nullptr);
 
 		// Link source queue to compositor
-		if (!gst_element_link(m_srcQueue, m_compositor)) {
+		if (!gst_element_link_many(m_srcQueue, videoConvertSrc, m_compositor, nullptr)) {
 			LoggingController::warning("TeeBranchPrefix: Failed to link source queue to compositor");
 			return;
 		}
 
 		// Link overlay queue to compositor - this creates sink_1 on compositor
-		if (!gst_element_link(m_overlayQueue, m_compositor)) {
+		if (!gst_element_link_many(m_overlayQueue, videoConvertOverlay, m_compositor, nullptr)) {
 			LoggingController::warning("TeeBranchPrefix: Failed to link overlay queue to compositor");
 			return;
 		}
 
 		// Link compositor to valve
-		if (!gst_element_link(m_compositor, m_valve)) {
+		if (!gst_element_link_many(m_compositor, m_valve, nullptr)) {
 			LoggingController::warning("TeeBranchPrefix: Failed to link compositor to valve");
 			return;
 		}

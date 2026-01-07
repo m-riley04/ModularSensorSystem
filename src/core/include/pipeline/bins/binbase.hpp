@@ -23,7 +23,7 @@ protected:
 	{
 		if (!element) return;
 
-		create(element->id().c_str());
+		create(nullptr);//element->id().c_str());
 	}
 
 	/**
