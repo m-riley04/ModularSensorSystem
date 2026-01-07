@@ -155,6 +155,9 @@
     <ClInclude Include="include\pipeline\branches\processingbranch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\utils\gst_debug_utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">
