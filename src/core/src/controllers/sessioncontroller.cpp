@@ -63,21 +63,25 @@ void SessionController::stopSession()
 
 void SessionController::startRecording()
 {
+	LoggingController::info("Starting recording...");
 	m_pipeline.startRecording();
 }
 
 void SessionController::stopRecording()
 {
+	LoggingController::info("Stopping recording...");
 	m_pipeline.stopRecording();
 }
 
 void SessionController::startProcessing()
 {
+	LoggingController::info("Starting processing...");
 	m_pipeline.startProcessing();
 }
 
 void SessionController::stopProcessing()
 {
+	LoggingController::info("Stopping processing...");
 	m_pipeline.stopProcessing();
 }
 

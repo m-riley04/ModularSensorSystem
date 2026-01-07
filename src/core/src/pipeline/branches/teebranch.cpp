@@ -16,15 +16,15 @@ TeeBranch::TeeBranch(Element* element, bool enableOverlay)
 		return;
 	}
 
-	// Create a "sometimes" sink ghost pad that targets the prefix's sink pad
-	m_sinkPad = makeSometimesSinkGhostPad("sink", m_prefix.bin(), "sink");
+	// Create a sink ghost pad that targets the prefix's sink pad
+	m_sinkPad = makeGhostPad("sink", m_prefix.bin(), "sink");
 	if (!m_sinkPad) {
 		LoggingController::warning("TeeBranch: Failed to create sink ghost pad");
 	}
 
 	// If overlay is enabled, create a ghost pad for the overlay input
 	if (enableOverlay) {
-		m_sinkOverlayPad = makeSometimesSinkGhostPad("sink_overlay", m_prefix.bin(), "sink_overlay");
+		m_sinkOverlayPad = makeGhostPad("sink_overlay", m_prefix.bin(), "sink_overlay");
 		if (!m_sinkOverlayPad) {
 			LoggingController::warning("TeeBranch: Failed to create sink_overlay ghost pad");
 		}

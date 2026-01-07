@@ -19,7 +19,7 @@ bool ProcessingBranch::createOutputPad()
 	}
 
 	// Create a ghost pad from the body's src pad
-	m_srcPad = makeSometimesSrcGhostPad("src", m_body, "src");
+	m_srcPad = makeGhostPad("src", m_body, "src");
 	if (!m_srcPad) {
 		LoggingController::warning("ProcessingBranch::createOutputPad: Failed to create src ghost pad");
 		return false;

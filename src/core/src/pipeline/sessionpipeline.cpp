@@ -396,6 +396,9 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, boo
 				LoggingController::warning("Failed to get overlay sink pad from preview branch for '" + QString::fromStdString(element->displayName()) + "'.");
 			}
 			else {
+				LoggingController::debug("Processor src pad caps before link: " + gstPadCapsSummary(processorSrcPad));
+				LoggingController::debug("Preview overlay sink pad caps before link: " + gstPadCapsSummary(overlaySinkPad));
+
 				// Log pad info for debugging
 				LoggingController::debug("Linking processor src pad '" + QString(GST_PAD_NAME(processorSrcPad)) 
 					+ "' to preview overlay sink pad '" + QString(GST_PAD_NAME(overlaySinkPad)) + "'");
@@ -422,6 +425,9 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, boo
 					branch->setLinkedProcessor(processorBranch);
 					LoggingController::debug("Successfully linked processor to preview overlay for '" + QString::fromStdString(element->displayName()) + "'");
 				}
+
+				LoggingController::debug("Processor src pad caps after link: " + gstPadCapsSummary(processorSrcPad));
+				LoggingController::debug("Preview overlay sink pad caps after link: " + gstPadCapsSummary(overlaySinkPad));
 			}
 		}
 	}

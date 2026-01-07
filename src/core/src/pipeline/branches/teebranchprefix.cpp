@@ -72,9 +72,9 @@ TeeBranchPrefix::TeeBranchPrefix(Element* element, bool enableOverlay)
 		}
 
 		// Create ghost pads - main sink, overlay sink, and src
-		m_sinkPad = this->makeSometimesSinkGhostPad("sink", m_srcQueue, "sink");
-		m_sinkOverlayPad = this->makeSometimesSinkGhostPad("sink_overlay", m_overlayQueue, "sink");
-		m_srcPad = this->makeSometimesSrcGhostPad("src", m_valve, "src");
+		m_sinkPad = this->makeGhostPad("sink", m_srcQueue, "sink");
+		m_sinkOverlayPad = this->makeGhostPad("sink_overlay", m_overlayQueue, "sink");
+		m_srcPad = this->makeGhostPad("src", m_valve, "src");
 		
 		// Mark overlay as enabled since everything is connected
 		m_overlayEnabled = true;
@@ -90,8 +90,8 @@ TeeBranchPrefix::TeeBranchPrefix(Element* element, bool enableOverlay)
 		}
 
 		// Create ghost pads - just sink and src (no overlay)
-		m_sinkPad = this->makeSometimesSinkGhostPad("sink", m_srcQueue, "sink");
-		m_srcPad = this->makeSometimesSrcGhostPad("src", m_valve, "src");
+		m_sinkPad = this->makeGhostPad("sink", m_srcQueue, "sink");
+		m_srcPad = this->makeGhostPad("src", m_valve, "src");
 	}
 }
 
