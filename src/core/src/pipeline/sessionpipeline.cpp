@@ -1,5 +1,6 @@
 #include "pipeline/sessionpipeline.hpp"
 #include <controllers/loggingcontroller.hpp>
+#include <utils/gst_debug_utils.hpp>
 
 SessionPipeline::SessionPipeline(SessionSettings& settings, ElementsController& ec, QObject* parent)
 	: QObject(parent)
