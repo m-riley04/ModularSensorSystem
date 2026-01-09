@@ -8,6 +8,6 @@ protected:
 	bool buildBodyBin() override final;
 
 public:
-	explicit TestDataSourcePreviewBranch(Element* element, bool enableOverlay = false);
+	explicit TestDataSourcePreviewBranch(Element* element);
 	~TestDataSourcePreviewBranch() override;
 };

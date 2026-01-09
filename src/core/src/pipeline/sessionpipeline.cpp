@@ -182,6 +182,7 @@ bool SessionPipeline::cleanup()
 	m_previewBranches.clear();
 	m_recordBranches.clear();
 	m_processingBranches.clear();
+	m_previewCompositors.clear();
 
 	// Element ptrs list cleanup
 	m_recordableElements.clear();
@@ -214,13 +215,6 @@ void SessionPipeline::stopRecording()
 
 void SessionPipeline::startProcessing()
 {
-	// Enable overlay on all preview branches that have processors attached
-	for (auto& previewBranch : m_previewBranches) {
-		if (previewBranch && previewBranch->linkedProcessor()) {
-			previewBranch->setOverlayEnabled(true);
-		}
-	}
-
 	// Enable processing on all processor branches
 	for (auto& processingBranch : m_processingBranches) {
 		if (processingBranch) {
@@ -235,13 +229,6 @@ void SessionPipeline::stopProcessing()
 	for (auto& processingBranch : m_processingBranches) {
 		if (processingBranch) {
 			processingBranch->setProcessingEnabled(false);
-		}
-	}
-
-	// Disable overlay on all preview branches
-	for (auto& previewBranch : m_previewBranches) {
-		if (previewBranch && previewBranch->linkedProcessor()) {
-			previewBranch->setOverlayEnabled(false);
 		}
 	}
 }
@@ -333,7 +320,7 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 
 	// Attempt to add/link preview (with overlay support if processors exist)
 	if (element->asPreviewable() != nullptr) {
-		if (!createPreviewBranch(element, tee, hasProcessors, processorBranch)) {
+		if (!createPreviewBranch(element, tee, processorBranch)) {
 			LoggingController::warning("Failed to create preview branch for element:" + QString::fromStdString(element->name()));
 			return false;
 		}
@@ -350,7 +337,7 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 	return true;
 }
 
-bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, bool enableOverlay, ProcessingBranch* processorBranch)
+bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, ProcessingBranch* processorBranch)
 {
 	IPreviewable* prevElem = element->asPreviewable();
 	if (!prevElem) {
@@ -359,7 +346,7 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, boo
 	}
 
 	// Get or create the preview branch with overlay support if processors are attached
-	PreviewBranch* branch = prevElem->previewBranch(enableOverlay);
+	PreviewBranch* branch = prevElem->previewBranch();
 	GstElement* branchBin = branch ? branch->bin() : nullptr;
 	if (!branchBin) {
 		LoggingController::warning("Failed to get preview branch bin for element:" + QString::fromStdString(element->name()));
@@ -375,62 +362,20 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, boo
 		return false;
 	}
 
-	// Link preview branch to tee
-	if (!gst_element_link(tee, branchBin)) {
+	// If we have a processor branch, create preview compositor links
+	if (processorBranch) {
+		PreviewCompositor* previewComp = new PreviewCompositor(m_pipeline.get(), tee);
+		m_previewCompositors.append(previewComp);
+		if (!previewComp->linkBranches(branch, processorBranch)) {
+			LoggingController::warning("Failed to link preview compositor for element:" + QString::fromStdString(element->name()));
+			delete previewComp; // TODO: use smarter memory management?
+			return false;
+		}
+	}
+	else if (!gst_element_link(tee, branchBin)) { // Otherwise, link tee directly to preview branch
 		LoggingController::warning("Failed to link source bin to preview sink for '" + QString::fromStdString(element->displayName()) + "'.");
 		gst_bin_remove(GST_BIN(m_pipeline.get()), branchBin);
 		return false;
-	}
-
-	// If we have a processor branch, link its output to the preview's overlay input
-	if (processorBranch && enableOverlay) {
-		// Get the processor's output pad
-		GstPad* processorSrcPad = processorBranch->srcPad();
-		if (!processorSrcPad) {
-			LoggingController::warning("Failed to get src pad from processor branch for '" + QString::fromStdString(element->displayName()) + "'.");
-			// Continue without processor overlay - preview will still work
-		}
-		else {
-			// Get the preview's overlay sink pad (exposed on the branch bin)
-			GstPad* overlaySinkPad = branch->sinkOverlayPad();
-			if (!overlaySinkPad) {
-				LoggingController::warning("Failed to get overlay sink pad from preview branch for '" + QString::fromStdString(element->displayName()) + "'.");
-			}
-			else {
-				LoggingController::debug("Processor src pad caps before link: " + gstPadCapsSummary(processorSrcPad));
-				LoggingController::debug("Preview overlay sink pad caps before link: " + gstPadCapsSummary(overlaySinkPad));
-
-				// Log pad info for debugging
-				LoggingController::debug("Linking processor src pad '" + QString(GST_PAD_NAME(processorSrcPad)) 
-					+ "' to preview overlay sink pad '" + QString(GST_PAD_NAME(overlaySinkPad)) + "'");
-
-				// Link processor output to preview overlay input
-				GstPadLinkReturn linkResult = gst_pad_link(processorSrcPad, overlaySinkPad);
-				if (linkResult != GST_PAD_LINK_OK) {
-					QString errorMsg;
-					switch (linkResult) {
-					case GST_PAD_LINK_WRONG_HIERARCHY: errorMsg = "WRONG_HIERARCHY"; break;
-					case GST_PAD_LINK_WAS_LINKED: errorMsg = "WAS_LINKED"; break;
-					case GST_PAD_LINK_WRONG_DIRECTION: errorMsg = "WRONG_DIRECTION"; break;
-					case GST_PAD_LINK_NOFORMAT: errorMsg = "NOFORMAT"; break;
-					case GST_PAD_LINK_NOSCHED: errorMsg = "NOSCHED"; break;
-					case GST_PAD_LINK_REFUSED: errorMsg = "REFUSED"; break;
-					default: errorMsg = QString::number(linkResult);
-					}
-					LoggingController::warning("Failed to link processor output to preview overlay for '" 
-						+ QString::fromStdString(element->displayName()) 
-						+ "'. Error: " + errorMsg);
-				}
-				else {
-					// Store the linked processor in the preview branch
-					branch->setLinkedProcessor(processorBranch);
-					LoggingController::debug("Successfully linked processor to preview overlay for '" + QString::fromStdString(element->displayName()) + "'");
-				}
-
-				LoggingController::debug("Processor src pad caps after link: " + gstPadCapsSummary(processorSrcPad));
-				LoggingController::debug("Preview overlay sink pad caps after link: " + gstPadCapsSummary(overlaySinkPad));
-			}
-		}
 	}
 
 	return true;

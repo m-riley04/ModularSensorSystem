@@ -11,16 +11,12 @@
  * 1. A prefix
  * 2. A body
  * A "branch" is really just a bin with a specific structure.
- * 
- * This bin exposes a "sometimes" sink pad that connects to the prefix.
- * If overlay is enabled, it also exposes a "sink_overlay" pad.
  */
 class MSS_CORE_API TeeBranch : public BinBase {
 protected:
 	TeeBranchPrefix m_prefix;
 	GstElement* m_body = nullptr;
-	GstPad* m_sinkPad = nullptr; // Sometimes ghost pad for main input
-	GstPad* m_sinkOverlayPad = nullptr; // Sometimes ghost pad for overlay input (if enabled)
+	GstPad* m_sinkPad = nullptr;
 
 	/**
 	 * @brief Builds the body bin for this branch.
@@ -38,27 +34,13 @@ public:
 	/**
 	 * @brief Constructs a TeeBranch.
 	 * @param element The parent element
-	 * @param enableOverlay If true, the prefix will include compositor for overlay support
 	 */
-	TeeBranch(Element* element, bool enableOverlay = false);
+	TeeBranch(Element* element);
 	virtual ~TeeBranch();
 
 	GstElement* body() const { return m_body; }
 	TeeBranchPrefix& prefix() { return m_prefix; }
 	GstPad* sinkPad() const { return m_sinkPad; }
-	GstPad* sinkOverlayPad() const { return m_sinkOverlayPad; }
 	void setBody(GstElement* body) { m_body = body; }
 	bool setValveClosed(bool closed) { return m_prefix.setValveClosed(closed); }
-
-	// Overlay support
-	bool hasOverlaySupport() const { return m_prefix.hasOverlay(); }
-	bool setOverlayEnabled(bool enabled) { return m_prefix.setOverlayEnabled(enabled); }
-	bool isOverlayEnabled() const { return m_prefix.isOverlayEnabled(); }
-	
-	/**
-	 * @brief Links a processor branch's output to the overlay input of this branch.
-	 * @param processorBranch The processor branch to link
-	 * @return true if successful
-	 */
-	bool linkProcessorToOverlay(GstElement* processorBranchBin);
 };

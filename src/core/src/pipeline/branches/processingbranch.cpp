@@ -2,7 +2,7 @@
 #include <controllers/loggingcontroller.hpp>
 
 ProcessingBranch::ProcessingBranch(Element* element)
-	: TeeBranch(element, false) // Processing branches don't need overlay themselves
+	: TeeBranch(element)
 	, m_srcPad(nullptr)
 {
 }

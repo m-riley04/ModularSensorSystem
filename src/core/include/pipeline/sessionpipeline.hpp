@@ -16,6 +16,7 @@
 #include <pipeline/branches/previewbranch.hpp>
 #include <pipeline/branches/recorderbranch.hpp>
 #include <pipeline/branches/processingbranch.hpp>
+#include <pipeline/branches/intermediaries/previewcompositor.hpp>
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
 
@@ -63,7 +64,7 @@ private:
 
 	bool createSourceElements(Element*);
 	bool createSourceBranches(Element*, GstElement*);
-	bool createPreviewBranch(Element*, GstElement*, bool enableOverlay = false, ProcessingBranch* processorBranch = nullptr);
+	bool createPreviewBranch(Element*, GstElement*, ProcessingBranch* processorBranch = nullptr);
 	bool createRecorderBranch(Element*, GstElement*);
 	bool createProcessingBranch(Element*, GstElement*);
 	ProcessingBranch* createProcessorBranch(Element* sourceElement, Processor* processor, GstElement* tee);
@@ -99,6 +100,7 @@ private:
 	QList<PreviewBranch*> m_previewBranches;
 	QList<RecorderBranch*> m_recordBranches;
 	QList<ProcessingBranch*> m_processingBranches;
+	QList<PreviewCompositor*> m_previewCompositors;
 	QList<Processor*> m_processorElements;
 	QList<IRecordable*> m_recordableElements;
 	ElementsController& m_elementsController;

@@ -158,6 +158,9 @@
     <ClInclude Include="include\utils\gst_debug_utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\pipeline\branches\intermediaries\previewcompositor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">
@@ -218,6 +221,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\pipeline\branches\processingbranch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pipeline\branches\intermediaries\previewcompositor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

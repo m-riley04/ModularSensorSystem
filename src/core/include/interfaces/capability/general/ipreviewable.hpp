@@ -16,10 +16,9 @@ public:
 
 	/**
 	 * @brief Gets the preview branch associated with this object.
-	 * @param enableOverlay If true, the preview branch will support overlay input from processors.
 	 * @return A pointer to the PreviewBranch object.
 	 */
-	virtual PreviewBranch* previewBranch(bool enableOverlay = false) = 0;
+	virtual PreviewBranch* previewBranch() = 0;
 
 	/**
 	 * @brief Method to retrieve the preview bin sink.

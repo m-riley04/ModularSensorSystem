@@ -33,7 +33,7 @@ public:
 	/// IPreviewableSource interface
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
-	PreviewBranch* previewBranch(bool enableOverlay = false) override;
+	PreviewBranch* previewBranch() override;
 	GstElement* previewSinkBin() override;
 	std::string previewSinkElementName() const override { return "preview_" + boost::uuids::to_string(uuid()); }
 
@@ -43,7 +43,7 @@ public slots:
 
 private:
 	void createBinIfNeeded();
-	void createPreviewBranchIfNeeded(bool enableOverlay = false);
+	void createPreviewBranchIfNeeded();
 	Source::Type m_sourceType = Source::Type::AUDIO;
 	quintptr m_windowId = 0;
 	std::unique_ptr<USBAudioSourceBin> m_bin;

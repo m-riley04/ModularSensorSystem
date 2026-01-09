@@ -3,8 +3,8 @@
 #include <pipeline/sinks/preview_defaults.hpp>
 #include <utils/boost_qt_conversions.hpp>
 
-USBAudioSourcePreviewBranch::USBAudioSourcePreviewBranch(Element* element, bool enableOverlay)
-	: PreviewBranch(element, enableOverlay)
+USBAudioSourcePreviewBranch::USBAudioSourcePreviewBranch(Element* element)
+	: PreviewBranch(element)
 {
 	buildBodyBin();
 }

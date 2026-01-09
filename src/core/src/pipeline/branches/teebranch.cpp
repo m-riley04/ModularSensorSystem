@@ -2,12 +2,11 @@
 #include <controllers/loggingcontroller.hpp>
 #include <memory>
 
-TeeBranch::TeeBranch(Element* element, bool enableOverlay)
+TeeBranch::TeeBranch(Element* element)
 	: BinBase(element)
-	, m_prefix(element, enableOverlay)
+	, m_prefix(element)
 	, m_body(nullptr)
 	, m_sinkPad(nullptr)
-	, m_sinkOverlayPad(nullptr)
 {
 	// Add the prefix bin to this bin
 	if (!addMany(m_prefix.bin()))
@@ -21,21 +20,12 @@ TeeBranch::TeeBranch(Element* element, bool enableOverlay)
 	if (!m_sinkPad) {
 		LoggingController::warning("TeeBranch: Failed to create sink ghost pad");
 	}
-
-	// If overlay is enabled, create a ghost pad for the overlay input
-	if (enableOverlay) {
-		m_sinkOverlayPad = makeGhostPad("sink_overlay", m_prefix.bin(), "sink_overlay");
-		if (!m_sinkOverlayPad) {
-			LoggingController::warning("TeeBranch: Failed to create sink_overlay ghost pad");
-		}
-	}
 }
 
 TeeBranch::~TeeBranch()
 {
 	// Ghost pads are owned by the bin and will be cleaned up when the bin is destroyed
 	m_sinkPad = nullptr;
-	m_sinkOverlayPad = nullptr;
 }
 
 bool TeeBranch::attachBody()
@@ -66,30 +56,4 @@ bool TeeBranch::attachBody()
 	}
 
 	return true;
-}
-
-bool TeeBranch::linkProcessorToOverlay(GstElement* processorBranchBin)
-{
-	if (!m_prefix.hasOverlay()) {
-		LoggingController::warning("TeeBranch::linkProcessorToOverlay: Overlay not supported for this branch");
-		return false;
-	}
-
-	if (!processorBranchBin) {
-		LoggingController::warning("TeeBranch::linkProcessorToOverlay: Processor branch bin is null");
-		return false;
-	}
-
-	// Get the src pad from the processor branch
-	GstPad* processorSrcPad = gst_element_get_static_pad(processorBranchBin, "src");
-	if (!processorSrcPad) {
-		LoggingController::warning("TeeBranch::linkProcessorToOverlay: Failed to get src pad from processor branch");
-		return false;
-	}
-
-	// Link to the overlay input
-	bool result = m_prefix.linkPadToOverlay(processorSrcPad);
-	gst_object_unref(processorSrcPad);
-
-	return result;
 }

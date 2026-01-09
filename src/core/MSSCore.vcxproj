@@ -106,6 +106,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\pipeline\branches\intermediaries\previewcompositor.cpp" />
     <ClCompile Include="src\controllers\elementscontroller.cpp" />
     <ClCompile Include="src\controllers\loggingcontroller.cpp" />
     <ClCompile Include="src\controllers\sessioncontroller.cpp" />
@@ -134,6 +135,7 @@
     <QtMoc Include="include\logging\logwriterworker.hpp" />
     <ClInclude Include="include\interfaces\capability\processors\iobjectdetectioncapable.hpp" />
     <ClInclude Include="include\models\settings_models.hpp" />
+    <ClInclude Include="include\pipeline\branches\intermediaries\previewcompositor.hpp" />
     <ClInclude Include="include\pipeline\branches\previewbranch.hpp" />
     <ClInclude Include="include\pipeline\branches\processingbranch.hpp" />
     <ClInclude Include="include\pipeline\branches\recorderbranch.hpp" />

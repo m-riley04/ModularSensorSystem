@@ -54,10 +54,10 @@ void USBVideoSource::createRecorderBranchIfNeeded()
 	}
 }
 
-void USBVideoSource::createPreviewBranchIfNeeded(bool enableOverlay)
+void USBVideoSource::createPreviewBranchIfNeeded()
 {
 	if (!m_previewBranch) {
-		m_previewBranch = std::make_unique<USBVideoSourcePreviewBranch>(this, enableOverlay);
+		m_previewBranch = std::make_unique<USBVideoSourcePreviewBranch>(this);
 	}
 }
 
@@ -68,9 +68,9 @@ GstElement* USBVideoSource::gstSrcBin()
 	return m_sourceBin->bin();
 }
 
-PreviewBranch* USBVideoSource::previewBranch(bool enableOverlay)
+PreviewBranch* USBVideoSource::previewBranch()
 {
-	createPreviewBranchIfNeeded(enableOverlay);
+	createPreviewBranchIfNeeded();
 	return m_previewBranch.get();
 }
 
