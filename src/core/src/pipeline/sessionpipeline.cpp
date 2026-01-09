@@ -362,21 +362,22 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, Pro
 		return false;
 	}
 
+	PreviewCompositor* previewComp = new PreviewCompositor(m_pipeline.get(), tee, branch);
+	m_previewCompositors.append(previewComp);
+
 	// If we have a processor branch, create preview compositor links
 	if (processorBranch) {
-		PreviewCompositor* previewComp = new PreviewCompositor(m_pipeline.get(), tee);
-		m_previewCompositors.append(previewComp);
-		if (!previewComp->linkBranches(branch, processorBranch)) {
-			LoggingController::warning("Failed to link preview compositor for element:" + QString::fromStdString(element->name()));
+		if (!previewComp->linkProcessingBranch(processorBranch)) {
+			LoggingController::warning("Failed to link processing branch for element:" + QString::fromStdString(element->name()));
 			delete previewComp; // TODO: use smarter memory management?
 			return false;
 		}
 	}
-	else if (!gst_element_link(tee, branchBin)) { // Otherwise, link tee directly to preview branch
-		LoggingController::warning("Failed to link source bin to preview sink for '" + QString::fromStdString(element->displayName()) + "'.");
-		gst_bin_remove(GST_BIN(m_pipeline.get()), branchBin);
-		return false;
-	}
+	//else if (!gst_element_link(tee, branchBin)) { // Otherwise, link tee directly to preview branch
+	//	LoggingController::warning("Failed to link source bin to preview sink for '" + QString::fromStdString(element->displayName()) + "'.");
+	//	gst_bin_remove(GST_BIN(m_pipeline.get()), branchBin);
+	//	return false;
+	//}
 
 	return true;
 }

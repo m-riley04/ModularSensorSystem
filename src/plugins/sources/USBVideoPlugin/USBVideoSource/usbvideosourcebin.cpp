@@ -31,7 +31,7 @@ bool USBVideoSourceBin::build()
         return false;
     }
 
-    /*GstCaps* caps = gst_caps_new_simple(
+    GstCaps* caps = gst_caps_new_simple(
         "video/x-raw",
         "format", G_TYPE_STRING, "NV12",
         "width", G_TYPE_INT, 1920,
@@ -39,7 +39,7 @@ bool USBVideoSourceBin::build()
         "framerate", GST_TYPE_FRACTION, 30, 1,
         NULL);
     g_object_set(G_OBJECT(capsFilter), "caps", caps, nullptr);
-    gst_caps_unref(caps);*/
+    gst_caps_unref(caps);
 
     // Add elements to bin, and clean up if failed
     if (!this->addMany(src, capsFilter, conv, queue)) {

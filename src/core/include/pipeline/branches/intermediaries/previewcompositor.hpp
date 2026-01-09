@@ -18,10 +18,11 @@ private:
 	ProcessingBranch* m_processingBranch;
 	GstPipeline* m_pipeline;
 	GstElement* m_mainTee;
-	
+
+	bool linkBaseElements();
 public:
-	PreviewCompositor(GstPipeline* pipeline, GstElement* mainTee);
+	PreviewCompositor(GstPipeline* pipeline, GstElement* mainTee, PreviewBranch* previewBranch);
 	~PreviewCompositor();
 
-	bool linkBranches(PreviewBranch* previewBranch, ProcessingBranch* processingBranch);
+	bool linkProcessingBranch(ProcessingBranch* processingBranch);
 };
