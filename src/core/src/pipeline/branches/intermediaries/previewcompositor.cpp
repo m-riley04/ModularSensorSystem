@@ -16,13 +16,6 @@ PreviewCompositor::PreviewCompositor(GstPipeline* pipeline, GstElement* mainTee,
 		return;
 	}
 
-	// Configure compositor properties
-	//g_object_set(G_OBJECT(m_compositor),
-	//	"background", 1, // black background
-	//	"ignore-inactive-pads", FALSE, // do not ignore inactive pads
-	//	nullptr);
-
-
 	this->linkBaseElements();
 }
 

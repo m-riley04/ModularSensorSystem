@@ -32,19 +32,19 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 
 	// Initialize elements
 	GstElement* bin = gst_bin_new(binName);
-	GstElement* startQueue = gst_element_factory_make("queue", "inputQueue");
 	GstElement* videoConvert = gst_element_factory_make("videoconvert", "videoConvert");
+	GstElement* videoScale = gst_element_factory_make("videoscale", "videoScale");
 	GstElement* onnxinference = gst_element_factory_make("onnxinference", "inference");
 	GstElement* tensorDecoder = gst_element_factory_make(decoderElementStr.c_str(), "tensorDecoder");
 	GstElement* overlay = gst_element_factory_make("objectdetectionoverlay", "overlay");
 	// TODO/CONSIDER: add a video converter here if needed?
 
 	// Check validity of each
-	if (!bin || !startQueue || !videoConvert || !onnxinference || !tensorDecoder || !overlay) {
+	if (!bin || !videoConvert || !videoScale || !onnxinference || !tensorDecoder || !overlay) {
 		LoggingController::warning("Failed to create one or more elements");
 		if (bin) gst_object_unref(bin);
-		if (startQueue) gst_object_unref(startQueue);
 		if (videoConvert) gst_object_unref(videoConvert);
+		if (videoScale) gst_object_unref(videoScale);
 		if (onnxinference) gst_object_unref(onnxinference);
 		if (tensorDecoder) gst_object_unref(tensorDecoder);
 		if (overlay) gst_object_unref(overlay);
@@ -52,7 +52,7 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	}
 
 	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(bin), startQueue, videoConvert, onnxinference, tensorDecoder, overlay, nullptr);
+	gst_bin_add_many(GST_BIN(bin), videoConvert, videoScale, onnxinference, tensorDecoder, overlay, nullptr);
 
 	/// CONFIGURATION
 
@@ -82,14 +82,14 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	//g_object_set(tensorDecoder, "max-detections", 100, nullptr); // TODO: make configurable
 
 	// Link source bin to elements
-	if (!gst_element_link_many(startQueue, videoConvert, onnxinference, tensorDecoder, overlay, nullptr)) {
+	if (!gst_element_link_many(videoScale, videoConvert, onnxinference, tensorDecoder, overlay, nullptr)) {
 		LoggingController::warning("Failed to link source bin to elements.");
 		gst_object_unref(bin);
 		return nullptr;
 	}
 
 	// Add input ghost pad
-	GstPad* inputPad = gst_element_get_static_pad(startQueue, "sink");
+	GstPad* inputPad = gst_element_get_static_pad(videoScale, "sink");
 	GstPad* ghostPad = gst_ghost_pad_new("sink", inputPad);
 	gst_object_unref(inputPad);
 	gst_element_add_pad(bin, ghostPad);
