@@ -6,7 +6,7 @@ PreviewCompositor::PreviewCompositor(GstPipeline* pipeline, GstElement* mainTee,
 	: m_pipeline(pipeline)
 	, m_mainTee(mainTee)
 	, m_previewBranch(previewBranch)
-	, m_compositor(gst_element_factory_make("input-selector", "preview_compositor"))
+	, m_compositor(gst_element_factory_make("compositor", "preview_compositor"))
 	, m_queuePreview(gst_element_factory_make("queue", "preview_queue"))
 	, m_queueProcessor(nullptr)
 	, m_processingBranch(nullptr)
@@ -49,9 +49,9 @@ bool PreviewCompositor::linkBaseElements()
 
 	// Configure pads
 	// Set zorder for preview branch to be on top
-	/*GstPad* previewPad = gst_element_get_static_pad(m_compositor, "sink_0");
-	g_object_set(G_OBJECT(previewPad), "zorder", 99, nullptr);
-	gst_object_unref(previewPad);*/
+	GstPad* previewPad = gst_element_get_static_pad(m_compositor, "sink_0");
+	g_object_set(G_OBJECT(previewPad), "zorder", 1, nullptr);
+	gst_object_unref(previewPad);
 
 	return true;
 }
@@ -79,9 +79,13 @@ bool PreviewCompositor::linkProcessingBranch(ProcessingBranch* processingBranch)
 	}
 
 	// Set zorder for processing branch to be below preview
-	/*GstPad* processingPad = gst_element_get_static_pad(m_compositor, "sink_1");
-	g_object_set(G_OBJECT(processingPad), "zorder", 1, nullptr);
-	gst_object_unref(processingPad);*/
+	GstPad* processingPad = gst_element_get_static_pad(m_compositor, "sink_1");
+	g_object_set(G_OBJECT(processingPad), "zorder", 99, nullptr);
+	gst_object_unref(processingPad);
+
+	// Set the active pad to be the processing branch initially
+	/*GstPad* activePad = gst_element_get_static_pad(m_compositor, "sink_1");
+	g_object_set(m_compositor, "active-pad", activePad, nullptr);*/
 
 	return true;
 }
