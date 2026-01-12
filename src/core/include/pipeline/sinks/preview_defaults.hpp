@@ -163,6 +163,11 @@ inline GstElement* createDefaultVideoPreviewSink(guintptr windowId, const char* 
 	// Add elements to bin
 	gst_bin_add_many(GST_BIN(bin), sink, nullptr);
 
+	// Configure
+	g_object_set(sink,
+		"sync", FALSE,    // render as fast as buffers arrive
+		NULL);
+
 	// Add input ghost pad
 	GstPad* inputPad = gst_element_get_static_pad(sink, "sink");
 	GstPad* ghostPad = gst_ghost_pad_new("sink", inputPad);

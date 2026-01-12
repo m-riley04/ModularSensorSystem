@@ -34,17 +34,21 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	GstElement* bin = gst_bin_new(binName);
 	GstElement* videoConvert = gst_element_factory_make("videoconvert", "videoConvert");
 	GstElement* videoScale = gst_element_factory_make("videoscale", "videoScale");
+	GstElement* capsFilter = gst_element_factory_make("capsfilter", "capsFilter");
+	GstElement* onnxQueue = gst_element_factory_make("queue", "onnxQueue");
 	GstElement* onnxinference = gst_element_factory_make("onnxinference", "inference");
 	GstElement* tensorDecoder = gst_element_factory_make(decoderElementStr.c_str(), "tensorDecoder");
 	GstElement* overlay = gst_element_factory_make("objectdetectionoverlay", "overlay");
 	// TODO/CONSIDER: add a video converter here if needed?
 
 	// Check validity of each
-	if (!bin || !videoConvert || !videoScale || !onnxinference || !tensorDecoder || !overlay) {
+	if (!bin || !videoConvert || !videoScale || !capsFilter || !onnxQueue || !onnxinference || !tensorDecoder || !overlay) {
 		LoggingController::warning("Failed to create one or more elements");
 		if (bin) gst_object_unref(bin);
 		if (videoConvert) gst_object_unref(videoConvert);
 		if (videoScale) gst_object_unref(videoScale);
+		if (capsFilter) gst_object_unref(capsFilter);
+		if (onnxQueue) gst_object_unref(onnxQueue);
 		if (onnxinference) gst_object_unref(onnxinference);
 		if (tensorDecoder) gst_object_unref(tensorDecoder);
 		if (overlay) gst_object_unref(overlay);
@@ -52,9 +56,26 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	}
 
 	// Add elements to pipeline
-	gst_bin_add_many(GST_BIN(bin), videoConvert, videoScale, onnxinference, tensorDecoder, overlay, nullptr);
+	gst_bin_add_many(GST_BIN(bin), videoConvert, videoScale, capsFilter, onnxQueue, onnxinference, tensorDecoder, overlay, nullptr);
 
 	/// CONFIGURATION
+
+	// caps filter
+	//GstCaps* caps = gst_caps_new_simple(
+	//	"video/x-raw",
+	//	"format", G_TYPE_STRING, "NV12",
+	//	"width", G_TYPE_INT, 640,    // TODO: make configurable
+	//	"height", G_TYPE_INT, 480,   // TODO: make configurable
+	//	"framerate", GST_TYPE_FRACTION, 30, 1, // TODO: make configurable
+	//	nullptr);
+	//g_object_set(capsFilter, "caps", caps, nullptr);
+	//gst_caps_unref(caps);
+
+	// queues
+	g_object_set(onnxQueue,
+		"leaky", 2,
+		"max-size-buffers", 1,
+		nullptr);
 
 	// onnx
 	QDir current = QDir::current();
@@ -67,9 +88,10 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 		return nullptr; // TODO/CONSIDER: handle better?
 	}
 	gchar* model_file = yoloPath.data();
-	g_object_set(onnxinference, "model-file", model_file, nullptr);
-	g_object_set(onnxinference, "execution-provider", 0, nullptr); // CPU execution provider. TODO: make configurable
-	g_object_set(onnxinference, "optimization-level", 0, nullptr);
+	g_object_set(onnxinference,
+		"model-file", model_file, 
+		"execution-provider", 0, 
+		"optimization-level", 3, nullptr); // TODO: make configurable
 
 	// yolo tensor decoder
 	QByteArray yoloClassesPath = yoloFolderPath + QByteArray(labelFilenameStr);
@@ -78,18 +100,23 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 		gst_object_unref(bin);
 		return nullptr; // TODO/CONSIDER: handle better?
 	}
-	g_object_set(tensorDecoder, "label-file", yoloClassesPath.constData(), nullptr); // TODO: make configurable
-	//g_object_set(tensorDecoder, "max-detections", 100, nullptr); // TODO: make configurable
+	g_object_set(tensorDecoder, "label-file", yoloClassesPath.constData(),
+		"max-detections", 100, nullptr); // TODO: make configurable
+
+	// overlay
+	g_object_set(overlay,
+		"object-detection-outline-color", 3372154880, // #C8FF0000 (red with some transparency)
+		nullptr);
 
 	// Link source bin to elements
-	if (!gst_element_link_many(videoScale, videoConvert, onnxinference, tensorDecoder, overlay, nullptr)) {
+	if (!gst_element_link_many(videoConvert, videoScale, capsFilter, onnxQueue, onnxinference, tensorDecoder, overlay, nullptr)) {
 		LoggingController::warning("Failed to link source bin to elements.");
 		gst_object_unref(bin);
 		return nullptr;
 	}
 
 	// Add input ghost pad
-	GstPad* inputPad = gst_element_get_static_pad(videoScale, "sink");
+	GstPad* inputPad = gst_element_get_static_pad(videoConvert, "sink");
 	GstPad* ghostPad = gst_ghost_pad_new("sink", inputPad);
 	gst_object_unref(inputPad);
 	gst_element_add_pad(bin, ghostPad);
