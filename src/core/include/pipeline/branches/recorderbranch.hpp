@@ -20,7 +20,25 @@ public:
 	 * @return True if the valve state was successfully set, false otherwise.
 	 */
 	virtual bool setRecordingEnabled(bool enabled) {
-		return m_prefix.setValveClosed(!enabled);
+		// Close/open valve from data flow
+		if (!m_prefix.setValveClosed(!enabled)) {
+			LoggingController::warning("Failed to " + QString(enabled ? "enable" : "disable") + " recording for element:'"
+				+ QString::fromStdString(m_element->id())
+				+ "'");
+			return false;
+		}
+
+		// Finalize recording if disabling
+		if (!enabled) {
+			if (!finalizeRecording()) {
+				LoggingController::warning("Failed to finalize recording for element:'"
+					+ QString::fromStdString(m_element->id())
+					+ "'");
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**

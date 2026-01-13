@@ -64,9 +64,6 @@ bool SessionPipeline::build(const QList<Element*>& elements, const QList<IRecord
 	// Cleanly tear down any existing pipeline first
 	close();
 
-	// Set session elements
-	m_recordableElements = recordableElements;
-
 	// Create the main pipeline
 	m_pipeline.reset(GST_PIPELINE(gst_pipeline_new(MAIN_PIPELINE_NAME)));
 	if (!m_pipeline) {
@@ -113,7 +110,11 @@ bool SessionPipeline::close()
 		return false;
 	}
 
-	this->cleanup();
+	if (!this->cleanup()) {
+		LoggingController::warning("Failed to clean up pipeline");
+		return false;
+	}
+
 	setState(State::STOPPED);
 
 	return true;
@@ -126,19 +127,7 @@ bool SessionPipeline::start()
 		return false;
 	}
 
-	//debugDisplayGstBin(GST_ELEMENT(m_pipeline.get()), true);
-
-	// Step through states to surface potential errors
-	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_READY) == GST_STATE_CHANGE_FAILURE) {
-		LoggingController::warning("Failed to set pipeline to READY");
-		close();
-		return false;
-	}
-	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_PAUSED) == GST_STATE_CHANGE_FAILURE) {
-		LoggingController::warning("Failed to set pipeline to PAUSED");
-		close();
-		return false;
-	}
+	// Set pipeline to playing
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_PLAYING) == GST_STATE_CHANGE_FAILURE) {
 		LoggingController::warning("Failed to set pipeline to PLAYING");
 		close();
@@ -150,9 +139,7 @@ bool SessionPipeline::start()
 
 bool SessionPipeline::stop()
 {
-	if (!m_pipeline) {
-		return true;
-	}
+	if (!m_pipeline) return true;
 
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_NULL) == GST_STATE_CHANGE_FAILURE) {
 		LoggingController::warning("Failed to set pipeline to NULL");
@@ -173,20 +160,12 @@ bool SessionPipeline::cleanup()
 
 	// GST elements ptrs lists cleanup
 	m_sourceBins.clear();
-	m_previewBins.clear();
-	m_recordBins.clear();
-	m_recordableElementBins.clear();
-	m_processorBins.clear();
 
 	// Branch lists cleanup
 	m_previewBranches.clear();
 	m_recordBranches.clear();
 	m_processingBranches.clear();
 	m_previewCompositors.clear();
-
-	// Element ptrs list cleanup
-	m_recordableElements.clear();
-	m_processorElements.clear();
 
 	return true;
 }
@@ -195,9 +174,11 @@ void SessionPipeline::startRecording()
 {
 	m_lastRecordingTimestamp = generateTimestampNs();
 
-	if (!openRecordingValves(m_recordableElements)) {
-		LoggingController::warning("Failed to open recording valves during startRecording.");
-		return;
+	for (RecorderBranch* recorderBranch : m_recordBranches) {
+		if (!recorderBranch) continue; // null check
+		if (!recorderBranch->setRecordingEnabled(true)) {
+			LoggingController::warning("Failed to start recording for element: " + QString::fromStdString(recorderBranch->element()->name()));
+		}
 	}
 
 	setState(State::RECORDING);
@@ -205,9 +186,12 @@ void SessionPipeline::startRecording()
 
 void SessionPipeline::stopRecording()
 {
-	if (!closeRecordingValves(m_recordableElements)) {
-		LoggingController::warning("Failed to close recording valves during stopRecording.");
-		return;
+
+	for (RecorderBranch* recorderBranch : m_recordBranches) {
+		if (!recorderBranch) continue; // null check
+		if (!recorderBranch->setRecordingEnabled(false)) {
+			LoggingController::warning("Failed to stop recording for element: " + QString::fromStdString(recorderBranch->element()->name()));
+		}
 	}
 
 	setState(State::STARTED);
@@ -217,8 +201,9 @@ void SessionPipeline::startProcessing()
 {
 	// Enable processing on all processor branches
 	for (auto& processingBranch : m_processingBranches) {
-		if (processingBranch) {
-			processingBranch->setProcessingEnabled(true);
+		if (!processingBranch) continue;
+		if (!processingBranch->setProcessingEnabled(true)) {
+			LoggingController::warning("Failed to enable processing on branch: " + QString::fromStdString(processingBranch->element()->name()));
 		}
 	}
 }
@@ -227,8 +212,9 @@ void SessionPipeline::stopProcessing()
 {
 	// Disable processing on all processor branches
 	for (auto& processingBranch : m_processingBranches) {
-		if (processingBranch) {
-			processingBranch->setProcessingEnabled(false);
+		if (!processingBranch) continue;
+		if (!processingBranch->setProcessingEnabled(false)) {
+			LoggingController::warning("Failed to disable processing on element: " + QString::fromStdString(processingBranch->element()->name()));
 		}
 	}
 }
@@ -362,22 +348,21 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, Pro
 		return false;
 	}
 
-	PreviewCompositor* previewComp = new PreviewCompositor(m_pipeline.get(), tee, branch);
-	m_previewCompositors.append(previewComp);
-
 	// If we have a processor branch, create preview compositor links
 	if (processorBranch) {
+		PreviewCompositor* previewComp = new PreviewCompositor(m_pipeline.get(), tee, branch);
+		m_previewCompositors.append(previewComp);
 		if (!previewComp->linkProcessingBranch(processorBranch)) {
 			LoggingController::warning("Failed to link processing branch for element:" + QString::fromStdString(element->name()));
 			delete previewComp; // TODO: use smarter memory management?
 			return false;
 		}
 	}
-	//else if (!gst_element_link(tee, branchBin)) { // Otherwise, link tee directly to preview branch
-	//	LoggingController::warning("Failed to link source bin to preview sink for '" + QString::fromStdString(element->displayName()) + "'.");
-	//	gst_bin_remove(GST_BIN(m_pipeline.get()), branchBin);
-	//	return false;
-	//}
+	else if (!gst_element_link(tee, branchBin)) { // Otherwise, link tee directly to preview branch
+		LoggingController::warning("Failed to link source bin to preview sink for '" + QString::fromStdString(element->displayName()) + "'.");
+		gst_bin_remove(GST_BIN(m_pipeline.get()), branchBin);
+		return false;
+	}
 
 	return true;
 }
@@ -424,8 +409,6 @@ ProcessingBranch* SessionPipeline::createProcessorBranch(Element* sourceElement,
 	}
 
 	// Store references
-	m_processorElements.append(processor);
-	m_processorBins.append(filterBin);
 	m_processingBranches.append(processorBranch);
 
 	LoggingController::debug("Created processor branch for '" + QString::fromStdString(processor->displayName()) + "'");
@@ -439,12 +422,6 @@ bool SessionPipeline::createRecorderBranch(Element* element, GstElement* tee)
 		LoggingController::warning("Failed to create and link recording bin for element:" + QString::fromStdString(element->name()));
 	}
 
-	return true;
-}
-
-bool SessionPipeline::createProcessingBranch(Element* element, GstElement* tee)
-{
-	// This is the old implementation - now handled in createSourceBranches
 	return true;
 }
 
@@ -493,9 +470,6 @@ bool SessionPipeline::createAndLinkPreviewBin(Element* element, GstElement* tee)
 		gst_bin_remove(GST_BIN(m_pipeline.get()), sink);
 		return false;
 	}
-
-	// If we succeed all paths above, add to our tracking list
-	m_previewBins.append(sink);
 
 	return true;
 }
@@ -554,53 +528,7 @@ bool SessionPipeline::createAndLinkRecordBin(Element* element, GstElement* tee)
 		return false;
 	}
 
-	// If we succeed all paths above, add to our tracking list
-	m_recordBins.append(sink);
-
 	return true;
-}
-
-GstElement* SessionPipeline::insertProcessorBins(Processor* processor, GstElement* prevElement)
-{
-	if (!processor) {
-		LoggingController::warning("Cannot insert processor GST elements: processor is null");
-		return nullptr;
-	}
-
-	if (!prevElement) {
-		LoggingController::warning("Cannot insert processor GST elements: previous element is null");
-		return nullptr;
-	}
-
-	// Dynamic cast to pipeline element and init gst element
-	IPipelineElement* pipelineElem = processor->asPipelineElement();
-	GstElement* filter = pipelineElem->gstFilterBin();
-
-	// Check validity of filter
-	if (!filter) {
-		LoggingController::warning("Failed to create filter for '" + QString::fromStdString(processor->displayName()) + "'");
-		return nullptr;
-	}
-
-	// TODO: configure gst processor elements (when properties are added like cpu vs gpu)	
-	
-	// Add processor bin to pipeline
-	if (!gst_bin_add(GST_BIN(m_pipeline.get()), filter)) {
-		LoggingController::warning("Failed to add processor filter for '" + QString::fromStdString(processor->displayName()) + "' to pipeline.");
-		return nullptr;
-	}
-
-	// Link previous element to processor filter
-	if (!gst_element_link(prevElement, filter)) {
-		LoggingController::warning("Failed to link previous element to processor filter for '" + QString::fromStdString(processor->displayName()) + "'.");
-		gst_bin_remove(GST_BIN(m_pipeline.get()), filter);
-		return nullptr;
-	}
-
-	// Add processor bin tracking list
-	m_processorBins.append(filter);
-
-	return filter;
 }
 
 bool SessionPipeline::openRecordingValves(QList<IRecordable*>& elements)

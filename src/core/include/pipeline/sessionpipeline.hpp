@@ -66,22 +66,14 @@ private:
 	bool createSourceBranches(Element*, GstElement*);
 	bool createPreviewBranch(Element*, GstElement*, ProcessingBranch* processorBranch = nullptr);
 	bool createRecorderBranch(Element*, GstElement*);
-	bool createProcessingBranch(Element*, GstElement*);
 	ProcessingBranch* createProcessorBranch(Element* sourceElement, Processor* processor, GstElement* tee);
 	bool createAndLinkPreviewBin(Element*, GstElement*);
 	bool createAndLinkRecordBin(Element*, GstElement*);
-	
-	/**
-	 * Inserts the processor bins into the pipeline for the given element.
-	 * // TODO/CONSIDER: move this into the main source elements creation somehow?
-	 */
-	GstElement* insertProcessorBins(Processor*, GstElement*);
 
 	bool openRecordingValves(QList<IRecordable*>&);
 	bool closeRecordingValves(QList<IRecordable*>&);
 	bool openRecordingValveForElement(IRecordable*);
 	bool closeRecordingValveForElement(IRecordable*);
-
 
 	bool openProcessingValveForElement(Processor*);
 	bool closeProcessingValveForElement(Processor*);
@@ -93,16 +85,10 @@ private:
 
 	// Volatile refs/ptrs
 	QList<GstElement*> m_sourceBins;
-	QList<GstElement*> m_previewBins;
-	QList<GstElement*> m_recordBins;
-	QList<GstElement*> m_processorBins;
-	QList<GstElement*> m_recordableElementBins;
 	QList<PreviewBranch*> m_previewBranches;
 	QList<RecorderBranch*> m_recordBranches;
 	QList<ProcessingBranch*> m_processingBranches;
 	QList<PreviewCompositor*> m_previewCompositors;
-	QList<Processor*> m_processorElements;
-	QList<IRecordable*> m_recordableElements;
 	ElementsController& m_elementsController;
 	SessionSettings& m_sessionSettings;
 	guint m_pipelineBusWatchId = 0;

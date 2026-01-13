@@ -16,6 +16,7 @@ public:
 	}
 
 	GstElement* bin() const { return m_bin; }
+	Element* element() const { return m_element; }
 
 protected:
 	explicit BinBase(Element* element)

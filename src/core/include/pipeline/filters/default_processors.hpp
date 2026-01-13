@@ -39,7 +39,6 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 	GstElement* onnxinference = gst_element_factory_make("onnxinference", "inference");
 	GstElement* tensorDecoder = gst_element_factory_make(decoderElementStr.c_str(), "tensorDecoder");
 	GstElement* overlay = gst_element_factory_make("objectdetectionoverlay", "overlay");
-	// TODO/CONSIDER: add a video converter here if needed?
 
 	// Check validity of each
 	if (!bin || !videoConvert || !videoScale || !capsFilter || !onnxQueue || !onnxinference || !tensorDecoder || !overlay) {
@@ -60,20 +59,9 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 
 	/// CONFIGURATION
 
-	// caps filter
-	//GstCaps* caps = gst_caps_new_simple(
-	//	"video/x-raw",
-	//	"format", G_TYPE_STRING, "NV12",
-	//	"width", G_TYPE_INT, 640,    // TODO: make configurable
-	//	"height", G_TYPE_INT, 480,   // TODO: make configurable
-	//	"framerate", GST_TYPE_FRACTION, 30, 1, // TODO: make configurable
-	//	nullptr);
-	//g_object_set(capsFilter, "caps", caps, nullptr);
-	//gst_caps_unref(caps);
-
 	// queues
 	g_object_set(onnxQueue,
-		"leaky", 2,
+		"leaky", 2, // leak downstream for smoother playback
 		"max-size-buffers", 1,
 		nullptr);
 
@@ -100,8 +88,10 @@ inline GstElement* createDefaultObjectDetectorProcessorFilter(ObjectDetectorMode
 		gst_object_unref(bin);
 		return nullptr; // TODO/CONSIDER: handle better?
 	}
-	g_object_set(tensorDecoder, "label-file", yoloClassesPath.constData(),
-		"max-detections", 100, nullptr); // TODO: make configurable
+	g_object_set(tensorDecoder, 
+		"label-file", yoloClassesPath.constData(),
+		"max-detections", 100, 
+		nullptr); // TODO: make configurable
 
 	// overlay
 	g_object_set(overlay,
