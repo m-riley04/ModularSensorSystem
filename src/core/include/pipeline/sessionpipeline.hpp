@@ -17,6 +17,7 @@
 #include <pipeline/branches/recorderbranch.hpp>
 #include <pipeline/branches/processingbranch.hpp>
 #include <pipeline/branches/intermediaries/previewcompositor.hpp>
+#include <vector>
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
 
@@ -82,16 +83,19 @@ private:
 	State m_state = State::STOPPED;
 	ns m_lastSessionTimestamp = 0;
 	ns m_lastRecordingTimestamp = 0;
+	guint m_pipelineBusWatchId = 0;
 
-	// Volatile refs/ptrs
+	// Borrowed ptrs
 	QList<GstElement*> m_sourceBins;
 	QList<PreviewBranch*> m_previewBranches;
 	QList<RecorderBranch*> m_recordBranches;
 	QList<ProcessingBranch*> m_processingBranches;
-	QList<PreviewCompositor*> m_previewCompositors;
+
+	// Owned ptrs
+	std::vector<std::unique_ptr<PreviewCompositor>> m_previewCompositors;
+
 	ElementsController& m_elementsController;
 	SessionSettings& m_sessionSettings;
-	guint m_pipelineBusWatchId = 0;
 
 signals:
 	void started();

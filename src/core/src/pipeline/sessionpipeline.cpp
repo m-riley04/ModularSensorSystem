@@ -350,11 +350,9 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, Pro
 
 	// If we have a processor branch, create preview compositor links
 	if (processorBranch) {
-		PreviewCompositor* previewComp = new PreviewCompositor(m_pipeline.get(), tee, branch);
-		m_previewCompositors.append(previewComp);
-		if (!previewComp->linkProcessingBranch(processorBranch)) {
+		m_previewCompositors.emplace_back(std::make_unique<PreviewCompositor>(m_pipeline.get(), tee, branch));
+		if (!m_previewCompositors.back()->linkProcessingBranch(processorBranch)) {
 			LoggingController::warning("Failed to link processing branch for element:" + QString::fromStdString(element->name()));
-			delete previewComp; // TODO: use smarter memory management?
 			return false;
 		}
 	}

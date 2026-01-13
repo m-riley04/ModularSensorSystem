@@ -47,14 +47,6 @@ bool PreviewCompositor::linkBaseElements()
 		return false;
 	}
 
-	// Configure pads
-	// Set zorder for preview branch to be on top
-	/*GstPad* previewPad = gst_element_get_static_pad(m_compositor, "sink_0");
-	g_object_set(G_OBJECT(previewPad), 
-		"zorder", 2,
-		nullptr);
-	gst_object_unref(previewPad);*/
-
 	return true;
 }
 
@@ -80,18 +72,12 @@ bool PreviewCompositor::linkProcessingBranch(ProcessingBranch* processingBranch)
 		return false;
 	}
 
-	// Set zorder for processing branch to be below preview
-	/*GstPad* processingPad = gst_element_get_static_pad(m_compositor, "sink_1");
-	g_object_set(G_OBJECT(processingPad),
-		"zorder", 1,
-		nullptr);
-	gst_object_unref(processingPad);*/
-
 	// Set the active pad to be the processing branch initially
 	GstPad* activePad = gst_element_get_static_pad(m_compositor, "sink_1");
 	g_object_set(m_compositor,
 		"active-pad", activePad, 
 		nullptr);
+	gst_object_unref(activePad);
 
 	return true;
 }
