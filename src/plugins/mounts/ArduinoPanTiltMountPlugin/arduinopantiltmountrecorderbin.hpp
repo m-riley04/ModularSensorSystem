@@ -10,7 +10,7 @@ protected:
 
 public:
 	ArduinoPanTiltMountRecorderBin(Element* element);
-	virtual ~ArduinoPanTiltMountRecorderBin() = default;
+	virtual ~ArduinoPanTiltMountRecorderBin() override;
 
 	bool finalizeRecording() override {
 		// Send EOS to the muxer to finalize the file

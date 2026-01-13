@@ -10,6 +10,12 @@ protected:
 	virtual bool buildBodyBin() = 0;
 	GstElement* m_filesinkElement = nullptr;
 
+	/**
+	 * @brief Finalizes recording by sending EOS to the appropriate element(s).
+	 * @return True if the EOS event was successfully sent; false otherwise.
+	 */
+	virtual bool finalizeRecording() = 0;
+
 public:
 	RecorderBranch(Element* element, Source::Type sourceType);
 	virtual ~RecorderBranch();
@@ -20,7 +26,7 @@ public:
 	 * @return True if the valve state was successfully set, false otherwise.
 	 */
 	virtual bool setRecordingEnabled(bool enabled) {
-		// Close/open valve from data flow
+		// Close/open valve from data flow FIRST
 		if (!m_prefix.setValveClosed(!enabled)) {
 			LoggingController::warning("Failed to " + QString(enabled ? "enable" : "disable") + " recording for element:'"
 				+ QString::fromStdString(m_element->id())
@@ -64,9 +70,5 @@ public:
 		return true;
 	}
 
-	/**
-	 * @brief Finalizes recording by sending EOS to the appropriate element(s).
-	 * @return True if the EOS event was successfully sent; false otherwise.
-	 */
-	virtual bool finalizeRecording() = 0;
+	
 };

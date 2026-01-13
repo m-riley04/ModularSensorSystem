@@ -6,6 +6,14 @@ ArduinoPanTiltMountRecorderBin::ArduinoPanTiltMountRecorderBin(Element* element)
     buildBodyBin();
 }
 
+ArduinoPanTiltMountRecorderBin::~ArduinoPanTiltMountRecorderBin()
+{
+	// Bins usually own their elements. However, since we got these elements through gst_bin_get_by_name, we still must unref them.
+	if (m_filesinkElement) {
+        gst_object_unref(m_filesinkElement);
+    }
+}
+
 bool ArduinoPanTiltMountRecorderBin::buildBodyBin()
 {
     std::string deviceUuid = boost::uuids::to_string(m_element->uuid());

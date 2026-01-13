@@ -16,8 +16,7 @@ protected:
 
 public:
 	USBVideoSourceRecorderBranch(Element* element);
-
-	virtual ~USBVideoSourceRecorderBranch() = default;
+	virtual ~USBVideoSourceRecorderBranch() override;
 
 	bool finalizeRecording() override {
 		// Send EOS to the muxer to finalize the file

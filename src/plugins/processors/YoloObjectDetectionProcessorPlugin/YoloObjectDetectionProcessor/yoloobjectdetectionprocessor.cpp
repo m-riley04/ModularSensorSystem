@@ -12,7 +12,7 @@ GstElement* YoloObjectDetectionProcessor::gstFilterBin()
 {
 	// Lazy initialization
 	if (!m_processorBin) {
-		std::make_unique<YoloProcessorBranch>(this);
+		m_processorBin = std::make_unique<YoloProcessorBranch>(this);
 	}
 	return m_processorBin->bin();
 }

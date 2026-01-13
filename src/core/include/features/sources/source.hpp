@@ -18,7 +18,7 @@ public:
 	/**
 	 * @brief The type of source.
 	 */
-	enum Type {
+	enum class Type {
 		VIDEO,
 		AUDIO,
 		DATA,
@@ -28,28 +28,6 @@ public:
 public:
 	Source(ElementInfo& element, QObject* parent = nullptr) : Element(element, parent) {}
 	virtual ~Source() = default;
-
-	/// OVERRIDES ///
-
-	/**
-	 * The hardware ID for the device.
-	 * Different APIs have different names for this, including:
-	 * - "uuid" (QtMultimedia)
-	 * - "device_name" (FFmpeg)
-	 * - "device-name" (GStreamer)
-	 * @return hardware ID string
-	 */
-	//virtual std::string uuid() const override = 0;
-
-	/**
-	 * The name of the device from the system.
-	 * Different APIs have different names for this, including:
-	 * - "description" (QtMultimedia)
-	 * - "device_description" (FFmpeg)
-	 * - "device-uuid" or "device-path" (GStreamer)
-	 * @return user-friendly name of the device from the hardware.
-	 */
-	//virtual std::string name() const override = 0;
 
 	/**
 	 * The type of device.
@@ -61,14 +39,17 @@ public:
 /// STATIC HELPERS ///
 public:
 	static bool isVideo(Source* src) {
+		if (!src) return false;
 		return src->type() == Source::Type::VIDEO;
 	}
 
 	static bool isAudio(Source* src) {
+		if (!src) return false;
 		return src->type() == Source::Type::AUDIO;
 	}
 
 	static bool isData(Source* src) {
+		if (!src) return false;
 		return src->type() == Source::Type::DATA;
 	}
 
@@ -80,10 +61,10 @@ public:
 	static std::string typeToString(Type type)
 	{
 		switch (type) {
-		case VIDEO: return "Video";
-		case AUDIO: return "Audio";
-		case DATA: return "Data";
-		case OTHER: return "Other";
+		case Type::VIDEO: return "Video";
+		case Type::AUDIO: return "Audio";
+		case Type::DATA: return "Data";
+		case Type::OTHER: return "Other";
 		default: return "Unknown";
 		}
 	}

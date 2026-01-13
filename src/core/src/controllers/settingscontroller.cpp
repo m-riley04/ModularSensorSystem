@@ -35,9 +35,6 @@ void SettingsController::loadSettings()
 	m_advancedSettings.logDirectory = QDir(m_settings.value("advanced/logDirectory", m_defaultAdvancedSettings.logDirectory.absolutePath()).toString());
 	m_advancedSettings.useUniqueLogFiles = m_settings.value("advanced/useUniqueLogFiles", m_defaultAdvancedSettings.useUniqueLogFiles).toBool();
 
-	// Preset settings
-	m_presetSettings.presetDirectory = QDir(m_settings.value("preset/presetDirectory", m_defaultPresetSettings.presetDirectory.absolutePath()).toString());
-
 	// Session settings
 	m_sessionSettings.confirmOnStopSession = m_settings.value("session/confirmOnStopSession", m_defaultSessionSettings.confirmOnStopSession).toBool();
 	m_sessionSettings.confirmOnStopRecording = m_settings.value("session/confirmOnStopRecording", m_defaultSessionSettings.confirmOnStopRecording).toBool();
@@ -92,9 +89,6 @@ void SettingsController::saveSettings()
 	m_settings.setValue("advanced/enableLogging", m_advancedSettings.enableLogging);
 	m_settings.setValue("advanced/logDirectory", m_advancedSettings.logDirectory.absolutePath());
 	m_settings.setValue("advanced/useUniqueLogFiles", m_advancedSettings.useUniqueLogFiles);
-
-	// Preset settings
-	m_settings.setValue("preset/presetDirectory", m_presetSettings.presetDirectory.absolutePath());
 
 	// Session settings
 	m_settings.setValue("session/confirmOnStopSession", m_sessionSettings.confirmOnStopSession);

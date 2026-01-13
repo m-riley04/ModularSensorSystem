@@ -154,8 +154,9 @@ inline GstElement* createDefaultVideoPreviewSink(guintptr windowId, const char* 
 	GstElement* sink = gst_element_factory_make(sinkName, binName); // TODO: make this dynamic
 
 	// Check validity of each
-	if (!sink) {
+	if (!bin || !sink) {
 		LoggingController::warning("Failed to create one or more elements");
+		if (bin) gst_object_unref(bin);
 		if (sink) gst_object_unref(sink);
 		return nullptr;
 	}

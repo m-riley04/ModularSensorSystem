@@ -54,9 +54,13 @@ public:
 	virtual const Type elementType() const noexcept override { return Type::Unknown; }
 
 	// Converters to capability interfaces
+
 	virtual IRecordable* asRecordable() override final { return dynamic_cast<IRecordable*>(this); }
+	const IRecordable* asRecordable() const { return const_cast<Element*>(this)->asRecordable(); }
 	virtual IPipelineElement* asPipelineElement() override final { return dynamic_cast<IPipelineElement*>(this); }
+	const IPipelineElement* asPipelineElement() const { return const_cast<Element*>(this)->asPipelineElement(); }
 	virtual IPreviewable* asPreviewable() override final { return dynamic_cast<IPreviewable*>(this); }
+	const IPreviewable* asPreviewable() const { return const_cast<Element*>(this)->asPreviewable(); }
 
 public slots:
 	virtual void onSessionStart() {}; // nop by default

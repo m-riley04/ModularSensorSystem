@@ -43,7 +43,7 @@ bool YoloProcessorBranch::buildBodyBin()
         return false;
     }
 
-    // Create output pad for linking to preview overlay
+	// Create output pad for linking to further branches/sinks
     if (!createOutputPad()) {
         LoggingController::warning("Failed to create output pad for processor branch");
         return false;

@@ -9,10 +9,7 @@
 class BinBase {
 public:
 	virtual ~BinBase() {
-		if (m_bin) {
-			gst_object_unref(m_bin);
-			m_bin = nullptr;
-		}
+		// The pipeline this bin is added to owns the bin, and thus should handle the unref.
 	}
 
 	GstElement* bin() const { return m_bin; }

@@ -6,6 +6,15 @@ USBVideoSourceRecorderBranch::USBVideoSourceRecorderBranch(Element* element)
     buildBodyBin();
 }
 
+USBVideoSourceRecorderBranch::~USBVideoSourceRecorderBranch()
+{
+	// Even though bins manage their children, we still need to unref the elements we got through gst_bin_get_by_name
+	if (m_encoder) gst_object_unref(m_encoder);
+	if (m_parse) gst_object_unref(m_parse);
+	if (m_muxer) gst_object_unref(m_muxer);
+	if (m_filesinkElement) gst_object_unref(m_filesinkElement);
+}
+
 bool USBVideoSourceRecorderBranch::buildBodyBin()
 {
     std::string deviceUuid = boost::uuids::to_string(m_element->uuid());

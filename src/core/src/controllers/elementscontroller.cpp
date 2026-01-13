@@ -70,6 +70,7 @@ const QList<Source*> ElementsController::sourcesForMount(const QUuid& mountId) c
 	const auto sourceIds = m_mountToSources.value(mountId);
 	for (auto& id : sourceIds) {
 		Source* source = m_sourceController.byId(id);
+		if (!source) continue;
 		sources.push_back(source);
 	}
 	return sources;

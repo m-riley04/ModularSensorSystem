@@ -174,10 +174,11 @@ void SessionPipeline::startRecording()
 {
 	m_lastRecordingTimestamp = generateTimestampNs();
 
-	for (RecorderBranch* recorderBranch : m_recordBranches) {
-		if (!recorderBranch) continue; // null check
-		if (!recorderBranch->setRecordingEnabled(true)) {
-			LoggingController::warning("Failed to start recording for element: " + QString::fromStdString(recorderBranch->element()->name()));
+	// Iterate through all IRecordable elements and start recording
+	for (IRecordable* recordableElement : this->m_elementsController.sourceController().recordableSources()) {
+		if (!recordableElement) continue; // null check
+		if (!recordableElement->startRecording()) {
+			LoggingController::warning("Failed to start recording for element"); // todo: name element?
 		}
 	}
 
@@ -187,10 +188,11 @@ void SessionPipeline::startRecording()
 void SessionPipeline::stopRecording()
 {
 
-	for (RecorderBranch* recorderBranch : m_recordBranches) {
-		if (!recorderBranch) continue; // null check
-		if (!recorderBranch->setRecordingEnabled(false)) {
-			LoggingController::warning("Failed to stop recording for element: " + QString::fromStdString(recorderBranch->element()->name()));
+	// Iterate through all IRecordable elements and start recording
+	for (IRecordable* recordableElement : this->m_elementsController.sourceController().recordableSources()) {
+		if (!recordableElement) continue; // null check
+		if (!recordableElement->stopRecording()) {
+			LoggingController::warning("Failed to stop recording for element"); // todo: name element?
 		}
 	}
 
@@ -199,22 +201,20 @@ void SessionPipeline::stopRecording()
 
 void SessionPipeline::startProcessing()
 {
-	// Enable processing on all processor branches
-	for (auto& processingBranch : m_processingBranches) {
-		if (!processingBranch) continue;
-		if (!processingBranch->setProcessingEnabled(true)) {
-			LoggingController::warning("Failed to enable processing on branch: " + QString::fromStdString(processingBranch->element()->name()));
+	for (auto& processor : m_elementsController.processingController().processors()) {
+		if (!processor) continue;
+		if (!processor->startProcessing()) {
+			LoggingController::warning("Failed to start processor: " + QString::fromStdString(processor->name()));
 		}
 	}
 }
 
 void SessionPipeline::stopProcessing()
 {
-	// Disable processing on all processor branches
-	for (auto& processingBranch : m_processingBranches) {
-		if (!processingBranch) continue;
-		if (!processingBranch->setProcessingEnabled(false)) {
-			LoggingController::warning("Failed to disable processing on element: " + QString::fromStdString(processingBranch->element()->name()));
+	for (auto& processor : m_elementsController.processingController().processors()) {
+		if (!processor) continue;
+		if (!processor->stopProcessing()) {
+			LoggingController::warning("Failed to stop processor: " + QString::fromStdString(processor->name()));
 		}
 	}
 }
@@ -308,7 +308,7 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 	if (element->asPreviewable() != nullptr) {
 		if (!createPreviewBranch(element, tee, processorBranch)) {
 			LoggingController::warning("Failed to create preview branch for element:" + QString::fromStdString(element->name()));
-			return false;
+			// TODO: should we pass through here?
 		}
 	}
 
@@ -316,7 +316,7 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 	if (element->asRecordable() != nullptr) {
 		if (!createRecorderBranch(element, tee)) {
 			LoggingController::warning("Failed to create recorder branch for element:" + QString::fromStdString(element->name()));
-			return false;
+			// TODO: should we pass through here?
 		}
 	}
 
@@ -418,6 +418,7 @@ bool SessionPipeline::createRecorderBranch(Element* element, GstElement* tee)
 {
 	if (!createAndLinkRecordBin(element, tee)) {
 		LoggingController::warning("Failed to create and link recording bin for element:" + QString::fromStdString(element->name()));
+		return false;
 	}
 
 	return true;

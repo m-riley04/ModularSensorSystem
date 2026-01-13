@@ -108,6 +108,5 @@ bool USBVideoSource::startRecording()
 bool USBVideoSource::stopRecording()
 {
 	if (!m_recorderBranch) return false;
-	// Close the valve FIRST, THEN send the EOS to finalize the file
-	return m_recorderBranch->setRecordingEnabled(false) && m_recorderBranch->finalizeRecording();
+	return m_recorderBranch->setRecordingEnabled(false); // finalization happens within the branch
 }
