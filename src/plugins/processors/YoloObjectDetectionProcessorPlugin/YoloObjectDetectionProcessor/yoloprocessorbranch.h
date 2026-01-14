@@ -9,6 +9,10 @@
 #include <vector>
 #include <gst/analytics/gstanalyticsmeta.h>
 
+/**
+ * @brief Represents a detection in an object detection system.
+ * TODO: move this to base SDK?
+ */
 struct Detection {
 	int x{}, y{}, w{}, h{};
 	float confidence{};
@@ -17,37 +21,37 @@ struct Detection {
 
 /**
  * @brief Extracts object detection metadata from a GStreamer buffer and converts it into a vector of Detection structures.
- * @param buffer The GStreamer buffer containing analytics metadata to extract detections from. If NULL, an empty vector is returned.
- * @return A vector of Detection objects, each containing bounding box coordinates (x, y, w, h), confidence score, and object label extracted from the buffer's analytics metadata.
+ * @param buffer The GStreamer buffer containing analytics metadata to extract detections from. Can be null (to get an empty vector).
+ * @return A vector of Detection objects.
  */
 static std::vector<Detection> extractDetections(GstBuffer* buffer) {
     std::vector<Detection> out;
     if (!buffer) return out;
 
-    // 1) Get analytics relation meta from the buffer (or NULL if absent)
-    GstAnalyticsRelationMeta* rel = gst_buffer_get_analytics_relation_meta(buffer);  // :contentReference[oaicite:5]{index=5}
+    // Get analytics relation meta from the buffer (or NULL if absent)
+    GstAnalyticsRelationMeta* rel = gst_buffer_get_analytics_relation_meta(buffer); // :contentReference[oaicite:5]{index=5}
     if (!rel) return out;
 
-    // 2) Iterate all analytics entries on this buffer
+    // Iterate all analytics entries on this buffer
     gpointer state = nullptr;
     GstAnalyticsMtd mtd; // handle to an analytics metadata entry
 
     while (gst_analytics_relation_meta_iterate(
-        rel, &state, GST_ANALYTICS_MTD_TYPE_ANY, &mtd)) { // :contentReference[oaicite:6]{index=6}
+        rel, &state, GST_ANALYTICS_MTD_TYPE_ANY, &mtd)) {
         const guint id = gst_analytics_mtd_get_id(&mtd);
 
-        // 3) Try to interpret this entry as Object-Detection metadata
+        // Try to interpret this entry as Object-Detection metadata
         GstAnalyticsODMtd od;
-        if (!gst_analytics_relation_meta_get_od_mtd(rel, id, &od)) { // :contentReference[oaicite:7]{index=7}
+        if (!gst_analytics_relation_meta_get_od_mtd(rel, id, &od)) {
             continue; // not an OD entry
         }
 
-        // 4) Extract bbox + confidence + label from OD metadata
+        // Extract bbox + confidence + label from OD metadata
         gint x = 0, y = 0, w = 0, h = 0;
         gfloat conf = 0.0f;
-        gst_analytics_od_mtd_get_location(&od, &x, &y, &w, &h, &conf); // 
+        gst_analytics_od_mtd_get_location(&od, &x, &y, &w, &h, &conf);
 
-        GQuark q = gst_analytics_od_mtd_get_obj_type(&od);            // 
+        GQuark q = gst_analytics_od_mtd_get_obj_type(&od);
         const char* label_c = g_quark_to_string(q);
         std::string label = label_c ? label_c : "";
 

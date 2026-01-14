@@ -63,7 +63,7 @@ bool YoloProcessorBranch::buildBodyBin()
 
             auto detections = extractDetections(buffer);
 
-			LoggingController::info("YoloProcessorBranch detected " + QString::number(detections.size()) + " objects.");
+			//LoggingController::info("YoloProcessorBranch detected " + QString::number(detections.size()) + " objects.");
 
             return GST_PAD_PROBE_OK;
         },
