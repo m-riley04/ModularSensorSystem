@@ -1,6 +1,15 @@
 #include "yoloprocessorbranch.h"
 #include <pipeline/filters/default_processors.hpp>
+#include <controllers/loggingcontroller.hpp>
 #include <utils/boost_qt_conversions.hpp>
+#include <gst/app/gstappsink.h>
+#include <gst/video/video.h>
+#include <gst/analytics/analytics.h>
+#include <gst/analytics/gstanalyticsmeta.h>
+
+static GstFlowReturn on_new_sample(GstAppSink* appsink, gpointer data) {
+
+}
 
 YoloProcessorBranch::YoloProcessorBranch(Element* element)
 	: ProcessingBranch(element)
@@ -42,6 +51,25 @@ bool YoloProcessorBranch::buildBodyBin()
         LoggingController::warning("Failed to attach body to processor branch");
         return false;
     }
+
+	// Get the src pad of the body so that we can inspect buffers for detection metadata
+    GstPad* pad = gst_element_get_static_pad(m_body, "src");
+    gst_pad_add_probe(
+        pad,
+        GST_PAD_PROBE_TYPE_BUFFER,
+        [](GstPad*, GstPadProbeInfo* info, gpointer) -> GstPadProbeReturn {
+            GstBuffer* buffer = gst_pad_probe_info_get_buffer(info);
+            if (!buffer) return GST_PAD_PROBE_OK;
+
+            auto detections = extractDetections(buffer);
+
+			LoggingController::info("YoloProcessorBranch detected " + QString::number(detections.size()) + " objects.");
+
+            return GST_PAD_PROBE_OK;
+        },
+        nullptr,
+        nullptr);
+    gst_object_unref(pad);
 
 	// Create output pad for linking to further branches/sinks
     if (!createOutputPad()) {
