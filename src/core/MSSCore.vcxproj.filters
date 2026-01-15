@@ -161,6 +161,9 @@
     <ClInclude Include="include\pipeline\branches\intermediaries\previewcompositor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\models\processing_models.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">

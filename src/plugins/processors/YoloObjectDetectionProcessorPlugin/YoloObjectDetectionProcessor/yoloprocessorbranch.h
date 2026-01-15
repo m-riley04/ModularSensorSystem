@@ -8,24 +8,16 @@
 #include <glib.h>
 #include <vector>
 #include <gst/analytics/gstanalyticsmeta.h>
-
-/**
- * @brief Represents a detection in an object detection system.
- * TODO: move this to base SDK?
- */
-struct Detection {
-	int x{}, y{}, w{}, h{};
-	float confidence{};
-	std::string label;
-};
+#include <functional>
+#include "interfaces/capability/processors/iobjectdetectioncapable.hpp"
 
 /**
  * @brief Extracts object detection metadata from a GStreamer buffer and converts it into a vector of Detection structures.
  * @param buffer The GStreamer buffer containing analytics metadata to extract detections from. Can be null (to get an empty vector).
  * @return A vector of Detection objects.
  */
-static std::vector<Detection> extractDetections(GstBuffer* buffer) {
-    std::vector<Detection> out;
+static std::vector<DetectionInfo> extractDetections(GstBuffer* buffer) {
+    std::vector<DetectionInfo> out;
     if (!buffer) return out;
 
     // Get analytics relation meta from the buffer (or NULL if absent)
@@ -55,10 +47,11 @@ static std::vector<Detection> extractDetections(GstBuffer* buffer) {
         const char* label_c = g_quark_to_string(q);
         std::string label = label_c ? label_c : "";
 
-        out.push_back(Detection{
-          .x = x, .y = y, .w = w, .h = h,
+        out.push_back(DetectionInfo{
+          .label = std::move(label.data()),
+		  .labelLength = label.size(),
           .confidence = conf,
-          .label = std::move(label),
+          .x = x, .y = y, .width = w, .height = h,
             });
     }
 
@@ -67,13 +60,18 @@ static std::vector<Detection> extractDetections(GstBuffer* buffer) {
 
 class YoloProcessorBranch : public ProcessingBranch {
 public:
+	using DetectionsCallback = std::function<void(std::vector<DetectionInfo>)>;
+
 	YoloProcessorBranch(Element* element);
 	~YoloProcessorBranch();
+
+	void setDetectionsCallback(DetectionsCallback cb) { m_onDetections = std::move(cb); }
 
 protected:
 	virtual bool buildBodyBin() override;
 
 private:
+	DetectionsCallback m_onDetections;
 	GstElement* m_inference;
 	GstElement* m_detector;
 	GstElement* m_overlay;

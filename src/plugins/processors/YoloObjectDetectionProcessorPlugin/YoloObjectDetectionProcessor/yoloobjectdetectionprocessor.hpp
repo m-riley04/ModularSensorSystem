@@ -35,7 +35,5 @@ public:
 private:
 	std::unique_ptr<YoloProcessorBranch> m_processorBin;
 
-signals:
-    void objectDetected(Source* source);
 };
 

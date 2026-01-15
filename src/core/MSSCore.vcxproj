@@ -134,6 +134,7 @@
     <ClInclude Include="include\interfaces\capability\general\irecordable.hpp" />
     <QtMoc Include="include\logging\logwriterworker.hpp" />
     <ClInclude Include="include\interfaces\capability\processors\iobjectdetectioncapable.hpp" />
+    <ClInclude Include="include\models\processing_models.hpp" />
     <ClInclude Include="include\models\settings_models.hpp" />
     <ClInclude Include="include\pipeline\branches\intermediaries\previewcompositor.hpp" />
     <ClInclude Include="include\pipeline\branches\previewbranch.hpp" />

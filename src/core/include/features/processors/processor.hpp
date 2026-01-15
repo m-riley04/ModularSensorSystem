@@ -4,6 +4,8 @@
 #include "sdk/plugins/iprocessorplugin.hpp"
 #include "features/element.hpp"
 #include "core_export.hpp"
+#include "models/processing_models.hpp"
+#include <vector>
 
 /**
  * An element that processes data from a source.
@@ -22,5 +24,8 @@ public:
 
     // Element implementations
     virtual const IElement::Type elementType() const noexcept override { return IElement::Type::Processor; }
+
+signals:
+    void objectsDetected(std::vector<DetectionInfo>);
 
 };

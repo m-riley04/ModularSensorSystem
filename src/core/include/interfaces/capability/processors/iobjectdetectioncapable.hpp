@@ -1,18 +1,7 @@
 #pragma once
 
 #include <string>
-
-/**
- * @brief The structure containing information about a detected object.
- */
-struct DetectionInfo {
-	std::string name;
-	float confidence;
-	int x;
-	int y;
-	int width;
-	int height;
-};
+#include <models/processing_models.hpp>
 
 class IObjectDetectionCapable
 {

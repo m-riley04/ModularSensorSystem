@@ -7,10 +7,6 @@
 #include <gst/analytics/analytics.h>
 #include <gst/analytics/gstanalyticsmeta.h>
 
-static GstFlowReturn on_new_sample(GstAppSink* appsink, gpointer data) {
-
-}
-
 YoloProcessorBranch::YoloProcessorBranch(Element* element)
 	: ProcessingBranch(element)
 {
@@ -57,17 +53,21 @@ bool YoloProcessorBranch::buildBodyBin()
     gst_pad_add_probe(
         pad,
         GST_PAD_PROBE_TYPE_BUFFER,
-        [](GstPad*, GstPadProbeInfo* info, gpointer) -> GstPadProbeReturn {
+        [](GstPad*, GstPadProbeInfo* info, gpointer userData) -> GstPadProbeReturn {
+            auto* self = static_cast<YoloProcessorBranch*>(userData);
+            if (!self) return GST_PAD_PROBE_OK;
+
             GstBuffer* buffer = gst_pad_probe_info_get_buffer(info);
             if (!buffer) return GST_PAD_PROBE_OK;
 
             auto detections = extractDetections(buffer);
+            if (detections.empty()) return GST_PAD_PROBE_OK;
 
-			//LoggingController::info("YoloProcessorBranch detected " + QString::number(detections.size()) + " objects.");
+            if (self->m_onDetections) self->m_onDetections(std::move(detections));
 
             return GST_PAD_PROBE_OK;
         },
-        nullptr,
+        this,
         nullptr);
     gst_object_unref(pad);
 
