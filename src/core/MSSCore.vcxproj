@@ -106,6 +106,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\controllers\rulescontroller.cpp" />
     <ClCompile Include="src\pipeline\branches\intermediaries\previewcompositor.cpp" />
     <ClCompile Include="src\controllers\elementscontroller.cpp" />
     <ClCompile Include="src\controllers\loggingcontroller.cpp" />
@@ -126,6 +127,7 @@
     <QtMoc Include="include\controllers\settingscontroller.hpp" />
     <QtMoc Include="include\controllers\loggingcontroller.hpp" />
     <QtMoc Include="include\controllers\elementscontroller.hpp" />
+    <ClInclude Include="include\controllers\rulescontroller.hpp" />
     <ClInclude Include="include\core_export.hpp" />
     <ClInclude Include="include\interfaces\capability\general\ipipelineelement.hpp" />
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp" />

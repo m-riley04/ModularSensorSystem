@@ -104,6 +104,12 @@ bool SessionPipeline::build(const QList<Element*>& elements, const QList<IRecord
 
 bool SessionPipeline::close()
 {
+	if (m_state == State::RECORDING) {
+		stopRecording();
+	}
+	stopProcessing();
+
+
 	// Stop pipeline first
 	if (!this->stop()) {
 		LoggingController::warning("Failed to stop pipeline");
@@ -151,12 +157,47 @@ bool SessionPipeline::stop()
 
 bool SessionPipeline::cleanup()
 {
+	if (m_pipeline) {
+		for (auto& compositor : m_previewCompositors) {
+			if (compositor) {
+				compositor->cleanup();
+			}
+		}
+
+		auto removeBinIfAttached = [this](GstElement* bin) {
+			if (!bin) return;
+			gst_element_set_state(bin, GST_STATE_NULL);
+			if (gst_object_has_as_parent(GST_OBJECT(bin), GST_OBJECT(m_pipeline.get()))) {
+				gst_bin_remove(GST_BIN(m_pipeline.get()), bin);
+			}
+			};
+
+		for (GstElement* srcBin : m_sourceBins) {
+			removeBinIfAttached(srcBin);
+		}
+
+		for (auto* previewBranch : m_previewBranches) {
+			removeBinIfAttached(previewBranch ? previewBranch->bin() : nullptr);
+		}
+
+		for (auto* recordBranch : m_recordBranches) {
+			removeBinIfAttached(recordBranch ? recordBranch->bin() : nullptr);
+		}
+
+		for (auto* processingBranch : m_processingBranches) {
+			removeBinIfAttached(processingBranch ? processingBranch->bin() : nullptr);
+		}
+	}
+
+	// bus watch cleanup
+	if (m_pipelineBusWatchId != 0) {
+		g_source_remove(m_pipelineBusWatchId);
+		m_pipelineBusWatchId = 0;
+	}
+
 	// Pipeline cleanup
 	m_pipeline.reset(nullptr);
 
-	// bus watch cleanup
-	g_source_remove(m_pipelineBusWatchId);
-	m_pipelineBusWatchId = 0;
 
 	// GST elements ptrs lists cleanup
 	m_sourceBins.clear();

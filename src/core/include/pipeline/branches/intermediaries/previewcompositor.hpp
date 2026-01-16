@@ -25,4 +25,5 @@ public:
 	~PreviewCompositor();
 
 	bool linkProcessingBranch(ProcessingBranch* processingBranch);
+	void cleanup();
 };
