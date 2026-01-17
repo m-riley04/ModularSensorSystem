@@ -75,7 +75,7 @@ bool PreviewCompositor::linkProcessingBranch(ProcessingBranch* processingBranch)
 	// Set the active pad to be the processing branch initially
 	GstPad* activePad = gst_element_get_static_pad(m_compositor, "sink_1");
 	g_object_set(m_compositor,
-		"active-pad", activePad, 
+		"active-pad", activePad,
 		nullptr);
 	gst_object_unref(activePad);
 

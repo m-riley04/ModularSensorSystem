@@ -29,6 +29,16 @@ void SessionController::startSession()
 	m_lastSessionTimestamp = generateTimestampNs();
 	m_pipeline.setSessionTimestamp(m_lastSessionTimestamp);
 
+	// Ensure processors get the same lifecycle hooks as sources so they can
+	// release/recreate their Gst bins across session restarts.
+	// This must be done at session start (not only in the constructor) because
+	// plugins/elements may load after SessionController construction.
+	for (auto& processor : m_elementsController.processingController().processors()) {
+		if (!processor) continue;
+		connect(&m_pipeline, &SessionPipeline::started, processor, &Processor::onSessionStart, Qt::UniqueConnection);
+		connect(&m_pipeline, &SessionPipeline::stopped, processor, &Processor::onSessionStop, Qt::UniqueConnection);
+	}
+
 	// Convert list of sources to elements
 	// TODO: optimize this, make it more elegant, avoid copying, and move it elsewhere if possible
 	QList<Element*> elements;

@@ -63,7 +63,7 @@ bool YoloProcessorBranch::buildBodyBin()
             auto detections = extractDetections(buffer);
             if (detections.empty()) return GST_PAD_PROBE_OK;
 
-            if (self->m_onDetections) self->m_onDetections(std::move(detections));
+            //if (self->m_onDetections) self->m_onDetections(std::move(detections));
 
             return GST_PAD_PROBE_OK;
         },

@@ -21,7 +21,7 @@ protected:
 	{
 		if (!element) return;
 
-		create(nullptr);//element->id().c_str());
+		create(nullptr);//element->id().c_str()); // Do not use id (duplicates occur). Let names be created automatically.
 	}
 
 	/**

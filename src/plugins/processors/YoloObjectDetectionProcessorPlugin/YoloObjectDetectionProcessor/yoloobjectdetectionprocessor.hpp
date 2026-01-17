@@ -19,6 +19,10 @@ public:
 	YoloObjectDetectionProcessor(const ElementInfo& element, QObject *parent);
 	~YoloObjectDetectionProcessor();
 
+	// Element lifecycle hooks
+	void onSessionStart() override;
+	void onSessionStop() override;
+
     // Processor API
     bool startProcessing() override;
     bool stopProcessing() override;
@@ -27,12 +31,14 @@ public:
     GstElement* gstSrcBin() override final { return nullptr; }
     GstElement* gstFilterBin() override final;
     GstElement* gstSinkBin() override final { return nullptr; }
-    ProcessingBranch* processingBranch() override final { return m_processorBin.get(); }
+    ProcessingBranch* processingBranch() override final;
 
     // IObjectDetectionCapable API
 	void onObjectDetected(DetectionInfo detection) override;
 
 private:
+	void createBranchIfNeeded();
+
 	std::unique_ptr<YoloProcessorBranch> m_processorBin;
 
 };

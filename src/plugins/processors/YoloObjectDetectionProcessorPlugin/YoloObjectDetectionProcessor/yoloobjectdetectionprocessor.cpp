@@ -2,37 +2,51 @@
 
 YoloObjectDetectionProcessor::YoloObjectDetectionProcessor(const ElementInfo& element, QObject *parent)
 	: Processor(element, parent)
-	, m_processorBin(std::make_unique<YoloProcessorBranch>(this))
+	, m_processorBin(nullptr)
 {
-	if (m_processorBin) {
-		m_processorBin->setDetectionsCallback([this](std::vector<DetectionInfo> detections) {
-			// Callback runs on a GStreamer streaming thread; bounce to Qt thread.
-			QMetaObject::invokeMethod(this, [this, detections = std::move(detections)]() mutable {
-				if (!detections.empty()) {
-					emit objectsDetected(std::move(detections));
-				}
-			}, Qt::QueuedConnection);
-		});
-	}
+	// Branch/bin is created lazily per session build.
 }
 
 YoloObjectDetectionProcessor::~YoloObjectDetectionProcessor()
 {}
 
+void YoloObjectDetectionProcessor::onSessionStart()
+{
+	// no-op; branch/bin is created when the pipeline asks for it
+}
+
+void YoloObjectDetectionProcessor::onSessionStop()
+{
+	// Make processor behave like sources: drop any cached GstBin so we never
+	// attempt to re-add a previously-parented bin to a new GstPipeline.
+	m_processorBin.reset();
+}
+
+void YoloObjectDetectionProcessor::createBranchIfNeeded()
+{
+	if (m_processorBin)
+		return;
+
+	m_processorBin = std::make_unique<YoloProcessorBranch>(this);
+	m_processorBin->setDetectionsCallback([this](std::vector<DetectionInfo> detections) {
+		QMetaObject::invokeMethod(this, [this, detections = std::move(detections)]() mutable {
+			if (!detections.empty()) {
+				emit objectsDetected(std::move(detections));
+			}
+		}, Qt::QueuedConnection);
+	});
+}
+
+ProcessingBranch* YoloObjectDetectionProcessor::processingBranch()
+{
+	createBranchIfNeeded();
+	return m_processorBin.get();
+}
+
 GstElement* YoloObjectDetectionProcessor::gstFilterBin()
 {
-	// Lazy initialization
-	if (!m_processorBin) {
-		m_processorBin = std::make_unique<YoloProcessorBranch>(this);
-		m_processorBin->setDetectionsCallback([this](std::vector<DetectionInfo> detections) {
-			QMetaObject::invokeMethod(this, [this, detections = std::move(detections)]() mutable {
-				if (!detections.empty()) {
-					emit objectsDetected(std::move(detections));
-				}
-			}, Qt::QueuedConnection);
-		});
-	}
-	return m_processorBin->bin();
+	createBranchIfNeeded();
+	return m_processorBin ? m_processorBin->bin() : nullptr;
 }
 
 void YoloObjectDetectionProcessor::onObjectDetected(DetectionInfo detection)
