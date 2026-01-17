@@ -180,7 +180,7 @@ bool SessionPipeline::cleanup()
 	m_previewBranches.clear();
 	m_recordBranches.clear();
 	m_processingBranches.clear();
-	m_previewCompositors.clear();
+	m_processorCompositors.clear();
 
 	return true;
 }
@@ -220,7 +220,17 @@ void SessionPipeline::startProcessing()
 		if (!processor) continue;
 		if (!processor->startProcessing()) {
 			LoggingController::warning("Failed to start processor: " + QString::fromStdString(processor->name()));
+			continue;
 		}
+
+		QUuid processorId = boostUuidToQUuid(processor->uuid());
+		if (!m_processorCompositors.contains(processorId)) {
+			LoggingController::warning("No PreviewCompositor found for processor: " + QString::fromStdString(processor->name()));
+			continue;
+		}
+
+		// Switch compositor to processing mode
+		m_processorCompositors[processorId]->setProcessingEnabled(true);
 	}
 }
 
@@ -230,7 +240,17 @@ void SessionPipeline::stopProcessing()
 		if (!processor) continue;
 		if (!processor->stopProcessing()) {
 			LoggingController::warning("Failed to stop processor: " + QString::fromStdString(processor->name()));
+			continue;
 		}
+
+		QUuid processorId = boostUuidToQUuid(processor->uuid());
+		if (!m_processorCompositors.contains(processorId)) {
+			LoggingController::warning("No PreviewCompositor found for processor: " + QString::fromStdString(processor->name()));
+			continue;
+		}
+
+		// Switch compositor to raw mode
+		m_processorCompositors[processorId]->setProcessingEnabled(false);
 	}
 }
 
@@ -365,8 +385,14 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, Pro
 
 	// If we have a processor branch, create preview compositor links
 	if (processorBranch) {
-		m_previewCompositors.emplace_back(std::make_unique<PreviewCompositor>(m_pipeline.get(), tee, branch));
-		if (!m_previewCompositors.back()->linkProcessingBranch(processorBranch)) {
+		Processor* processor = static_cast<Processor*>(processorBranch->element());
+		QUuid uuid = boostUuidToQUuid(processor->uuid());
+		auto entry = m_processorCompositors.insert(
+			std::pair<QUuid, std::unique_ptr<PreviewCompositor>>(
+				uuid
+				, std::make_unique<PreviewCompositor>(m_pipeline.get(), tee, branch))
+		);
+		if (!m_processorCompositors.at(uuid)->linkProcessingBranch(processorBranch)) {
 			LoggingController::warning("Failed to link processing branch for element:" + QString::fromStdString(element->name()));
 			return false;
 		}

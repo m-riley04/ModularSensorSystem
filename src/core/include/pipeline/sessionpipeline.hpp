@@ -18,6 +18,7 @@
 #include <pipeline/branches/processingbranch.hpp>
 #include <pipeline/branches/intermediaries/previewcompositor.hpp>
 #include <vector>
+#include <map>
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
 
@@ -92,7 +93,7 @@ private:
 	QList<ProcessingBranch*> m_processingBranches;
 
 	// Owned ptrs
-	std::vector<std::unique_ptr<PreviewCompositor>> m_previewCompositors;
+	std::map<QUuid, std::unique_ptr<PreviewCompositor>> m_processorCompositors;
 
 	ElementsController& m_elementsController;
 	SessionSettings& m_sessionSettings;

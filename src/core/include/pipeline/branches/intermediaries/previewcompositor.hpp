@@ -24,6 +24,8 @@ public:
 	PreviewCompositor(GstPipeline* pipeline, GstElement* mainTee, PreviewBranch* previewBranch);
 	~PreviewCompositor();
 
+	bool setProcessingEnabled(bool enabled);
+
 	bool linkProcessingBranch(ProcessingBranch* processingBranch);
 	void cleanup();
 };

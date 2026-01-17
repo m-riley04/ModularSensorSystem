@@ -24,6 +24,25 @@ PreviewCompositor::~PreviewCompositor()
 	cleanup();
 }
 
+bool PreviewCompositor::setProcessingEnabled(bool enabled)
+{
+	std::string padName = enabled ? "sink_1" : "sink_0";
+
+	// Set the active pad to be the processing branch initially
+	GstPad* activePad = gst_element_get_static_pad(m_compositor, padName.c_str());
+	if (!activePad) {
+		LoggingController::warning("Failed to get active pad in PreviewCompositor.");
+		return false;
+	}
+
+	g_object_set(m_compositor,
+		"active-pad", activePad,
+		nullptr);
+	gst_object_unref(activePad);
+
+	return true;
+}
+
 bool PreviewCompositor::linkBaseElements()
 {
 	if (!m_pipeline || !m_mainTee || !m_queuePreview || !m_compositor || !m_previewBranch) {
@@ -72,12 +91,10 @@ bool PreviewCompositor::linkProcessingBranch(ProcessingBranch* processingBranch)
 		return false;
 	}
 
-	// Set the active pad to be the processing branch initially
-	GstPad* activePad = gst_element_get_static_pad(m_compositor, "sink_1");
-	g_object_set(m_compositor,
-		"active-pad", activePad,
-		nullptr);
-	gst_object_unref(activePad);
+	if (!setProcessingEnabled(true)) {
+		LoggingController::warning("Failed to enable processing in PreviewCompositor.");
+		return false;
+	}
 
 	return true;
 }
