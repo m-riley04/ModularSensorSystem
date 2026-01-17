@@ -29,41 +29,8 @@ void SessionController::startSession()
 	m_lastSessionTimestamp = generateTimestampNs();
 	m_pipeline.setSessionTimestamp(m_lastSessionTimestamp);
 
-	// Ensure processors get the same lifecycle hooks as sources so they can
-	// release/recreate their Gst bins across session restarts.
-	// This must be done at session start (not only in the constructor) because
-	// plugins/elements may load after SessionController construction.
-	for (auto& processor : m_elementsController.processingController().processors()) {
-		if (!processor) continue;
-		connect(&m_pipeline, &SessionPipeline::started, processor, &Processor::onSessionStart, Qt::UniqueConnection);
-		connect(&m_pipeline, &SessionPipeline::stopped, processor, &Processor::onSessionStop, Qt::UniqueConnection);
-	}
-
-	// Convert list of sources to elements
-	// TODO: optimize this, make it more elegant, avoid copying, and move it elsewhere if possible
-	QList<Element*> elements;
-	QList<IRecordable*> recordableElements;
-	for (auto& source : m_elementsController.sourceController().sources()) {
-		if (!source->asPipelineElement()) continue; // Skip sources that can't be pipeline elements (vast majority should be able to)
-		if (auto rec = source->asRecordable()) recordableElements.append(rec);
-		elements.append(source);
-	}
-
-	// Also add mounts as GST elements (if they have bins)
-	for (auto& mount : m_elementsController.mountController().mounts()) {
-		if (!mount->asPipelineElement()) continue; // Skip mounts that can't be pipeline elements
-		if (auto rec = mount->asRecordable()) recordableElements.append(rec);
-		elements.append(mount);
-	}
-
-	// Finally, add processors as GST elements
-	//for (auto& processor : m_elementsController.processingController().processors()) {
-	//	if (!processor->asPipelineElement()) continue; // Skip processors that can't be pipeline elements
-	//	if (auto rec = processor->asRecordable()) recordableElements.append(rec);
-	//	elements.append(processor);
-	//}
-
-	m_pipeline.build(elements, recordableElements);
+	// Build the pipeline
+	m_pipeline.build(m_elementsController.elements());
 }
 
 void SessionController::stopSession()

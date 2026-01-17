@@ -54,7 +54,7 @@ public slots:
 	void stopRecording();
 	void startProcessing();
 	void stopProcessing();
-	bool build(const QList<Element*>&, const QList<IRecordable*>&);
+	bool build(const QList<Element*>&);
 	bool close();
 
 	void onPipelineError(const QString& errorMessage);

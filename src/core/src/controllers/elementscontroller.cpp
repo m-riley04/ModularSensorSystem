@@ -33,6 +33,26 @@ ElementsController::~ElementsController()
 {
 }
 
+QList<Element*> ElementsController::elements() const
+{
+	QList<Element*> elements;
+
+	// You might be asking yourself; why not just concatenate the lists?
+	// The reason: QList<Mount*> (and others) is not implicitly convertible to QList<Element*>.
+
+	for (auto& mount : m_mountController.mounts()) {
+		elements.append(mount);
+	}
+	for (auto& source : m_sourceController.sources()) {
+		elements.append(source);
+	}
+	for (auto& processor : m_processingController.processors()) {
+		elements.append(processor);
+	}
+
+	return elements;
+}
+
 void ElementsController::attachSourceToMount(const QUuid& mountId, const QUuid& sourceId)
 {
 	m_mountToSources.value(mountId).append(sourceId);

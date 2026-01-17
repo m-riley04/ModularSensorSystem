@@ -25,6 +25,12 @@ public:
 	MountController& mountController() const { return m_mountController; }
 	ProcessingController& processingController() const{ return m_processingController; }
 
+	/**
+	 * @brief Retrieves the list of elements.
+	 * @return A new/copied list of pointers to Element objects.
+	 */
+	QList<Element*> elements() const;
+
 	void attachSourceToMount(const QUuid& mountId, const QUuid& sourceId);
 	void detachSourceFromMount(const QUuid& mountId, const QUuid& sourceId);
 	void attachProcessorToSource(const QUuid& sourceId, const QUuid& processorId);

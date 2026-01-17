@@ -59,7 +59,7 @@ static gboolean pipeline_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 	return true;
 }
 
-bool SessionPipeline::build(const QList<Element*>& elements, const QList<IRecordable*>& recordableElements)
+bool SessionPipeline::build(const QList<Element*>& elements)
 {
 	// Cleanly tear down any existing pipeline first
 	close();
@@ -77,18 +77,21 @@ bool SessionPipeline::build(const QList<Element*>& elements, const QList<IRecord
 	m_pipelineBusWatchId = gst_bus_add_watch(bus, pipeline_bus_call, this);
 	gst_object_unref(bus);
 
-	// Iterate over all sources and add them
+	// Iterate over all eligible elements and add them
 	for (auto& element : elements) {
-		if (!createSourceElements(element)) {
-			emit errorOccurred("Failed to create source elements for element '" + QString::fromStdString(element->name()) + "'");
-			close(); // TODO/CONSIDER: handle this more gracefully? And check if close succeeded?
-			return false;
-		}
-
 		// Link start and stop hooks
-		// TODO: fix connect syntax
 		connect(this, &SessionPipeline::started, element, &Element::onSessionStart, Qt::UniqueConnection);
 		connect(this, &SessionPipeline::stopped, element, &Element::onSessionStop, Qt::UniqueConnection);
+
+		if (!element->asPipelineElement()) continue; // skip non-pipeline elements
+		if (element->asPipelineElement()->processingBranch() != nullptr) continue; // skip processor elements
+		if (!createSourceElements(element)) {
+			emit errorOccurred("Failed to create source elements for element '" + QString::fromStdString(element->name()) + "'");
+			if (!close()) { // TODO/CONSIDER: handle this more gracefully? And check if close succeeded?
+				LoggingController::warning("Failed to close pipeline after build failure.");
+			}
+			return false;
+		}
 	}
 
 	if (!start()) {
@@ -107,14 +110,13 @@ bool SessionPipeline::close()
 	if (m_state == State::RECORDING) {
 		stopRecording();
 	}
-	//stopProcessing(); // ENable processing automatically so that pipeline caps can be negotiated properly
 
-	// Notify elements before we tear down the pipeline so they can release any
-	// cached GstElements/GstBins that might still be parented.
+	// NOTE: We do NOT stop processing here because 
+
+	// Notify elements before we tear down the pipeline so they can release any cached GstElements/GstBins that might still be parented.
 	if (m_pipeline && m_state != State::STOPPED) {
 		emit stopped();
 	}
-
 
 	// Stop pipeline first
 	if (!this->stop()) {
