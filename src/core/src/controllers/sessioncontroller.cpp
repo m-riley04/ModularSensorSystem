@@ -13,11 +13,15 @@ SessionController::SessionController(SettingsController& settingsController, Ele
 
 SessionController::~SessionController()
 {
-	m_pipeline.close();
+	LoggingController::info("Shutting down SessionController...");
+	if (!m_pipeline.close()) {
+		LoggingController::critical("Failed to close pipeline during shutdown");
+	}
 }
 
 void SessionController::restartSession()
 {
+	LoggingController::info("Restarting session...");
 	stopSession();
 	startSession();
 	emit sessionRestarted();
@@ -30,12 +34,17 @@ void SessionController::startSession()
 	m_pipeline.setSessionTimestamp(m_lastSessionTimestamp);
 
 	// Build the pipeline
-	m_pipeline.build(m_elementsController.elements());
+	if (!m_pipeline.build(m_elementsController.elements())) {
+		LoggingController::critical("Failed to start session.");
+	}
 }
 
 void SessionController::stopSession()
 {
-	m_pipeline.close();
+	LoggingController::info("Stopping session...");
+	if (!m_pipeline.close()) {
+		LoggingController::critical("Failed to stop session.");
+	}
 }
 
 void SessionController::startRecording()
@@ -66,8 +75,10 @@ void SessionController::clearRecordings()
 {
 	QString sessionRecordingPrefix = m_settingsController.sessionSettings().outputPrefix;
 
-	safeDeleteDirectoryContents(
+	if (!safeDeleteDirectoryContents(
 		m_settingsController.sessionSettings().outputDirectory
 		, QStringList() << sessionRecordingPrefix << "*"
-		, QDir::Dirs);
+		, QDir::Dirs)) {
+		LoggingController::critical("Failed to clear recordings.");
+	}
 }

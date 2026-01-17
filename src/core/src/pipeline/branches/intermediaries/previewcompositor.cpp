@@ -101,41 +101,6 @@ bool PreviewCompositor::linkProcessingBranch(ProcessingBranch* processingBranch)
 
 void PreviewCompositor::cleanup()
 {
-	if (m_queueProcessor) {
-		gst_element_set_state(m_queueProcessor, GST_STATE_NULL);
-	}
-	if (m_queuePreview) {
-		gst_element_set_state(m_queuePreview, GST_STATE_NULL);
-	}
-	if (m_compositor) {
-		gst_element_set_state(m_compositor, GST_STATE_NULL);
-	}
-
-	if (m_pipeline) {
-		if (m_queueProcessor && gst_object_has_as_parent(GST_OBJECT(m_queueProcessor), GST_OBJECT(m_pipeline))) {
-			gst_bin_remove(GST_BIN(m_pipeline), m_queueProcessor);
-		}
-		if (m_queuePreview && gst_object_has_as_parent(GST_OBJECT(m_queuePreview), GST_OBJECT(m_pipeline))) {
-			gst_bin_remove(GST_BIN(m_pipeline), m_queuePreview);
-		}
-		if (m_compositor && gst_object_has_as_parent(GST_OBJECT(m_compositor), GST_OBJECT(m_pipeline))) {
-			gst_bin_remove(GST_BIN(m_pipeline), m_compositor);
-		}
-	}
-
-	if (m_queueProcessor) {
-		gst_object_unref(m_queueProcessor);
-		m_queueProcessor = nullptr;
-	}
-	if (m_queuePreview) {
-		gst_object_unref(m_queuePreview);
-		m_queuePreview = nullptr;
-	}
-	if (m_compositor) {
-		gst_object_unref(m_compositor);
-		m_compositor = nullptr;
-	}
-
 	m_processingBranch = nullptr;
 	m_previewBranch = nullptr;
 	m_pipeline = nullptr;

@@ -62,7 +62,9 @@ static gboolean pipeline_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 bool SessionPipeline::build(const QList<Element*>& elements)
 {
 	// Cleanly tear down any existing pipeline first
-	close();
+	if (!close()) {
+		LoggingController::warning("Failed to close existing pipeline before building a new one.");
+	}
 
 	// Create the main pipeline
 	m_pipeline.reset(GST_PIPELINE(gst_pipeline_new(MAIN_PIPELINE_NAME)));
@@ -110,14 +112,7 @@ bool SessionPipeline::close()
 	if (m_state == State::RECORDING) {
 		stopRecording();
 	}
-
-	// NOTE: We do NOT stop processing here because 
-
-	// Notify elements before we tear down the pipeline so they can release any cached GstElements/GstBins that might still be parented.
-	if (m_pipeline && m_state != State::STOPPED) {
-		emit stopped();
-	}
-
+	
 	// Stop pipeline first
 	if (!this->stop()) {
 		LoggingController::warning("Failed to stop pipeline");
@@ -144,7 +139,8 @@ bool SessionPipeline::start()
 	// Set pipeline to playing
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_PLAYING) == GST_STATE_CHANGE_FAILURE) {
 		LoggingController::warning("Failed to set pipeline to PLAYING");
-		close();
+		stop();
+		cleanup();
 		return false;
 	}
 
@@ -173,7 +169,6 @@ bool SessionPipeline::cleanup()
 
 	// Pipeline cleanup
 	m_pipeline.reset(nullptr);
-
 
 	// GST elements ptrs lists cleanup
 	m_sourceBins.clear();
@@ -204,7 +199,6 @@ void SessionPipeline::startRecording()
 
 void SessionPipeline::stopRecording()
 {
-
 	// Iterate through all IRecordable elements and start recording
 	for (IRecordable* recordableElement : this->m_elementsController.sourceController().recordableSources()) {
 		if (!recordableElement) continue; // null check
@@ -463,65 +457,6 @@ ProcessingBranch* SessionPipeline::createProcessorBranch(Element* sourceElement,
 
 bool SessionPipeline::createRecorderBranch(Element* element, GstElement* tee)
 {
-	if (!createAndLinkRecordBin(element, tee)) {
-		LoggingController::warning("Failed to create and link recording bin for element:" + QString::fromStdString(element->name()));
-		return false;
-	}
-
-	return true;
-}
-
-bool SessionPipeline::createAndLinkPreviewBin(Element* element, GstElement* tee)
-{
-	if (!element) {
-		LoggingController::warning("Cannot create and link the source and preview bins: element is null");
-		return false;
-	}
-
-	IPreviewable* prevSrc = element->asPreviewable();
-	if (!prevSrc) {
-		LoggingController::warning("Cannot create and link the source and preview bins for '" + QString::fromStdString(element->displayName()) + "': source is not previewable");
-		return false;
-	}
-
-	// Init elemets
-	guintptr windowId = static_cast<guintptr>(prevSrc->windowId());
-	GstElement* sink = prevSrc->previewSinkBin();
-
-	// TODO/CONSIDER: similar to recording, maybe include a valve mechanism to enable/disable previewing?
-
-	// dynamic cast to source
-	// TODO: this should be reworked to not assume element is a Source. Currently needed for "createDefaultPreviewSink" function
-	Source* srcElem = dynamic_cast<Source*>(element);
-	if (!srcElem) {
-		LoggingController::warning("Cannot create and link the source and preview bins for '" + QString::fromStdString(element->displayName()) + "': element is not a source");
-		return false;
-	}
-
-	// Check validity of each
-	if (!sink) {
-		LoggingController::warning("Failed to create custom sink element for '" + QString::fromStdString(element->displayName()) + "'; creating default sink");
-		sink = createDefaultPreviewSink(srcElem->type(), windowId, prevSrc->previewSinkElementName().c_str());
-	}
-
-	// Add preview element(s) to pipeline
-	if (!gst_bin_add(GST_BIN(m_pipeline.get()), sink)) {
-		LoggingController::warning("Failed to add preview sink for '" + QString::fromStdString(element->displayName()) + "' to pipeline.");
-		return false;
-	}
-
-	// Link source bin to sink
-	if (!gst_element_link(tee, sink)) {
-		LoggingController::warning("Failed to link source bin to preview sink for '" + QString::fromStdString(element->displayName()) + "'.");
-		gst_bin_remove(GST_BIN(m_pipeline.get()), sink);
-		return false;
-	}
-
-	return true;
-}
-
-bool SessionPipeline::createAndLinkRecordBin(Element* element, GstElement* tee)
-{
 	if (!element) {
 		LoggingController::warning("Cannot create and link the source and recording bins: source is null");
 		return false;
@@ -574,71 +509,6 @@ bool SessionPipeline::createAndLinkRecordBin(Element* element, GstElement* tee)
 		return false;
 	}
 
-	return true;
-}
-
-bool SessionPipeline::openRecordingValves(QList<IRecordable*>& elements)
-{
-	// Iterate over all sources and open their valves
-	for (auto& element : elements) {
-		if (!openRecordingValveForElement(element)) {
-			LoggingController::warning("Failed to open recording valve for source");
-		}
-	}
-
-	return true;
-}
-
-bool SessionPipeline::closeRecordingValves(QList<IRecordable*>& sources)
-{
-	// Iterate over all sources and close their valves
-	for (auto& src : sources) {
-		if (!closeRecordingValveForElement(src)) {
-			LoggingController::warning("Failed to close recording valve for source");
-		}
-	}
-
-	return true;
-}
-
-bool SessionPipeline::openRecordingValveForElement(IRecordable* src)
-{
-	if (!src) {
-		LoggingController::warning("Cannot open recording valve for source: source is not recordable");
-		return false;
-	}
-	
-	return src->startRecording();
-}
-
-bool SessionPipeline::closeRecordingValveForElement(IRecordable* src)
-{
-	if (!src) {
-		LoggingController::warning("Cannot close recording valve for source: source is not recordable");
-		return false;
-	}
-
-	return src->stopRecording();
-}
-
-bool SessionPipeline::openProcessingValveForElement(Processor* proc)
-{
-	if (!proc) {
-		LoggingController::warning("Cannot close valve for processor: processor is null");
-		return false;
-	}
-
-	proc->startProcessing();
-	return true;}
-
-bool SessionPipeline::closeProcessingValveForElement(Processor* proc)
-{
-	if (!proc) {
-		LoggingController::warning("Cannot close valve for processor: processor is null");
-		return false;
-	}
-
-	proc->stopProcessing();
 	return true;
 }
 

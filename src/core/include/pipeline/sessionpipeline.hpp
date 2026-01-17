@@ -70,16 +70,6 @@ private:
 	bool createPreviewBranch(Element*, GstElement*, ProcessingBranch* processorBranch = nullptr);
 	bool createRecorderBranch(Element*, GstElement*);
 	ProcessingBranch* createProcessorBranch(Element* sourceElement, Processor* processor, GstElement* tee);
-	bool createAndLinkPreviewBin(Element*, GstElement*);
-	bool createAndLinkRecordBin(Element*, GstElement*);
-
-	bool openRecordingValves(QList<IRecordable*>&);
-	bool closeRecordingValves(QList<IRecordable*>&);
-	bool openRecordingValveForElement(IRecordable*);
-	bool closeRecordingValveForElement(IRecordable*);
-
-	bool openProcessingValveForElement(Processor*);
-	bool closeProcessingValveForElement(Processor*);
 
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
 	State m_state = State::STOPPED;
