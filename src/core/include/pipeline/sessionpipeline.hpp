@@ -44,6 +44,7 @@ public:
 	bool isStopped() const { return m_state == State::STOPPED; }
 	bool isRecording() const { return m_state == State::RECORDING; }
 	bool isBuilt() const { return m_pipeline != nullptr; }
+	bool isProcessingEnabled() const { return m_isProcessingEnabled; }
 
 	void setSessionTimestamp(ns timestamp) { m_lastSessionTimestamp = timestamp; }
 
@@ -82,6 +83,7 @@ private:
 
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
 	State m_state = State::STOPPED;
+	bool m_isProcessingEnabled = true;
 	ns m_lastSessionTimestamp = 0;
 	ns m_lastRecordingTimestamp = 0;
 	guint m_pipelineBusWatchId = 0;

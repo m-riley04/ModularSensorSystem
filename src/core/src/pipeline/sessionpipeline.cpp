@@ -232,6 +232,8 @@ void SessionPipeline::startProcessing()
 		// Switch compositor to processing mode
 		m_processorCompositors[processorId]->setProcessingEnabled(true);
 	}
+
+	m_isProcessingEnabled = true;
 }
 
 void SessionPipeline::stopProcessing()
@@ -252,6 +254,8 @@ void SessionPipeline::stopProcessing()
 		// Switch compositor to raw mode
 		m_processorCompositors[processorId]->setProcessingEnabled(false);
 	}
+
+	m_isProcessingEnabled = false;
 }
 
 bool SessionPipeline::createSourceElements(Element* element)

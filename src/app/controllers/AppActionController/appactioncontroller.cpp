@@ -147,7 +147,9 @@ void AppActionController::refreshProcessorActionStates()
 	}
     m_processorActions.openRemoveProcessor->setEnabled(isProcessorSelected && isElementProcessor);
     m_processorActions.openEditProcessor->setEnabled(isProcessorSelected && isElementProcessor);
-	m_processorActions.toggleProcessing->setEnabled(isProcessorSelected); // Toggle is for all processors. TODO/CONSIDER: make this per-processor?
+    // TODO/CONSIDER: also enable/disable processing button?
+
+	m_processorActions.toggleProcessing->setChecked(m_controller.sessionController().pipeline().isProcessingEnabled());
 }
 
 void AppActionController::refreshSessionActionStates()
