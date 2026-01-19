@@ -323,19 +323,16 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 	// Check if this source has processors attached
 	QUuid sourceId = boostUuidToQUuid(element->uuid());
 	QList<Processor*> processors = m_elementsController.processorsForSource(sourceId);
-	bool hasProcessors = !processors.isEmpty();
 
 	// Create processor branches first (they need to be in the pipeline before linking to preview)
 	ProcessingBranch* processorBranch = nullptr;
-	if (hasProcessors) {
+	if (!processors.isEmpty()) {
 		// For now, we only support one processor per source
 		// TODO: Support chaining multiple processors
 		Processor* processor = processors.first();
 		processorBranch = createProcessorBranch(element, processor, tee);
 		if (!processorBranch) {
 			LoggingController::warning("Failed to create processor branch for element:" + QString::fromStdString(element->name()));
-			// Continue without processor - preview will still work
-			hasProcessors = false;
 		}
 	}
 
@@ -343,7 +340,12 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 	if (element->asPreviewable() != nullptr) {
 		if (!createPreviewBranch(element, tee, processorBranch)) {
 			LoggingController::warning("Failed to create preview branch for element:" + QString::fromStdString(element->name()));
-			// TODO: should we pass through here?
+
+			// Since we're checking if it's previewable, the creation should work. If it fails, clean up processor branch if it exists and return false.
+			if (!cleanup()) {
+				LoggingController::warning("Failed to clean up pipeline after preview branch creation failure for element:" + QString::fromStdString(element->name()));
+			}
+			return false;
 		}
 	}
 
@@ -351,7 +353,12 @@ bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
 	if (element->asRecordable() != nullptr) {
 		if (!createRecorderBranch(element, tee)) {
 			LoggingController::warning("Failed to create recorder branch for element:" + QString::fromStdString(element->name()));
-			// TODO: should we pass through here?
+			
+			// Since we're checking if it's recordable, the creation should work. If it fails, clean up processor branch if it exists and return false.
+			if (!cleanup()) {
+				LoggingController::warning("Failed to clean up pipeline after recorder branch creation failure for element:" + QString::fromStdString(element->name()));
+			}
+			return false;
 		}
 	}
 
@@ -386,6 +393,12 @@ bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, Pro
 	// If we have a processor branch, create preview compositor links
 	if (processorBranch) {
 		Processor* processor = static_cast<Processor*>(processorBranch->element());
+		if (!processor) {
+			LoggingController::warning("Failed to get processor from processor branch for element:" + QString::fromStdString(element->name()));
+			gst_bin_remove(GST_BIN(m_pipeline.get()), branchBin);
+			return false;
+		}
+
 		QUuid uuid = boostUuidToQUuid(processor->uuid());
 		auto entry = m_processorCompositors.insert(
 			std::pair<QUuid, std::unique_ptr<PreviewCompositor>>(
