@@ -164,9 +164,6 @@
     <ClInclude Include="include\models\processing_models.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\controllers\rulescontroller.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">
@@ -283,6 +280,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\controllers\elementscontroller.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\controllers\rulescontroller.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\models\rule_models.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
