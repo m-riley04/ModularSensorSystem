@@ -5,7 +5,7 @@
 
 class USBAudioSourceBin : public SourceBin {
 public:
-	USBAudioSourceBin(const boost::uuids::uuid& uuid, const std::string& id);
+	USBAudioSourceBin(Element*);
 
 	virtual ~USBAudioSourceBin() = default;
 

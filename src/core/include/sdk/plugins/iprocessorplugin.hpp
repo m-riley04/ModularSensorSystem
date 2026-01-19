@@ -18,6 +18,6 @@ struct ProcessorInfo {
 class MSS_CORE_API IProcessorPlugin : public IPlugin {
 public:
     virtual Source::Type supportedSourceType() const = 0;
-    virtual Processor* createProcessor(Source* source, QObject* parent = nullptr) = 0;
+    virtual Processor* createProcessor(QObject* parent = nullptr) = 0;
     virtual const IElement::Type type() const override final { return IElement::Type::Processor; }
 };

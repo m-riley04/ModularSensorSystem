@@ -21,13 +21,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -118,9 +118,11 @@
   <ItemGroup>
     <ClCompile Include="USBVideoSource\usbvideosource.cpp" />
     <ClCompile Include="USBVideoSource\usbvideosourcebin.cpp" />
-    <ClCompile Include="USBVideoSource\usbvideosourcerecorderbin.cpp" />
+    <ClCompile Include="USBVideoSource\usbvideosourcepreviewbranch.cpp" />
+    <ClCompile Include="USBVideoSource\usbvideosourcerecorderbranch.cpp" />
     <ClInclude Include="USBVideoSource\usbvideosourcebin.hpp" />
-    <ClInclude Include="USBVideoSource\usbvideosourcerecorderbin.hpp" />
+    <ClInclude Include="USBVideoSource\usbvideosourcepreviewbranch.hpp" />
+    <ClInclude Include="USBVideoSource\usbvideosourcerecorderbranch.hpp" />
     <ClInclude Include="utils.hpp" />
     <QtMoc Include="USBVideoSource\usbvideosource.hpp" />
     <ClInclude Include="usbvideoplugin.hpp" />

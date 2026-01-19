@@ -47,7 +47,7 @@ const QString generateSessionSourcePath(Element* element, const SessionSettings&
 	}
 
 	// Sanitize the file name derived from the source display/name to avoid invalid characters
-	QString baseName = QString::fromStdString(sanitizeFileNameForWindows(element->name()));
+	QString baseName = QString::fromStdString(sanitizeFileNameForWindows(element->displayName()));
 
 	// Avoid reserved DOS device names
 	static const QStringList reserved = {

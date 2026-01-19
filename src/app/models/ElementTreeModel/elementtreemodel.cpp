@@ -189,8 +189,7 @@ void ElementTreeModel::buildHierarchical()
         ElementTreeNode* mountNode = &m_nodeMap[mId];
         m_rootNodes.append(mountNode);
 
-        for (auto s : m_mainController.sessionController().getSourcesByMount(mId)) {
-            QUuid sId = boostUuidToQUuid(s->uuid());
+        for (auto& sId : m_mainController.elementsController().sourceIdsForMount(mId)) {
             m_nodeMap.insert(sId, ElementTreeNode{
                 .uuid = sId,
                 .kind = IElement::Type::Source,
@@ -200,8 +199,7 @@ void ElementTreeModel::buildHierarchical()
             ElementTreeNode* sourceNode = &m_nodeMap[sId];
             mountNode->children.append(sourceNode);
 
-            for (auto p : m_mainController.sessionController().getProcessorsBySource(sId)) {
-                QUuid pId = boostUuidToQUuid(p->uuid());
+            for (auto& pId : m_mainController.elementsController().processorIdsForSource(sId)) {
                 m_nodeMap.insert(pId, ElementTreeNode{
                     .uuid = pId,
                     .kind = IElement::Type::Processor,

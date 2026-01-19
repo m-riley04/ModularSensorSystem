@@ -2,6 +2,9 @@
 
 #include <gst/gst.h>
 #include <string>
+//#include <pipeline/branches/previewbranch.hpp>
+
+class PreviewBranch;
 
 /**
  * @brief Capability interface for elements that provide a preview.
@@ -10,6 +13,12 @@
 class IPreviewable {
 public:
 	virtual ~IPreviewable() = default;
+
+	/**
+	 * @brief Gets the preview branch associated with this object.
+	 * @return A pointer to the PreviewBranch object.
+	 */
+	virtual PreviewBranch* previewBranch() = 0;
 
 	/**
 	 * @brief Method to retrieve the preview bin sink.

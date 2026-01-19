@@ -1,12 +1,11 @@
 ﻿#include "controllers/sessioncontroller.hpp"
 #include <utils/safer_io_utils.hpp>
 
-SessionController::SessionController(SettingsController& settingsController, SourceController& sourceController, ProcessingController& processingController,
-	MountController& mountController, QObject* parent)
+SessionController::SessionController(SettingsController& settingsController, ElementsController& ec, QObject* parent)
 	: QObject(parent)
 	, m_settingsController(settingsController)
-	, m_pipeline(SessionPipeline(settingsController.sessionSettings(), this)), m_sourceController(sourceController), m_processingController(processingController)
-	, m_mountController(mountController)
+	, m_elementsController(ec)
+	, m_pipeline(settingsController.sessionSettings(), m_elementsController, this)
 {
 	// Connect signals for error handling
 	connect(&m_pipeline, &SessionPipeline::errorOccurred, this, &SessionController::errorOccurred);
@@ -14,11 +13,15 @@ SessionController::SessionController(SettingsController& settingsController, Sou
 
 SessionController::~SessionController()
 {
-	m_pipeline.close();
+	LoggingController::info("Shutting down SessionController...");
+	if (!m_pipeline.close()) {
+		LoggingController::critical("Failed to close pipeline during shutdown");
+	}
 }
 
 void SessionController::restartSession()
 {
+	LoggingController::info("Restarting session...");
 	stopSession();
 	startSession();
 	emit sessionRestarted();
@@ -30,69 +33,52 @@ void SessionController::startSession()
 	m_lastSessionTimestamp = generateTimestampNs();
 	m_pipeline.setSessionTimestamp(m_lastSessionTimestamp);
 
-	// Convert list of sources to elements
-	// TODO: optimize this, make it more elegant, avoid copying, and move it elsewhere if possible
-	QList<Element*> elements;
-	QList<IRecordable*> recordableElements;
-	for (auto& source : m_sourceController.sources()) {
-		if (!source->asPipelineElement()) continue; // Skip sources that can't be pipeline elements (vast majority should be able to)
-		if (auto rec = source->asRecordable()) recordableElements.append(rec);
-		elements.append(source);
+	// Build the pipeline
+	if (!m_pipeline.build(m_elementsController.elements())) {
+		LoggingController::critical("Failed to start session.");
 	}
-
-	// Also add mounts as GST elements (if they have bins)
-	for (auto& mount : m_mountController.mounts()) {
-		if (!mount->asPipelineElement()) continue; // Skip mounts that can't be pipeline elements
-		if (auto rec = mount->asRecordable()) recordableElements.append(rec);
-		elements.append(mount);
-	}
-
-	m_pipeline.build(elements, recordableElements);
 }
 
 void SessionController::stopSession()
 {
-	m_pipeline.close();
+	LoggingController::info("Stopping session...");
+	if (!m_pipeline.close()) {
+		LoggingController::critical("Failed to stop session.");
+	}
 }
 
 void SessionController::startRecording()
 {
+	LoggingController::info("Starting recording...");
 	m_pipeline.startRecording();
 }
 
 void SessionController::stopRecording()
 {
+	LoggingController::info("Stopping recording...");
 	m_pipeline.stopRecording();
+}
+
+void SessionController::startProcessing()
+{
+	LoggingController::info("Starting processing...");
+	m_pipeline.startProcessing();
+}
+
+void SessionController::stopProcessing()
+{
+	LoggingController::info("Stopping processing...");
+	m_pipeline.stopProcessing();
 }
 
 void SessionController::clearRecordings()
 {
 	QString sessionRecordingPrefix = m_settingsController.sessionSettings().outputPrefix;
 
-	safeDeleteDirectoryContents(
+	if (!safeDeleteDirectoryContents(
 		m_settingsController.sessionSettings().outputDirectory
 		, QStringList() << sessionRecordingPrefix << "*"
-		, QDir::Dirs);
-}
-
-const QList<const Source*> SessionController::getSourcesByMount(QUuid mountId) const
-{
-	QList<const Source*> sources;
-	const auto sourceIds = m_mountToSources.value(mountId);
-	for (auto& id : sourceIds) {
-		const Source* source = m_sourceController.byId(id);
-		sources.push_back(source);
+		, QDir::Dirs)) {
+		LoggingController::critical("Failed to clear recordings.");
 	}
-	return sources;
-}
-
-const QList<const Processor*> SessionController::getProcessorsBySource(QUuid sourceId) const
-{
-	QList<const Processor*> processors;
-	const auto processorIds = m_sourceToProcessors.value(sourceId);
-	for (auto& id : processorIds) {
-		const Processor* source = m_processingController.byId(id);
-		processors.push_back(source);
-	}
-	return processors;
 }

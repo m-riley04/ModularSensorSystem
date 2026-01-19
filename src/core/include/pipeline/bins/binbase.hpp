@@ -3,17 +3,25 @@
 #include <gst/gst.h>
 #include <string>
 #include <boost/uuid.hpp>
+#include <features/element.hpp>
+#include <core_export.hpp>
 
 class BinBase {
 public:
-	virtual ~BinBase() = default;
+	virtual ~BinBase() {
+		// The pipeline this bin is added to owns the bin, and thus should handle the unref.
+	}
 
 	GstElement* bin() const { return m_bin; }
+	Element* element() const { return m_element; }
 
 protected:
-	explicit BinBase(const boost::uuids::uuid& uuid, const std::string& id) : m_uuid(uuid), m_id(id)
+	explicit BinBase(Element* element)
+		: m_bin(nullptr), m_element(element)
 	{
-		create(m_id.c_str());
+		if (!element) return;
+
+		create(nullptr);//element->id().c_str()); // Do not use id (duplicates occur). Let names be created automatically.
 	}
 
 	/**
@@ -53,16 +61,21 @@ protected:
 	 * Creates a ghost pad from an element's static pad.
 	 */
 	GstPad* makeGhostPad(const char* ghostName, GstElement* element, const char* padName) {
-		GstPad* pad = gst_element_get_static_pad(element, padName);
-		if (!pad) return nullptr;
-		GstPad* ghost = gst_ghost_pad_new(ghostName, pad);
-		gst_object_unref(pad);
+		GstPad* targetPad = gst_element_get_static_pad(element, padName);
+		if (!targetPad) return nullptr;
+
+		GstPad* ghost = gst_ghost_pad_new(ghostName, targetPad);
+		gst_object_unref(targetPad);
 		if (!ghost) return nullptr;
-		gst_element_add_pad(m_bin, ghost);
+
+		gst_pad_set_active(ghost, TRUE);
+		if (!gst_element_add_pad(m_bin, ghost)) {
+			gst_object_unref(ghost);
+			return nullptr;
+		}
 		return ghost;
 	}
 
 	GstElement* m_bin = nullptr;
-	boost::uuids::uuid m_uuid;
-	std::string m_id;
+	Element* m_element = nullptr;
 };

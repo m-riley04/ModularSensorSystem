@@ -11,6 +11,14 @@
 #include <utils/debug.hpp>
 #include <utils/utils.hpp>
 #include <utils/session_utils.hpp>
+#include <features/processors/processor.hpp>
+#include <controllers/elementscontroller.hpp>
+#include <pipeline/branches/previewbranch.hpp>
+#include <pipeline/branches/recorderbranch.hpp>
+#include <pipeline/branches/processingbranch.hpp>
+#include <pipeline/branches/intermediaries/previewcompositor.hpp>
+#include <vector>
+#include <map>
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
 
@@ -26,7 +34,7 @@ public:
 	};
 
 public:
-	explicit SessionPipeline(SessionSettings& settings, QObject* parent = nullptr);
+	explicit SessionPipeline(SessionSettings& settings, ElementsController& ec, QObject* parent = nullptr);
 	virtual ~SessionPipeline() = default;
 
 	const GstElement* bin() const { return GST_ELEMENT(m_pipeline.get()); }
@@ -36,6 +44,7 @@ public:
 	bool isStopped() const { return m_state == State::STOPPED; }
 	bool isRecording() const { return m_state == State::RECORDING; }
 	bool isBuilt() const { return m_pipeline != nullptr; }
+	bool isProcessingEnabled() const { return m_isProcessingEnabled; }
 
 	void setSessionTimestamp(ns timestamp) { m_lastSessionTimestamp = timestamp; }
 
@@ -43,7 +52,9 @@ public slots:
 	void setState(State newState);
 	void startRecording();
 	void stopRecording();
-	bool build(const QList<Element*>&, const QList<IRecordable*>&);
+	void startProcessing();
+	void stopProcessing();
+	bool build(const QList<Element*>&);
 	bool close();
 
 	void onPipelineError(const QString& errorMessage);
@@ -55,27 +66,29 @@ private:
 	bool cleanup();
 
 	bool createSourceElements(Element*);
-	bool createAndLinkPreviewBin(Element*, GstElement*);
-	bool createAndLinkRecordBin(Element*, GstElement*);
-
-	bool openRecordingValves(QList<IRecordable*>&);
-	bool closeRecordingValves(QList<IRecordable*>&);
-	bool openRecordingValveForElement(IRecordable*);
-	bool closeRecordingValveForElement(IRecordable*);
+	bool createSourceBranches(Element*, GstElement*);
+	bool createPreviewBranch(Element*, GstElement*, ProcessingBranch* processorBranch = nullptr);
+	bool createRecorderBranch(Element*, GstElement*);
+	ProcessingBranch* createProcessorBranch(Element* sourceElement, Processor* processor, GstElement* tee);
 
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
 	State m_state = State::STOPPED;
+	bool m_isProcessingEnabled = true;
 	ns m_lastSessionTimestamp = 0;
 	ns m_lastRecordingTimestamp = 0;
-
-	// Volatile refs/ptrs
-	QList<GstElement*> m_sourceBins;
-	QList<GstElement*> m_previewBins;
-	QList<GstElement*> m_recordBins;
-	QList<GstElement*> m_recordableElementBins;
-	QList<IRecordable*> m_recordableElements;
-	SessionSettings& m_sessionSettings; // ptr to session settings owned by settings controller
 	guint m_pipelineBusWatchId = 0;
+
+	// Borrowed ptrs
+	QList<GstElement*> m_sourceBins;
+	QList<PreviewBranch*> m_previewBranches;
+	QList<RecorderBranch*> m_recordBranches;
+	QList<ProcessingBranch*> m_processingBranches;
+
+	// Owned ptrs
+	std::map<QUuid, std::unique_ptr<PreviewCompositor>> m_processorCompositors;
+
+	ElementsController& m_elementsController;
+	SessionSettings& m_sessionSettings;
 
 signals:
 	void started();

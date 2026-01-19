@@ -46,7 +46,7 @@ const std::vector<ElementInfo> ArduinoPanTiltMountPlugin::discover() const
 
     std::vector<ElementInfo> list;
     for (const QSerialPortInfo& portInfo : serialPorts) {
-        if (portInfo.manufacturer() != "Arduino") {
+        if (portInfo.manufacturer() != "Arduino") { // TODO: add fallback checks
 			LoggingController::info("Skipping non-Arduino device on port: " + portInfo.portName());
             continue;
         }

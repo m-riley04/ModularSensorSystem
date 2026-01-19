@@ -25,7 +25,7 @@ public:
 		active ? emit processingStarted() : emit processingStopped();
     }
 
-	void addProcessor(IProcessorPlugin* plugin);
+	void addProcessor(Processor* processor);
 	void removeProcessor(Processor* processor);
 	void clearProcessors();
 

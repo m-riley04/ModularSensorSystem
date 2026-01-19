@@ -13,6 +13,7 @@
 #include "controllers/sessioncontroller.hpp"
 #include "controllers/settingscontroller.hpp"
 #include "controllers/loggingcontroller.hpp"
+#include "controllers/elementscontroller.hpp"
 #include "core_export.hpp"
 
 class MSS_CORE_API MainController  : public QObject
@@ -23,12 +24,13 @@ public:
 	MainController(QSettings& settings, QObject *parent);
 	~MainController();
 
+	MountController& mountController() { return m_mountController; }
 	SourceController& sourceController() { return m_sourceController; }
+	ProcessingController& processingController() { return m_processingController; }
+	ElementsController& elementsController() { return m_elementsController; }
+	SessionController& sessionController() { return m_sessionController; }
 	PluginController& pluginController() { return m_pluginController; }
 	PresetsController& presetsController() { return m_presetsController; }
-	ProcessingController& processingController() { return m_processingController; }
-	MountController& mountController() { return m_mountController; }
-	SessionController& sessionController() { return m_sessionController; }
 	SettingsController& settingsController() { return m_settingsController; }
 	LoggingController& loggingController() { return m_loggingController; }
 
@@ -43,6 +45,7 @@ private:
 	SourceController m_sourceController;
 	ProcessingController m_processingController;
 	MountController m_mountController;
+	ElementsController m_elementsController;
 	PluginController m_pluginController;
 	PresetsController m_presetsController;
 	SessionController m_sessionController;

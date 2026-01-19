@@ -257,7 +257,7 @@ QJsonArray PresetsController::sourcePresetsToJson(const QList<SourcePreset>& sou
 		obj["id"] = QString::fromStdString(sourcePreset.sourceId.toStdString());
 		obj["name"] = sourcePreset.sourceName;
 		obj["plugin_id"] = sourcePreset.pluginId;
-		obj["type"] = sourcePreset.sourceType;
+		obj["type"] = static_cast<int>(sourcePreset.sourceType); // Store as int
 		obj["config"] = sourcePreset.settings;
 		array.append(obj);
 	}

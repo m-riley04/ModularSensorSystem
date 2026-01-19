@@ -1,0 +1,17 @@
+[modelinfo]
+version=1.0
+group-id=yolo-v8-out
+
+[images]
+id=images
+type=float32
+dims=1,3,640,640
+dir=input
+ranges=0.0,1.0;0.0,1.0;0.0,1.0
+
+[output0]
+id=yolo-v8-out
+type=float32
+dims=1,84,8400
+dims-order=col-major
+dir=output

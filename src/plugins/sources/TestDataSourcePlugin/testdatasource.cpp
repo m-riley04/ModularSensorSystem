@@ -6,7 +6,7 @@ TestDataSource::TestDataSource(const std::string& hardwareId, QObject* parent)
 
 TestDataSource::TestDataSource(SourceInfo sourceInfo, QObject* parent)
 	: Source(sourceInfo.elementInfo, parent),
-	m_bin(std::make_unique<TestDataSourceBin>(this->uuid(), sourceInfo.elementInfo.id))
+	m_bin(std::make_unique<TestDataSourceBin>(this))
 {
 	m_cfg.sensorId = sourceInfo.elementInfo.id;
 
@@ -32,7 +32,14 @@ SourceInfo TestDataSource::getSourceInfo(const std::string& id) const
 void TestDataSource::createBinIfNeeded()
 {
 	if (!m_bin) {
-		m_bin = std::make_unique<TestDataSourceBin>(this->uuid(), this->id());
+		m_bin = std::make_unique<TestDataSourceBin>(this);
+	}
+}
+
+void TestDataSource::createPreviewBranchIfNeeded()
+{
+	if (!m_previewBranch) {
+		m_previewBranch = std::make_unique<TestDataSourcePreviewBranch>(this);
 	}
 }
 
@@ -48,12 +55,25 @@ void TestDataSource::onSessionStart()
 	scheduleNextTick();
 }
 
+PreviewBranch* TestDataSource::previewBranch()
+{
+	createPreviewBranchIfNeeded();
+	return m_previewBranch.get();
+}
+
+GstElement* TestDataSource::previewSinkBin()
+{
+	createPreviewBranchIfNeeded();
+	return m_previewBranch->bin();
+}
+
 void TestDataSource::onSessionStop()
 {
 	m_timer.stop();
 
 	// Reset bin
 	m_bin.reset(nullptr);
+	m_previewBranch.reset(nullptr);
 }
 
 void TestDataSource::onTimerTimeout()

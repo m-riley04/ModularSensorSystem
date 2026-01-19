@@ -1,10 +1,12 @@
 #include "pipeline/sessionpipeline.hpp"
 #include <controllers/loggingcontroller.hpp>
+#include <utils/gst_debug_utils.hpp>
 
-SessionPipeline::SessionPipeline(SessionSettings& settings, QObject* parent)
+SessionPipeline::SessionPipeline(SessionSettings& settings, ElementsController& ec, QObject* parent)
 	: QObject(parent)
 	, m_pipeline(nullptr, &gst_object_unref)
 	, m_sessionSettings(settings)
+	, m_elementsController(ec)
 {
 	if (!gst_is_initialized()) {
 		gst_init(nullptr, nullptr);
@@ -57,13 +59,12 @@ static gboolean pipeline_bus_call(GstBus* bus, GstMessage* msg, gpointer data)
 	return true;
 }
 
-bool SessionPipeline::build(const QList<Element*>& elements, const QList<IRecordable*>& recordableElements)
+bool SessionPipeline::build(const QList<Element*>& elements)
 {
 	// Cleanly tear down any existing pipeline first
-	close();
-
-	// Set session recordable elements
-	m_recordableElements = recordableElements;
+	if (!close()) {
+		LoggingController::warning("Failed to close existing pipeline before building a new one.");
+	}
 
 	// Create the main pipeline
 	m_pipeline.reset(GST_PIPELINE(gst_pipeline_new(MAIN_PIPELINE_NAME)));
@@ -78,18 +79,21 @@ bool SessionPipeline::build(const QList<Element*>& elements, const QList<IRecord
 	m_pipelineBusWatchId = gst_bus_add_watch(bus, pipeline_bus_call, this);
 	gst_object_unref(bus);
 
-	// Iterate over all sources and add them
+	// Iterate over all eligible elements and add them
 	for (auto& element : elements) {
+		// Link start and stop hooks
+		connect(this, &SessionPipeline::started, element, &Element::onSessionStart, Qt::UniqueConnection);
+		connect(this, &SessionPipeline::stopped, element, &Element::onSessionStop, Qt::UniqueConnection);
+
+		if (!element->asPipelineElement()) continue; // skip non-pipeline elements
+		if (element->asPipelineElement()->processingBranch() != nullptr) continue; // skip processor elements
 		if (!createSourceElements(element)) {
 			emit errorOccurred("Failed to create source elements for element '" + QString::fromStdString(element->name()) + "'");
-			close();
+			if (!close()) { // TODO/CONSIDER: handle this more gracefully? And check if close succeeded?
+				LoggingController::warning("Failed to close pipeline after build failure.");
+			}
 			return false;
 		}
-
-		// Link start and stop hooks
-		// TODO: fix connect syntax
-		connect(this, &SessionPipeline::started, element, &Element::onSessionStart);
-		connect(this, &SessionPipeline::stopped, element, &Element::onSessionStop);
 	}
 
 	if (!start()) {
@@ -105,13 +109,21 @@ bool SessionPipeline::build(const QList<Element*>& elements, const QList<IRecord
 
 bool SessionPipeline::close()
 {
+	if (m_state == State::RECORDING) {
+		stopRecording();
+	}
+	
 	// Stop pipeline first
 	if (!this->stop()) {
 		LoggingController::warning("Failed to stop pipeline");
 		return false;
 	}
 
-	this->cleanup();
+	if (!this->cleanup()) {
+		LoggingController::warning("Failed to clean up pipeline");
+		return false;
+	}
+
 	setState(State::STOPPED);
 
 	return true;
@@ -124,20 +136,11 @@ bool SessionPipeline::start()
 		return false;
 	}
 
-	// Step through states to surface potential errors
-	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_READY) == GST_STATE_CHANGE_FAILURE) {
-		LoggingController::warning("Failed to set pipeline to READY");
-		close();
-		return false;
-	}
-	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_PAUSED) == GST_STATE_CHANGE_FAILURE) {
-		LoggingController::warning("Failed to set pipeline to PAUSED");
-		close();
-		return false;
-	}
+	// Set pipeline to playing
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_PLAYING) == GST_STATE_CHANGE_FAILURE) {
 		LoggingController::warning("Failed to set pipeline to PLAYING");
-		close();
+		stop();
+		cleanup();
 		return false;
 	}
 
@@ -146,9 +149,7 @@ bool SessionPipeline::start()
 
 bool SessionPipeline::stop()
 {
-	if (!m_pipeline) {
-		return true;
-	}
+	if (!m_pipeline) return true;
 
 	if (gst_element_set_state(GST_ELEMENT(m_pipeline.get()), GST_STATE_NULL) == GST_STATE_CHANGE_FAILURE) {
 		LoggingController::warning("Failed to set pipeline to NULL");
@@ -160,21 +161,23 @@ bool SessionPipeline::stop()
 
 bool SessionPipeline::cleanup()
 {
+	// bus watch cleanup
+	if (m_pipelineBusWatchId != 0) {
+		g_source_remove(m_pipelineBusWatchId);
+		m_pipelineBusWatchId = 0;
+	}
+
 	// Pipeline cleanup
 	m_pipeline.reset(nullptr);
 
-	// bus watch cleanup
-	g_source_remove(m_pipelineBusWatchId);
-	m_pipelineBusWatchId = 0;
-
 	// GST elements ptrs lists cleanup
 	m_sourceBins.clear();
-	m_previewBins.clear();
-	m_recordBins.clear();
-	m_recordableElementBins.clear();
 
-	// Sources ptrs list cleanup
-	m_recordableElements.clear();
+	// Branch lists cleanup
+	m_previewBranches.clear();
+	m_recordBranches.clear();
+	m_processingBranches.clear();
+	m_processorCompositors.clear();
 
 	return true;
 }
@@ -183,9 +186,12 @@ void SessionPipeline::startRecording()
 {
 	m_lastRecordingTimestamp = generateTimestampNs();
 
-	if (!openRecordingValves(m_recordableElements)) {
-		LoggingController::warning("Failed to open recording valves during startRecording.");
-		return;
+	// Iterate through all IRecordable elements and start recording
+	for (IRecordable* recordableElement : this->m_elementsController.sourceController().recordableSources()) {
+		if (!recordableElement) continue; // null check
+		if (!recordableElement->startRecording()) {
+			LoggingController::warning("Failed to start recording for element"); // todo: name element?
+		}
 	}
 
 	setState(State::RECORDING);
@@ -193,12 +199,59 @@ void SessionPipeline::startRecording()
 
 void SessionPipeline::stopRecording()
 {
-	if (!closeRecordingValves(m_recordableElements)) {
-		LoggingController::warning("Failed to close recording valves during stopRecording.");
-		return;
+	// Iterate through all IRecordable elements and start recording
+	for (IRecordable* recordableElement : this->m_elementsController.sourceController().recordableSources()) {
+		if (!recordableElement) continue; // null check
+		if (!recordableElement->stopRecording()) {
+			LoggingController::warning("Failed to stop recording for element"); // todo: name element?
+		}
 	}
 
 	setState(State::STARTED);
+}
+
+void SessionPipeline::startProcessing()
+{
+	for (auto& processor : m_elementsController.processingController().processors()) {
+		if (!processor) continue;
+		if (!processor->startProcessing()) {
+			LoggingController::warning("Failed to start processor: " + QString::fromStdString(processor->name()));
+			continue;
+		}
+
+		QUuid processorId = boostUuidToQUuid(processor->uuid());
+		if (!m_processorCompositors.contains(processorId)) {
+			LoggingController::warning("No PreviewCompositor found for processor: " + QString::fromStdString(processor->name()));
+			continue;
+		}
+
+		// Switch compositor to processing mode
+		m_processorCompositors[processorId]->setProcessingEnabled(true);
+	}
+
+	m_isProcessingEnabled = true;
+}
+
+void SessionPipeline::stopProcessing()
+{
+	for (auto& processor : m_elementsController.processingController().processors()) {
+		if (!processor) continue;
+		if (!processor->stopProcessing()) {
+			LoggingController::warning("Failed to stop processor: " + QString::fromStdString(processor->name()));
+			continue;
+		}
+
+		QUuid processorId = boostUuidToQUuid(processor->uuid());
+		if (!m_processorCompositors.contains(processorId)) {
+			LoggingController::warning("No PreviewCompositor found for processor: " + QString::fromStdString(processor->name()));
+			continue;
+		}
+
+		// Switch compositor to raw mode
+		m_processorCompositors[processorId]->setProcessingEnabled(false);
+	}
+
+	m_isProcessingEnabled = false;
 }
 
 bool SessionPipeline::createSourceElements(Element* element)
@@ -231,6 +284,21 @@ bool SessionPipeline::createSourceElements(Element* element)
 		return false;
 	}
 
+	// If we succeed all paths above, add to our tracking list
+	m_sourceBins.append(srcBin);
+
+	// Create and link branches
+	if (!createSourceBranches(element, srcBin)) {
+		LoggingController::warning("Failed to create source branches for element:" + QString::fromStdString(element->name()));
+		gst_bin_remove(GST_BIN(m_pipeline.get()), srcBin);
+		return false;
+	}
+
+	return true;
+}
+
+bool SessionPipeline::createSourceBranches(Element* element, GstElement* srcBin)
+{
 	// Create a tee element to split the source output
 	std::string teeName = "tee_" + boost::uuids::to_string(element->uuid());
 	GstElement* tee = gst_element_factory_make("tee", teeName.c_str());
@@ -252,81 +320,155 @@ bool SessionPipeline::createSourceElements(Element* element)
 		return false;
 	}
 
-	// If we succeed all paths above, add to our tracking list
-	m_sourceBins.append(srcBin);
+	// Check if this source has processors attached
+	QUuid sourceId = boostUuidToQUuid(element->uuid());
+	QList<Processor*> processors = m_elementsController.processorsForSource(sourceId);
 
-	// Attempt to add/link preview
+	// Create processor branches first (they need to be in the pipeline before linking to preview)
+	ProcessingBranch* processorBranch = nullptr;
+	if (!processors.isEmpty()) {
+		// For now, we only support one processor per source
+		// TODO: Support chaining multiple processors
+		Processor* processor = processors.first();
+		processorBranch = createProcessorBranch(element, processor, tee);
+		if (!processorBranch) {
+			LoggingController::warning("Failed to create processor branch for element:" + QString::fromStdString(element->name()));
+		}
+	}
+
+	// Attempt to add/link preview (with overlay support if processors exist)
 	if (element->asPreviewable() != nullptr) {
-		if (!createAndLinkPreviewBin(element, tee)) {
-			LoggingController::warning("Failed to create and link preview bin for element:"
-				+ QString::fromStdString(element->name()));
+		if (!createPreviewBranch(element, tee, processorBranch)) {
+			LoggingController::warning("Failed to create preview branch for element:" + QString::fromStdString(element->name()));
+
+			// Since we're checking if it's previewable, the creation should work. If it fails, clean up processor branch if it exists and return false.
+			if (!cleanup()) {
+				LoggingController::warning("Failed to clean up pipeline after preview branch creation failure for element:" + QString::fromStdString(element->name()));
+			}
+			return false;
 		}
 	}
 
 	// Attempt to add/link recording bin
 	if (element->asRecordable() != nullptr) {
-		if (!createAndLinkRecordBin(element, tee)) {
-			LoggingController::warning("Failed to create and link recording bin for element:"
-				+ QString::fromStdString(element->name()));
+		if (!createRecorderBranch(element, tee)) {
+			LoggingController::warning("Failed to create recorder branch for element:" + QString::fromStdString(element->name()));
+			
+			// Since we're checking if it's recordable, the creation should work. If it fails, clean up processor branch if it exists and return false.
+			if (!cleanup()) {
+				LoggingController::warning("Failed to clean up pipeline after recorder branch creation failure for element:" + QString::fromStdString(element->name()));
+			}
+			return false;
 		}
 	}
 
 	return true;
 }
 
-bool SessionPipeline::createAndLinkPreviewBin(Element* element, GstElement* tee)
+bool SessionPipeline::createPreviewBranch(Element* element, GstElement* tee, ProcessingBranch* processorBranch)
 {
-	if (!element) {
-		LoggingController::warning("Cannot create and link the source and preview bins: element is null");
+	IPreviewable* prevElem = element->asPreviewable();
+	if (!prevElem) {
+		LoggingController::warning("Element is not previewable for element:" + QString::fromStdString(element->name()));
 		return false;
 	}
 
-	IPreviewable* prevSrc = element->asPreviewable();
-	if (!prevSrc) {
-		LoggingController::warning("Cannot create and link the source and preview bins for '" + QString::fromStdString(element->displayName()) + "': source is not previewable");
+	// Get or create the preview branch with overlay support if processors are attached
+	PreviewBranch* branch = prevElem->previewBranch();
+	GstElement* branchBin = branch ? branch->bin() : nullptr;
+	if (!branchBin) {
+		LoggingController::warning("Failed to get preview branch bin for element:" + QString::fromStdString(element->name()));
 		return false;
 	}
 
-	// Init elemets
-	guintptr windowId = static_cast<guintptr>(prevSrc->windowId());
-	GstElement* sink = prevSrc->previewSinkBin();
+	// Store preview branch (non-owning)
+	m_previewBranches.append(branch);
 
-	// TODO/CONSIDER: similar to recording, maybe include a valve mechanism to enable/disable previewing?
-
-	// dynamic cast to source
-	// TODO: this should be reworked to not assume element is a Source. Currently needed for "createDefaultPreviewSink" function
-	Source* srcElem = dynamic_cast<Source*>(element);
-	if (!srcElem) {
-		LoggingController::warning("Cannot create and link the source and preview bins for '" + QString::fromStdString(element->displayName()) + "': element is not a source");
-		return false;
-	}
-
-	// Check validity of each
-	if (!sink) {
-		LoggingController::warning("Failed to create custom sink element for '" + QString::fromStdString(element->displayName()) + "'; creating default sink");
-		sink = createDefaultPreviewSink(srcElem->type(), windowId, prevSrc->previewSinkElementName().c_str());
-	}
-
-	// Add preview element(s) to pipeline
-	if (!gst_bin_add(GST_BIN(m_pipeline.get()), sink)) {
+	// Add preview branch to pipeline
+	if (!gst_bin_add(GST_BIN(m_pipeline.get()), branchBin)) {
 		LoggingController::warning("Failed to add preview sink for '" + QString::fromStdString(element->displayName()) + "' to pipeline.");
 		return false;
 	}
 
-	// Link source bin to sink
-	if (!gst_element_link(tee, sink)) {
+	// If we have a processor branch, create preview compositor links
+	if (processorBranch) {
+		Processor* processor = static_cast<Processor*>(processorBranch->element());
+		if (!processor) {
+			LoggingController::warning("Failed to get processor from processor branch for element:" + QString::fromStdString(element->name()));
+			gst_bin_remove(GST_BIN(m_pipeline.get()), branchBin);
+			return false;
+		}
+
+		QUuid uuid = boostUuidToQUuid(processor->uuid());
+		auto entry = m_processorCompositors.insert(
+			std::pair<QUuid, std::unique_ptr<PreviewCompositor>>(
+				uuid
+				, std::make_unique<PreviewCompositor>(m_pipeline.get(), tee, branch))
+		);
+		if (!m_processorCompositors.at(uuid)->linkProcessingBranch(processorBranch)) {
+			LoggingController::warning("Failed to link processing branch for element:" + QString::fromStdString(element->name()));
+			return false;
+		}
+	}
+	else if (!gst_element_link(tee, branchBin)) { // Otherwise, link tee directly to preview branch
 		LoggingController::warning("Failed to link source bin to preview sink for '" + QString::fromStdString(element->displayName()) + "'.");
-		gst_bin_remove(GST_BIN(m_pipeline.get()), sink);
+		gst_bin_remove(GST_BIN(m_pipeline.get()), branchBin);
 		return false;
 	}
-
-	// If we succeed all paths above, add to our tracking list
-	m_previewBins.append(sink);
 
 	return true;
 }
 
-bool SessionPipeline::createAndLinkRecordBin(Element* element, GstElement* tee)
+ProcessingBranch* SessionPipeline::createProcessorBranch(Element* sourceElement, Processor* processor, GstElement* tee)
+{
+	if (!processor) {
+		LoggingController::warning("Cannot create processor branch: processor is null");
+		return nullptr;
+	}
+
+	// Get the processor's pipeline element interface
+	IPipelineElement* pipelineElem = processor->asPipelineElement();
+	if (!pipelineElem) {
+		LoggingController::warning("Processor '" + QString::fromStdString(processor->displayName()) + "' is not a pipeline element");
+		return nullptr;
+	}
+
+	// Get the ProcessingBranch from the processor
+	ProcessingBranch* processorBranch = pipelineElem->processingBranch();
+	if (!processorBranch) {
+		LoggingController::warning("Processor '" + QString::fromStdString(processor->displayName()) + "' does not expose a ProcessingBranch");
+		return nullptr;
+	}
+
+	// Get the processor's bin
+	GstElement* filterBin = processorBranch->bin();
+	if (!filterBin) {
+		LoggingController::warning("Failed to get filter bin for processor '" + QString::fromStdString(processor->displayName()) + "'");
+		return nullptr;
+	}
+
+	// Add processor bin to pipeline
+	if (!gst_bin_add(GST_BIN(m_pipeline.get()), filterBin)) {
+		LoggingController::warning("Failed to add processor bin for '" + QString::fromStdString(processor->displayName()) + "' to pipeline.");
+		return nullptr;
+	}
+
+	// Link tee to processor bin
+	if (!gst_element_link(tee, filterBin)) {
+		LoggingController::warning("Failed to link tee to processor bin for '" + QString::fromStdString(processor->displayName()) + "'.");
+		gst_bin_remove(GST_BIN(m_pipeline.get()), filterBin);
+		return nullptr;
+	}
+
+	// Store references
+	m_processingBranches.append(processorBranch);
+
+	LoggingController::debug("Created processor branch for '" + QString::fromStdString(processor->displayName()) + "'");
+
+	return processorBranch;
+}
+
+bool SessionPipeline::createRecorderBranch(Element* element, GstElement* tee)
 {
 	if (!element) {
 		LoggingController::warning("Cannot create and link the source and recording bins: source is null");
@@ -380,55 +522,6 @@ bool SessionPipeline::createAndLinkRecordBin(Element* element, GstElement* tee)
 		return false;
 	}
 
-	// If we succeed all paths above, add to our tracking list
-	m_recordBins.append(sink);
-
-	return true;
-}
-
-bool SessionPipeline::openRecordingValves(QList<IRecordable*>& elements)
-{
-	// Iterate over all sources and open their valves
-	for (auto& element : elements) {
-		if (!openRecordingValveForElement(element)) {
-			LoggingController::warning("Failed to open recording valve for source");
-		}
-	}
-
-	return true;
-}
-
-bool SessionPipeline::closeRecordingValves(QList<IRecordable*>& sources)
-{
-	// Iterate over all sources and close their valves
-	for (auto& src : sources) {
-		if (!closeRecordingValveForElement(src)) {
-			LoggingController::warning("Failed to close recording valve for source");
-		}
-	}
-
-	return true;
-}
-
-bool SessionPipeline::openRecordingValveForElement(IRecordable* src)
-{
-	if (!src) {
-		LoggingController::warning("Cannot open recording valve for source: source is not recordable");
-		return false;
-	}
-
-	src->startRecording();
-	return true;
-}
-
-bool SessionPipeline::closeRecordingValveForElement(IRecordable* src)
-{
-	if (!src) {
-		LoggingController::warning("Cannot close recording valve for source: source is not recordable");
-		return false;
-	}
-
-	src->stopRecording();
 	return true;
 }
 

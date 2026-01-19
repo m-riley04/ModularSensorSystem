@@ -28,6 +28,8 @@ public:
 
 	// IPipelineElement implementations
 	GstElement* gstSrcBin() override final;
+	GstElement* gstFilterBin() override final { return nullptr; }
+	GstElement* gstSinkBin() override final { return nullptr; }
 
 	// IRecordable implementations
 	GstElement* recorderSinkBin() override;
@@ -62,7 +64,7 @@ private:
 	MountError m_error;
 
 	std::unique_ptr<ArduinoPanTiltMountBin> m_bin;
-	std::unique_ptr<ArduinoPanTiltMountRecorderBin> m_recorderBin;
+	std::unique_ptr<ArduinoPanTiltMountRecorderBin> m_recorderBranch;
 
 	std::string m_recordingFilePath;
 };

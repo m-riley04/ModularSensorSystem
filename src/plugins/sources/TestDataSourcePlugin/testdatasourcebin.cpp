@@ -3,8 +3,8 @@
 #include <gst/gstbuffer.h>
 #include <pipeline/mime_types.hpp>
 
-TestDataSourceBin::TestDataSourceBin(const boost::uuids::uuid& uuid, const std::string& id)
-    : SourceBin(uuid, id, Source::Type::DATA, "src")
+TestDataSourceBin::TestDataSourceBin(Element* element)
+    : SourceBin(element, Source::Type::DATA, "src")
 {
 	build();
 }
@@ -31,7 +31,7 @@ void TestDataSourceBin::pushRandomSample(uint64_t seq, double value)
 }
 
 bool TestDataSourceBin::build() {
-	std::string binName = boost::uuids::to_string(m_uuid);
+	std::string binName = boost::uuids::to_string(m_element->uuid());
 
     if (!this->create(("rand_data_bin_" + binName).c_str())) {
         return false;

@@ -12,7 +12,7 @@
  * Qt applications on Windows do not have a console by default, and
  * g_print was being ignored in the normal debug console.
  */
-void setupConsole()
+static void setupConsole()
 {
 	AllocConsole();
 
@@ -22,11 +22,13 @@ void setupConsole()
 	freopen_s(&fpOut, "CONOUT$", "w", stdout);
 	freopen_s(&fpErr, "CONOUT$", "w", stderr);
 }
+
 #endif
 
 int main(int argc, char *argv[])
 {
 	#ifdef Q_OS_WINDOWS
+
 	// Removed this because I implemented a better logging system that writes to files.
 	// Need to re-evaluate if I want this behavior again later.
 	//if (IsDebuggerPresent()) setupConsole();

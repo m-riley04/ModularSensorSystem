@@ -76,9 +76,22 @@ public:
 	 */
 	virtual void onSessionStop() = 0;
 
-	// Converters to capability interfaces
+	/**
+	 * @brief Casts this element to an IRecordable interface if it implements it.
+	 * @return Returns an IRecordable pointer if this element implements it, nullptr otherwise.
+	 */
 	virtual IRecordable* asRecordable() = 0;
+
+	/**
+	 * @brief Casts this element to an IPipelineElement interface if it implements it.
+	 * @return Returns an IPipelineElement pointer if this element implements it, nullptr otherwise.
+	 */
 	virtual IPipelineElement* asPipelineElement() = 0;
+
+	/**
+	 * @brief Attempts to cast this object to an IPreviewable interface pointer.
+	 * @return A pointer to the IPreviewable interface if the cast succeeds, otherwise nullptr.
+	 */
 	virtual IPreviewable* asPreviewable() = 0;
 
 protected:

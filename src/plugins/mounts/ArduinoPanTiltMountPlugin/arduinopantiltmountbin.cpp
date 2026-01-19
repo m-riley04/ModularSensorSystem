@@ -4,8 +4,8 @@
 #include <gst/app/gstappsrc.h>
 #include <pipeline/utils.hpp>
 
-ArduinoPanTiltMountBin::ArduinoPanTiltMountBin(const boost::uuids::uuid& uuid, const std::string& id)
-	: SourceBin(uuid, id, Source::Type::DATA, "src")
+ArduinoPanTiltMountBin::ArduinoPanTiltMountBin(Element* element)
+	: SourceBin(element, Source::Type::DATA, "src")
 {
 	build();
 }
@@ -34,7 +34,7 @@ void ArduinoPanTiltMountBin::pushSample(QByteArray payload)
 
 bool ArduinoPanTiltMountBin::build()
 {
-    std::string deviceName = boost::uuids::to_string(m_uuid);
+    std::string deviceName = boost::uuids::to_string(m_element->uuid());
     std::string gstElementPrefix = "arduino_pan_tilt";
 
     if (!this->create((gstElementPrefix + "_" + deviceName).c_str())) return false;

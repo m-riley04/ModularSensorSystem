@@ -14,11 +14,13 @@
     <ClCompile Include="usbaudioplugin.cpp" />
     <ClCompile Include="USBAudioSource\usbaudiosource.cpp" />
     <ClCompile Include="USBAudioSource\usbaudiosourcebin.cpp" />
+    <ClCompile Include="USBAudioSource\usbaudiosourcepreviewbranch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="usbaudioplugin.hpp" />
     <QtMoc Include="USBAudioSource\usbaudiosource.hpp" />
     <ClInclude Include="USBAudioSource\usbaudiosourcebin.hpp" />
+    <ClInclude Include="USBAudioSource\usbaudiosourcepreviewbranch.hpp" />
     <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -36,13 +38,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>

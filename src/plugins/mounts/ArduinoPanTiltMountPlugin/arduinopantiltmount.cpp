@@ -8,7 +8,7 @@ ArduinoPanTiltMount::ArduinoPanTiltMount(const ElementInfo& element, QObject* pa
 	: Mount(element, parent)
 	, m_serialPort(new QSerialPort(QString::fromStdString(element.name), this))
 	, m_panTiltInfo(Pose())
-	, m_bin(std::make_unique<ArduinoPanTiltMountBin>(this->uuid(), element.id))
+	, m_bin(std::make_unique<ArduinoPanTiltMountBin>(this))
 
 {
 	// Add serial port connections FIRST
@@ -127,7 +127,7 @@ GstElement* ArduinoPanTiltMount::gstSrcBin()
 GstElement* ArduinoPanTiltMount::recorderSinkBin()
 {
 	createRecorderBinIfNeeded();
-	return m_recorderBin->bin();
+	return m_recorderBranch->bin();
 }
 
 std::string ArduinoPanTiltMount::recorderFileExtension() const
@@ -137,38 +137,38 @@ std::string ArduinoPanTiltMount::recorderFileExtension() const
 
 bool ArduinoPanTiltMount::setRecordingFilePath(const std::string& filePath)
 {
-	if (!m_recorderBin) return false;
+	if (!m_recorderBranch) return false;
 
-	return m_recorderBin->setRecordingFilePath(filePath);
+	return m_recorderBranch->setRecordingFilePath(filePath);
 }
 
 bool ArduinoPanTiltMount::startRecording()
 {
-	if (!m_recorderBin) {
+	if (!m_recorderBranch) {
 		createRecorderBinIfNeeded();
 	}
-	return m_recorderBin->setRecordingEnabled(true);
+	return m_recorderBranch->setRecordingEnabled(true);
 }
 
 bool ArduinoPanTiltMount::stopRecording()
 {
-	if (!m_recorderBin) {
+	if (!m_recorderBranch) {
 		createRecorderBinIfNeeded();
 	}
-	return m_recorderBin->setRecordingEnabled(false) && m_recorderBin->finalizeRecording();;
+	return m_recorderBranch->setRecordingEnabled(false) && m_recorderBranch->finalizeRecording();;
 }
 
 void ArduinoPanTiltMount::createBinIfNeeded()
 {
 	if (!m_bin) {
-		m_bin = std::make_unique<ArduinoPanTiltMountBin>(this->uuid(), this->id());
+		m_bin = std::make_unique<ArduinoPanTiltMountBin>(this);
 	}
 }
 
 void ArduinoPanTiltMount::createRecorderBinIfNeeded()
 {
-	if (!m_recorderBin) {
-		m_recorderBin = std::make_unique<ArduinoPanTiltMountRecorderBin>(this->uuid(), this->id());
+	if (!m_recorderBranch) {
+		m_recorderBranch = std::make_unique<ArduinoPanTiltMountRecorderBin>(this);
 	}
 }
 

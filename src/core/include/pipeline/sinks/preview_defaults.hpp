@@ -150,21 +150,37 @@ inline GstElement* createDefaultVideoPreviewSink(guintptr windowId, const char* 
 	const char* sinkName = getVideoSinkFactoryName();
 
 	// Initialize elements
+	GstElement* bin = gst_bin_new(binName);
 	GstElement* sink = gst_element_factory_make(sinkName, binName); // TODO: make this dynamic
 
 	// Check validity of each
-	if (!sink) {
+	if (!bin || !sink) {
 		LoggingController::warning("Failed to create one or more elements");
+		if (bin) gst_object_unref(bin);
 		if (sink) gst_object_unref(sink);
 		return nullptr;
 	}
+
+	// Add elements to bin
+	gst_bin_add_many(GST_BIN(bin), sink, nullptr);
+
+	// Configure
+	g_object_set(sink,
+		"sync", FALSE,    // render as fast as buffers arrive
+		NULL);
+
+	// Add input ghost pad
+	GstPad* inputPad = gst_element_get_static_pad(sink, "sink");
+	GstPad* ghostPad = gst_ghost_pad_new("sink", inputPad);
+	gst_object_unref(inputPad);
+	gst_element_add_pad(bin, ghostPad);
 
 	// Set the video sink for overlay
 	if (windowId != 0 && GST_IS_VIDEO_OVERLAY(sink)) {
 		gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(sink), windowId);
 	}
 
-	return sink;
+	return bin;
 }
 
 /**

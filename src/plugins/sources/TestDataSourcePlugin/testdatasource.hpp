@@ -9,6 +9,7 @@
 #include "testdatasourcepluginutils.hpp"
 #include <QTimer>
 #include <QRandomGenerator>
+#include "testdatasourcepreviewbranch.hpp"
 
 class TestDataSource : public Source
 	, public IPreviewable
@@ -34,11 +35,14 @@ public:
 
 	/// IPipelineElement interface
 	GstElement* gstSrcBin() override;
+	GstElement* gstFilterBin() override final { return nullptr; }
+	GstElement* gstSinkBin() override final { return nullptr; }
 
 	/// IPreviewableSource interface
 	quintptr windowId() const override { return m_windowId; }
 	void setWindowId(quintptr newWindowId) override { m_windowId = newWindowId; }
-	GstElement* previewSinkBin() override { return nullptr; } // Use default sink
+	PreviewBranch* previewBranch() override;
+	GstElement* previewSinkBin() override;
 	std::string previewSinkElementName() const override { return "preview_" + boost::uuids::to_string(uuid()); }
 
 public slots:
@@ -51,9 +55,11 @@ private slots:
 private:
 	void scheduleNextTick();
 	void createBinIfNeeded();
+	void createPreviewBranchIfNeeded();
 	Source::Type m_sourceType = Source::Type::DATA;
 	quintptr m_windowId = 0;
 	std::unique_ptr<TestDataSourceBin> m_bin;
+	std::unique_ptr<TestDataSourcePreviewBranch> m_previewBranch;
 
 	QTimer m_timer;
 	uint64_t m_seq{ 0 };

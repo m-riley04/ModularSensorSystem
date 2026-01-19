@@ -1,29 +1,35 @@
 #include "arduinopantiltmountrecorderbin.hpp"
 
-ArduinoPanTiltMountRecorderBin::ArduinoPanTiltMountRecorderBin(const boost::uuids::uuid& uuid, const std::string& id)
-   : RecorderBin(uuid, id, Source::Type::DATA, "sink")
+ArduinoPanTiltMountRecorderBin::ArduinoPanTiltMountRecorderBin(Element* element)
+   : RecorderBranch(element, Source::Type::DATA)
 {
-    build();
+    buildBodyBin();
 }
 
-bool ArduinoPanTiltMountRecorderBin::build()
+ArduinoPanTiltMountRecorderBin::~ArduinoPanTiltMountRecorderBin()
 {
-    std::string deviceUuid = boost::uuids::to_string(m_uuid);
+	// Bins usually own their elements. However, since we got these elements through gst_bin_get_by_name, we still must unref them.
+	if (m_filesinkElement) {
+        gst_object_unref(m_filesinkElement);
+    }
+}
 
-    m_bin = createDefaultDataRecordingSink(("pan_tilt_recorder_sink_bin_" + deviceUuid).c_str());
-    if (!m_bin) {
+bool ArduinoPanTiltMountRecorderBin::buildBodyBin()
+{
+    std::string deviceUuid = boost::uuids::to_string(m_element->uuid());
+
+    m_body = createDefaultDataRecordingSink(("pan_tilt_recorder_sink_bin_" + deviceUuid).c_str());
+    if (!m_body) {
 		LoggingController::warning("Failed to create recorder bin");
         return false;
 	}
 
-    m_inputQueue = gst_bin_get_by_name(GST_BIN(m_bin), "queue");
-    m_valveElement = gst_bin_get_by_name(GST_BIN(m_bin), "valve");
-    m_filesinkElement = gst_bin_get_by_name(GST_BIN(m_bin), "filesink");
+    m_filesinkElement = gst_bin_get_by_name(GST_BIN(m_body), "filesink");
 
-    if (!m_inputQueue || !m_valveElement || !m_filesinkElement) {
+    if (!m_filesinkElement) {
 		LoggingController::warning("Failed to get one or more elements from recorder bin");
         return false;
 	}
 
-    return true;
+    return this->attachBody();
 }

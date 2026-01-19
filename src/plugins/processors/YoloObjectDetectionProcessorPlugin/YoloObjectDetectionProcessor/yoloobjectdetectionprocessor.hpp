@@ -4,29 +4,42 @@
 #include <QImage>
 #include <QVideoFrame>
 #include "features/processors/processor.hpp"
+#include "interfaces/capability/processors/iobjectdetectioncapable.hpp"
+#include "interfaces/capability/general/ipipelineelement.hpp"
+#include "yoloprocessorbranch.h"
 
-class Processor;
-
-class YoloObjectDetectionProcessor : public Processor
+class YoloObjectDetectionProcessor
+	: public Processor
+    , public IObjectDetectionCapable
+    , public IPipelineElement
 {
 	Q_OBJECT
 
 public:
-	YoloObjectDetectionProcessor(const ElementInfo& element, Source* src, QObject *parent);
+	YoloObjectDetectionProcessor(const ElementInfo& element, QObject *parent);
 	~YoloObjectDetectionProcessor();
 
-    // ProcessorBase API
-    void startProcessing() override { mEnabled = true; }
-    void stopProcessing() override { mEnabled = false; }
+	// Element lifecycle hooks
+	void onSessionStart() override;
+	void onSessionStop() override;
+
+    // Processor API
+    bool startProcessing() override;
+    bool stopProcessing() override;
+
+    // IPipelineElement API
+    GstElement* gstSrcBin() override final { return nullptr; }
+    GstElement* gstFilterBin() override final;
+    GstElement* gstSinkBin() override final { return nullptr; }
+    ProcessingBranch* processingBranch() override final;
+
+    // IObjectDetectionCapable API
+	void onObjectDetected(DetectionInfo detection) override;
 
 private:
-    bool mEnabled = true;
-    QImage mPreview;
+	void createBranchIfNeeded();
 
-public slots:
-	void processFrame(const QVideoFrame& frame);
+	std::unique_ptr<YoloProcessorBranch> m_processorBin;
 
-signals:
-    void objectDetected(Source* source);
 };
 

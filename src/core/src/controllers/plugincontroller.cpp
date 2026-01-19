@@ -1,4 +1,5 @@
 #include "controllers/plugincontroller.hpp"
+#include "controllers/loggingcontroller.hpp"
 
 PluginController::PluginController(SettingsController& settingsController, QObject* parent)
 	: QObject(parent)
@@ -39,11 +40,20 @@ void PluginController::unloadPlugins() {
 
 void PluginController::loadPlugin(const QString& pluginPath)
 {
-	m_pluginRegistry.load(pluginPath.toStdString(), FACTORY_API_VERSION);
+	if (!m_pluginRegistry.load(pluginPath.toStdString(), FACTORY_API_VERSION)) {
+		LoggingController::warning("The plugin registry failed to load plugin from path: " + pluginPath);
+		return;
+	}
+
+	// check for metadata to determine type
+	if (m_pluginRegistry.metadataByPath().find(pluginPath.toStdString()) == m_pluginRegistry.metadataByPath().end()) {
+		LoggingController::warning("The plugin registry has no metadata for loaded plugin at path: " + pluginPath);
+		return;
+	}
+
 	auto& pluginMeta = m_pluginRegistry.metadataByPath().at(pluginPath.toStdString());
 	if (pluginMeta.type == IElement::Type::Source) {
-		ISourcePlugin* plugin = m_pluginRegistry.as < ISourcePlugin
-		>().back(); // Get the last loaded source plugin
+		ISourcePlugin* plugin = m_pluginRegistry.as<ISourcePlugin>().back(); // Get the last loaded source plugin
 		m_sourcePlugins.append(plugin);
 		m_plugins.append(plugin);
 	}
@@ -100,6 +110,12 @@ void PluginController::unloadPlugin(const QString& pluginPath)
 void PluginController::loadPlugins()
 {
 	m_pluginRegistry.loadAll();
+
+	// Clear existing plugin lists
+	m_plugins.clear();
+	m_sourcePlugins.clear();
+	m_processorPlugins.clear();
+	m_mountPlugins.clear();
 
 	// Populate plugin lists
 	populateSourcePlugins();

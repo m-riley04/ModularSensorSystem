@@ -6,7 +6,7 @@
 
 class USBVideoSourceBin : public SourceBin {
 public:
-	USBVideoSourceBin(const boost::uuids::uuid& uuid, const std::string& id);
+	USBVideoSourceBin(Element* element);
 
 	virtual ~USBVideoSourceBin() = default;
 

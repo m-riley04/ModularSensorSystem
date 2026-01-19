@@ -1,7 +1,7 @@
 #include "yoloobjectdetectionprocessorplugin.hpp"
 #include "YoloObjectDetectionProcessor/yoloobjectdetectionprocessor.hpp"
 
-Processor* YoloObjectDetectionProcessorPlugin::createProcessor(Source* src, QObject* parent)
+Processor* YoloObjectDetectionProcessorPlugin::createProcessor(QObject* parent)
 {
     const ElementInfo info{
         .id = "yolo_object_detection_processor",
@@ -9,5 +9,5 @@ Processor* YoloObjectDetectionProcessorPlugin::createProcessor(Source* src, QObj
         .displayName = "YOLO Object Detection Processor",
         .pluginId = "yolo_object_detection_processor_plugin",
     };
-    return new YoloObjectDetectionProcessor(info, src, parent);
+    return new YoloObjectDetectionProcessor(info, parent);
 }

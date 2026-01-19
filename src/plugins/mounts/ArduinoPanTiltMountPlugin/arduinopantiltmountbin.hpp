@@ -7,7 +7,7 @@
 
 class ArduinoPanTiltMountBin : public SourceBin {
 public:
-	ArduinoPanTiltMountBin(const boost::uuids::uuid& uuid, const std::string& id);
+	ArduinoPanTiltMountBin(Element* element);
 	virtual ~ArduinoPanTiltMountBin() = default;
 
 	GstElement* appsrcElement() const { return m_appsrc; }
