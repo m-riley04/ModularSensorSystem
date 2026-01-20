@@ -7,8 +7,46 @@ SessionController::SessionController(SettingsController& settingsController, Ele
 	, m_elementsController(ec)
 	, m_pipeline(settingsController.sessionSettings(), m_elementsController, this)
 {
-	// Connect signals for error handling
+	qRegisterMetaType<AutomationEvent>("AutomationEvent");
+
 	connect(&m_pipeline, &SessionPipeline::errorOccurred, this, &SessionController::errorOccurred);
+
+	connect(&m_pipeline, &SessionPipeline::stateChanged, this, [this](SessionPipeline::State newState) {
+		AutomationEvent ev;
+		ev.type = "pipeline.stateChanged";
+		ev.payload.insert("state", static_cast<int>(newState));
+		ev.timestamp = m_lastSessionTimestamp;
+		emit automationEvent(ev);
+	});
+
+	connect(&m_pipeline, &SessionPipeline::eosReached, this, [this]() {
+		AutomationEvent ev;
+		ev.type = "pipeline.eos";
+		ev.timestamp = m_lastSessionTimestamp;
+		emit automationEvent(ev);
+	});
+
+	connect(&m_pipeline, &SessionPipeline::errorOccurred, this, [this](const QString& errorMessage) {
+		AutomationEvent ev;
+		ev.type = "pipeline.error";
+		ev.payload.insert("message", errorMessage);
+		ev.timestamp = m_lastSessionTimestamp;
+		emit automationEvent(ev);
+	});
+
+	connect(&m_pipeline, &SessionPipeline::recordingStarted, this, [this]() {
+		AutomationEvent ev;
+		ev.type = "pipeline.recordingStarted";
+		ev.timestamp = m_lastSessionTimestamp;
+		emit automationEvent(ev);
+	});
+
+	connect(&m_pipeline, &SessionPipeline::recordingStopped, this, [this]() {
+		AutomationEvent ev;
+		ev.type = "pipeline.recordingStopped";
+		ev.timestamp = m_lastSessionTimestamp;
+		emit automationEvent(ev);
+	});
 }
 
 SessionController::~SessionController()

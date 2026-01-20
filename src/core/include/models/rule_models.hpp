@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string_view>
-#include <QObject>
 
 /**
  * @brief Represents a trigger for a rule.
@@ -30,13 +29,4 @@ struct RuleModel {
 	bool isActive;
 	RuleTrigger trigger;
 	RuleAction action;
-};
-
-class Rule : public QObject {
-	Q_OBJECT
-private:
-
-
-public:
-	explicit Rule(const RuleModel& model, QObject* parent);
 };

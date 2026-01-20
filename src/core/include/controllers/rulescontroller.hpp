@@ -2,9 +2,12 @@
 
 #include <QObject>
 #include "models/rule_models.hpp"
+#include <automation/automation.hpp>
+#include <automation/automation_event.hpp>
 #include <vector>
 #include <controllers/elementscontroller.hpp>
 #include <map>
+#include <controllers/sessioncontroller.hpp>
 
 /**
  * @brief A controller class for managing rules within the application.
@@ -13,10 +16,14 @@
 class RulesController : public QObject
 {
 	Q_OBJECT
+
 private:
 	ElementsController& m_elementsController;
+	SessionController& m_sessionController;
 
-	std::vector<Rule> m_rules;
+	std::vector<RuleModel> m_rules;
+
+	void onAutomationEvent(const AutomationEvent& event);
 
 	/**
 	 * @brief Checks all active rules to see if their trigger conditions are met. Executes associated actions if conditions are met.
@@ -37,8 +44,8 @@ private:
 	void executeRuleAction(const RuleAction& action);
 
 public:
-	explicit RulesController(ElementsController&, QObject*);
+	explicit RulesController(SessionController& sc, ElementsController& ec, QObject* parent);
 	~RulesController();
 
-	void addRule(const Rule rule);
+	void addRule(const RuleModel& rule);
 };

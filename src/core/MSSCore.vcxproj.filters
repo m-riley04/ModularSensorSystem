@@ -164,6 +164,12 @@
     <ClInclude Include="include\models\processing_models.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\models\rule_models.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\automation\automation_event.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">
@@ -232,6 +238,9 @@
     <ClCompile Include="src\controllers\rulescontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\automation\automation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="include\controllers\maincontroller.hpp">
@@ -285,7 +294,7 @@
     <QtMoc Include="include\controllers\rulescontroller.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="include\models\rule_models.hpp">
+    <QtMoc Include="include\automation\automation.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

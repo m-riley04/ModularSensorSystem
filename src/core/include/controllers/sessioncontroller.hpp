@@ -15,6 +15,8 @@
 #include "settingscontroller.hpp"
 #include "core_export.hpp"
 
+#include <automation/automation_event.hpp>
+
 class MSS_CORE_API SessionController : public QObject
 {
 	Q_OBJECT
@@ -51,6 +53,8 @@ signals:
 
 	void recordingStarted();
 	void recordingStopped();
+
+	void automationEvent(AutomationEvent event);
 
 	void errorOccurred(QString errorMessage); // TODO: should I use a const ref?
 
