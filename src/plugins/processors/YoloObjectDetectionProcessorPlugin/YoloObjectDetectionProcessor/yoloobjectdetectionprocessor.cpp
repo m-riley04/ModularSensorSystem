@@ -1,4 +1,5 @@
 #include "yoloobjectdetectionprocessor.hpp"
+#include <utils/boost_qt_conversions.hpp>
 
 YoloObjectDetectionProcessor::YoloObjectDetectionProcessor(const ElementInfo& element, QObject *parent)
 	: Processor(element, parent)
@@ -32,6 +33,19 @@ void YoloObjectDetectionProcessor::createBranchIfNeeded()
 		QMetaObject::invokeMethod(this, [this, detections = std::move(detections)]() mutable {
 			if (!detections.empty()) {
 				emit objectsDetected(std::move(detections));
+
+				// TODO: optimize this?
+				QStringList labels;
+				for (auto& d : detections) {
+					labels.push_back(QString(d.label));
+				}
+
+				AutomationEvent ev;
+				ev.type = "processor.objectsDetected";
+				ev.elementId = boostUuidToQUuid(this->uuid());
+				ev.payload.insert("count", static_cast<int>(detections.size()));
+				ev.payload.insert("labels", labels);
+				emit automationEvent(ev);
 			}
 		}, Qt::QueuedConnection);
 	});

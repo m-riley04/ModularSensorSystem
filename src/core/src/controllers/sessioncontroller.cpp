@@ -74,6 +74,14 @@ void SessionController::startSession()
 	// Build the pipeline
 	if (!m_pipeline.build(m_elementsController.elements())) {
 		LoggingController::critical("Failed to start session.");
+		return;
+	}
+
+	// Forward processor events into controller-level automation bus
+	for (Processor* processor : m_elementsController.processingController().processors()) {
+		if (!processor) continue;
+		connect(processor, &Processor::automationEvent,
+			this, &SessionController::automationEvent, Qt::QueuedConnection);
 	}
 }
 

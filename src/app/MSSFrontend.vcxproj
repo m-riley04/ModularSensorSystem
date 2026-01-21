@@ -119,9 +119,11 @@
     <ClCompile Include="dialogs\AddProcessorDialog\addprocessordialog.cpp" />
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
     <ClCompile Include="dialogs\AppSettingsDialog\appsettingsdialog.cpp" />
+    <ClCompile Include="dialogs\AutomationDialog\automationdialog.cpp" />
     <ClCompile Include="dialogs\PluginsDialog\pluginsdialog.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
     <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp" />
+    <ClCompile Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
     <ClCompile Include="widgets\DockedMountControls\dockedmountcontrols.cpp" />
     <ClCompile Include="widgets\PluginDetailsWidget\plugindetailswidget.cpp" />
@@ -132,7 +134,9 @@
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="dialogs\AddMountDialog\addmountdialog.ui" />
     <QtUic Include="dialogs\AppSettingsDialog\appsettingsdialog.ui" />
+    <QtUic Include="dialogs\AutomationDialog\automationdialog.ui" />
     <QtUic Include="dialogs\PluginsDialog\pluginsdialog.ui" />
+    <QtUic Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.ui" />
     <QtUic Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.ui" />
     <QtUic Include="widgets\DockedMountControls\dockedmountcontrols.ui" />
     <QtUic Include="widgets\PluginDetailsWidget\plugindetailswidget.ui" />
@@ -205,6 +209,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controllers\AppActionController\action_containers.h" />
+    <QtMoc Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.h" />
+    <QtMoc Include="dialogs\AutomationDialog\automationdialog.h" />
     <QtMoc Include="widgets\DockedMountControls\dockedmountcontrols.h" />
     <QtMoc Include="dialogs\AppSettingsDialog\appsettingsdialog.h" />
     <QtMoc Include="controllers\UiSettingsController\uisettingscontroller.h" />

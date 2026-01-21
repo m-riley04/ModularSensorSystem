@@ -5,6 +5,7 @@
 #include "features/element.hpp"
 #include "core_export.hpp"
 #include "models/processing_models.hpp"
+#include <automation/automation_event.hpp>
 #include <vector>
 
 /**
@@ -27,5 +28,6 @@ public:
 
 signals:
     void objectsDetected(std::vector<DetectionInfo>);
+	void automationEvent(AutomationEvent event);
 
 };

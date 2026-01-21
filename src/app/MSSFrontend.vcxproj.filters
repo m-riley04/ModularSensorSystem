@@ -82,6 +82,12 @@
     <ClCompile Include="widgets\DockedMountControls\dockedmountcontrols.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogs\AutomationDialog\automationdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -135,6 +141,12 @@
     <QtMoc Include="widgets\DockedMountControls\dockedmountcontrols.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="dialogs\AutomationDialog\automationdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
@@ -174,6 +186,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\DockedMountControls\dockedmountcontrols.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogs\AutomationDialog\automationdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AutomationDialogClass</class>
+ <widget class="QDialog" name="AutomationDialogClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>793</width>
+    <height>656</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>AutomationDialog</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QListWidget" name="listWidget">
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::DragDropMode::DragDrop</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QActionButton" name="actionButtonAdd">
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QActionButton" name="actionButtonRemove">
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset theme="QIcon::ThemeIcon::ListRemove"/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::StandardButton::Apply|QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::RestoreDefaults</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Automation Rules</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+  <action name="actionAddNewRule">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+   </property>
+   <property name="text">
+    <string>Add New Rule</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionRemoveRule">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ListRemove"/>
+   </property>
+   <property name="text">
+    <string>Remove Rule</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QActionButton</class>
+   <extends>QPushButton</extends>
+   <header>qactionbutton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
