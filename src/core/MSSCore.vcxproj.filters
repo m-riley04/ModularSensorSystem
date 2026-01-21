@@ -170,6 +170,9 @@
     <ClInclude Include="include\automation\automation_event.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\automation\automation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">
@@ -292,9 +295,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="include\controllers\rulescontroller.hpp">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="include\automation\automation.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

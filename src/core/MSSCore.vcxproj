@@ -129,7 +129,7 @@
     <QtMoc Include="include\controllers\loggingcontroller.hpp" />
     <QtMoc Include="include\controllers\elementscontroller.hpp" />
     <QtMoc Include="include\controllers\rulescontroller.hpp" />
-    <QtMoc Include="include\automation\automation.hpp" />
+    <ClInclude Include="include\automation\automation.hpp" />
     <ClInclude Include="include\automation\automation_event.hpp" />
     <ClInclude Include="include\core_export.hpp" />
     <ClInclude Include="include\interfaces\capability\general\ipipelineelement.hpp" />

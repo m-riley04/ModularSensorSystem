@@ -14,13 +14,6 @@
    <string>AutomationDialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
-    <widget class="QListWidget" name="listWidget">
-     <property name="dragDropMode">
-      <enum>QAbstractItemView::DragDropMode::DragDrop</enum>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1">
     <layout class="QVBoxLayout" name="verticalLayout">
      <property name="rightMargin">
@@ -84,6 +77,13 @@
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Automation Rules</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QListView" name="listView">
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::DragDropMode::DragDrop</enum>
      </property>
     </widget>
    </item>

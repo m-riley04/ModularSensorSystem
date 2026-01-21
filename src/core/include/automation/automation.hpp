@@ -3,17 +3,13 @@
 #include <QObject>
 #include <models/rule_models.hpp>
 
-class Rule : public QObject {
-	Q_OBJECT
-private:
-
-
+/**
+ * @brief Represents an automation rule in the system.
+ */
+class Rule {
 public:
-	explicit Rule(const RuleModel& model, QObject* parent);
+	explicit Rule(const RuleModel& model);
 
-public slots:
-	void trigger();
-
-signals:
-	void triggered();
 };
+
+Q_DECLARE_METATYPE(Rule)

@@ -1,15 +1,6 @@
 #include "automation/automation.hpp"
 
-Rule::Rule(const RuleModel& model, QObject* parent)
-	: QObject(parent)
+Rule::Rule(const RuleModel& model)
 {
 
-}
-
-
-void Rule::trigger()
-{
-
-
-	emit triggered();
 }

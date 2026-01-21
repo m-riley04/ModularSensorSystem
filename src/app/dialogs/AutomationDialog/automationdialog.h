@@ -2,16 +2,22 @@
 
 #include <QDialog>
 #include "ui_automationdialog.h"
+#include <controllers/rulescontroller.hpp>
 
 class AutomationDialog : public QDialog
 {
 	Q_OBJECT
 
-public:
-	AutomationDialog(QWidget *parent = nullptr);
-	~AutomationDialog();
-
 private:
 	Ui::AutomationDialogClass ui;
+	RulesController& m_rulesController;
+
+	void populateRuleList();
+
+public:
+	AutomationDialog(RulesController&, QWidget *parent = nullptr);
+	~AutomationDialog();
+
+
 };
 

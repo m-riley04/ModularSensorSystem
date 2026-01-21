@@ -88,6 +88,12 @@
     <ClCompile Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\AutomationRuleItemWidget\automationruleitemwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\AutomationRuleItemDelegate\automationruleitemdelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -147,6 +153,12 @@
     <QtMoc Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="widgets\AutomationRuleItemDelegate\automationruleitemdelegate.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\AutomationRuleItemWidget\automationruleitemwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="widgets\PresetsWidget\presetswidget.ui">
@@ -192,6 +204,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="widgets\AutomationRuleItemWidget\automationruleitemwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
