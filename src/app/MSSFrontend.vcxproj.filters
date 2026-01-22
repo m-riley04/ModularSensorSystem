@@ -85,13 +85,13 @@
     <ClCompile Include="dialogs\AutomationDialog\automationdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="widgets\AutomationRuleItemWidget\automationruleitemwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="widgets\AutomationRuleItemDelegate\automationruleitemdelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="models\AutomationRulesListModel\automationruleslistmodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -150,9 +150,6 @@
     <QtMoc Include="dialogs\AutomationDialog\automationdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="widgets\AutomationRuleItemDelegate\automationruleitemdelegate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -201,9 +198,6 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogs\AutomationDialog\automationdialog.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="widgets\AutomationRuleListItemWidget\automationrulelistitemwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="widgets\AutomationRuleItemWidget\automationruleitemwidget.ui">
@@ -268,6 +262,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controllers\AppActionController\action_containers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="models\AutomationRulesListModel\automationruleslistmodel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

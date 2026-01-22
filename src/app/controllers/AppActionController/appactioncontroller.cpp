@@ -1,5 +1,6 @@
 #include "appactioncontroller.h"
 #include "widgets/DockableElementsManagerWidget/dockableelementsmanagerwidget.h"
+#include "dialogs/AutomationDialog/automationdialog.h"
 #include <algorithm>
 
 AppActionController::AppActionController(AppActions* actions, UiSettingsController& uisc, MainController& c, QWidget* parentWidget, QObject* parent)
@@ -12,6 +13,7 @@ AppActionController::AppActionController(AppActions* actions, UiSettingsControll
     m_sourceActions = *actions->sourceActions;
     m_processorActions = *actions->processorActions;
     m_sessionActions = *actions->sessionActions;
+	m_automationActions = *actions->automationActions;
 	m_viewActions = *actions->viewActions;
     m_miscActions = *actions->miscActions;
 
@@ -71,6 +73,12 @@ void AppActionController::initActionSignals()
 
     // About
     connect(m_miscActions.openGithubRepository, &QAction::triggered, this, &AppActionController::onOpenGithubRepository);
+
+    // Automation
+    connect(m_automationActions.openAutomationRules, &QAction::triggered, [this]() {
+		AutomationDialog* dialog = new AutomationDialog(m_controller.rulesController(), m_parentWidget);
+		dialog->exec();
+		});
 
     // Debug
     connect(m_miscActions.generatePipelineDiagram, &QAction::triggered, this, &AppActionController::onPrintPipelineDebugClicked);

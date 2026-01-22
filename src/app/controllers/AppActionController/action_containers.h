@@ -36,6 +36,9 @@ struct PresetActions {
     QAction* refreshPreset;
 };
 
+struct AutomationActions {
+	QAction* openAutomationRules;
+};
 
 struct ViewActions {
     QAction* viewPresetsList;
@@ -66,6 +69,7 @@ struct AppActions {
     SourceActions* sourceActions;
     ProcessorActions* processorActions;
     SessionActions* sessionActions;
+	AutomationActions* automationActions;
     ViewActions* viewActions;
     MiscActions* miscActions;
 };

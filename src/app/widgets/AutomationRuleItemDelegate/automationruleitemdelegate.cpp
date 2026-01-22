@@ -1,49 +1,73 @@
 #include "automationruleitemdelegate.h"
-#include <widgets/AutomationRuleItemWidget/automationrulelistitemwidget.h>
+
+#include <widgets/AutomationRuleItemWidget/automationruleitemwidget.h>
+
+#include <QAbstractItemModel>
+
+#include <app/models/AutomationRulesListModel/automationruleslistmodel.h>
+
+static RuleModel ruleFromIndex(const QModelIndex& index)
+{
+	auto* m = dynamic_cast<const AutomationRulesListModel*>(index.model());
+	if (!m) return {};
+	return m->ruleAt(index.row());
+}
+
+void AutomationRuleItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
+	const QModelIndex& index) const
+{
+	QStyledItemDelegate::paint(painter, option, index);
+}
 
 // Some of these implementations were structured from Qt docs: https://doc.qt.io/qt-6/qtwidgets-itemviews-stardelegate-example.html
 
 QWidget* AutomationRuleItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    if (index.data().canConvert<StarRating>()) {
-        StarEditor* editor = new StarEditor(parent);
-        connect(editor, &StarEditor::editingFinished,
-            this, &StarDelegate::commitAndCloseEditor);
-        return editor;
-    }
-    return QStyledItemDelegate::createEditor(parent, option, index);
+	Q_UNUSED(option);
+	Q_UNUSED(index);
+
+	auto* editor = new AutomationRuleItemWidget(parent);
+	connect(editor, &AutomationRuleItemWidget::editingFinished, this, [this, editor]() {
+		auto* self = const_cast<AutomationRuleItemDelegate*>(this);
+		emit self->commitData(editor);
+		emit self->closeEditor(editor);
+	});
+	return editor;
 }
 
 void AutomationRuleItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
-    if (index.data().canConvert<StarRating>()) {
-        StarRating starRating = qvariant_cast<StarRating>(index.data());
-        StarEditor* starEditor = qobject_cast<StarEditor*>(editor);
-        starEditor->setStarRating(starRating);
-    }
-    else {
-        QStyledItemDelegate::setEditorData(editor, index);
-    }
+	auto* w = qobject_cast<AutomationRuleItemWidget*>(editor);
+	if (!w) {
+		QStyledItemDelegate::setEditorData(editor, index);
+		return;
+	}
+
+	w->setRule(ruleFromIndex(index));
 }
 
 void AutomationRuleItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
     const QModelIndex& index) const
 {
-    if (index.data().canConvert<StarRating>()) {
-        StarEditor* starEditor = qobject_cast<StarEditor*>(editor);
-        model->setData(index, QVariant::fromValue(starEditor->starRating()));
-    }
-    else {
-        QStyledItemDelegate::setModelData(editor, model, index);
-    }
+	auto* w = qobject_cast<AutomationRuleItemWidget*>(editor);
+	if (!w) {
+		QStyledItemDelegate::setModelData(editor, model, index);
+		return;
+	}
+
+	auto* m = dynamic_cast<AutomationRulesListModel*>(model);
+	if (!m) return;
+
+	RuleModel r = m->ruleAt(index.row());
+
+	// Persist just by calling model->setData(). The model is responsible for syncing to RulesController.
+	if (auto* cb = w->findChild<QComboBox*>("dropdownAction")) {
+		m->setData(index, cb->currentData().toString(), AutomationRulesListModel::Roles::ActionTypeRole);
+	}
 }
 
 QSize AutomationRuleItemDelegate::sizeHint(const QStyleOptionViewItem& option,
     const QModelIndex& index) const
 {
-    if (index.data().canConvert<StarRating>()) {
-        StarRating starRating = qvariant_cast<StarRating>(index.data());
-        return starRating.sizeHint();
-    }
-    return QStyledItemDelegate::sizeHint(option, index);
+	return QStyledItemDelegate::sizeHint(option, index);
 }

@@ -15,8 +15,6 @@
  */
 class RulesController : public QObject
 {
-	Q_OBJECT
-
 private:
 	ElementsController& m_elementsController;
 	SessionController& m_sessionController;
@@ -47,5 +45,19 @@ public:
 	explicit RulesController(SessionController& sc, ElementsController& ec, QObject* parent);
 	~RulesController();
 
-	void addRule(const RuleModel& rule);
+	const std::vector<RuleModel>& rules() const { return m_rules; }
+
+	void addRule(const RuleModel& rule) { m_rules.push_back(rule); }
+	bool updateRule(int index, const RuleModel& rule)
+	{
+		if (index < 0 || index >= static_cast<int>(m_rules.size())) return false;
+		m_rules[static_cast<size_t>(index)] = rule;
+		return true;
+	}
+	bool removeRule(int index)
+	{
+		if (index < 0 || index >= static_cast<int>(m_rules.size())) return false;
+		m_rules.erase(m_rules.begin() + index);
+		return true;
+	}
 };

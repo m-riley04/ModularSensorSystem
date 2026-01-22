@@ -12,6 +12,7 @@ MainController::MainController(QSettings& settings, QObject *parent)
 	, m_pluginController(m_settingsController, this)
 	, m_presetsController(m_settingsController, this)
 	, m_sessionController(m_settingsController, m_elementsController, this)
+	, m_rulesController(m_sessionController, m_elementsController, this)
 	
 {}
 

@@ -30,6 +30,7 @@ public:
 	SourceActions& sourceActions() { return m_sourceActions; }
 	ProcessorActions& processorActions() { return m_processorActions; }
 	SessionActions& sessionActions() { return m_sessionActions; }
+	AutomationActions& automationActions() { return m_automationActions; }
 	ViewActions& viewActions() { return m_viewActions; }
 
 public slots:
@@ -95,6 +96,7 @@ private:
 	ProcessorActions m_processorActions;
 	SessionActions m_sessionActions;
 	ViewActions m_viewActions;
+	AutomationActions m_automationActions;
     MiscActions m_miscActions;
     
 	ElementTreeNode* m_currentSelectedElementNode = nullptr; // TODO: should these even exist?
