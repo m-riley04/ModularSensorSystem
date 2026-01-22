@@ -8,6 +8,7 @@
  */
 class Rule {
 public:
+	explicit Rule();
 	explicit Rule(const RuleModel& model);
 
 };

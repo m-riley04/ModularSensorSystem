@@ -1,14 +1,47 @@
 #pragma once
 
-#include <string_view>
+#include <string>
+
+enum class RuleTriggerType
+{
+	AutomationEventType,
+};
+
+enum class RuleActionType
+{
+	SessionStartRecording,
+	SessionStopRecording,
+	SessionStartProcessing,
+	SessionStopProcessing,
+};
+
+inline std::string toString(RuleActionType t)
+{
+	switch (t) {
+		case RuleActionType::SessionStartRecording: return "session.startRecording";
+		case RuleActionType::SessionStopRecording: return "session.stopRecording";
+		case RuleActionType::SessionStartProcessing: return "session.startProcessing";
+		case RuleActionType::SessionStopProcessing: return "session.stopProcessing";
+		default: return {};
+	}
+}
+
+inline bool tryParseRuleActionType(const std::string& s, RuleActionType& out)
+{
+	if (s == "session.startRecording") { out = RuleActionType::SessionStartRecording; return true; }
+	if (s == "session.stopRecording") { out = RuleActionType::SessionStopRecording; return true; }
+	if (s == "session.startProcessing") { out = RuleActionType::SessionStartProcessing; return true; }
+	if (s == "session.stopProcessing") { out = RuleActionType::SessionStopProcessing; return true; }
+	return false;
+}
 
 /**
  * @brief Represents a trigger for a rule.
  */
 struct RuleTrigger {
 	int ruleId;
-	std::string_view triggerType;
-	std::string_view condition;
+	std::string triggerType;
+	std::string condition;
 };
 
 /**
@@ -16,8 +49,8 @@ struct RuleTrigger {
  */
 struct RuleAction {
 	int ruleId;
-	std::string_view actionType;
-	std::string_view target;
+	std::string actionType;
+	std::string target;
 };
 
 /**
@@ -25,7 +58,7 @@ struct RuleAction {
  */
 struct RuleModel {
 	int id;
-	std::string_view description;
+	std::string description;
 	bool isActive;
 	RuleTrigger trigger;
 	RuleAction action;

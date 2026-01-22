@@ -45,6 +45,10 @@ AppActions MainWindow::createActions() {
         .clipSession = ui.actionClipSession
     };
 
+	AutomationActions* automationActions = new AutomationActions{
+		.openAutomationRules = ui.actionOpenAutomationRules
+	};
+
     ViewActions* viewActions = new ViewActions{
         .viewPresetsList = ui.actionViewPresetsList,
         .viewControls = ui.actionViewControls,
@@ -74,6 +78,7 @@ AppActions MainWindow::createActions() {
         .sourceActions = sourceActions,
         .processorActions = processorActions,
         .sessionActions = sessionActions,
+		.automationActions = automationActions,
         .viewActions = viewActions,
         .miscActions = miscActions
     };

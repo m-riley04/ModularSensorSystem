@@ -14,6 +14,7 @@
 #include "controllers/settingscontroller.hpp"
 #include "controllers/loggingcontroller.hpp"
 #include "controllers/elementscontroller.hpp"
+#include "controllers/rulescontroller.hpp"
 #include "core_export.hpp"
 
 class MSS_CORE_API MainController  : public QObject
@@ -32,6 +33,7 @@ public:
 	PluginController& pluginController() { return m_pluginController; }
 	PresetsController& presetsController() { return m_presetsController; }
 	SettingsController& settingsController() { return m_settingsController; }
+	RulesController& rulesController() { return m_rulesController; }
 	LoggingController& loggingController() { return m_loggingController; }
 
 	/**
@@ -49,4 +51,5 @@ private:
 	PluginController m_pluginController;
 	PresetsController m_presetsController;
 	SessionController m_sessionController;
+	RulesController m_rulesController;
 };

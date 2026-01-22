@@ -493,11 +493,18 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </property>
     <addaction name="actionDebugPipelineDiagram"/>
    </widget>
+   <widget class="QMenu" name="menuAutomation">
+    <property name="title">
+     <string>Automation</string>
+    </property>
+    <addaction name="actionOpenAutomationRules"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuSession"/>
    <addaction name="menuPlugins"/>
+   <addaction name="menuAutomation"/>
    <addaction name="menuAbout"/>
    <addaction name="menuHelp"/>
    <addaction name="menuDebug"/>
@@ -988,6 +995,14 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <action name="actionClearLogs">
    <property name="text">
     <string>Clear Logs</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenAutomationRules">
+   <property name="text">
+    <string>Open Automation Rules</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

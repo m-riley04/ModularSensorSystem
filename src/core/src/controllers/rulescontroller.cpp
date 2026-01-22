@@ -1,6 +1,8 @@
 #include <controllers/rulescontroller.hpp>
 #include <controllers/loggingcontroller.hpp>
 
+#include <models/rule_models.hpp>
+
 #include <QString>
 
 RulesController::RulesController(SessionController& sc, ElementsController& ec, QObject* parent)
@@ -36,8 +38,7 @@ void RulesController::onAutomationEvent(const AutomationEvent& event)
 	for (const RuleModel& rule : m_rules) {
 		if (!rule.isActive) continue;
 
-		const QString triggerType = QString::fromUtf8(rule.trigger.triggerType.data(),
-			static_cast<int>(rule.trigger.triggerType.size()));
+		const QString triggerType = QString::fromStdString(rule.trigger.triggerType);
 		if (triggerType != event.type) continue;
 
 		executeRuleAction(rule.action);
@@ -61,30 +62,26 @@ void RulesController::executeRuleAction(const RuleAction& action)
 	// TODO: Placeholder for executing the action specified in the rule
 	// e.g., perform action based on action.actionType and action.target
 
-	const QString actionType = QString::fromUtf8(action.actionType.data(),
-		static_cast<int>(action.actionType.size()));
-
-	if (actionType == "session.startRecording") {
-		m_sessionController.startRecording();
-		return;
-	}
-	if (actionType == "session.stopRecording") {
-		m_sessionController.stopRecording();
-		return;
-	}
-	if (actionType == "session.startProcessing") {
-		m_sessionController.startProcessing();
-		return;
-	}
-	if (actionType == "session.stopProcessing") {
-		m_sessionController.stopProcessing();
+	RuleActionType t{};
+	if (!tryParseRuleActionType(action.actionType, t)) {
+		LoggingController::warning("Unknown rule actionType: " + QString::fromStdString(action.actionType));
 		return;
 	}
 
-	LoggingController::warning("Unknown rule actionType: " + actionType);
-}
-
-void RulesController::addRule(const RuleModel& rule)
-{
-	m_rules.push_back(rule);
+	switch (t) {
+		case RuleActionType::SessionStartRecording:
+			m_sessionController.startRecording();
+			return;
+		case RuleActionType::SessionStopRecording:
+			m_sessionController.stopRecording();
+			return;
+		case RuleActionType::SessionStartProcessing:
+			m_sessionController.startProcessing();
+			return;
+		case RuleActionType::SessionStopProcessing:
+			m_sessionController.stopProcessing();
+			return;
+		default:
+			return;
+	}
 }
