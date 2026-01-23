@@ -4,6 +4,9 @@
 #include "ui_automationdialog.h"
 #include <controllers/rulescontroller.hpp>
 
+class ElementsController;
+class SessionController;
+
 class AutomationRulesListModel;
 
 class AutomationDialog : public QDialog
@@ -13,6 +16,8 @@ class AutomationDialog : public QDialog
 private:
 	Ui::AutomationDialogClass ui;
 	RulesController& m_rulesController;
+	ElementsController& m_elementsController;
+	SessionController& m_sessionController;
 	AutomationRulesListModel* m_rulesModel = nullptr;
 
 	void populateRuleList();
@@ -22,7 +27,7 @@ private slots:
 	void onRemoveRule();
 
 public:
-	AutomationDialog(RulesController&, QWidget *parent = nullptr);
+	AutomationDialog(RulesController&, ElementsController&, SessionController&, QWidget *parent = nullptr);
 	~AutomationDialog();
 
 

@@ -76,7 +76,7 @@ void AppActionController::initActionSignals()
 
     // Automation
     connect(m_automationActions.openAutomationRules, &QAction::triggered, [this]() {
-		AutomationDialog* dialog = new AutomationDialog(m_controller.rulesController(), m_parentWidget);
+		AutomationDialog* dialog = new AutomationDialog(m_controller.rulesController(), m_controller.elementsController(), m_controller.sessionController(), m_parentWidget);
 		dialog->exec();
 		});
 

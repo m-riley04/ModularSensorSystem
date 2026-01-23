@@ -28,12 +28,12 @@ public:
 	bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 	bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-	RuleModel ruleAt(int row) const;
+	Rule ruleAt(int row) const;
 	void rebuild();
 
 private:
 	RulesController& m_rulesController;
-	std::vector<RuleModel> m_rules;
+	std::vector<Rule> m_rules;
 };
 
 Q_DECLARE_METATYPE(AutomationRulesListModel*)

@@ -23,28 +23,28 @@ QVariant AutomationRulesListModel::data(const QModelIndex& index, int role) cons
 
 	const auto& r = m_rules[static_cast<size_t>(index.row())];
 
-	if (role == Qt::DisplayRole || role == Qt::EditRole) {
-		const QString desc = QString::fromStdString(r.description);
-		return desc.isEmpty() ? QString("(unnamed rule)") : desc;
+	switch (role) {
+		case Qt::DisplayRole:
+		case Qt::EditRole: {
+			const QString desc = QString::fromStdString(r.description());
+			return desc.isEmpty() ? QString("(unnamed rule)") : desc;
+		}
+		case Roles::RuleRole:
+			return QVariant::fromValue(r.description().c_str());
+		case Roles::ActionTypeRole:
+			return QString::fromStdString(toString(r.action().actionType()));
+		case Roles::ActionTargetRole:
+			return QString::fromStdString(r.action().target());
+		case Roles::TriggerTypeRole:
+			return QString::fromStdString(toString(r.trigger().triggerType()));
+		case Roles::TriggerConditionRole:
+			return QString::fromStdString(r.trigger().condition());
+		case Qt::CheckStateRole:
+			return r.isActive() ? Qt::Checked : Qt::Unchecked;
+		default:
+			return {};
 	}
-	if (role == Roles::RuleRole) {
-		return QVariant::fromValue(r.description.c_str());
-	}
-	if (role == Roles::ActionTypeRole) {
-		return QString::fromStdString(r.action.actionType);
-	}
-	if (role == Roles::ActionTargetRole) {
-		return QString::fromStdString(r.action.target);
-	}
-	if (role == Roles::TriggerTypeRole) {
-		return QString::fromStdString(r.trigger.triggerType);
-	}
-	if (role == Roles::TriggerConditionRole) {
-		return QString::fromStdString(r.trigger.condition);
-	}
-	if (role == Qt::CheckStateRole) {
-		return r.isActive ? Qt::Checked : Qt::Unchecked;
-	}
+
 	return {};
 }
 
@@ -61,41 +61,47 @@ bool AutomationRulesListModel::setData(const QModelIndex& index, const QVariant&
 
 	auto& r = m_rules[static_cast<size_t>(index.row())];
 
-	if (role == Qt::EditRole) {
-		r.description = value.toString().toStdString();
-		m_rulesController.updateRule(index.row(), r);
-		emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
-		return true;
-	}
-	if (role == Roles::ActionTypeRole) {
-		r.action.actionType = value.toString().toStdString();
-		m_rulesController.updateRule(index.row(), r);
-		emit dataChanged(index, index, { Roles::ActionTypeRole });
-		return true;
-	}
-	if (role == Roles::ActionTargetRole) {
-		r.action.target = value.toString().toStdString();
-		m_rulesController.updateRule(index.row(), r);
-		emit dataChanged(index, index, { Roles::ActionTargetRole });
-		return true;
-	}
-	if (role == Roles::TriggerTypeRole) {
-		r.trigger.triggerType = value.toString().toStdString();
-		m_rulesController.updateRule(index.row(), r);
-		emit dataChanged(index, index, { Roles::TriggerTypeRole });
-		return true;
-	}
-	if (role == Roles::TriggerConditionRole) {
-		r.trigger.condition = value.toString().toStdString();
-		m_rulesController.updateRule(index.row(), r);
-		emit dataChanged(index, index, { Roles::TriggerConditionRole });
-		return true;
-	}
-	if (role == Qt::CheckStateRole) {
-		r.isActive = (value.toInt() == Qt::Checked);
-		m_rulesController.updateRule(index.row(), r);
-		emit dataChanged(index, index, { Qt::CheckStateRole });
-		return true;
+	switch (role) {
+		case Qt::EditRole:
+			r.setDescription(value.toString().toStdString());
+			m_rulesController.updateRule(index.row(), r);
+			emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
+			return true;
+		case Roles::ActionTargetRole:
+			r.action().setTarget(value.toString().toStdString());
+			m_rulesController.updateRule(index.row(), r);
+			emit dataChanged(index, index, { Roles::ActionTargetRole });
+			return true;
+		case Roles::ActionTypeRole:
+			{
+				RuleActionType t{};
+				if (!tryParseRuleActionType(value.toString().toStdString(), t)) return false;
+				r.action().setActionType(t);
+			}
+			m_rulesController.updateRule(index.row(), r);
+			emit dataChanged(index, index, { Roles::ActionTypeRole });
+			return true;
+		case Roles::TriggerConditionRole:
+			r.trigger().setCondition(value.toString().toStdString());
+			m_rulesController.updateRule(index.row(), r);
+			emit dataChanged(index, index, { Roles::TriggerConditionRole });
+			return true;
+		case Roles::TriggerTypeRole:
+			{
+				RuleTriggerType t{};
+				if (!tryParseRuleTriggerType(value.toString().toStdString(), t)) return false;
+				r.trigger().setTriggerType(t);
+			}
+			m_rulesController.updateRule(index.row(), r);
+			emit dataChanged(index, index, { Roles::TriggerTypeRole });
+			return true;
+		case Qt::CheckStateRole:
+			r.setActive(value.toInt() == Qt::Checked);
+			m_rulesController.updateRule(index.row(), r);
+			emit dataChanged(index, index, { Qt::CheckStateRole });
+			return true;
+		default:
+			return false;
 	}
 
 	return false;
@@ -109,12 +115,9 @@ bool AutomationRulesListModel::insertRows(int row, int count, const QModelIndex&
 
 	beginInsertRows(QModelIndex(), row, row + count - 1);
 	for (int i = 0; i < count; ++i) {
-		RuleModel r{};
-		r.id = -1;
-		r.description = "New rule";
-		r.isActive = true;
-		r.trigger = RuleTrigger{ -1, "", "" };
-		r.action = RuleAction{ -1, "", "" };
+		RuleTrigger trig(-1, RuleTriggerType::AutomationEventType, "");
+		RuleAction act(-1, RuleActionType::SessionStartRecording, "");
+		Rule r(-1, "New rule", true, trig, act);
 		m_rulesController.addRule(r);
 		m_rules.insert(m_rules.begin() + (row + i), r);
 	}
@@ -139,7 +142,7 @@ bool AutomationRulesListModel::removeRows(int row, int count, const QModelIndex&
 	return true;
 }
 
-RuleModel AutomationRulesListModel::ruleAt(int row) const
+Rule AutomationRulesListModel::ruleAt(int row) const
 {
 	if (row < 0 || row >= static_cast<int>(m_rules.size())) return {};
 	return m_rules[static_cast<size_t>(row)];

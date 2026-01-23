@@ -106,7 +106,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\automation\automation.cpp" />
     <ClCompile Include="src\controllers\rulescontroller.cpp" />
     <ClCompile Include="src\pipeline\branches\intermediaries\previewcompositor.cpp" />
     <ClCompile Include="src\controllers\elementscontroller.cpp" />
@@ -129,7 +128,6 @@
     <QtMoc Include="include\controllers\loggingcontroller.hpp" />
     <QtMoc Include="include\controllers\elementscontroller.hpp" />
     <QtMoc Include="include\controllers\rulescontroller.hpp" />
-    <ClInclude Include="include\automation\automation.hpp" />
     <ClInclude Include="include\automation\automation_event.hpp" />
     <ClInclude Include="include\core_export.hpp" />
     <ClInclude Include="include\interfaces\capability\general\ipipelineelement.hpp" />

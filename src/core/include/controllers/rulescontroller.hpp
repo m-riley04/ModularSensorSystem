@@ -2,7 +2,6 @@
 
 #include <QObject>
 #include "models/rule_models.hpp"
-#include <automation/automation.hpp>
 #include <automation/automation_event.hpp>
 #include <vector>
 #include <controllers/elementscontroller.hpp>
@@ -19,7 +18,7 @@ private:
 	ElementsController& m_elementsController;
 	SessionController& m_sessionController;
 
-	std::vector<RuleModel> m_rules;
+	std::vector<Rule> m_rules;
 
 	void onAutomationEvent(const AutomationEvent& event);
 
@@ -45,10 +44,10 @@ public:
 	explicit RulesController(SessionController& sc, ElementsController& ec, QObject* parent);
 	~RulesController();
 
-	const std::vector<RuleModel>& rules() const { return m_rules; }
+	const std::vector<Rule>& rules() const { return m_rules; }
 
-	void addRule(const RuleModel& rule) { m_rules.push_back(rule); }
-	bool updateRule(int index, const RuleModel& rule)
+	void addRule(const Rule& rule) { m_rules.push_back(rule); }
+	bool updateRule(int index, const Rule& rule)
 	{
 		if (index < 0 || index >= static_cast<int>(m_rules.size())) return false;
 		m_rules[static_cast<size_t>(index)] = rule;

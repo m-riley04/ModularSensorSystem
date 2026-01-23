@@ -23,31 +23,31 @@ void RulesController::checkRules()
 {
 	LoggingController::debug("Checking all rules...");
 
-	for (const RuleModel& rule : m_rules) {
-		if (!rule.isActive) continue;
-		if (!checkRuleTrigger(rule.trigger)) continue;
+	for (const Rule& rule : m_rules) {
+		if (!rule.isActive()) continue;
+		if (!checkRuleTrigger(rule.trigger())) continue;
 
 		// If we reach here, trigger the action
-		executeRuleAction(rule.action);
+		executeRuleAction(rule.action());
 	}
 }
 
 void RulesController::onAutomationEvent(const AutomationEvent& event)
 {
 	// Basic skeleton: match by triggerType only (condition evaluation can be added later)
-	for (const RuleModel& rule : m_rules) {
-		if (!rule.isActive) continue;
+	for (const Rule& rule : m_rules) {
+		if (!rule.isActive()) continue;
 
-		const QString triggerType = QString::fromStdString(rule.trigger.triggerType);
-		if (triggerType != event.type) continue;
+		if (rule.trigger().triggerType() != RuleTriggerType::AutomationEventType) continue;
+		if (event.type != "automation.event") continue;
 
-		executeRuleAction(rule.action);
+		executeRuleAction(rule.action());
 	}
 }
 
 bool RulesController::checkRuleTrigger(const RuleTrigger& trigger)
 {
-	LoggingController::debug("Checking trigger for rule #" + QString::number(trigger.ruleId)); // TODO/CONSIDER: should logging be here? Might get spammy.
+	LoggingController::debug("Checking trigger for rule #" + QString::number(trigger.ruleId())); // TODO/CONSIDER: should logging be here? Might get spammy.
 
 	// TODO: Placeholder for checking the trigger condition
 	// e.g., evaluate condition based on trigger.triggerType and trigger.condition
@@ -57,18 +57,12 @@ bool RulesController::checkRuleTrigger(const RuleTrigger& trigger)
 
 void RulesController::executeRuleAction(const RuleAction& action)
 {
-	LoggingController::debug("Executing action for rule #" + QString::number(action.ruleId));
+	LoggingController::debug("Executing action for rule #" + QString::number(action.ruleId()));
 
 	// TODO: Placeholder for executing the action specified in the rule
 	// e.g., perform action based on action.actionType and action.target
 
-	RuleActionType t{};
-	if (!tryParseRuleActionType(action.actionType, t)) {
-		LoggingController::warning("Unknown rule actionType: " + QString::fromStdString(action.actionType));
-		return;
-	}
-
-	switch (t) {
+	switch (action.actionType()) {
 		case RuleActionType::SessionStartRecording:
 			m_sessionController.startRecording();
 			return;

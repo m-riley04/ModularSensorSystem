@@ -4,6 +4,9 @@
 #include "ui_automationruleitemwidget.h"
 #include <models/rule_models.hpp>
 
+class ElementsController;
+class SessionController;
+
 // NOTE: structured after Qt docs for item delegate: https://doc.qt.io/qt-6/qtwidgets-itemviews-stardelegate-example.html
 
 class AutomationRuleItemWidget : public QWidget
@@ -12,19 +15,23 @@ class AutomationRuleItemWidget : public QWidget
 
 private:
 	Ui::AutomationRuleItemWidgetClass ui;
-	RuleModel m_rule;
+	Rule m_rule;
+	ElementsController& m_elementsController;
+	SessionController& m_sessionController;
+
+	void populateTargets();
 
 protected:
 	void mouseMoveEvent(QMouseEvent* event) override;
 	void mouseReleaseEvent(QMouseEvent* event) override;
 
 public:
-	AutomationRuleItemWidget(QWidget *parent = nullptr);
+	AutomationRuleItemWidget(ElementsController& ec, SessionController& sc, QWidget *parent = nullptr);
 	~AutomationRuleItemWidget();
 
 	QSize sizeHint() const override;
-	void setRule(const RuleModel& rule);
-	RuleModel rule() const { return m_rule; }
+	void setRule(const Rule& rule);
+	Rule rule() const { return m_rule; }
 
 signals:
 	void editingFinished();

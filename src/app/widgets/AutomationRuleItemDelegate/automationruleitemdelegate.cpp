@@ -4,9 +4,12 @@
 
 #include <QAbstractItemModel>
 
+#include <controllers/elementscontroller.hpp>
+#include <controllers/sessioncontroller.hpp>
+
 #include <app/models/AutomationRulesListModel/automationruleslistmodel.h>
 
-static RuleModel ruleFromIndex(const QModelIndex& index)
+static Rule ruleFromIndex(const QModelIndex& index)
 {
 	auto* m = dynamic_cast<const AutomationRulesListModel*>(index.model());
 	if (!m) return {};
@@ -26,7 +29,8 @@ QWidget* AutomationRuleItemDelegate::createEditor(QWidget* parent, const QStyleO
 	Q_UNUSED(option);
 	Q_UNUSED(index);
 
-	auto* editor = new AutomationRuleItemWidget(parent);
+	auto* editor = new AutomationRuleItemWidget(m_elementsController, m_sessionController, parent);
+
 	connect(editor, &AutomationRuleItemWidget::editingFinished, this, [this, editor]() {
 		auto* self = const_cast<AutomationRuleItemDelegate*>(this);
 		emit self->commitData(editor);
@@ -58,11 +62,15 @@ void AutomationRuleItemDelegate::setModelData(QWidget* editor, QAbstractItemMode
 	auto* m = dynamic_cast<AutomationRulesListModel*>(model);
 	if (!m) return;
 
-	RuleModel r = m->ruleAt(index.row());
-
 	// Persist just by calling model->setData(). The model is responsible for syncing to RulesController.
 	if (auto* cb = w->findChild<QComboBox*>("dropdownAction")) {
 		m->setData(index, cb->currentData().toString(), AutomationRulesListModel::Roles::ActionTypeRole);
+	}
+	if (auto* cb = w->findChild<QComboBox*>("dropdownActionTarget")) {
+		m->setData(index, cb->currentData().toString(), AutomationRulesListModel::Roles::ActionTargetRole);
+	}
+	if (auto* cb = w->findChild<QComboBox*>("dropdownConditionTarget")) {
+		m->setData(index, cb->currentData().toString(), AutomationRulesListModel::Roles::TriggerConditionRole);
 	}
 }
 
