@@ -3,8 +3,6 @@
 #include <QWidget>
 #include <QStringList>
 
-#include <vector>
-
 class QToolButton;
 class QMenu;
 class QAction;
@@ -14,6 +12,7 @@ class GroupSelectWidget : public QWidget
 {
 	Q_OBJECT
 	Q_PROPERTY(QString placeholderText READ placeholderText WRITE setPlaceholderText)
+
 public:
 	enum class SelectionMode {
 		Single,
@@ -21,39 +20,15 @@ public:
 	};
 	Q_ENUM(SelectionMode)
 
-	explicit GroupSelectWidget(QWidget* parent = nullptr);
-	~GroupSelectWidget() override;
-
-	void clear();
-	void addItem(const QString& text);
-	void addItem(const QString& text, const QString& value);
-	void addItems(const QStringList& items);
-	bool removeItem(const QString& text);
-	bool hasItem(const QString& text) const;
-	int count() const;
-
-	QStringList options() const;
-	void setOptions(const QStringList& options);
-
-	QStringList selectedValues() const;
-	void setSelectedValues(const QStringList& values);
-
-	QString placeholderText() const;
-	void setPlaceholderText(const QString& text);
-
-	SelectionMode selectionMode() const;
-	void setSelectionMode(SelectionMode mode);
-
-signals:
-	void selectionChanged(const QStringList& selectedValues);
-
-private:
 	struct Option {
 		QString label;
-		QString value;
+		QVariant userData;
+		bool operator==(const Option& other) const {
+			return label == other.label && userData == other.userData;
+		}
 	};
-
-	const Option* findOptionByValue(const QString& value) const;
+private:
+	const Option* findOptionByValue(const QVariant& value) const;
 	const Option* findOptionByLabel(const QString& label) const;
 
 	void rebuildMenu();
@@ -65,8 +40,37 @@ private:
 
 	QToolButton* m_button;
 	QMenu* m_menu;
-	std::vector<Option> m_options;
-	QStringList m_selected;
+	QList<Option> m_options;
+	QList<Option> m_selected;
 	QString m_placeholderText;
 	SelectionMode m_selectionMode = SelectionMode::Multi;
+
+public:
+	explicit GroupSelectWidget(QWidget* parent = nullptr);
+	~GroupSelectWidget() override;
+
+	void clear();
+	void addItem(const QString& text);
+	void addItem(const QString& text, const QVariant& userData);
+	bool removeItem(const QString& text);
+	bool hasItem(const QString& text) const;
+	bool hasItem(const QVariant& userData) const;
+	int count() const;
+
+	QList<Option>& options() { return m_options; }
+	void setOptions(const QList<Option>& options);
+
+	QList<Option>& selectedValues() { return m_selected; }
+	void setSelectedValues(const QList<Option>& values);
+
+	QString placeholderText() const;
+	void setPlaceholderText(const QString& text);
+
+	SelectionMode selectionMode() const;
+	void setSelectionMode(SelectionMode mode);
+
+signals:
+	void selectionChanged(const QList<Option>& selectedValues);
+	void selectionModeChanged(GroupSelectWidget::SelectionMode newMode);
+
 };

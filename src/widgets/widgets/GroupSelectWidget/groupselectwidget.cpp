@@ -33,10 +33,10 @@ GroupSelectWidget::GroupSelectWidget(QWidget* parent)
 
 GroupSelectWidget::~GroupSelectWidget() = default;
 
-const GroupSelectWidget::Option* GroupSelectWidget::findOptionByValue(const QString& value) const
+const GroupSelectWidget::Option* GroupSelectWidget::findOptionByValue(const QVariant& userData) const
 {
 	for (const auto& o : m_options) {
-		if (o.value == value) return &o;
+		if (o.userData == userData) return &o;
 	}
 	return nullptr;
 }
@@ -79,32 +79,20 @@ void GroupSelectWidget::addItem(const QString& text)
 	rebuildMenu();
 }
 
-void GroupSelectWidget::addItem(const QString& text, const QString& value)
+void GroupSelectWidget::addItem(const QString& text, const QVariant& userData)
 {
 	if (text.isEmpty()) return;
-	const QString v = value.isEmpty() ? text : value;
+	const QVariant v = userData.isNull() ? text : userData;
 	if (findOptionByValue(v)) return;
 	m_options.push_back({ text, v });
 	rebuildMenu();
-}
-
-void GroupSelectWidget::addItems(const QStringList& items)
-{
-	bool changed = false;
-	for (const auto& s : items) {
-		if (s.isEmpty()) continue;
-		if (findOptionByValue(s)) continue;
-		m_options.push_back({ s, s });
-		changed = true;
-	}
-	if (changed) rebuildMenu();
 }
 
 bool GroupSelectWidget::removeItem(const QString& text)
 {
 	const auto before = m_options.size();
 	for (auto it = m_options.begin(); it != m_options.end();) {
-		if (it->label == text || it->value == text) it = m_options.erase(it);
+		if (it->label == text || it->userData == text) it = m_options.erase(it);
 		else ++it;
 	}
 	m_selected.removeAll(text);
@@ -123,28 +111,22 @@ int GroupSelectWidget::count() const
 	return static_cast<int>(m_options.size());
 }
 
-QStringList GroupSelectWidget::options() const
+void GroupSelectWidget::setOptions(const QList<Option>& options)
 {
-	QStringList vals;
-	vals.reserve(static_cast<int>(m_options.size()));
-	for (const auto& o : m_options) vals.append(o.value);
-	return vals;
-}
-
-void GroupSelectWidget::setOptions(const QStringList& options)
-{
-	QStringList curr;
-	for (const auto& o : m_options) curr.append(o.value);
+	QList<Option> curr;
+	for (const auto& o : m_options) curr.append(o);
 	if (curr == options) return;
 
 	m_options.clear();
-	for (const auto& s : options) {
-		if (s.isEmpty()) continue;
-		m_options.push_back({ s, s });
+	for (const auto& o : options) {
+		if (o.label.isEmpty()) continue;
+		m_options.push_back(o);
 	}
-	QStringList filtered;
+
+	// filter selected
+	QList<Option> filtered;
 	for (const auto& s : m_selected) {
-		if (findOptionByValue(s)) filtered.append(s);
+		if (findOptionByValue(s.userData)) filtered.append(s);
 	}
 	m_selected = filtered;
 	rebuildMenu();
@@ -152,16 +134,11 @@ void GroupSelectWidget::setOptions(const QStringList& options)
 	emit selectionChanged(m_selected);
 }
 
-QStringList GroupSelectWidget::selectedValues() const
+void GroupSelectWidget::setSelectedValues(const QList<Option>& values)
 {
-	return m_selected;
-}
-
-void GroupSelectWidget::setSelectedValues(const QStringList& values)
-{
-	QStringList filtered;
+	QList<Option> filtered;
 	for (const auto& v : values) {
-		if (findOptionByValue(v) && !filtered.contains(v)) filtered.append(v);
+		if (findOptionByValue(v.userData) && !filtered.contains(v)) filtered.append(v);
 	}
 	if (m_selected == filtered) return;
 	m_selected = filtered;
@@ -197,11 +174,10 @@ void GroupSelectWidget::rebuildMenu()
 	for (const auto& opt : m_options) {
 		auto* act = m_menu->addAction(opt.label);
 		act->setCheckable(true);
-		act->setData(opt.value);
-		act->setChecked(m_selected.contains(opt.value));
+		act->setData(opt.userData);
+		act->setChecked(m_selected.contains(opt.userData));
 		connect(act, &QAction::toggled, this, &GroupSelectWidget::onActionToggled);
 	}
-
 
 	updateButtonText();
 }
@@ -221,8 +197,8 @@ void GroupSelectWidget::openSelectionDialog()
 	for (const auto& opt : m_options) {
 		auto* item = new QListWidgetItem(opt.label);
 		item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-		item->setCheckState(m_selected.contains(opt.value) ? Qt::Checked : Qt::Unchecked);
-		item->setData(Qt::UserRole, opt.value);
+		item->setCheckState(m_selected.contains(opt.userData) ? Qt::Checked : Qt::Unchecked);
+		item->setData(Qt::UserRole, opt.userData);
 		list->addItem(item);
 	}
 

@@ -49,9 +49,6 @@
     <ClCompile Include="widgets\GroupSelectWidget\groupselectwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\GroupSelectWidget\groupselectwidget_moc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h">
