@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QDialog>
 #include "ui_automationdialog.h"
 #include <controllers/rulescontroller.hpp>
 

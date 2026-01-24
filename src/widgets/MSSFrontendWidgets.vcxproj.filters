@@ -46,6 +46,12 @@
     <ClCompile Include="widgets\QChaptersWidget\qchapterswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\GroupSelectWidget\groupselectwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\GroupSelectWidget\groupselectwidget_moc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h">
@@ -61,6 +67,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\QChaptersWidget\qchapterswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\GroupSelectWidget\groupselectwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -108,6 +108,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="widgets\CustomTitleBar\customtitlebar.cpp" />
+    <ClCompile Include="widgets\GroupSelectWidget\groupselectwidget.cpp" />
+    <ClCompile Include="widgets\GroupSelectWidget\groupselectwidget_moc.cpp" />
     <ClCompile Include="widgets\QActionButton\qactionbutton.cpp" />
     <ClCompile Include="widgets\QChaptersWidget\qchapterswidget.cpp" />
     <ClCompile Include="widgets\QDirectoryPickerWidget\qdirectorypickerwidget.cpp" />
@@ -116,6 +118,7 @@
     <QtMoc Include="widgets\QActionButton\qactionbutton.h" />
     <QtMoc Include="widgets\QDirectoryPickerWidget\qdirectorypickerwidget.h" />
     <QtMoc Include="widgets\QChaptersWidget\qchapterswidget.h" />
+    <QtMoc Include="widgets\GroupSelectWidget\groupselectwidget.h" />
     <ClInclude Include="widgets\SimultaneousMediaPlayer\simultaneousmediaplayer.h" />
     <QtMoc Include="widgets\QDynamicGridWidget\qdynamicgridwidget.h" />
     <QtMoc Include="widgets\CustomTitleBar\customtitlebar.h" />

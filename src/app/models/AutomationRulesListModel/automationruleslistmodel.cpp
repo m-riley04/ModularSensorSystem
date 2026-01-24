@@ -1,7 +1,5 @@
 #include "automationruleslistmodel.h"
-
 #include <algorithm>
-#include <QString>
 
 AutomationRulesListModel::AutomationRulesListModel(RulesController& rc, QObject* parent)
 	: QAbstractListModel(parent)

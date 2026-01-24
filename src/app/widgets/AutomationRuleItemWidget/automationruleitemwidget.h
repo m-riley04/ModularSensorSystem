@@ -18,6 +18,7 @@ private:
 	Rule m_rule;
 	ElementsController& m_elementsController;
 	SessionController& m_sessionController;
+	bool m_updatingUi = false;
 
 	void populateTargets();
 

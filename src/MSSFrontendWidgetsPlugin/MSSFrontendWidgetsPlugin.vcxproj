@@ -71,7 +71,7 @@
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\lib\MSSFrontendWidgets.lib;</AdditionalDependencies>
     </QtMoc>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\widgets\widgets\QActionButton;$(SolutionDir)src\widgets\widgets\QDirectoryPickerWidget;$(SolutionDir)src\widgets\widgets\QChaptersWidget</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\widgets\widgets\QActionButton;$(SolutionDir)src\widgets\widgets\QDirectoryPickerWidget;$(SolutionDir)src\widgets\widgets\QChaptersWidget;$(SolutionDir)src\widgets\widgets\GroupSelectWidget</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -114,8 +114,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\widgets\widgets\GroupSelectWidget\groupselectwidget.cpp" />
     <ClCompile Include="..\widgets\widgets\QChaptersWidget\qchapterswidget.cpp" />
     <ClCompile Include="..\widgets\widgets\QDirectoryPickerWidget\qdirectorypickerwidget.cpp" />
+    <ClCompile Include="plugins\GroupSelectWidgetPlugin\groupselectwidgetplugin.cpp" />
     <ClCompile Include="plugins\QActionButtonPlugin\qactionbuttonplugin.cpp" />
     <ClCompile Include="plugins\QChaptersWidgetPlugin\qchapterswidgetextension.cpp" />
     <ClCompile Include="plugins\QChaptersWidgetPlugin\qchapterswidgetextensionfactory.cpp" />
@@ -154,6 +156,10 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="plugins\QActionButtonPlugin\qactionbuttonplugin.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\widgets\widgets\GroupSelectWidget\groupselectwidget.h" />
+    <QtMoc Include="plugins\GroupSelectWidgetPlugin\groupselectwidgetplugin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

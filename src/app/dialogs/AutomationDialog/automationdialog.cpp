@@ -1,40 +1,53 @@
 #include "automationdialog.h"
-
 #include <app/models/AutomationRulesListModel/automationruleslistmodel.h>
 #include <widgets/AutomationRuleItemDelegate/automationruleitemdelegate.h>
 #include <widgets/AutomationRuleItemWidget/automationruleitemwidget.h>
 
-#include <QAbstractItemView>
+#include <widgets/widgets/GroupSelectWidget/groupselectwidget.h>
 
 void AutomationDialog::populateRuleList()
 {
 	if (!m_rulesModel) return;
-	m_rulesModel->rebuild();
+
+	// Keep existing widgets; rebuilding resets the model to controller state and can
+	// overwrite recent edits before they are reflected.
 
 	// Always-on editor widgets
 	for (int row = 0; row < m_rulesModel->rowCount(); ++row) {
 		QModelIndex idx = m_rulesModel->index(row, 0);
-		auto* w = new AutomationRuleItemWidget(m_elementsController, m_sessionController, ui.listView);
-		w->setRule(m_rulesModel->ruleAt(row));
-		connect(w, &AutomationRuleItemWidget::editingFinished, this, [this, row, w]() {
+		auto* existing = ui.listView->indexWidget(idx);
+		auto* w = qobject_cast<AutomationRuleItemWidget*>(existing);
+		if (!w) {
+			w = new AutomationRuleItemWidget(m_elementsController, m_sessionController, ui.listView);
+			ui.listView->setIndexWidget(idx, w);
+			connect(w, &AutomationRuleItemWidget::editingFinished, this, [this, row, w]() {
 			// Persist via model custom roles
-			if (auto* cb = w->findChild<QComboBox*>("dropdownAction")) {
-				m_rulesModel->setData(m_rulesModel->index(row, 0), cb->currentData(), AutomationRulesListModel::Roles::ActionTypeRole);
+			if (auto* enabled = w->findChild<QCheckBox*>("checkboxToggleRule")) {
+				m_rulesModel->setData(m_rulesModel->index(row, 0), enabled->isChecked() ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole);
 			}
-			if (auto* cb = w->findChild<QComboBox*>("dropdownActionTarget")) {
-				m_rulesModel->setData(m_rulesModel->index(row, 0), cb->currentData(), AutomationRulesListModel::Roles::ActionTargetRole);
+			if (auto* actions = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectActions"))) {
+				const auto sel = actions->selectedValues();
+				m_rulesModel->setData(m_rulesModel->index(row, 0), sel.isEmpty() ? QString() : sel.first(), AutomationRulesListModel::Roles::ActionTypeRole);
 			}
-			if (auto* cb = w->findChild<QComboBox*>("dropdownConditionTarget")) {
-				m_rulesModel->setData(m_rulesModel->index(row, 0), cb->currentData(), AutomationRulesListModel::Roles::TriggerConditionRole);
+			if (auto* targets = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectActionTargets"))) {
+				const auto sel = targets->selectedValues();
+				m_rulesModel->setData(m_rulesModel->index(row, 0), sel.isEmpty() ? QString() : sel.first(), AutomationRulesListModel::Roles::ActionTargetRole);
+			}
+			if (auto* sources = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectEventSources"))) {
+				const auto sel = sources->selectedValues();
+				m_rulesModel->setData(m_rulesModel->index(row, 0), sel.isEmpty() ? QString() : sel.first(), AutomationRulesListModel::Roles::TriggerConditionRole);
+			}
+			if (auto* types = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectEventTypes"))) {
+				const auto sel = types->selectedValues();
+				m_rulesModel->setData(m_rulesModel->index(row, 0), sel.isEmpty() ? QString() : sel.first(), AutomationRulesListModel::Roles::TriggerTypeRole);
 			}
 
-			// Ensure the widget remains installed for this row (some view updates can clear it)
-			const QModelIndex idx = m_rulesModel->index(row, 0);
-			if (ui.listView->indexWidget(idx) != w) {
-				ui.listView->setIndexWidget(idx, w);
-			}
-		});
-		ui.listView->setIndexWidget(idx, w);
+			w->setRule(m_rulesModel->ruleAt(row));
+			});
+		}
+
+		// Refresh widget view from current model state
+		w->setRule(m_rulesModel->ruleAt(row));
 	}
 }
 

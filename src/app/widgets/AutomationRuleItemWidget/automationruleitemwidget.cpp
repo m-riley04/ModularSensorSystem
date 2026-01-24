@@ -6,6 +6,52 @@
 #include <controllers/sessioncontroller.hpp>
 #include <features/element.hpp>
 
+#include <widgets/widgets/GroupSelectWidget/groupselectwidget.h>
+
+static GroupSelectWidget* replacePlaceholderWithGroupSelect(Ui::AutomationRuleItemWidgetClass& ui, QWidget* parent, const char* objectName)
+{
+	auto* placeholder = parent->findChild<QWidget*>(objectName);
+	if (!placeholder) return nullptr;
+	if (auto* existing = dynamic_cast<GroupSelectWidget*>(placeholder)) return existing;
+
+	const QString placeholderName = placeholder->objectName();
+
+	auto* gs = new GroupSelectWidget(parent);
+	gs->setObjectName(placeholderName);
+	gs->setSizePolicy(placeholder->sizePolicy());
+	gs->setMinimumSize(placeholder->minimumSize());
+	gs->setMaximumSize(placeholder->maximumSize());
+
+	if (placeholder == ui.selectEventSources) {
+		ui.layoutEvent->replaceWidget(ui.selectEventSources, gs);
+		ui.selectEventSources->hide();
+		ui.selectEventSources = gs;
+	}
+	else if (placeholder == ui.selectEventTypes) {
+		ui.layoutEvent->replaceWidget(ui.selectEventTypes, gs);
+		ui.selectEventTypes->hide();
+		ui.selectEventTypes = gs;
+	}
+	else if (placeholder == ui.selectActionTargets) {
+		ui.layoutAction->replaceWidget(ui.selectActionTargets, gs);
+		ui.selectActionTargets->hide();
+		ui.selectActionTargets = gs;
+	}
+	else if (placeholder == ui.selectActions) {
+		ui.layoutAction->replaceWidget(ui.selectActions, gs);
+		ui.selectActions->hide();
+		ui.selectActions = gs;
+	}
+	else {
+		delete gs;
+		return nullptr;
+	}
+
+	gs->show();
+	placeholder->deleteLater();
+	return gs;
+}
+
 // NOTE: structured after Qt docs for item delegate: https://doc.qt.io/qt-6/qtwidgets-itemviews-stardelegate-example.html
 
 AutomationRuleItemWidget::AutomationRuleItemWidget(ElementsController& ec, SessionController& sc, QWidget *parent)
@@ -15,23 +61,47 @@ AutomationRuleItemWidget::AutomationRuleItemWidget(ElementsController& ec, Sessi
 {
 	ui.setupUi(this);
 
-	ui.dropdownAction->clear();
-	ui.dropdownAction->addItem("Start recording", QString::fromStdString(toString(RuleActionType::SessionStartRecording)));
-	ui.dropdownAction->addItem("Stop recording", QString::fromStdString(toString(RuleActionType::SessionStopRecording)));
-	ui.dropdownAction->addItem("Start processing", QString::fromStdString(toString(RuleActionType::SessionStartProcessing)));
-	ui.dropdownAction->addItem("Stop processing", QString::fromStdString(toString(RuleActionType::SessionStopProcessing)));
+	// The .ui contains generic QWidget placeholders. Replace them with real widgets at runtime.
+	replacePlaceholderWithGroupSelect(ui, this, "selectEventSources");
+	replacePlaceholderWithGroupSelect(ui, this, "selectEventTypes");
+	replacePlaceholderWithGroupSelect(ui, this, "selectActionTargets");
+	replacePlaceholderWithGroupSelect(ui, this, "selectActions");
 
+	// The .ui contains native placeholders; discover GroupSelectWidget at runtime.
 	populateTargets();
+
+	for (auto* w : { dynamic_cast<GroupSelectWidget*>(ui.selectActions),
+				  dynamic_cast<GroupSelectWidget*>(ui.selectActionTargets),
+				  dynamic_cast<GroupSelectWidget*>(ui.selectEventSources),
+				  dynamic_cast<GroupSelectWidget*>(ui.selectEventTypes) }) {
+		if (!w) continue;
+		connect(w, &GroupSelectWidget::selectionChanged, this, [this](const QStringList&) {
+			if (m_updatingUi) return;
+			emit editingFinished();
+		});
+	}
+
+	if (auto* w = dynamic_cast<GroupSelectWidget*>(ui.selectActions)) {
+		w->setPlaceholderText("Select action");
+	}
+	if (auto* w = dynamic_cast<GroupSelectWidget*>(ui.selectActionTargets)) {
+		w->setPlaceholderText("Select targets");
+	}
+	if (auto* w = dynamic_cast<GroupSelectWidget*>(ui.selectEventSources)) {
+		w->setPlaceholderText("Select event sources");
+	}
+	if (auto* w = dynamic_cast<GroupSelectWidget*>(ui.selectEventTypes)) {
+		w->setPlaceholderText("Select event type");
+	}
 
 	setMouseTracking(true);
 	setAutoFillBackground(true);
 
-	connect(ui.dropdownConditionTarget, &QComboBox::currentIndexChanged, this, &AutomationRuleItemWidget::editingFinished);
-	connect(ui.dropdownType, &QComboBox::currentIndexChanged, this, &AutomationRuleItemWidget::editingFinished);
-	connect(ui.dropdownActionTarget, &QComboBox::currentIndexChanged, this, &AutomationRuleItemWidget::editingFinished);
-	connect(ui.dropdownAction, &QComboBox::currentIndexChanged, this, &AutomationRuleItemWidget::editingFinished);
-	connect(ui.dropdownAction, &QComboBox::currentIndexChanged, this, [this]() { populateTargets(); });
-	connect(ui.dropdownActionTarget, &QComboBox::currentIndexChanged, this, [this]() { populateTargets(); });
+	// Persist when any selection changes
+	connect(ui.checkboxToggleRule, &QCheckBox::toggled, this, [this](bool) {
+		if (m_updatingUi) return;
+		emit editingFinished();
+	});
 }
 
 AutomationRuleItemWidget::~AutomationRuleItemWidget()
@@ -51,115 +121,101 @@ void AutomationRuleItemWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void AutomationRuleItemWidget::setRule(const Rule& rule)
 {
+	m_updatingUi = true;
 	m_rule = rule;
-
-	const int idx = ui.dropdownAction->findData(QString::fromStdString(toString(m_rule.action().actionType())));
-	if (idx >= 0) ui.dropdownAction->setCurrentIndex(idx);
+	ui.checkboxToggleRule->setChecked(m_rule.isActive());
 
 	populateTargets();
 
-	if (ui.dropdownActionTarget) {
-		const int tIdx = ui.dropdownActionTarget->findData(QString::fromStdString(m_rule.action().target()));
-		if (tIdx >= 0) ui.dropdownActionTarget->setCurrentIndex(tIdx);
+	if (auto* actions = dynamic_cast<GroupSelectWidget*>(ui.selectActions)) {
+		QSignalBlocker blocker(actions);
+		actions->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
+		actions->setSelectedValues({ QString::fromStdString(toString(m_rule.action().actionType())) });
 	}
-	if (ui.dropdownConditionTarget) {
-		const int cIdx = ui.dropdownConditionTarget->findData(QString::fromStdString(m_rule.trigger().condition()));
-		if (cIdx >= 0) ui.dropdownConditionTarget->setCurrentIndex(cIdx);
+	if (auto* targets = dynamic_cast<GroupSelectWidget*>(ui.selectActionTargets)) {
+		QSignalBlocker blocker(targets);
+		targets->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
+		if (!m_rule.action().target().empty()) {
+			targets->setSelectedValues({ QString::fromStdString(m_rule.action().target()) });
+		}
+		else {
+			targets->setSelectedValues({});
+		}
 	}
-}
-
-static void addSessionActions(QComboBox* cb)
-{
-	cb->addItem("Start recording (session)", QString::fromStdString(toString(RuleActionType::SessionStartRecording)));
-	cb->addItem("Stop recording (session)", QString::fromStdString(toString(RuleActionType::SessionStopRecording)));
-	cb->addItem("Start processing (session)", QString::fromStdString(toString(RuleActionType::SessionStartProcessing)));
-	cb->addItem("Stop processing (session)", QString::fromStdString(toString(RuleActionType::SessionStopProcessing)));
-}
-
-static void addElementActions(QComboBox* cb, Element* e)
-{
-	if (!e) return;
-
-	if (e->asRecordable()) {
-		cb->addItem("Start recording", QString::fromStdString(toString(RuleActionType::SessionStartRecording)));
-		cb->addItem("Stop recording", QString::fromStdString(toString(RuleActionType::SessionStopRecording)));
+	if (auto* evSrc = dynamic_cast<GroupSelectWidget*>(ui.selectEventSources)) {
+		QSignalBlocker blocker(evSrc);
+		evSrc->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
+		if (!m_rule.trigger().condition().empty()) {
+			evSrc->setSelectedValues({ QString::fromStdString(m_rule.trigger().condition()) });
+		}
+		else {
+			evSrc->setSelectedValues({});
+		}
 	}
-	if (e->asPipelineElement()) {
-		cb->addItem("Start processing", QString::fromStdString(toString(RuleActionType::SessionStartProcessing)));
-		cb->addItem("Stop processing", QString::fromStdString(toString(RuleActionType::SessionStopProcessing)));
+	if (auto* evTypes = dynamic_cast<GroupSelectWidget*>(ui.selectEventTypes)) {
+		QSignalBlocker blocker(evTypes);
+		evTypes->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
+		evTypes->setSelectedValues({ QString::fromStdString(toString(m_rule.trigger().triggerType())) });
 	}
-	if (e->elementType() == IElement::Type::Mount) {
-		cb->addItem("Move to…", QString("mount.moveTo"));
-		cb->addItem("Follow detected object", QString("mount.followObject"));
-	}
-}
-
-static Element* findElementById(ElementsController& ec, const QString& id)
-{
-	for (auto* e : ec.elements()) {
-		if (!e) continue;
-		if (QString::fromStdString(e->id()) == id) return e;
-	}
-	return nullptr;
+	m_updatingUi = false;
 }
 
 void AutomationRuleItemWidget::populateTargets()
 {
-	auto* cbActionTarget = ui.dropdownActionTarget;
-	auto* cbCondTarget = ui.dropdownConditionTarget;
-	auto* cbAction = ui.dropdownAction;
-	if (!cbActionTarget || !cbCondTarget) return;
+	QSignalBlocker b1(ui.selectActionTargets);
+	QSignalBlocker b2(ui.selectEventSources);
+	QSignalBlocker b3(ui.selectActions);
+	QSignalBlocker b4(ui.selectEventTypes);
 
-	const QString prevActionTarget = cbActionTarget->currentData().toString();
-	const QString prevCondTarget = cbCondTarget->currentData().toString();
+	auto* actionTargets = dynamic_cast<GroupSelectWidget*>(ui.selectActionTargets);
+	auto* eventSources = dynamic_cast<GroupSelectWidget*>(ui.selectEventSources);
+	auto* actions = dynamic_cast<GroupSelectWidget*>(ui.selectActions);
+	auto* eventTypes = dynamic_cast<GroupSelectWidget*>(ui.selectEventTypes);
 
-	cbActionTarget->blockSignals(true);
-	cbCondTarget->blockSignals(true);
-	cbActionTarget->clear();
-	cbCondTarget->clear();
+	const QStringList prevActionTargets = actionTargets ? actionTargets->selectedValues() : QStringList{};
+	const QStringList prevEventSources = eventSources ? eventSources->selectedValues() : QStringList{};
+	const QStringList prevActions = actions ? actions->selectedValues() : QStringList{};
+	const QStringList prevEventTypes = eventTypes ? eventTypes->selectedValues() : QStringList{};
 
-	// Allow de-select (session-wide)
-	cbActionTarget->addItem("(Session)", QString());
-	cbCondTarget->addItem("(Session)", QString());
-
-	const auto elements = m_elementsController.elements();
-	for (auto* e : elements) {
-		if (!e) continue;
-
-		const QString label = QString::fromStdString(e->displayName());
-		const QString id = QString::fromStdString(e->id());
-		cbActionTarget->addItem(label, id);
-
-		// For now, condition target list is unfiltered.
-		cbCondTarget->addItem(label, id);
+	if (actionTargets) {
+		actionTargets->clear();
+		actionTargets->addItem("(Session)", QString());
+		for (auto* e : m_elementsController.elements()) {
+			if (!e) continue;
+			actionTargets->addItem(QString::fromStdString(e->displayName()), QString::fromStdString(e->id()));
+		}
 	}
 
-	const int idxAction = cbActionTarget->findData(prevActionTarget);
-	if (idxAction >= 0) cbActionTarget->setCurrentIndex(idxAction);
-	const int idxCond = cbCondTarget->findData(prevCondTarget);
-	if (idxCond >= 0) cbCondTarget->setCurrentIndex(idxCond);
-
-	cbActionTarget->blockSignals(false);
-	cbCondTarget->blockSignals(false);
-
-	// Rebuild actions list based on selected action target's capabilities
-	if (cbAction) {
-		const QString prevAction = cbAction->currentData().toString();
-		cbAction->blockSignals(true);
-		cbAction->clear();
-		const QString selectedTargetId = cbActionTarget->currentData().toString();
-		Element* target = findElementById(m_elementsController, selectedTargetId);
-		if (target) {
-			addElementActions(cbAction, target);
+	if (eventSources) {
+		eventSources->clear();
+		eventSources->addItem("(Session)", QString());
+		for (auto* e : m_elementsController.elements()) {
+			if (!e) continue;
+			eventSources->addItem(QString::fromStdString(e->displayName()), QString::fromStdString(e->id()));
 		}
-		else {
-			addSessionActions(cbAction);
-		}
-		int idx = cbAction->findData(prevAction);
-		if (idx < 0 && cbAction->count() > 0) idx = 0;
-		if (idx >= 0) cbAction->setCurrentIndex(idx);
-		cbAction->blockSignals(false);
 	}
+
+	if (eventTypes) {
+		eventTypes->clear();
+		eventTypes->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
+		eventTypes->addItem("Automation event", QString::fromStdString(toString(RuleTriggerType::AutomationEventType)));
+	}
+
+	if (actions) {
+		actions->clear();
+		actions->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
+		actions->addItem("Start recording", QString::fromStdString(toString(RuleActionType::SessionStartRecording)));
+		actions->addItem("Stop recording", QString::fromStdString(toString(RuleActionType::SessionStopRecording)));
+		actions->addItem("Start processing", QString::fromStdString(toString(RuleActionType::SessionStartProcessing)));
+		actions->addItem("Stop processing", QString::fromStdString(toString(RuleActionType::SessionStopProcessing)));
+		actions->addItem("Move to…", "mount.moveTo");
+		actions->addItem("Follow detected object", "mount.followObject");
+	}
+
+	if (actionTargets) actionTargets->setSelectedValues(prevActionTargets);
+	if (eventSources) eventSources->setSelectedValues(prevEventSources);
+	if (actions) actions->setSelectedValues(prevActions);
+	if (eventTypes) eventTypes->setSelectedValues(prevEventTypes);
 }
 
 

@@ -2,6 +2,7 @@
 #include "plugins/QActionButtonPlugin/qactionbuttonplugin.h"
 #include "plugins/QDirectoryPickerWidgetPlugin/qdirectorypickerwidgetplugin.h"
 #include "plugins/QChaptersWidgetPlugin/qchapterswidgetplugin.h"
+#include "plugins/GroupSelectWidgetPlugin/groupselectwidgetplugin.h"
 
 #include <QtCore/QtPlugin>
 
@@ -11,6 +12,7 @@ MSSFrontendWidgetsPlugin::MSSFrontendWidgetsPlugin(QObject *parent)
     m_widgets.append(new QActionButtonPlugin(this));
     m_widgets.append(new QDirectoryPickerWidgetPlugin(this));
 	m_widgets.append(new QChaptersWidgetPlugin(this));
+	m_widgets.append(new GroupSelectWidgetPlugin(this));
 }
 
 QList<QDesignerCustomWidgetInterface*> MSSFrontendWidgetsPlugin::customWidgets() const

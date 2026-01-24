@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QAbstractListModel>
-#include <QObject>
 #include <controllers/rulescontroller.hpp>
 #include <models/rule_models.hpp>
 #include <vector>

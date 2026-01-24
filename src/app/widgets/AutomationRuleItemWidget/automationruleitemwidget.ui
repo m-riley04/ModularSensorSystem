@@ -39,7 +39,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="dropdownConditionTarget"/>
+      <widget class="QWidget" name="selectEventSources" native="true"/>
      </item>
      <item>
       <widget class="QLabel" name="label">
@@ -49,7 +49,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="dropdownType"/>
+      <widget class="QWidget" name="selectEventTypes" native="true"/>
      </item>
     </layout>
    </item>
@@ -61,12 +61,12 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Action Target</string>
+        <string>Action Target(s)</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="dropdownActionTarget"/>
+      <widget class="QWidget" name="selectActionTargets" native="true"/>
      </item>
      <item>
       <widget class="QLabel" name="label_3">
@@ -76,7 +76,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="dropdownAction"/>
+      <widget class="QWidget" name="selectActions" native="true"/>
      </item>
     </layout>
    </item>
@@ -84,6 +84,13 @@
     <widget class="QStackedWidget" name="stackCondition">
      <widget class="QWidget" name="page"/>
      <widget class="QWidget" name="page_2"/>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QCheckBox" name="checkboxToggleRule">
+     <property name="text">
+      <string/>
+     </property>
     </widget>
    </item>
   </layout>

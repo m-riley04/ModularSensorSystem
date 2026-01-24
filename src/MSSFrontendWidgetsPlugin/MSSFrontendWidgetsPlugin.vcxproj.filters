@@ -56,6 +56,9 @@
     <QtMoc Include="plugins\QActionButtonPlugin\qactionbuttonplugin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="plugins\GroupSelectWidgetPlugin\groupselectwidgetplugin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\widgets\widgets\QActionButton\qactionbutton.cpp">
@@ -82,6 +85,12 @@
     <ClCompile Include="plugins\QActionButtonPlugin\qactionbuttonplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="plugins\GroupSelectWidgetPlugin\groupselectwidgetplugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\widgets\widgets\GroupSelectWidget\groupselectwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="..\widgets\widgets\QDirectoryPickerWidget\qdirectorypickerwidget.ui">
@@ -90,5 +99,10 @@
     <QtUic Include="..\widgets\widgets\QChaptersWidget\qchapterswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\widgets\widgets\GroupSelectWidget\groupselectwidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

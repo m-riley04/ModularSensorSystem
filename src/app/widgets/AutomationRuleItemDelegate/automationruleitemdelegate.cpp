@@ -1,12 +1,7 @@
 #include "automationruleitemdelegate.h"
-
 #include <widgets/AutomationRuleItemWidget/automationruleitemwidget.h>
-
-#include <QAbstractItemModel>
-
 #include <controllers/elementscontroller.hpp>
 #include <controllers/sessioncontroller.hpp>
-
 #include <app/models/AutomationRulesListModel/automationruleslistmodel.h>
 
 static Rule ruleFromIndex(const QModelIndex& index)
@@ -53,25 +48,9 @@ void AutomationRuleItemDelegate::setEditorData(QWidget* editor, const QModelInde
 void AutomationRuleItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
     const QModelIndex& index) const
 {
-	auto* w = qobject_cast<AutomationRuleItemWidget*>(editor);
-	if (!w) {
-		QStyledItemDelegate::setModelData(editor, model, index);
-		return;
-	}
-
-	auto* m = dynamic_cast<AutomationRulesListModel*>(model);
-	if (!m) return;
-
-	// Persist just by calling model->setData(). The model is responsible for syncing to RulesController.
-	if (auto* cb = w->findChild<QComboBox*>("dropdownAction")) {
-		m->setData(index, cb->currentData().toString(), AutomationRulesListModel::Roles::ActionTypeRole);
-	}
-	if (auto* cb = w->findChild<QComboBox*>("dropdownActionTarget")) {
-		m->setData(index, cb->currentData().toString(), AutomationRulesListModel::Roles::ActionTargetRole);
-	}
-	if (auto* cb = w->findChild<QComboBox*>("dropdownConditionTarget")) {
-		m->setData(index, cb->currentData().toString(), AutomationRulesListModel::Roles::TriggerConditionRole);
-	}
+	Q_UNUSED(editor);
+	Q_UNUSED(model);
+	Q_UNUSED(index);
 }
 
 QSize AutomationRuleItemDelegate::sizeHint(const QStyleOptionViewItem& option,
