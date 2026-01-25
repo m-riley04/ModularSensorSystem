@@ -75,7 +75,7 @@ AutomationRuleItemWidget::AutomationRuleItemWidget(ElementsController& ec, Sessi
 				  dynamic_cast<GroupSelectWidget*>(ui.selectEventSources),
 				  dynamic_cast<GroupSelectWidget*>(ui.selectEventTypes) }) {
 		if (!w) continue;
-		connect(w, &GroupSelectWidget::selectionChanged, this, [this](const QStringList&) {
+		connect(w, &GroupSelectWidget::selectionChanged, this, [this](const QList<GroupSelectWidget::Option>&) {
 			if (m_updatingUi) return;
 			emit editingFinished();
 		});
@@ -130,32 +130,49 @@ void AutomationRuleItemWidget::setRule(const Rule& rule)
 	if (auto* actions = dynamic_cast<GroupSelectWidget*>(ui.selectActions)) {
 		QSignalBlocker blocker(actions);
 		actions->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
-		actions->setSelectedValues({ QString::fromStdString(toString(m_rule.action().actionType())) });
+		const QVariant ud = QString::fromStdString(toString(m_rule.action().actionType()));
+		actions->setSelectedUserData({ ud });
 	}
 	if (auto* targets = dynamic_cast<GroupSelectWidget*>(ui.selectActionTargets)) {
 		QSignalBlocker blocker(targets);
-		targets->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
-		if (!m_rule.action().target().empty()) {
-			targets->setSelectedValues({ QString::fromStdString(m_rule.action().target()) });
-		}
-		else {
-			targets->setSelectedValues({});
+		targets->setSelectionMode(GroupSelectWidget::SelectionMode::Multi);
+		{
+			const QString raw = QString::fromStdString(m_rule.action().target());
+			QVariantList vals;
+			if (raw.isEmpty()) {
+				vals.append(QString("(Session)"));
+			}
+			else {
+				for (const auto& s : raw.split(';', Qt::KeepEmptyParts)) {
+					if (s.isEmpty()) vals.append(QString("(Session)"));
+					else vals.append(s);
+				}
+			}
+			targets->setSelectedUserData(vals);
 		}
 	}
 	if (auto* evSrc = dynamic_cast<GroupSelectWidget*>(ui.selectEventSources)) {
 		QSignalBlocker blocker(evSrc);
-		evSrc->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
-		if (!m_rule.trigger().condition().empty()) {
-			evSrc->setSelectedValues({ QString::fromStdString(m_rule.trigger().condition()) });
-		}
-		else {
-			evSrc->setSelectedValues({});
+		evSrc->setSelectionMode(GroupSelectWidget::SelectionMode::Multi);
+		{
+			const QString raw = QString::fromStdString(m_rule.trigger().condition());
+			QVariantList vals;
+			if (raw.isEmpty()) {
+				vals.append(QString("(Session)"));
+			}
+			else {
+				for (const auto& s : raw.split(';', Qt::KeepEmptyParts)) {
+					if (s.isEmpty()) vals.append(QString("(Session)"));
+					else vals.append(s);
+				}
+			}
+			evSrc->setSelectedUserData(vals);
 		}
 	}
 	if (auto* evTypes = dynamic_cast<GroupSelectWidget*>(ui.selectEventTypes)) {
 		QSignalBlocker blocker(evTypes);
 		evTypes->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
-		evTypes->setSelectedValues({ QString::fromStdString(toString(m_rule.trigger().triggerType())) });
+		evTypes->setSelectedUserData({ QString::fromStdString(toString(m_rule.trigger().triggerType())) });
 	}
 	m_updatingUi = false;
 }
@@ -172,14 +189,14 @@ void AutomationRuleItemWidget::populateTargets()
 	auto* actions = dynamic_cast<GroupSelectWidget*>(ui.selectActions);
 	auto* eventTypes = dynamic_cast<GroupSelectWidget*>(ui.selectEventTypes);
 
-	const QStringList prevActionTargets = actionTargets ? actionTargets->selectedValues() : QStringList{};
-	const QStringList prevEventSources = eventSources ? eventSources->selectedValues() : QStringList{};
-	const QStringList prevActions = actions ? actions->selectedValues() : QStringList{};
-	const QStringList prevEventTypes = eventTypes ? eventTypes->selectedValues() : QStringList{};
+	const QList<GroupSelectWidget::Option> prevActionTargets = actionTargets ? actionTargets->selectedValues() : QList<GroupSelectWidget::Option>{};
+	const QList<GroupSelectWidget::Option> prevEventSources = eventSources ? eventSources->selectedValues() : QList<GroupSelectWidget::Option>{};
+	const QList<GroupSelectWidget::Option> prevActions = actions ? actions->selectedValues() : QList<GroupSelectWidget::Option>{};
+	const QList<GroupSelectWidget::Option> prevEventTypes = eventTypes ? eventTypes->selectedValues() : QList<GroupSelectWidget::Option>{};
 
 	if (actionTargets) {
 		actionTargets->clear();
-		actionTargets->addItem("(Session)", QString());
+		actionTargets->addItem("(Session)", QString("(Session)"));
 		for (auto* e : m_elementsController.elements()) {
 			if (!e) continue;
 			actionTargets->addItem(QString::fromStdString(e->displayName()), QString::fromStdString(e->id()));
@@ -188,7 +205,7 @@ void AutomationRuleItemWidget::populateTargets()
 
 	if (eventSources) {
 		eventSources->clear();
-		eventSources->addItem("(Session)", QString());
+		eventSources->addItem("(Session)", QString("(Session)"));
 		for (auto* e : m_elementsController.elements()) {
 			if (!e) continue;
 			eventSources->addItem(QString::fromStdString(e->displayName()), QString::fromStdString(e->id()));

@@ -25,23 +25,48 @@ void AutomationDialog::populateRuleList()
 			if (auto* enabled = w->findChild<QCheckBox*>("checkboxToggleRule")) {
 				m_rulesModel->setData(m_rulesModel->index(row, 0), enabled->isChecked() ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole);
 			}
+			m_rulesModel->rebuild(); // Refresh the model's internal rule list
 			if (auto* actions = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectActions"))) {
 				const auto sel = actions->selectedValues();
-				m_rulesModel->setData(m_rulesModel->index(row, 0), sel.isEmpty() ? QString() : sel.first(), AutomationRulesListModel::Roles::ActionTypeRole);
+				const QString v = sel.isEmpty() ? QString() : sel.first().userData.toString();
+				// If it's not a known enum action (e.g. "mount.moveTo"), setData may reject it.
+				// In that case, persist it via EditRole (description) is wrong; instead, bypass model
+				// validation by storing the raw string in the model/controller if supported.
+				if (!m_rulesModel->setData(m_rulesModel->index(row, 0), v, AutomationRulesListModel::Roles::ActionTypeRole)) {
+					// Last resort: keep it in ActionTargetRole-like storage? No.
+					// If the backend doesn't support custom actions yet, do nothing.
+				}
 			}
 			if (auto* targets = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectActionTargets"))) {
 				const auto sel = targets->selectedValues();
-				m_rulesModel->setData(m_rulesModel->index(row, 0), sel.isEmpty() ? QString() : sel.first(), AutomationRulesListModel::Roles::ActionTargetRole);
+				QStringList vals;
+				vals.reserve(sel.size());
+				for (const auto& o : sel) {
+					const QString v = o.userData.toString();
+					vals.append(v == "(Session)" ? QString() : v);
+				}
+				// Preserve explicit Session selection as an empty-token marker so it round-trips.
+				const QString persisted = vals.isEmpty() ? QString() : vals.join(';');
+				m_rulesModel->setData(m_rulesModel->index(row, 0), persisted, AutomationRulesListModel::Roles::ActionTargetRole);
 			}
 			if (auto* sources = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectEventSources"))) {
 				const auto sel = sources->selectedValues();
-				m_rulesModel->setData(m_rulesModel->index(row, 0), sel.isEmpty() ? QString() : sel.first(), AutomationRulesListModel::Roles::TriggerConditionRole);
+				QStringList vals;
+				vals.reserve(sel.size());
+				for (const auto& o : sel) {
+					const QString v = o.userData.toString();
+					vals.append(v == "(Session)" ? QString() : v);
+				}
+				const QString persisted = vals.isEmpty() ? QString() : vals.join(';');
+				m_rulesModel->setData(m_rulesModel->index(row, 0), persisted, AutomationRulesListModel::Roles::TriggerConditionRole);
 			}
 			if (auto* types = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectEventTypes"))) {
 				const auto sel = types->selectedValues();
-				m_rulesModel->setData(m_rulesModel->index(row, 0), sel.isEmpty() ? QString() : sel.first(), AutomationRulesListModel::Roles::TriggerTypeRole);
+				m_rulesModel->setData(m_rulesModel->index(row, 0), sel.isEmpty() ? QString() : sel.first().userData.toString(), AutomationRulesListModel::Roles::TriggerTypeRole);
 			}
 
+			// Pull latest rule state back from controller to keep UI/model in sync.
+			m_rulesModel->rebuild();
 			w->setRule(m_rulesModel->ruleAt(row));
 			});
 		}

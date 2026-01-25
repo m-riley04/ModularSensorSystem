@@ -57,11 +57,13 @@ public:
 	bool hasItem(const QVariant& userData) const;
 	int count() const;
 
-	QList<Option>& options() { return m_options; }
+	const QList<Option>& options() const { return m_options; }
 	void setOptions(const QList<Option>& options);
 
-	QList<Option>& selectedValues() { return m_selected; }
+	const QList<Option>& selectedValues() const { return m_selected; }
 	void setSelectedValues(const QList<Option>& values);
+	void setSelectedUserData(const QVariantList& userData);
+	QVariantList selectedUserData() const;
 
 	QString placeholderText() const;
 	void setPlaceholderText(const QString& text);

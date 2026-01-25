@@ -10,6 +10,8 @@
 #include <QListWidget>
 #include <QPushButton>
 
+#include <algorithm>
+
 GroupSelectWidget::GroupSelectWidget(QWidget* parent)
 	: QWidget(parent)
 	, m_button(new QToolButton(this))
@@ -58,6 +60,7 @@ void GroupSelectWidget::setSelectionMode(SelectionMode mode)
 {
 	if (m_selectionMode == mode) return;
 	m_selectionMode = mode;
+	emit selectionModeChanged(m_selectionMode);
 
 	if (m_selectionMode == SelectionMode::Single && m_selected.size() > 1) {
 		setSelectedValues({ m_selected.first() });
@@ -95,7 +98,10 @@ bool GroupSelectWidget::removeItem(const QString& text)
 		if (it->label == text || it->userData == text) it = m_options.erase(it);
 		else ++it;
 	}
-	m_selected.removeAll(text);
+	for (auto it = m_selected.begin(); it != m_selected.end();) {
+		if (it->label == text || it->userData == text) it = m_selected.erase(it);
+		else ++it;
+	}
 	if (m_options.size() == before) return false;
 	rebuildMenu();
 	return true;
@@ -106,6 +112,11 @@ bool GroupSelectWidget::hasItem(const QString& text) const
 	return findOptionByValue(text) || findOptionByLabel(text);
 }
 
+bool GroupSelectWidget::hasItem(const QVariant& userData) const
+{
+	return findOptionByValue(userData) != nullptr;
+}
+
 int GroupSelectWidget::count() const
 {
 	return static_cast<int>(m_options.size());
@@ -113,9 +124,7 @@ int GroupSelectWidget::count() const
 
 void GroupSelectWidget::setOptions(const QList<Option>& options)
 {
-	QList<Option> curr;
-	for (const auto& o : m_options) curr.append(o);
-	if (curr == options) return;
+	if (m_options == options) return;
 
 	m_options.clear();
 	for (const auto& o : options) {
@@ -138,20 +147,43 @@ void GroupSelectWidget::setSelectedValues(const QList<Option>& values)
 {
 	QList<Option> filtered;
 	for (const auto& v : values) {
-		if (findOptionByValue(v.userData) && !filtered.contains(v)) filtered.append(v);
+		const auto* opt = findOptionByValue(v.userData);
+		if (!opt) continue;
+		if (!filtered.contains(*opt)) filtered.append(*opt);
 	}
 	if (m_selected == filtered) return;
 	m_selected = filtered;
 
 	for (auto* a : m_menu->actions()) {
 		if (!a) continue;
-		const bool checked = m_selected.contains(a->data().toString());
+		const QVariant v = a->data();
+		const bool checked = std::any_of(m_selected.begin(), m_selected.end(), [&v](const Option& o) { return o.userData == v; });
 		QSignalBlocker blocker(a);
 		a->setChecked(checked);
 	}
 
 	updateButtonText();
 	emit selectionChanged(m_selected);
+}
+
+QVariantList GroupSelectWidget::selectedUserData() const
+{
+	QVariantList out;
+	out.reserve(m_selected.size());
+	for (const auto& o : m_selected) out.append(o.userData);
+	return out;
+}
+
+void GroupSelectWidget::setSelectedUserData(const QVariantList& userData)
+{
+	QList<Option> opts;
+	opts.reserve(userData.size());
+	for (const auto& v : userData) {
+		const auto* opt = findOptionByValue(v);
+		if (!opt) continue;
+		opts.append(*opt);
+	}
+	setSelectedValues(opts);
 }
 
 QString GroupSelectWidget::placeholderText() const
@@ -175,7 +207,8 @@ void GroupSelectWidget::rebuildMenu()
 		auto* act = m_menu->addAction(opt.label);
 		act->setCheckable(true);
 		act->setData(opt.userData);
-		act->setChecked(m_selected.contains(opt.userData));
+		const bool checked = std::any_of(m_selected.begin(), m_selected.end(), [&opt](const Option& o) { return o.userData == opt.userData; });
+		act->setChecked(checked);
 		connect(act, &QAction::toggled, this, &GroupSelectWidget::onActionToggled);
 	}
 
@@ -197,13 +230,18 @@ void GroupSelectWidget::openSelectionDialog()
 	for (const auto& opt : m_options) {
 		auto* item = new QListWidgetItem(opt.label);
 		item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-		item->setCheckState(m_selected.contains(opt.userData) ? Qt::Checked : Qt::Unchecked);
+		const bool checked = std::any_of(m_selected.begin(), m_selected.end(), [&opt](const Option& o) { return o.userData == opt.userData; });
+		item->setCheckState(checked ? Qt::Checked : Qt::Unchecked);
 		item->setData(Qt::UserRole, opt.userData);
 		list->addItem(item);
 	}
 
 	auto* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dlg);
 	auto* clearBtn = buttons->addButton("Clear", QDialogButtonBox::ResetRole);
+	QPushButton* selectAllBtn = nullptr;
+	if (m_selectionMode == SelectionMode::Multi) {
+		selectAllBtn = buttons->addButton("Select all", QDialogButtonBox::ActionRole);
+	}
 	layout->addWidget(buttons);
 
 	QObject::connect(clearBtn, &QPushButton::clicked, &dlg, [list]() {
@@ -211,22 +249,32 @@ void GroupSelectWidget::openSelectionDialog()
 			list->item(i)->setCheckState(Qt::Unchecked);
 		}
 	});
+	if (selectAllBtn) {
+		QObject::connect(selectAllBtn, &QPushButton::clicked, &dlg, [list]() {
+			for (int i = 0; i < list->count(); ++i) {
+				list->item(i)->setCheckState(Qt::Checked);
+			}
+		});
+	}
 
 	QObject::connect(buttons, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
 	QObject::connect(buttons, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
 
 	if (dlg.exec() != QDialog::Accepted) return;
 
-	QStringList selected;
+	QList<Option> selected;
 	for (int i = 0; i < list->count(); ++i) {
 		auto* item = list->item(i);
 		if (!item) continue;
-		if (item->checkState() == Qt::Checked) selected.append(item->data(Qt::UserRole).toString());
+		if (item->checkState() == Qt::Checked) {
+			const QVariant ud = item->data(Qt::UserRole);
+			if (const auto* opt = findOptionByValue(ud)) {
+				selected.append(*opt);
+			}
+		}
 	}
 
-	if (m_selectionMode == SelectionMode::Single && selected.size() > 1) {
-		selected = { selected.first() };
-	}
+	if (m_selectionMode == SelectionMode::Single && selected.size() > 1) selected = { selected.first() };
 	setSelectedValues(selected);
 }
 
@@ -234,31 +282,35 @@ void GroupSelectWidget::onActionToggled(bool)
 {
 	auto* act = qobject_cast<QAction*>(sender());
 	if (!act) return;
-	const QString value = act->data().toString();
+	const QVariant value = act->data();
 	if (!m_menu || m_menu->signalsBlocked()) return;
+
+	const auto* opt = findOptionByValue(value);
+	if (!opt) return;
 
 	if (m_selectionMode == SelectionMode::Single) {
 		if (act->isChecked()) {
-			// clear all others
-			m_selected = { value };
+			m_selected = { *opt };
 			for (auto* a : m_menu->actions()) {
-				if (a == act) continue;
-				a->blockSignals(true);
+				if (!a || a == act) continue;
+				QSignalBlocker b(a);
 				a->setChecked(false);
-				a->blockSignals(false);
 			}
 			m_menu->hide();
 		}
 		else {
-			m_selected.removeAll(value);
+			m_selected.clear();
 		}
 	}
 	else {
 		if (act->isChecked()) {
-			if (!m_selected.contains(value)) m_selected.append(value);
+			if (!m_selected.contains(*opt)) m_selected.append(*opt);
 		}
 		else {
-			m_selected.removeAll(value);
+			for (auto it = m_selected.begin(); it != m_selected.end();) {
+				if (it->userData == value) it = m_selected.erase(it);
+				else ++it;
+			}
 		}
 	}
 
@@ -274,9 +326,8 @@ void GroupSelectWidget::updateButtonText()
 	}
 	QStringList labels;
 	labels.reserve(m_selected.size());
-	for (const auto& v : m_selected) {
-		if (const auto* opt = findOptionByValue(v)) labels.append(opt->label);
-		else labels.append(v);
+	for (const auto& o : m_selected) {
+		labels.append(o.label);
 	}
 	m_button->setText(labels.join(", "));
 }
