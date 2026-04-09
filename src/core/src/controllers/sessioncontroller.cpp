@@ -1,5 +1,6 @@
 ﻿#include "controllers/sessioncontroller.hpp"
 #include <utils/safer_io_utils.hpp>
+#include <models/rule_models.hpp>
 
 SessionController::SessionController(SettingsController& settingsController, ElementsController& ec, QObject* parent)
 	: QObject(parent)
@@ -13,7 +14,7 @@ SessionController::SessionController(SettingsController& settingsController, Ele
 
 	connect(&m_pipeline, &SessionPipeline::stateChanged, this, [this](SessionPipeline::State newState) {
 		AutomationEvent ev;
-		ev.type = "pipeline.stateChanged";
+		ev.type = AutomationEventStrings::PipelineStateChanged;
 		ev.payload.insert("state", static_cast<int>(newState));
 		ev.timestamp = m_lastSessionTimestamp;
 		emit automationEvent(ev);
@@ -21,14 +22,14 @@ SessionController::SessionController(SettingsController& settingsController, Ele
 
 	connect(&m_pipeline, &SessionPipeline::eosReached, this, [this]() {
 		AutomationEvent ev;
-		ev.type = "pipeline.eos";
+		ev.type = AutomationEventStrings::PipelineEos;
 		ev.timestamp = m_lastSessionTimestamp;
 		emit automationEvent(ev);
 	});
 
 	connect(&m_pipeline, &SessionPipeline::errorOccurred, this, [this](const QString& errorMessage) {
 		AutomationEvent ev;
-		ev.type = "pipeline.error";
+		ev.type = AutomationEventStrings::PipelineError;
 		ev.payload.insert("message", errorMessage);
 		ev.timestamp = m_lastSessionTimestamp;
 		emit automationEvent(ev);
@@ -36,16 +37,24 @@ SessionController::SessionController(SettingsController& settingsController, Ele
 
 	connect(&m_pipeline, &SessionPipeline::recordingStarted, this, [this]() {
 		AutomationEvent ev;
-		ev.type = "pipeline.recordingStarted";
+		ev.type = AutomationEventStrings::RecordingStarted;
 		ev.timestamp = m_lastSessionTimestamp;
 		emit automationEvent(ev);
 	});
 
 	connect(&m_pipeline, &SessionPipeline::recordingStopped, this, [this]() {
 		AutomationEvent ev;
-		ev.type = "pipeline.recordingStopped";
+		ev.type = AutomationEventStrings::RecordingStopped;
 		ev.timestamp = m_lastSessionTimestamp;
 		emit automationEvent(ev);
+	});
+
+	// Wire future processors added mid-session
+	connect(&m_elementsController.processingController(), &ProcessingController::processorAdded,
+		this, [this](Processor* processor) {
+			if (!processor) return;
+			connect(processor, &Processor::automationEvent,
+				this, &SessionController::automationEvent, Qt::QueuedConnection);
 	});
 }
 

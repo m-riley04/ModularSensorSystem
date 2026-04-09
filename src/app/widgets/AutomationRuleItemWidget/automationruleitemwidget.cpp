@@ -130,14 +130,14 @@ void AutomationRuleItemWidget::setRule(const Rule& rule)
 	if (auto* actions = dynamic_cast<GroupSelectWidget*>(ui.selectActions)) {
 		QSignalBlocker blocker(actions);
 		actions->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
-		const QVariant ud = QString::fromStdString(toString(m_rule.action().actionType()));
+		const QVariant ud = m_rule.action().actionType();
 		actions->setSelectedUserData({ ud });
 	}
 	if (auto* targets = dynamic_cast<GroupSelectWidget*>(ui.selectActionTargets)) {
 		QSignalBlocker blocker(targets);
 		targets->setSelectionMode(GroupSelectWidget::SelectionMode::Multi);
 		{
-			const QString raw = QString::fromStdString(m_rule.action().target());
+			const QString& raw = m_rule.action().target();
 			QVariantList vals;
 			if (raw.isEmpty()) {
 				vals.append(QString("(Session)"));
@@ -155,7 +155,7 @@ void AutomationRuleItemWidget::setRule(const Rule& rule)
 		QSignalBlocker blocker(evSrc);
 		evSrc->setSelectionMode(GroupSelectWidget::SelectionMode::Multi);
 		{
-			const QString raw = QString::fromStdString(m_rule.trigger().condition());
+			const QString& raw = m_rule.trigger().condition();
 			QVariantList vals;
 			if (raw.isEmpty()) {
 				vals.append(QString("(Session)"));
@@ -172,7 +172,7 @@ void AutomationRuleItemWidget::setRule(const Rule& rule)
 	if (auto* evTypes = dynamic_cast<GroupSelectWidget*>(ui.selectEventTypes)) {
 		QSignalBlocker blocker(evTypes);
 		evTypes->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
-		evTypes->setSelectedUserData({ QString::fromStdString(toString(m_rule.trigger().triggerType())) });
+		evTypes->setSelectedUserData({ m_rule.trigger().eventType() });
 	}
 	m_updatingUi = false;
 }
@@ -215,18 +215,22 @@ void AutomationRuleItemWidget::populateTargets()
 	if (eventTypes) {
 		eventTypes->clear();
 		eventTypes->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
-		eventTypes->addItem("Automation event", QString::fromStdString(toString(RuleTriggerType::AutomationEventType)));
+		eventTypes->addItem("Pipeline state changed", AutomationEventStrings::PipelineStateChanged);
+		eventTypes->addItem("Pipeline EOS", AutomationEventStrings::PipelineEos);
+		eventTypes->addItem("Pipeline error", AutomationEventStrings::PipelineError);
+		eventTypes->addItem("Recording started", AutomationEventStrings::RecordingStarted);
+		eventTypes->addItem("Recording stopped", AutomationEventStrings::RecordingStopped);
 	}
 
 	if (actions) {
 		actions->clear();
 		actions->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
-		actions->addItem("Start recording", QString::fromStdString(toString(RuleActionType::SessionStartRecording)));
-		actions->addItem("Stop recording", QString::fromStdString(toString(RuleActionType::SessionStopRecording)));
-		actions->addItem("Start processing", QString::fromStdString(toString(RuleActionType::SessionStartProcessing)));
-		actions->addItem("Stop processing", QString::fromStdString(toString(RuleActionType::SessionStopProcessing)));
-		actions->addItem("Move to…", "mount.moveTo");
-		actions->addItem("Follow detected object", "mount.followObject");
+		actions->addItem("Start recording",        AutomationActionStrings::SessionStartRecording);
+		actions->addItem("Stop recording", AutomationActionStrings::SessionStopRecording);
+		actions->addItem("Start processing", AutomationActionStrings::SessionStartProcessing);
+		actions->addItem("Stop processing", AutomationActionStrings::SessionStopProcessing);
+		actions->addItem("Move to\u2026",          QStringLiteral("mount.moveTo"));
+		actions->addItem("Follow detected object", QStringLiteral("mount.followObject"));
 	}
 
 	if (actionTargets) actionTargets->setSelectedValues(prevActionTargets);

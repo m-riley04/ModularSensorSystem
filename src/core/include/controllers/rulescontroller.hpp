@@ -2,61 +2,40 @@
 
 #include <QObject>
 #include "models/rule_models.hpp"
+#include "core_export.hpp"
 #include <automation/automation_event.hpp>
 #include <vector>
+#include <functional>
+#include <unordered_map>
 #include <controllers/elementscontroller.hpp>
-#include <map>
 #include <controllers/sessioncontroller.hpp>
 
-/**
- * @brief A controller class for managing rules within the application.
- * Rules are for automating actions based on processor events.
- */
-class RulesController : public QObject
+class MSS_CORE_API RulesController : public QObject
 {
-private:
-	ElementsController& m_elementsController;
-	SessionController& m_sessionController;
-
-	std::vector<Rule> m_rules;
-
-	void onAutomationEvent(const AutomationEvent& event);
-
-	/**
-	 * @brief Checks all active rules to see if their trigger conditions are met. Executes associated actions if conditions are met.
-	 */
-	void checkRules();
-
-	/**
-	 * @brief Checks if a rule trigger condition is met.
-	 * @param trigger The rule trigger to check.
-	 * @return True if the trigger condition is met, false otherwise.
-	 */
-	bool checkRuleTrigger(const RuleTrigger& trigger);
-
-	/**
-	 * @brief Executes the action associated with a rule.
-	 * @param action The rule action to execute.
-	 */
-	void executeRuleAction(const RuleAction& action);
+	Q_OBJECT
 
 public:
+	using ActionHandler = std::function<void(const RuleAction&)>;
+
 	explicit RulesController(SessionController& sc, ElementsController& ec, QObject* parent);
 	~RulesController();
 
 	const std::vector<Rule>& rules() const { return m_rules; }
 
 	void addRule(const Rule& rule) { m_rules.push_back(rule); }
-	bool updateRule(int index, const Rule& rule)
-	{
-		if (index < 0 || index >= static_cast<int>(m_rules.size())) return false;
-		m_rules[static_cast<size_t>(index)] = rule;
-		return true;
-	}
-	bool removeRule(int index)
-	{
-		if (index < 0 || index >= static_cast<int>(m_rules.size())) return false;
-		m_rules.erase(m_rules.begin() + index);
-		return true;
-	}
+	bool updateRule(int index, const Rule& rule);
+	bool removeRule(int index);
+
+	/// Register a named action handler (call from core or plugins)
+	void registerAction(const QString& actionType, ActionHandler handler);
+
+private:
+	ElementsController& m_elementsController;
+	SessionController& m_sessionController;
+
+	std::vector<Rule> m_rules;
+	std::unordered_map<QString, ActionHandler> m_actionHandlers;
+
+	void onAutomationEvent(const AutomationEvent& event);
+	void executeRuleAction(const RuleAction& action);
 };

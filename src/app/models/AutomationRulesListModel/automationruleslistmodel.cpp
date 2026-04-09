@@ -24,19 +24,19 @@ QVariant AutomationRulesListModel::data(const QModelIndex& index, int role) cons
 	switch (role) {
 		case Qt::DisplayRole:
 		case Qt::EditRole: {
-			const QString desc = QString::fromStdString(r.description());
+			const QString& desc = r.description();
 			return desc.isEmpty() ? QString("(unnamed rule)") : desc;
 		}
 		case Roles::RuleRole:
-			return QVariant::fromValue(r.description().c_str());
+			return r.description();
 		case Roles::ActionTypeRole:
-			return QString::fromStdString(toString(r.action().actionType()));
+			return r.action().actionType();
 		case Roles::ActionTargetRole:
-			return QString::fromStdString(r.action().target());
+			return r.action().target();
 		case Roles::TriggerTypeRole:
-			return QString::fromStdString(toString(r.trigger().triggerType()));
+			return r.trigger().eventType();
 		case Roles::TriggerConditionRole:
-			return QString::fromStdString(r.trigger().condition());
+			return r.trigger().condition();
 		case Qt::CheckStateRole:
 			return r.isActive() ? Qt::Checked : Qt::Unchecked;
 		default:
@@ -61,35 +61,27 @@ bool AutomationRulesListModel::setData(const QModelIndex& index, const QVariant&
 
 	switch (role) {
 		case Qt::EditRole:
-			r.setDescription(value.toString().toStdString());
+			r.setDescription(value.toString());
 			m_rulesController.updateRule(index.row(), r);
 			emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
 			return true;
 		case Roles::ActionTargetRole:
-			r.action().setTarget(value.toString().toStdString());
+			r.action().setTarget(value.toString());
 			m_rulesController.updateRule(index.row(), r);
 			emit dataChanged(index, index, { Roles::ActionTargetRole });
 			return true;
 		case Roles::ActionTypeRole:
-			{
-				RuleActionType t{};
-				if (!tryParseRuleActionType(value.toString().toStdString(), t)) return false;
-				r.action().setActionType(t);
-			}
+			r.action().setActionType(value.toString());
 			m_rulesController.updateRule(index.row(), r);
 			emit dataChanged(index, index, { Roles::ActionTypeRole });
 			return true;
 		case Roles::TriggerConditionRole:
-			r.trigger().setCondition(value.toString().toStdString());
+			r.trigger().setCondition(value.toString());
 			m_rulesController.updateRule(index.row(), r);
 			emit dataChanged(index, index, { Roles::TriggerConditionRole });
 			return true;
 		case Roles::TriggerTypeRole:
-			{
-				RuleTriggerType t{};
-				if (!tryParseRuleTriggerType(value.toString().toStdString(), t)) return false;
-				r.trigger().setTriggerType(t);
-			}
+			r.trigger().setEventType(value.toString());
 			m_rulesController.updateRule(index.row(), r);
 			emit dataChanged(index, index, { Roles::TriggerTypeRole });
 			return true;
@@ -113,9 +105,9 @@ bool AutomationRulesListModel::insertRows(int row, int count, const QModelIndex&
 
 	beginInsertRows(QModelIndex(), row, row + count - 1);
 	for (int i = 0; i < count; ++i) {
-		RuleTrigger trig(-1, RuleTriggerType::AutomationEventType, "");
-		RuleAction act(-1, RuleActionType::SessionStartRecording, "");
-		Rule r(-1, "New rule", true, trig, act);
+		RuleTrigger trig(-1, AutomationEventStrings::PipelineStateChanged, QString());
+		RuleAction act(-1, AutomationActionStrings::SessionStartRecording, QString());
+		Rule r(-1, QStringLiteral("New rule"), true, trig, act);
 		m_rulesController.addRule(r);
 		m_rules.insert(m_rules.begin() + (row + i), r);
 	}

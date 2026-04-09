@@ -3,8 +3,6 @@
 
 #include <models/rule_models.hpp>
 
-#include <QString>
-
 RulesController::RulesController(SessionController& sc, ElementsController& ec, QObject* parent)
 	: QObject(parent)
 	, m_elementsController(ec)
@@ -12,6 +10,20 @@ RulesController::RulesController(SessionController& sc, ElementsController& ec, 
 {
 	connect(&m_sessionController, &SessionController::automationEvent,
 		this, &RulesController::onAutomationEvent, Qt::QueuedConnection);
+
+	// Register built-in actions
+	registerAction(AutomationActionStrings::SessionStartRecording, [&](const RuleAction&) {
+		m_sessionController.startRecording();
+	});
+	registerAction(AutomationActionStrings::SessionStopRecording, [&](const RuleAction&) {
+		m_sessionController.stopRecording();
+	});
+	registerAction(AutomationActionStrings::SessionStartProcessing, [&](const RuleAction&) {
+		m_sessionController.startProcessing();
+	});
+	registerAction(AutomationActionStrings::SessionStopProcessing, [&](const RuleAction&) {
+		m_sessionController.stopProcessing();
+	});
 }
 
 RulesController::~RulesController()
@@ -19,63 +31,47 @@ RulesController::~RulesController()
 
 }
 
-void RulesController::checkRules()
-{
-	LoggingController::debug("Checking all rules...");
-
-	for (const Rule& rule : m_rules) {
-		if (!rule.isActive()) continue;
-		if (!checkRuleTrigger(rule.trigger())) continue;
-
-		// If we reach here, trigger the action
-		executeRuleAction(rule.action());
-	}
-}
-
 void RulesController::onAutomationEvent(const AutomationEvent& event)
 {
-	// Basic skeleton: match by triggerType only (condition evaluation can be added later)
 	for (const Rule& rule : m_rules) {
 		if (!rule.isActive()) continue;
+		if (rule.trigger().eventType() != event.type) continue;
 
-		if (rule.trigger().triggerType() != RuleTriggerType::AutomationEventType) continue;
-		if (event.type != "automation.event") continue;
-
+		// TODO: evaluate rule.trigger().condition() against event.payload
 		executeRuleAction(rule.action());
 	}
 }
 
-bool RulesController::checkRuleTrigger(const RuleTrigger& trigger)
+bool RulesController::updateRule(int index, const Rule& rule)
 {
-	LoggingController::debug("Checking trigger for rule #" + QString::number(trigger.ruleId())); // TODO/CONSIDER: should logging be here? Might get spammy.
+	if (index < 0 || index >= static_cast<int>(m_rules.size()))
+		return false;
 
-	// TODO: Placeholder for checking the trigger condition
-	// e.g., evaluate condition based on trigger.triggerType and trigger.condition
+	m_rules[index] = rule;
+	return true;
+}
 
-	return false;
+bool RulesController::removeRule(int index)
+{
+	if (index < 0 || index >= static_cast<int>(m_rules.size()))
+		return false;
+
+	m_rules.erase(m_rules.begin() + index);
+	return true;
+}
+
+void RulesController::registerAction(const QString& actionType, ActionHandler handler)
+{
+	m_actionHandlers[actionType] = std::move(handler);
 }
 
 void RulesController::executeRuleAction(const RuleAction& action)
 {
-	LoggingController::debug("Executing action for rule #" + QString::number(action.ruleId()));
-
-	// TODO: Placeholder for executing the action specified in the rule
-	// e.g., perform action based on action.actionType and action.target
-
-	switch (action.actionType()) {
-		case RuleActionType::SessionStartRecording:
-			m_sessionController.startRecording();
-			return;
-		case RuleActionType::SessionStopRecording:
-			m_sessionController.stopRecording();
-			return;
-		case RuleActionType::SessionStartProcessing:
-			m_sessionController.startProcessing();
-			return;
-		case RuleActionType::SessionStopProcessing:
-			m_sessionController.stopProcessing();
-			return;
-		default:
-			return;
+	auto it = m_actionHandlers.find(action.actionType());
+	if (it != m_actionHandlers.end()) {
+		it->second(action);
+	} else {
+		LoggingController::warning("No handler registered for action: "
+			+ action.actionType());
 	}
 }

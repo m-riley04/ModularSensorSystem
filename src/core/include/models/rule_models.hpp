@@ -1,56 +1,25 @@
 #pragma once
 
-#include <string>
+#include <QStringLiteral>
 
 class RuleTrigger;
 class RuleAction;
 class Rule;
 
-enum class RuleTriggerType
-{
-	AutomationEventType,
-};
-
-enum class RuleActionType
-{
-	SessionStartRecording,
-	SessionStopRecording,
-	SessionStartProcessing,
-	SessionStopProcessing,
-};
-
-inline std::string toString(RuleTriggerType t)
-{
-	switch (t) {
-		case RuleTriggerType::AutomationEventType: return "automation.event";
-		default: return {};
-	}
+// Built-in event types and actions that can be used in rule triggers
+namespace AutomationEventStrings {
+	inline const QString PipelineStateChanged = QStringLiteral("pipeline.stateChanged");
+	inline const QString PipelineEos = QStringLiteral("pipeline.eos");
+	inline const QString PipelineError = QStringLiteral("pipeline.error");
+	inline const QString RecordingStarted = QStringLiteral("pipeline.recordingStarted");
+	inline const QString RecordingStopped = QStringLiteral("pipeline.recordingStopped");
 }
 
-inline bool tryParseRuleTriggerType(const std::string& s, RuleTriggerType& out)
-{
-	if (s == "automation.event") { out = RuleTriggerType::AutomationEventType; return true; }
-	return false;
-}
-
-inline std::string toString(RuleActionType t)
-{
-	switch (t) {
-		case RuleActionType::SessionStartRecording: return "session.startRecording";
-		case RuleActionType::SessionStopRecording: return "session.stopRecording";
-		case RuleActionType::SessionStartProcessing: return "session.startProcessing";
-		case RuleActionType::SessionStopProcessing: return "session.stopProcessing";
-		default: return {};
-	}
-}
-
-inline bool tryParseRuleActionType(const std::string& s, RuleActionType& out)
-{
-	if (s == "session.startRecording") { out = RuleActionType::SessionStartRecording; return true; }
-	if (s == "session.stopRecording") { out = RuleActionType::SessionStopRecording; return true; }
-	if (s == "session.startProcessing") { out = RuleActionType::SessionStartProcessing; return true; }
-	if (s == "session.stopProcessing") { out = RuleActionType::SessionStopProcessing; return true; }
-	return false;
+namespace AutomationActionStrings {
+	inline const QString SessionStartRecording = QStringLiteral("session.startRecording");
+	inline const QString SessionStopRecording = QStringLiteral("session.stopRecording");
+	inline const QString SessionStartProcessing = QStringLiteral("session.startProcessing");
+	inline const QString SessionStopProcessing = QStringLiteral("session.stopProcessing");
 }
 
 /**
@@ -60,25 +29,26 @@ class RuleTrigger
 {
 public:
 	RuleTrigger() = default;
-	RuleTrigger(int ruleId, RuleTriggerType triggerType, std::string condition)
+	RuleTrigger(int ruleId, QString eventType, QString condition)
 		: m_ruleId(ruleId)
-		, m_triggerType(triggerType)
+		, m_eventType(std::move(eventType))
 		, m_condition(std::move(condition))
 	{}
 
 	int ruleId() const { return m_ruleId; }
 	void setRuleId(int id) { m_ruleId = id; }
 
-	RuleTriggerType triggerType() const { return m_triggerType; }
-	void setTriggerType(RuleTriggerType t) { m_triggerType = t; }
+	/// The event type string to match against AutomationEvent::type
+	const QString& eventType() const { return m_eventType; }
+	void setEventType(QString t) { m_eventType = std::move(t); }
 
-	const std::string& condition() const { return m_condition; }
-	void setCondition(std::string c) { m_condition = std::move(c); }
+	const QString& condition() const { return m_condition; }
+	void setCondition(QString c) { m_condition = std::move(c); }
 
 private:
 	int m_ruleId = -1;
-	RuleTriggerType m_triggerType = RuleTriggerType::AutomationEventType;
-	std::string m_condition;
+	QString m_eventType;  // e.g. "pipeline.eos", "processor.detection", etc.
+	QString m_condition;
 };
 
 /**
@@ -88,25 +58,26 @@ class RuleAction
 {
 public:
 	RuleAction() = default;
-	RuleAction(int ruleId, RuleActionType actionType, std::string target)
+	RuleAction(int ruleId, QString actionType, QString target)
 		: m_ruleId(ruleId)
-		, m_actionType(actionType)
+		, m_actionType(std::move(actionType))
 		, m_target(std::move(target))
 	{}
 
 	int ruleId() const { return m_ruleId; }
 	void setRuleId(int id) { m_ruleId = id; }
 
-	RuleActionType actionType() const { return m_actionType; }
-	void setActionType(RuleActionType t) { m_actionType = t; }
+	/// A dot-namespaced action identifier, e.g. "session.startRecording"
+	const QString& actionType() const { return m_actionType; }
+	void setActionType(QString t) { m_actionType = std::move(t); }
 
-	const std::string& target() const { return m_target; }
-	void setTarget(std::string t) { m_target = std::move(t); }
+	const QString& target() const { return m_target; }
+	void setTarget(QString t) { m_target = std::move(t); }
 
 private:
 	int m_ruleId = -1;
-	RuleActionType m_actionType = RuleActionType::SessionStartRecording;
-	std::string m_target;
+	QString m_actionType;
+	QString m_target;
 };
 
 /**
@@ -116,7 +87,7 @@ class Rule
 {
 public:
 	Rule() = default;
-	Rule(int id, std::string description, bool isActive, RuleTrigger trigger, RuleAction action)
+	Rule(int id, QString description, bool isActive, RuleTrigger trigger, RuleAction action)
 		: m_id(id)
 		, m_description(std::move(description))
 		, m_isActive(isActive)
@@ -127,8 +98,8 @@ public:
 	int id() const { return m_id; }
 	void setId(int id) { m_id = id; }
 
-	const std::string& description() const { return m_description; }
-	void setDescription(std::string d) { m_description = std::move(d); }
+	const QString& description() const { return m_description; }
+	void setDescription(QString d) { m_description = std::move(d); }
 
 	bool isActive() const { return m_isActive; }
 	void setActive(bool a) { m_isActive = a; }
@@ -141,7 +112,7 @@ public:
 
 private:
 	int m_id = -1;
-	std::string m_description;
+	QString m_description;
 	bool m_isActive = true;
 	RuleTrigger m_trigger;
 	RuleAction m_action;
