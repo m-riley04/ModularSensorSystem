@@ -6,36 +6,45 @@
 
 class ElementsController;
 class SessionController;
-
-// NOTE: structured after Qt docs for item delegate: https://doc.qt.io/qt-6/qtwidgets-itemviews-stardelegate-example.html
+class GroupSelectWidget;
 
 class AutomationRuleItemWidget : public QWidget
 {
 	Q_OBJECT
 
+public:
+	AutomationRuleItemWidget(ElementsController& ec, SessionController& sc, QWidget* parent = nullptr);
+	~AutomationRuleItemWidget();
+
+	QSize sizeHint() const override;
+	void setRule(const Rule& rule);
+	Rule rule() const;
+
+	void setSelected(bool selected);
+	bool isSelected() const { return m_selected; }
+
+signals:
+	void editingFinished();
+	void clicked();
+
+protected:
+	void mousePressEvent(QMouseEvent* event) override;
+
 private:
+	void populateTargets();
+	void syncRuleFromWidgets();
+	void updateSelectionStyle();
+
 	Ui::AutomationRuleItemWidgetClass ui;
 	Rule m_rule;
 	ElementsController& m_elementsController;
 	SessionController& m_sessionController;
 	bool m_updatingUi = false;
+	bool m_selected = false;
 
-	void populateTargets();
-
-protected:
-	void mouseMoveEvent(QMouseEvent* event) override;
-	void mouseReleaseEvent(QMouseEvent* event) override;
-
-public:
-	AutomationRuleItemWidget(ElementsController& ec, SessionController& sc, QWidget *parent = nullptr);
-	~AutomationRuleItemWidget();
-
-	QSize sizeHint() const override;
-	void setRule(const Rule& rule);
-	Rule rule() const { return m_rule; }
-
-signals:
-	void editingFinished();
-
+	GroupSelectWidget* m_selectActions = nullptr;
+	GroupSelectWidget* m_selectActionTargets = nullptr;
+	GroupSelectWidget* m_selectEventSources = nullptr;
+	GroupSelectWidget* m_selectEventTypes = nullptr;
 };
 

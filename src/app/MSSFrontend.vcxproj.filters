@@ -88,9 +88,6 @@
     <ClCompile Include="widgets\AutomationRuleItemWidget\automationruleitemwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\AutomationRuleItemDelegate\automationruleitemdelegate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="models\AutomationRulesListModel\automationruleslistmodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -148,9 +145,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogs\AutomationDialog\automationdialog.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="widgets\AutomationRuleItemDelegate\automationruleitemdelegate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="widgets\AutomationRuleItemWidget\automationruleitemwidget.h">

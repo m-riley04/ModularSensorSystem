@@ -124,7 +124,6 @@
     <ClCompile Include="models\AutomationRulesListModel\automationruleslistmodel.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
     <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp" />
-    <ClCompile Include="widgets\AutomationRuleItemDelegate\automationruleitemdelegate.cpp" />
     <ClCompile Include="widgets\AutomationRuleItemWidget\automationruleitemwidget.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
     <ClCompile Include="widgets\DockedMountControls\dockedmountcontrols.cpp" />
@@ -212,7 +211,6 @@
   <ItemGroup>
     <ClInclude Include="controllers\AppActionController\action_containers.h" />
     <ClInclude Include="models\AutomationRulesListModel\automationruleslistmodel.h" />
-    <QtMoc Include="widgets\AutomationRuleItemDelegate\automationruleitemdelegate.h" />
     <QtMoc Include="widgets\AutomationRuleItemWidget\automationruleitemwidget.h" />
     <QtMoc Include="dialogs\AutomationDialog\automationdialog.h" />
     <QtMoc Include="widgets\DockedMountControls\dockedmountcontrols.h" />

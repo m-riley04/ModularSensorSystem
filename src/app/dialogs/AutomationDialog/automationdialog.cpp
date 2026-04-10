@@ -1,119 +1,124 @@
 #include "automationdialog.h"
-#include <app/models/AutomationRulesListModel/automationruleslistmodel.h>
-#include <widgets/AutomationRuleItemDelegate/automationruleitemdelegate.h>
 #include <widgets/AutomationRuleItemWidget/automationruleitemwidget.h>
-
 #include <widgets/widgets/GroupSelectWidget/groupselectwidget.h>
 
-void AutomationDialog::populateRuleList()
-{
-	if (!m_rulesModel) return;
+#include <QScrollArea>
+#include <QVBoxLayout>
 
-	// Keep existing widgets; rebuilding resets the model to controller state and can
-	// overwrite recent edits before they are reflected.
-
-	// Always-on editor widgets
-	for (int row = 0; row < m_rulesModel->rowCount(); ++row) {
-		QModelIndex idx = m_rulesModel->index(row, 0);
-		auto* existing = ui.listView->indexWidget(idx);
-		auto* w = qobject_cast<AutomationRuleItemWidget*>(existing);
-		if (!w) {
-			w = new AutomationRuleItemWidget(m_elementsController, m_sessionController, ui.listView);
-			ui.listView->setIndexWidget(idx, w);
-			connect(w, &AutomationRuleItemWidget::editingFinished, this, [this, row, w]() {
-			// Persist via model custom roles
-			if (auto* enabled = w->findChild<QCheckBox*>("checkboxToggleRule")) {
-				m_rulesModel->setData(m_rulesModel->index(row, 0), enabled->isChecked() ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole);
-			}
-			m_rulesModel->rebuild(); // Refresh the model's internal rule list
-			if (auto* actions = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectActions"))) {
-				const auto sel = actions->selectedValues();
-				const QString v = sel.isEmpty() ? QString() : sel.first().userData.toString();
-				// If it's not a known enum action (e.g. "mount.moveTo"), setData may reject it.
-				// In that case, persist it via EditRole (description) is wrong; instead, bypass model
-				// validation by storing the raw string in the model/controller if supported.
-				if (!m_rulesModel->setData(m_rulesModel->index(row, 0), v, AutomationRulesListModel::Roles::ActionTypeRole)) {
-					// Last resort: keep it in ActionTargetRole-like storage? No.
-					// If the backend doesn't support custom actions yet, do nothing.
-				}
-			}
-			if (auto* targets = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectActionTargets"))) {
-				const auto sel = targets->selectedValues();
-				QStringList vals;
-				vals.reserve(sel.size());
-				for (const auto& o : sel) {
-					const QString v = o.userData.toString();
-					vals.append(v == "(Session)" ? QString() : v);
-				}
-				// Preserve explicit Session selection as an empty-token marker so it round-trips.
-				const QString persisted = vals.isEmpty() ? QString() : vals.join(';');
-				m_rulesModel->setData(m_rulesModel->index(row, 0), persisted, AutomationRulesListModel::Roles::ActionTargetRole);
-			}
-			if (auto* sources = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectEventSources"))) {
-				const auto sel = sources->selectedValues();
-				QStringList vals;
-				vals.reserve(sel.size());
-				for (const auto& o : sel) {
-					const QString v = o.userData.toString();
-					vals.append(v == "(Session)" ? QString() : v);
-				}
-				const QString persisted = vals.isEmpty() ? QString() : vals.join(';');
-				m_rulesModel->setData(m_rulesModel->index(row, 0), persisted, AutomationRulesListModel::Roles::TriggerConditionRole);
-			}
-			if (auto* types = dynamic_cast<GroupSelectWidget*>(w->findChild<QWidget*>("selectEventTypes"))) {
-				const auto sel = types->selectedValues();
-				m_rulesModel->setData(m_rulesModel->index(row, 0), sel.isEmpty() ? QString() : sel.first().userData.toString(), AutomationRulesListModel::Roles::TriggerTypeRole);
-			}
-
-			// Pull latest rule state back from controller to keep UI/model in sync.
-			m_rulesModel->rebuild();
-			w->setRule(m_rulesModel->ruleAt(row));
-			});
-		}
-
-		// Refresh widget view from current model state
-		w->setRule(m_rulesModel->ruleAt(row));
-	}
-}
-
-void AutomationDialog::onAddRule()
-{
-	if (!m_rulesModel) return;
-
-	const int row = m_rulesModel->rowCount();
-	m_rulesModel->insertRow(row);
-	populateRuleList();
-}
-
-void AutomationDialog::onRemoveRule()
-{
-	if (!m_rulesModel) return;
-	// Remove last rule for now since we're not using selection in always-on widget mode.
-	const int row = m_rulesModel->rowCount() - 1;
-	if (row < 0) return;
-	m_rulesModel->removeRow(row);
-	populateRuleList();
-}
-
-AutomationDialog::AutomationDialog(RulesController& rc, ElementsController& ec, SessionController& sc, QWidget *parent)
+AutomationDialog::AutomationDialog(RulesController& rc, ElementsController& ec, SessionController& sc, QWidget* parent)
 	: QDialog(parent), m_rulesController(rc), m_elementsController(ec), m_sessionController(sc)
 {
 	ui.setupUi(this);
 
-	m_rulesModel = new AutomationRulesListModel(m_rulesController, this);
-	ui.listView->setModel(m_rulesModel);
-	ui.listView->setItemDelegate(new AutomationRuleItemDelegate(m_elementsController, m_sessionController, ui.listView));
-	ui.listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	ui.listView->setSelectionMode(QAbstractItemView::NoSelection);
+	// Replace the listView with a simple scroll area + vertical layout.
+	auto* scrollArea = new QScrollArea(this);
+	scrollArea->setWidgetResizable(true);
+
+	auto* container = new QWidget(scrollArea);
+	m_rulesLayout = new QVBoxLayout(container);
+	m_rulesLayout->setAlignment(Qt::AlignTop);
+	m_rulesLayout->setContentsMargins(4, 4, 4, 4);
+	m_rulesLayout->setSpacing(4);
+	scrollArea->setWidget(container);
+
+	// Swap the listView out of the parent layout
+	if (auto* parentLayout = ui.listView->parentWidget()->layout()) {
+		parentLayout->replaceWidget(ui.listView, scrollArea);
+	}
+	ui.listView->hide();
+	ui.listView->deleteLater();
 
 	connect(ui.actionButtonAdd, &QPushButton::clicked, this, &AutomationDialog::onAddRule);
 	connect(ui.actionButtonRemove, &QPushButton::clicked, this, &AutomationDialog::onRemoveRule);
 
-	populateRuleList();
-
-
+	rebuildRuleWidgets();
 }
 
 AutomationDialog::~AutomationDialog()
 {}
+
+void AutomationDialog::rebuildRuleWidgets()
+{
+	// Clear existing widgets
+	while (QLayoutItem* item = m_rulesLayout->takeAt(0)) {
+		if (item->widget()) item->widget()->deleteLater();
+		delete item;
+	}
+
+	const auto& rules = m_rulesController.rules();
+	for (int i = 0; i < static_cast<int>(rules.size()); ++i) {
+		auto* w = new AutomationRuleItemWidget(m_elementsController, m_sessionController);
+		w->setRule(rules[i]);
+		m_rulesLayout->addWidget(w);
+
+		connect(w, &AutomationRuleItemWidget::editingFinished, this, [this, i, w]() {
+			saveWidgetToController(i, w);
+		});
+
+		connect(w, &AutomationRuleItemWidget::clicked, this, [this, i]() {
+			selectRule(i);
+		});
+	}
+
+	// Absorb any remaining vertical space below the last rule widget
+	m_rulesLayout->addStretch(1);
+
+	// Keep previous selection if still in range, otherwise select last
+	if (!rules.empty()) {
+		selectRule(qBound(0, m_selectedIndex, static_cast<int>(rules.size()) - 1));
+	} else {
+		m_selectedIndex = -1;
+	}
+}
+
+void AutomationDialog::selectRule(int index)
+{
+	m_selectedIndex = index;
+
+	// Walk all rule widgets and update their visual state
+	for (int i = 0; i < m_rulesLayout->count(); ++i) {
+		auto* item = m_rulesLayout->itemAt(i);
+		if (!item || !item->widget()) continue;
+		auto* w = qobject_cast<AutomationRuleItemWidget*>(item->widget());
+		if (w) w->setSelected(i == m_selectedIndex);
+	}
+}
+
+void AutomationDialog::saveWidgetToController(int row, AutomationRuleItemWidget* w)
+{
+	if (row < 0 || row >= static_cast<int>(m_rulesController.rules().size())) return;
+
+	Rule r = w->rule();
+	m_rulesController.updateRule(row, r);
+}
+
+void AutomationDialog::onAddRule()
+{
+	RuleTrigger trig(-1, AutomationEventStrings::PipelineStateChanged, QString());
+	RuleAction act(-1, AutomationActionStrings::SessionStartRecording, QString());
+	Rule r(-1, QStringLiteral("New rule"), true, trig, act);
+	m_rulesController.addRule(r);
+
+	// Select the newly added rule
+	m_selectedIndex = static_cast<int>(m_rulesController.rules().size()) - 1;
+	rebuildRuleWidgets();
+}
+
+void AutomationDialog::onRemoveRule()
+{
+	const int count = static_cast<int>(m_rulesController.rules().size());
+	if (count == 0 || m_selectedIndex < 0 || m_selectedIndex >= count) return;
+
+	m_rulesController.removeRule(m_selectedIndex);
+
+	// Adjust selection: stay at same index or move up if we removed the last
+	const int newCount = static_cast<int>(m_rulesController.rules().size());
+	if (newCount == 0) {
+		m_selectedIndex = -1;
+	} else {
+		m_selectedIndex = qMin(m_selectedIndex, newCount - 1);
+	}
+
+	rebuildRuleWidgets();
+}
 
