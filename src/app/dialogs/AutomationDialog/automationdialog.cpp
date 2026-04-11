@@ -47,7 +47,7 @@ void AutomationDialog::rebuildRuleWidgets()
 
 	const auto& rules = m_rulesController.rules();
 	for (int i = 0; i < static_cast<int>(rules.size()); ++i) {
-		auto* w = new AutomationRuleItemWidget(m_elementsController, m_sessionController);
+		auto* w = new AutomationRuleItemWidget(m_rulesController, m_elementsController, m_sessionController);
 		w->setRule(rules[i]);
 		m_rulesLayout->addWidget(w);
 
@@ -94,8 +94,15 @@ void AutomationDialog::saveWidgetToController(int row, AutomationRuleItemWidget*
 
 void AutomationDialog::onAddRule()
 {
-	RuleTrigger trig(-1, AutomationEventStrings::PipelineStateChanged, QString());
-	RuleAction act(-1, AutomationActionStrings::SessionStartRecording, QString());
+	// Default to the first registered event/action type, if any
+	const auto& evTypes = m_rulesController.registeredEventTypes();
+	const auto& acTypes = m_rulesController.registeredActionTypes();
+
+	const QString defaultEvent  = evTypes.isEmpty() ? QString() : evTypes.first().id;
+	const QString defaultAction = acTypes.isEmpty() ? QString() : acTypes.first().id;
+
+	RuleTrigger trig(-1, defaultEvent, QString());
+	RuleAction act(-1, defaultAction, QString());
 	Rule r(-1, QStringLiteral("New rule"), true, trig, act);
 	m_rulesController.addRule(r);
 

@@ -8,11 +8,23 @@ class Rule;
 
 // Built-in event types and actions that can be used in rule triggers
 namespace AutomationEventStrings {
+	// Pipeline events
 	inline const QString PipelineStateChanged = QStringLiteral("pipeline.stateChanged");
 	inline const QString PipelineEos = QStringLiteral("pipeline.eos");
 	inline const QString PipelineError = QStringLiteral("pipeline.error");
 	inline const QString RecordingStarted = QStringLiteral("pipeline.recordingStarted");
 	inline const QString RecordingStopped = QStringLiteral("pipeline.recordingStopped");
+
+	// Processor / detection events
+	inline const QString ProcessorObjectDetected = QStringLiteral("processor.objectDetected");
+
+	// Session lifecycle events
+	inline const QString SessionStarted = QStringLiteral("session.started");
+	inline const QString SessionStopped = QStringLiteral("session.stopped");
+
+	// Processing lifecycle events
+	inline const QString ProcessingStarted = QStringLiteral("processor.processingStarted");
+	inline const QString ProcessingStopped = QStringLiteral("processor.processingStopped");
 }
 
 namespace AutomationActionStrings {
@@ -47,7 +59,7 @@ public:
 
 private:
 	int m_ruleId = -1;
-	QString m_eventType;  // e.g. "pipeline.eos", "processor.detection", etc.
+	QString m_eventType;  // e.g. "pipeline.eos", "processor.objectDetected", etc.
 	QString m_condition;
 };
 

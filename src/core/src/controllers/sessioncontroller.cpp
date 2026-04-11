@@ -53,8 +53,7 @@ SessionController::SessionController(SettingsController& settingsController, Ele
 	connect(&m_elementsController.processingController(), &ProcessingController::processorAdded,
 		this, [this](Processor* processor) {
 			if (!processor) return;
-			connect(processor, &Processor::automationEvent,
-				this, &SessionController::automationEvent, Qt::QueuedConnection);
+			connectProcessor(processor);
 	});
 }
 
@@ -89,9 +88,14 @@ void SessionController::startSession()
 	// Forward processor events into controller-level automation bus
 	for (Processor* processor : m_elementsController.processingController().processors()) {
 		if (!processor) continue;
-		connect(processor, &Processor::automationEvent,
-			this, &SessionController::automationEvent, Qt::QueuedConnection);
+		connectProcessor(processor);
 	}
+
+	// Emit session-started automation event
+	AutomationEvent ev;
+	ev.type = AutomationEventStrings::SessionStarted;
+	ev.timestamp = m_lastSessionTimestamp;
+	emit automationEvent(ev);
 }
 
 void SessionController::stopSession()
@@ -100,6 +104,12 @@ void SessionController::stopSession()
 	if (!m_pipeline.close()) {
 		LoggingController::critical("Failed to stop session.");
 	}
+
+	// Emit session-stopped automation event
+	AutomationEvent ev;
+	ev.type = AutomationEventStrings::SessionStopped;
+	ev.timestamp = m_lastSessionTimestamp;
+	emit automationEvent(ev);
 }
 
 void SessionController::startRecording()
@@ -118,12 +128,24 @@ void SessionController::startProcessing()
 {
 	LoggingController::info("Starting processing...");
 	m_pipeline.startProcessing();
+
+	// Emit processing-started automation event
+	AutomationEvent ev;
+	ev.type = AutomationEventStrings::ProcessingStarted;
+	ev.timestamp = m_lastSessionTimestamp;
+	emit automationEvent(ev);
 }
 
 void SessionController::stopProcessing()
 {
 	LoggingController::info("Stopping processing...");
 	m_pipeline.stopProcessing();
+
+	// Emit processing-stopped automation event
+	AutomationEvent ev;
+	ev.type = AutomationEventStrings::ProcessingStopped;
+	ev.timestamp = m_lastSessionTimestamp;
+	emit automationEvent(ev);
 }
 
 void SessionController::clearRecordings()
@@ -136,4 +158,44 @@ void SessionController::clearRecordings()
 		, QDir::Dirs)) {
 		LoggingController::critical("Failed to clear recordings.");
 	}
+}
+
+void SessionController::connectProcessor(Processor* processor)
+{
+	// Forward raw automation events from the processor
+	connect(processor, &Processor::automationEvent,
+		this, &SessionController::automationEvent, Qt::QueuedConnection);
+
+	// Bridge objectsDetected into the automation event bus
+	connect(processor, &Processor::objectsDetected,
+		this, [this, processor](const std::vector<DetectionInfo>& detections) {
+			if (detections.empty()) return;
+
+			AutomationEvent ev;
+			ev.type = AutomationEventStrings::ProcessorObjectDetected;
+			ev.elementId = boostUuidToQUuid(processor->uuid());
+			ev.timestamp = m_lastSessionTimestamp;
+
+			// Summary
+			ev.payload.insert("count", static_cast<int>(detections.size()));
+
+			// Top-confidence detection details
+			const auto& top = detections.front();
+			ev.payload.insert("label", QString::fromUtf8(top.label, static_cast<qsizetype>(top.labelLength)));
+			ev.payload.insert("confidence", static_cast<double>(top.confidence));
+			ev.payload.insert("x", top.x);
+			ev.payload.insert("y", top.y);
+			ev.payload.insert("width", top.width);
+			ev.payload.insert("height", top.height);
+
+			// All detected labels for condition matching
+			QVariantList labels;
+			labels.reserve(static_cast<qsizetype>(detections.size()));
+			for (const auto& d : detections) {
+				labels.append(QString::fromUtf8(d.label, static_cast<qsizetype>(d.labelLength)));
+			}
+			ev.payload.insert("labels", labels);
+
+			emit automationEvent(ev);
+	}, Qt::QueuedConnection);
 }

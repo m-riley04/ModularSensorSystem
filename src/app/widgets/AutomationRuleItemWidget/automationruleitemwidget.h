@@ -6,6 +6,7 @@
 
 class ElementsController;
 class SessionController;
+class RulesController;
 class GroupSelectWidget;
 
 class AutomationRuleItemWidget : public QWidget
@@ -13,7 +14,7 @@ class AutomationRuleItemWidget : public QWidget
 	Q_OBJECT
 
 public:
-	AutomationRuleItemWidget(ElementsController& ec, SessionController& sc, QWidget* parent = nullptr);
+	AutomationRuleItemWidget(RulesController& rc, ElementsController& ec, SessionController& sc, QWidget* parent = nullptr);
 	~AutomationRuleItemWidget();
 
 	QSize sizeHint() const override;
@@ -37,6 +38,7 @@ private:
 
 	Ui::AutomationRuleItemWidgetClass ui;
 	Rule m_rule;
+	RulesController& m_rulesController;
 	ElementsController& m_elementsController;
 	SessionController& m_sessionController;
 	bool m_updatingUi = false;

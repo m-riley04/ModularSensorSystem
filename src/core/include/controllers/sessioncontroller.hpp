@@ -46,6 +46,9 @@ private:
 	SessionPipeline m_pipeline;
 	ns m_lastSessionTimestamp = 0;
 
+	/// Connects a processor's signals (automationEvent + objectsDetected) to this controller
+	void connectProcessor(Processor* processor);
+
 signals:
 	void sessionStarted();
 	void sessionStopped();

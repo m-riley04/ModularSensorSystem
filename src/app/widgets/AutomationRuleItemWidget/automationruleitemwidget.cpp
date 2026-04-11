@@ -1,19 +1,21 @@
 #include "automationruleitemwidget.h"
 #include <models/rule_models.hpp>
+#include <controllers/rulescontroller.hpp>
 #include <controllers/elementscontroller.hpp>
 #include <controllers/sessioncontroller.hpp>
 #include <features/element.hpp>
 #include <widgets/widgets/GroupSelectWidget/groupselectwidget.h>
 #include <qevent.h>
 
-AutomationRuleItemWidget::AutomationRuleItemWidget(ElementsController& ec, SessionController& sc, QWidget* parent)
+AutomationRuleItemWidget::AutomationRuleItemWidget(RulesController& rc, ElementsController& ec, SessionController& sc, QWidget* parent)
 	: QWidget(parent)
+	, m_rulesController(rc)
 	, m_elementsController(ec)
 	, m_sessionController(sc)
 {
 	ui.setupUi(this);
 
-	// The stacked widget is unused — hide it so it doesn't affect layout
+	// The stacked widget is unused – hide it so it doesn't affect layout
 	ui.stackCondition->hide();
 
 	// Prevent vertical stretching: lock to a fixed height
@@ -192,30 +194,29 @@ void AutomationRuleItemWidget::populateTargets()
 		m_selectEventSources->setSelectedValues(prev);
 	}
 
+	// Event types — driven by RulesController registry
 	if (m_selectEventTypes) {
 		QSignalBlocker b(m_selectEventTypes);
 		const auto& prev = m_selectEventTypes->selectedValues();
 		m_selectEventTypes->clear();
 		m_selectEventTypes->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
-		m_selectEventTypes->addItem("Pipeline state changed", AutomationEventStrings::PipelineStateChanged);
-		m_selectEventTypes->addItem("Pipeline EOS",            AutomationEventStrings::PipelineEos);
-		m_selectEventTypes->addItem("Pipeline error",          AutomationEventStrings::PipelineError);
-		m_selectEventTypes->addItem("Recording started",       AutomationEventStrings::RecordingStarted);
-		m_selectEventTypes->addItem("Recording stopped",       AutomationEventStrings::RecordingStopped);
+
+		for (const auto& info : m_rulesController.registeredEventTypes()) {
+			m_selectEventTypes->addItem(info.displayName, info.id);
+		}
 		m_selectEventTypes->setSelectedValues(prev);
 	}
 
+	// Action types — driven by RulesController registry
 	if (m_selectActions) {
 		QSignalBlocker b(m_selectActions);
 		const auto& prev = m_selectActions->selectedValues();
 		m_selectActions->clear();
 		m_selectActions->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
-		m_selectActions->addItem("Start recording",        AutomationActionStrings::SessionStartRecording);
-		m_selectActions->addItem("Stop recording",         AutomationActionStrings::SessionStopRecording);
-		m_selectActions->addItem("Start processing",       AutomationActionStrings::SessionStartProcessing);
-		m_selectActions->addItem("Stop processing",        AutomationActionStrings::SessionStopProcessing);
-		m_selectActions->addItem("Move to\u2026",          QStringLiteral("mount.moveTo"));
-		m_selectActions->addItem("Follow detected object", QStringLiteral("mount.followObject"));
+
+		for (const auto& info : m_rulesController.registeredActionTypes()) {
+			m_selectActions->addItem(info.displayName, info.id);
+		}
 		m_selectActions->setSelectedValues(prev);
 	}
 }
