@@ -1,58 +1,10 @@
 #include "automationruleitemwidget.h"
-
 #include <models/rule_models.hpp>
-
 #include <controllers/elementscontroller.hpp>
 #include <controllers/sessioncontroller.hpp>
 #include <features/element.hpp>
-
 #include <widgets/widgets/GroupSelectWidget/groupselectwidget.h>
-
-#include <QMouseEvent>
-
-static GroupSelectWidget* replacePlaceholderWithGroupSelect(Ui::AutomationRuleItemWidgetClass& ui, QWidget* parent, const char* objectName)
-{
-	auto* placeholder = parent->findChild<QWidget*>(objectName);
-	if (!placeholder) return nullptr;
-	if (auto* existing = dynamic_cast<GroupSelectWidget*>(placeholder)) return existing;
-
-	const QString placeholderName = placeholder->objectName();
-
-	auto* gs = new GroupSelectWidget(parent);
-	gs->setObjectName(placeholderName);
-	gs->setSizePolicy(placeholder->sizePolicy());
-	gs->setMinimumSize(placeholder->minimumSize());
-	gs->setMaximumSize(placeholder->maximumSize());
-
-	if (placeholder == ui.selectEventSources) {
-		ui.layoutEvent->replaceWidget(ui.selectEventSources, gs);
-		ui.selectEventSources->hide();
-		ui.selectEventSources = gs;
-	}
-	else if (placeholder == ui.selectEventTypes) {
-		ui.layoutEvent->replaceWidget(ui.selectEventTypes, gs);
-		ui.selectEventTypes->hide();
-		ui.selectEventTypes = gs;
-	}
-	else if (placeholder == ui.selectActionTargets) {
-		ui.layoutAction->replaceWidget(ui.selectActionTargets, gs);
-		ui.selectActionTargets->hide();
-		ui.selectActionTargets = gs;
-	}
-	else if (placeholder == ui.selectActions) {
-		ui.layoutAction->replaceWidget(ui.selectActions, gs);
-		ui.selectActions->hide();
-		ui.selectActions = gs;
-	}
-	else {
-		delete gs;
-		return nullptr;
-	}
-
-	gs->show();
-	placeholder->deleteLater();
-	return gs;
-}
+#include <qevent.h>
 
 AutomationRuleItemWidget::AutomationRuleItemWidget(ElementsController& ec, SessionController& sc, QWidget* parent)
 	: QWidget(parent)
@@ -68,11 +20,11 @@ AutomationRuleItemWidget::AutomationRuleItemWidget(ElementsController& ec, Sessi
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 	setMaximumHeight(60);
 
-	// Replace .ui placeholders with real GroupSelectWidgets
-	m_selectEventSources = replacePlaceholderWithGroupSelect(ui, this, "selectEventSources");
-	m_selectEventTypes   = replacePlaceholderWithGroupSelect(ui, this, "selectEventTypes");
-	m_selectActionTargets = replacePlaceholderWithGroupSelect(ui, this, "selectActionTargets");
-	m_selectActions      = replacePlaceholderWithGroupSelect(ui, this, "selectActions");
+	// TODO: do we really need this?
+	m_selectEventSources = ui.selectEventSources;
+	m_selectEventTypes = ui.selectEventTypes;
+	m_selectActionTargets = ui.selectActionTargets;
+	m_selectActions      = ui.selectActions;
 
 	populateTargets();
 
@@ -183,11 +135,11 @@ void AutomationRuleItemWidget::syncRuleFromWidgets()
 	m_rule.setActive(ui.checkboxToggleRule->isChecked());
 
 	if (m_selectActions) {
-		const auto sel = m_selectActions->selectedValues();
+		const auto& sel = m_selectActions->selectedValues();
 		m_rule.action().setActionType(sel.isEmpty() ? QString() : sel.first().userData.toString());
 	}
 	if (m_selectActionTargets) {
-		const auto sel = m_selectActionTargets->selectedValues();
+		const auto& sel = m_selectActionTargets->selectedValues();
 		QStringList vals;
 		vals.reserve(sel.size());
 		for (const auto& o : sel) {
@@ -197,7 +149,7 @@ void AutomationRuleItemWidget::syncRuleFromWidgets()
 		m_rule.action().setTarget(vals.join(';'));
 	}
 	if (m_selectEventSources) {
-		const auto sel = m_selectEventSources->selectedValues();
+		const auto& sel = m_selectEventSources->selectedValues();
 		QStringList vals;
 		vals.reserve(sel.size());
 		for (const auto& o : sel) {
@@ -207,7 +159,7 @@ void AutomationRuleItemWidget::syncRuleFromWidgets()
 		m_rule.trigger().setCondition(vals.join(';'));
 	}
 	if (m_selectEventTypes) {
-		const auto sel = m_selectEventTypes->selectedValues();
+		const auto& sel = m_selectEventTypes->selectedValues();
 		m_rule.trigger().setEventType(sel.isEmpty() ? QString() : sel.first().userData.toString());
 	}
 }
@@ -216,7 +168,7 @@ void AutomationRuleItemWidget::populateTargets()
 {
 	if (m_selectActionTargets) {
 		QSignalBlocker b(m_selectActionTargets);
-		auto prev = m_selectActionTargets->selectedValues();
+		const auto& prev = m_selectActionTargets->selectedValues();
 		m_selectActionTargets->clear();
 		m_selectActionTargets->setSelectionMode(GroupSelectWidget::SelectionMode::Multi);
 		m_selectActionTargets->addItem("(Session)", QString("(Session)"));
@@ -229,7 +181,7 @@ void AutomationRuleItemWidget::populateTargets()
 
 	if (m_selectEventSources) {
 		QSignalBlocker b(m_selectEventSources);
-		auto prev = m_selectEventSources->selectedValues();
+		const auto& prev = m_selectEventSources->selectedValues();
 		m_selectEventSources->clear();
 		m_selectEventSources->setSelectionMode(GroupSelectWidget::SelectionMode::Multi);
 		m_selectEventSources->addItem("(Session)", QString("(Session)"));
@@ -242,7 +194,7 @@ void AutomationRuleItemWidget::populateTargets()
 
 	if (m_selectEventTypes) {
 		QSignalBlocker b(m_selectEventTypes);
-		auto prev = m_selectEventTypes->selectedValues();
+		const auto& prev = m_selectEventTypes->selectedValues();
 		m_selectEventTypes->clear();
 		m_selectEventTypes->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
 		m_selectEventTypes->addItem("Pipeline state changed", AutomationEventStrings::PipelineStateChanged);
@@ -255,7 +207,7 @@ void AutomationRuleItemWidget::populateTargets()
 
 	if (m_selectActions) {
 		QSignalBlocker b(m_selectActions);
-		auto prev = m_selectActions->selectedValues();
+		const auto& prev = m_selectActions->selectedValues();
 		m_selectActions->clear();
 		m_selectActions->setSelectionMode(GroupSelectWidget::SelectionMode::Single);
 		m_selectActions->addItem("Start recording",        AutomationActionStrings::SessionStartRecording);

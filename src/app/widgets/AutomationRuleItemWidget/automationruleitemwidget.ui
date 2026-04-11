@@ -26,6 +26,49 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
+   <item row="0" column="0">
+    <widget class="QCheckBox" name="checkboxToggleRule">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QStackedWidget" name="stackCondition">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="page"/>
+     <widget class="QWidget" name="page_2"/>
+    </widget>
+   </item>
+   <item row="0" column="8">
+    <layout class="QHBoxLayout" name="layoutAction">
+     <property name="leftMargin">
+      <number>5</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Action Target(s)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="GroupSelectWidget" name="selectActionTargets"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Action</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="GroupSelectWidget" name="selectActions"/>
+     </item>
+    </layout>
+   </item>
    <item row="0" column="1">
     <layout class="QHBoxLayout" name="layoutEvent">
      <property name="leftMargin">
@@ -39,7 +82,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QWidget" name="selectEventSources" native="true"/>
+      <widget class="GroupSelectWidget" name="selectEventSources"/>
      </item>
      <item>
       <widget class="QLabel" name="label">
@@ -49,53 +92,20 @@
       </widget>
      </item>
      <item>
-      <widget class="QWidget" name="selectEventTypes" native="true"/>
+      <widget class="GroupSelectWidget" name="selectEventTypes"/>
      </item>
     </layout>
-   </item>
-   <item row="0" column="9">
-    <layout class="QHBoxLayout" name="layoutAction">
-     <property name="leftMargin">
-      <number>5</number>
-     </property>
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Action Target(s)</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QWidget" name="selectActionTargets" native="true"/>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Action</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QWidget" name="selectActions" native="true"/>
-     </item>
-    </layout>
-   </item>
-   <item row="0" column="8">
-    <widget class="QStackedWidget" name="stackCondition">
-     <widget class="QWidget" name="page"/>
-     <widget class="QWidget" name="page_2"/>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QCheckBox" name="checkboxToggleRule">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>GroupSelectWidget</class>
+   <extends>QWidget</extends>
+   <header>groupselectwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
