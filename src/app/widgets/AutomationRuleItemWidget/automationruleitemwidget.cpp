@@ -7,6 +7,9 @@
 #include <widgets/widgets/GroupSelectWidget/groupselectwidget.h>
 #include <qevent.h>
 
+// TODO/CONSIDER: are definitions the right way to go about this? maybe use a style sheet instead?
+#define AUTOMATION_RULE_ITEM_HEIGHT 60
+
 AutomationRuleItemWidget::AutomationRuleItemWidget(RulesController& rc, ElementsController& ec, SessionController& sc, QWidget* parent)
 	: QWidget(parent)
 	, m_rulesController(rc)
@@ -15,12 +18,12 @@ AutomationRuleItemWidget::AutomationRuleItemWidget(RulesController& rc, Elements
 {
 	ui.setupUi(this);
 
-	// The stacked widget is unused – hide it so it doesn't affect layout
+	// The stacked widget is unused. Hide it so it doesn't affect layout
 	ui.stackCondition->hide();
 
 	// Prevent vertical stretching: lock to a fixed height
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-	setMaximumHeight(60);
+	setMaximumHeight(AUTOMATION_RULE_ITEM_HEIGHT);
 
 	// TODO: do we really need this?
 	m_selectEventSources = ui.selectEventSources;

@@ -117,7 +117,10 @@ void RulesController::executeRuleAction(const RuleAction& action)
 {
 	auto it = m_actionHandlers.find(action.actionType());
 	if (it != m_actionHandlers.end()) {
-		LoggingController::info(tr("Executing rule action (ruleId = %1, type = %2, target = %3)").arg(action.ruleId()).arg(action.actionType()).arg(action.target()));
+		LoggingController::info(tr("Executing rule action (ruleId = %1, type = %2, target = %3)")
+			.arg(action.ruleId())
+			.arg(action.actionType())
+			.arg(action.target()));
 		it->second(action);
 	} else {
 		LoggingController::warning("No handler registered for action: "
