@@ -57,4 +57,8 @@ private:
 
 	void onAutomationEvent(const AutomationEvent& event);
 	void executeRuleAction(const RuleAction& action);
+
+	// built-in registers
+	void registerBuiltInEventTypes();
+	void registerBuiltInActions();
 };

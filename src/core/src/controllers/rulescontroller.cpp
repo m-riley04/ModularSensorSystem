@@ -3,6 +3,38 @@
 
 #include <models/rule_models.hpp>
 
+void RulesController::registerBuiltInEventTypes() {
+	registerEventType(AutomationEventStrings::PipelineStateChanged, tr("Pipeline state changed"));
+	registerEventType(AutomationEventStrings::PipelineEos, tr("Pipeline EOS"));
+	registerEventType(AutomationEventStrings::PipelineError, tr("Pipeline error"));
+	registerEventType(AutomationEventStrings::RecordingStarted, tr("Recording started"));
+	registerEventType(AutomationEventStrings::RecordingStopped, tr("Recording stopped"));
+	registerEventType(AutomationEventStrings::ProcessorObjectDetected, tr("Object detected"));
+	registerEventType(AutomationEventStrings::SessionStarted, tr("Session started"));
+	registerEventType(AutomationEventStrings::SessionStopped, tr("Session stopped"));
+	registerEventType(AutomationEventStrings::ProcessingStarted, tr("Processing started"));
+	registerEventType(AutomationEventStrings::ProcessingStopped, tr("Processing stopped"));
+}
+
+void RulesController::registerBuiltInActions() {
+	registerAction(AutomationActionStrings::SessionStartRecording,
+		tr("Start recording"), [&](const RuleAction&) {
+			m_sessionController.startRecording();
+		});
+	registerAction(AutomationActionStrings::SessionStopRecording,
+		tr("Stop recording"), [&](const RuleAction&) {
+			m_sessionController.stopRecording();
+		});
+	registerAction(AutomationActionStrings::SessionStartProcessing,
+		tr("Start processing"), [&](const RuleAction&) {
+			m_sessionController.startProcessing();
+		});
+	registerAction(AutomationActionStrings::SessionStopProcessing,
+		tr("Stop processing"), [&](const RuleAction&) {
+			m_sessionController.stopProcessing();
+		});
+}
+
 RulesController::RulesController(SessionController& sc, ElementsController& ec, QObject* parent)
 	: QObject(parent)
 	, m_elementsController(ec)
@@ -11,35 +43,10 @@ RulesController::RulesController(SessionController& sc, ElementsController& ec, 
 	connect(&m_sessionController, &SessionController::automationEvent,
 		this, &RulesController::onAutomationEvent, Qt::QueuedConnection);
 
-	// ── Built-in event types ───────────────────────────────────────────
-	registerEventType(AutomationEventStrings::PipelineStateChanged, tr("Pipeline state changed"));
-	registerEventType(AutomationEventStrings::PipelineEos,          tr("Pipeline EOS"));
-	registerEventType(AutomationEventStrings::PipelineError,        tr("Pipeline error"));
-	registerEventType(AutomationEventStrings::RecordingStarted,     tr("Recording started"));
-	registerEventType(AutomationEventStrings::RecordingStopped,     tr("Recording stopped"));
-	registerEventType(AutomationEventStrings::ProcessorObjectDetected, tr("Object detected"));
-	registerEventType(AutomationEventStrings::SessionStarted,       tr("Session started"));
-	registerEventType(AutomationEventStrings::SessionStopped,       tr("Session stopped"));
-	registerEventType(AutomationEventStrings::ProcessingStarted,    tr("Processing started"));
-	registerEventType(AutomationEventStrings::ProcessingStopped,    tr("Processing stopped"));
-
-	// ── Built-in actions ───────────────────────────────────────────────
-	registerAction(AutomationActionStrings::SessionStartRecording,
-		tr("Start recording"), [&](const RuleAction&) {
-		m_sessionController.startRecording();
-	});
-	registerAction(AutomationActionStrings::SessionStopRecording,
-		tr("Stop recording"), [&](const RuleAction&) {
-		m_sessionController.stopRecording();
-	});
-	registerAction(AutomationActionStrings::SessionStartProcessing,
-		tr("Start processing"), [&](const RuleAction&) {
-		m_sessionController.startProcessing();
-	});
-	registerAction(AutomationActionStrings::SessionStopProcessing,
-		tr("Stop processing"), [&](const RuleAction&) {
-		m_sessionController.stopProcessing();
-	});
+	// Register built-in event types and actions so they appear in the UI and have handlers
+	registerBuiltInEventTypes();
+	registerBuiltInActions();
+	
 }
 
 RulesController::~RulesController()
