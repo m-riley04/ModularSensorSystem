@@ -4,6 +4,7 @@
 #include <models/rule_models.hpp>
 
 void RulesController::registerBuiltInEventTypes() {
+	LoggingController::info("Registering built-in event types");
 	registerEventType(AutomationEventStrings::PipelineStateChanged, tr("Pipeline state changed"));
 	registerEventType(AutomationEventStrings::PipelineEos, tr("Pipeline EOS"));
 	registerEventType(AutomationEventStrings::PipelineError, tr("Pipeline error"));
@@ -17,6 +18,7 @@ void RulesController::registerBuiltInEventTypes() {
 }
 
 void RulesController::registerBuiltInActions() {
+	LoggingController::info("Registering built-in rule action handlers");
 	registerAction(AutomationActionStrings::SessionStartRecording,
 		tr("Start recording"), [&](const RuleAction&) {
 			m_sessionController.startRecording();
@@ -61,6 +63,7 @@ void RulesController::onAutomationEvent(const AutomationEvent& event)
 		if (rule.trigger().eventType() != event.type) continue;
 
 		// TODO: evaluate rule.trigger().condition() against event.payload
+		LoggingController::info(tr("Rule triggered: %1").arg(rule.description()));
 		executeRuleAction(rule.action());
 	}
 }
@@ -114,6 +117,7 @@ void RulesController::executeRuleAction(const RuleAction& action)
 {
 	auto it = m_actionHandlers.find(action.actionType());
 	if (it != m_actionHandlers.end()) {
+		LoggingController::info(tr("Executing rule action (ruleId = %1, type = %2, target = %3)").arg(action.ruleId()).arg(action.actionType()).arg(action.target()));
 		it->second(action);
 	} else {
 		LoggingController::warning("No handler registered for action: "
