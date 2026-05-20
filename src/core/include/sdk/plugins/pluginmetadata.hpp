@@ -1,5 +1,7 @@
 #pragma once
 
+#include <features/ielement.hpp>
+
 /**
  * @brief Represents discovered plugin metadata (no instantiation required).
  */

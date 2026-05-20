@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35327.3
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11806.211 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{227DF51C-4F8C-4C96-AC7E-39617C0AEF82}"
 	ProjectSection(SolutionItems) = preProject
@@ -37,6 +37,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSFrontendWidgetsPlugin", "src\MSSFrontendWidgetsPlugin\MSSFrontendWidgetsPlugin.vcxproj", "{4F612BCD-C992-4099-BE7B-B6A8D7B6986F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArduinoPanTiltMountPlugin", "src\plugins\mounts\ArduinoPanTiltMountPlugin\ArduinoPanTiltMountPlugin.vcxproj", "{962A658E-0719-4970-8B68-9CE8C63B4626}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSSCoreTests", "src\tests\MSSCoreTests\MSSCoreTests.vcxproj", "{C8A7108F-F097-45F8-B84B-D6E8AA0B89E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,6 +90,10 @@ Global
 		{962A658E-0719-4970-8B68-9CE8C63B4626}.Debug|x64.Build.0 = Debug|x64
 		{962A658E-0719-4970-8B68-9CE8C63B4626}.Release|x64.ActiveCfg = Release|x64
 		{962A658E-0719-4970-8B68-9CE8C63B4626}.Release|x64.Build.0 = Release|x64
+		{C8A7108F-F097-45F8-B84B-D6E8AA0B89E7}.Debug|x64.ActiveCfg = Debug|x64
+		{C8A7108F-F097-45F8-B84B-D6E8AA0B89E7}.Debug|x64.Build.0 = Debug|x64
+		{C8A7108F-F097-45F8-B84B-D6E8AA0B89E7}.Release|x64.ActiveCfg = Release|x64
+		{C8A7108F-F097-45F8-B84B-D6E8AA0B89E7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
