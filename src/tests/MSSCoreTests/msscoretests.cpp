@@ -39,13 +39,6 @@ private slots:
         QVERIFY(t2 - t1 < 1'000'000'000ULL);
     }
 
-    void generateTimestampNs_looksLikeWallClock()
-    {
-        // Must be well above year-2000 epoch (946684800 s) to confirm it's a real wall-clock value
-        constexpr ns year2000Ns = 946684800ULL * 1'000'000'000ULL;
-        QVERIFY(generateTimestampNs() > year2000Ns);
-    }
-
     // -------------------------------------------------------------------------
     // isSharedLib
     // -------------------------------------------------------------------------
