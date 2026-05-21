@@ -23,7 +23,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="msscoretests.cpp">
+    <QtMoc Include="main.cpp">
       <Filter>Source Files</Filter>
     </QtMoc>
   </ItemGroup>

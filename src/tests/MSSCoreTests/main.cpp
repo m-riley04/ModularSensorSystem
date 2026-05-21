@@ -9,7 +9,7 @@
 // add GStreamerProps.props to this project and re-enable those tests when ready.
 #include "../../core/src/utils/utils.cpp"
 
-class MSSCoreTests : public QObject
+class UtilsTests : public QObject
 {
     Q_OBJECT
 
@@ -152,5 +152,14 @@ private slots:
     }
 };
 
-QTEST_MAIN(MSSCoreTests)
-#include "msscoretests.moc"
+#include "main.moc"
+
+int main(int argc, char* argv[])
+{
+    int status = 0;
+    status |= QTest::qExec(new UtilsTests, argc, argv);
+    // status |= QTest::qExec(new TestObject, argc, argv);
+    // status |= QTest::qExec(new ..., argc, argv);
+
+    return status;
+}
