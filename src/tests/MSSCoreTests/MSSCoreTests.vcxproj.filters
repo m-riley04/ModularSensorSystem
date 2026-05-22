@@ -23,8 +23,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="main.cpp">
+    <ClCompile Include="testsuite.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utiltests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="controllerstests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="utiltests.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="testsuite.hpp">
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

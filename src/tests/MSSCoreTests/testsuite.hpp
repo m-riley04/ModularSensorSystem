@@ -24,27 +24,18 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-#include <QtTest>
-#include "testsuite.hpp"
-#include "utiltests.hpp"
+#pragma once
+
+#include <QObject>
+#include <vector>
 
 /**
- * ***REQUIRED*** for Qt tests to appear in Visual Studio's test explorer.
+ * @brief Represents a test suite for Qt tests to be compatible with Visual Studio's testing system
  */
-static UtilTests TEST_UTILS;
-
-int main(int argc, char* argv[])
+class TestSuite : public QObject
 {
-    int status = 0;
-    auto runTest = [&status, argc, argv](QObject* obj) {
-        status |= QTest::qExec(obj, argc, argv);
-        };
-
-    // run suite
-    auto& suite = TestSuite::suite();
-    for (auto it = suite.begin(); it != suite.end(); ++it) {
-        runTest(*it);
-    }
-
-    return status;
-}
+    Q_OBJECT
+public:
+    TestSuite();
+    static std::vector<QObject*>& suite();
+};
