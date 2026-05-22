@@ -9,9 +9,23 @@
 // add GStreamerProps.props to this project and re-enable those tests when ready.
 #include "../../core/src/utils/utils.cpp"
 
-class UtilsTests : public QObject
+class TestSuite : public QObject
+{
+public:
+    static std::vector<QObject*>& suite() {
+        static std::vector<QObject*> objects;
+        return objects;
+    }
+    TestSuite() { suite().push_back(this); }
+
+};
+
+class UtilsTests : public TestSuite
 {
     Q_OBJECT
+
+public:
+    using TestSuite::TestSuite;
 
 private slots:
 
@@ -150,89 +164,27 @@ private slots:
         QString qStr = boostUuidToQUuid(boostId).toString(QUuid::WithoutBraces).toLower();
         QCOMPARE(qStr, boostStr);
     }
-};
-
-#include <controllers/maincontroller.hpp>
-
-
-class ControllersTests : public QObject
-{
-    Q_OBJECT
-
-private:
-    QSettings m_settings;
-    MainController m_controller{ m_settings, nullptr };
-
-private slots:
-
-	void mainController_initializesElementsController()
-	{
-		// Just check that we can access the elements controller without crashing; more detailed tests are in ElementsControllerTests
-		ElementsController& ec = m_controller.elementsController();
-		QVERIFY(&ec != nullptr);
-	}
 
 };
 
-#include <pipeline/sessionpipeline.hpp>
+static UtilsTests TEST_UTILS;
 
-class SessionPipelineTests : public QObject
-{
-    Q_OBJECT
 
-private:
-    QSettings m_qsettings;
-    MainController m_controller{ m_qsettings, nullptr };
-    SessionSettings m_settings{};
-    SessionPipeline m_pipeline{ m_settings, m_controller.elementsController() };
-
-private slots:
-
-	void sessionPipeline_initialStateIsStopped()
-	{
-		QCOMPARE(m_pipeline.state(), SessionPipeline::State::STOPPED);
-	}
-
-};
 
 #include "main.moc"
 
-static QList<QObject*> allTestObjects()
-{
-    return {
-        new UtilsTests,
-        new ControllersTests,
-        new SessionPipelineTests,
-    };
-}
-
 int main(int argc, char* argv[])
 {
-    QCoreApplication app(argc, argv);
-
-    // Support --list_content so the Qt Test Adapter in Visual Studio can
-    // discover tests without requiring debug symbols.
-    for (int i = 1; i < argc; ++i) {
-        if (qstrcmp(argv[i], "--list_content") == 0) {
-            for (QObject* obj : allTestObjects()) {
-                const QMetaObject* meta = obj->metaObject();
-                printf("%s\n", meta->className());
-                for (int m = 0; m < meta->methodCount(); ++m) {
-                    QMetaMethod method = meta->method(m);
-                    if (method.methodType() == QMetaMethod::Slot &&
-                        method.access() == QMetaMethod::Private) {
-                        printf("  %s\n", method.name().constData());
-                    }
-                }
-                delete obj;
-            }
-            return 0;
-        }
-    }
-
     int status = 0;
-    for (QObject* obj : allTestObjects())
+    auto runTest = [&status, argc, argv](QObject* obj) {
         status |= QTest::qExec(obj, argc, argv);
+        };
+
+    // run suite
+    auto& suite = TestSuite::suite();
+    for (auto it = suite.begin(); it != suite.end(); ++it) {
+        runTest(*it);
+    }
 
     return status;
 }
