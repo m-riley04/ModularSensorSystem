@@ -19,10 +19,11 @@
 #include <pipeline/branches/intermediaries/previewcompositor.hpp>
 #include <vector>
 #include <map>
+#include "core_export.hpp"
 
 constexpr const char* MAIN_PIPELINE_NAME = "main_pipeline";
 
-class SessionPipeline : public QObject
+class MSS_CORE_API SessionPipeline : public QObject
 {
 	Q_OBJECT
 public:

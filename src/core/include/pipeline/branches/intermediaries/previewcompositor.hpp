@@ -4,12 +4,13 @@
 #include <vector>
 #include <pipeline/branches/teebranch.hpp>
 #include <pipeline/branches/previewbranch.hpp>
+#include "core_export.hpp"
 
 /**
  * @brief An intermediary that composites the preview and processing branches together, along with the base stream.
  * NOT contained within a bin (for now).
  */
-class PreviewCompositor {
+class MSS_CORE_API PreviewCompositor {
 private:
 	GstElement* m_compositor;
 	GstElement* m_queuePreview;
