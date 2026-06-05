@@ -82,6 +82,9 @@
     <ClCompile Include="widgets\DockedMountControls\dockedmountcontrols.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="factories\settingspagefactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="windows\MainWindow\MainWindow.h">
@@ -235,6 +238,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controllers\AppActionController\action_containers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="factories\settingspagefactory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

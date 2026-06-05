@@ -167,6 +167,9 @@
     <ClInclude Include="include\controllers\rulescontroller.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\interfaces\capability\general\isettingsprovider.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controllers\maincontroller.cpp">

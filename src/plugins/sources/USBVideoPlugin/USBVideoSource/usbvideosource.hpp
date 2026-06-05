@@ -9,6 +9,7 @@
 #include <sdk/plugins/isourceplugin.hpp>
 #include "interfaces/capability/general/irecordable.hpp"
 #include "interfaces/capability/general/ipipelineelement.hpp"
+#include "interfaces/capability/general/isettingsprovider.hpp"
 #include <utils/boost_qt_conversions.hpp>
 #include "utils.hpp"
 #include "usbvideosourcebin.hpp"
@@ -19,6 +20,7 @@ class USBVideoSource : public Source
 	, public IPreviewable
 	, public IRecordable
 	, public IPipelineElement
+	, public ISettingsProvider
 {
 	Q_OBJECT
 
@@ -49,6 +51,13 @@ public:
 	bool startRecording() override;
 	bool stopRecording() override;
 
+	/// ISettingsProvider interface
+	virtual QList<SettingDescriptor> settingsSchema() const;
+	virtual QVariant settingValue(const QString& key) const;
+	virtual bool setSettingValue(const QString& key, const QVariant& value);
+	virtual void resetSettings();
+	virtual bool openOsSettings();
+
 
 public slots:
 	void onSessionStart() override;
@@ -66,4 +75,6 @@ private:
 	std::unique_ptr<USBVideoSourceRecorderBranch> m_recorderBranch;
 
 	std::string m_recordingFilePath;
+
+	QMap<QString, QVariant> m_settingsMap{};
 };

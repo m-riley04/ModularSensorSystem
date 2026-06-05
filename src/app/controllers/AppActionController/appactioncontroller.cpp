@@ -1,6 +1,7 @@
 #include "appactioncontroller.h"
 #include "widgets/DockableElementsManagerWidget/dockableelementsmanagerwidget.h"
 #include <algorithm>
+#include "factories/settingspagefactory.hpp"
 
 AppActionController::AppActionController(AppActions* actions, UiSettingsController& uisc, MainController& c, QWidget* parentWidget, QObject* parent)
     : QObject(parent), m_uiSettingsController(uisc), m_controller(c), m_parentWidget(parentWidget)
@@ -399,17 +400,19 @@ void AppActionController::onOpenEditSourceDialog()
         return;
     }
 
+
     // Get the source from the selected element
     // TODO: check this implementation
     Source* source = m_controller.sourceController().byId(m_currentSelectedElementNode->uuid);
-    if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
-		// TODO: show source-specific property dialog
-        /* QWidget* w = cfg->createConfigWidget(this);
-         QDialog dlg(this);
-         dlg.setWindowTitle(QString::fromStdString(source->name()) + " Properties");
-         QVBoxLayout lay(&dlg);
-         lay.addWidget(w);
-         dlg.exec();*/
+    SettingsPageFactory factory = SettingsPageFactory();
+    //if (auto cfg = qobject_cast<IConfigurableSource*>(source)) {
+	if (auto cfg = dynamic_cast<ISettingsProvider*>(source)) {
+        QDialog dlg(m_parentWidget);
+        QWidget* w = factory.build(cfg, &dlg);
+        dlg.setWindowTitle("Properties");
+        QVBoxLayout lay(&dlg);
+        lay.addWidget(w);
+        dlg.exec();
     }
     else {
         // fallback: show generic property inspector

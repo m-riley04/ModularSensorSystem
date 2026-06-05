@@ -130,6 +130,7 @@
     <ClInclude Include="include\controllers\rulescontroller.hpp" />
     <ClInclude Include="include\core_export.hpp" />
     <ClInclude Include="include\interfaces\capability\general\ipipelineelement.hpp" />
+    <ClInclude Include="include\interfaces\capability\general\isettingsprovider.hpp" />
     <ClInclude Include="include\interfaces\capability\ihascustompreview.hpp" />
     <ClInclude Include="include\interfaces\capability\mounts\ipantiltmount.hpp" />
     <ClInclude Include="include\interfaces\capability\general\ipreviewable.hpp" />

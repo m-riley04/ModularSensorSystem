@@ -120,6 +120,7 @@
     <ClCompile Include="dialogs\AddSourceDialog\addsourcedialog.cpp" />
     <ClCompile Include="dialogs\AppSettingsDialog\appsettingsdialog.cpp" />
     <ClCompile Include="dialogs\PluginsDialog\pluginsdialog.cpp" />
+    <ClCompile Include="factories\settingspagefactory.cpp" />
     <ClCompile Include="models\ElementTreeModel\elementtreemodel.cpp" />
     <ClCompile Include="models\PluginListModel\pluginlistmodel.cpp" />
     <ClCompile Include="widgets\DockableElementsManagerWidget\dockableelementsmanagerwidget.cpp" />
@@ -205,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controllers\AppActionController\action_containers.h" />
+    <ClInclude Include="factories\settingspagefactory.hpp" />
     <QtMoc Include="widgets\DockedMountControls\dockedmountcontrols.h" />
     <QtMoc Include="dialogs\AppSettingsDialog\appsettingsdialog.h" />
     <QtMoc Include="controllers\UiSettingsController\uisettingscontroller.h" />

@@ -74,7 +74,7 @@ private:
 
 	std::unique_ptr<GstPipeline, decltype(&gst_object_unref)> m_pipeline;
 	State m_state = State::STOPPED;
-	bool m_isProcessingEnabled = true;
+	bool m_isProcessingEnabled = false;
 	ns m_lastSessionTimestamp = 0;
 	ns m_lastRecordingTimestamp = 0;
 	guint m_pipelineBusWatchId = 0;

@@ -110,3 +110,54 @@ bool USBVideoSource::stopRecording()
 	if (!m_recorderBranch) return false;
 	return m_recorderBranch->setRecordingEnabled(false); // finalization happens within the branch
 }
+
+QList<SettingDescriptor> USBVideoSource::settingsSchema() const
+{
+	return {
+		{ SettingDescriptor::Enum, "resolution", "Resolution", "...", "Video", QVariant(), QVariant(), QVariant(), QStringList()},
+		{ SettingDescriptor::Int, "frame_rate", "Frame Rate", "...", "Video", QVariant(), QVariant(), QVariant(), QStringList()},
+		{ SettingDescriptor::DirPath, "output_path", "Output Path", "...", "Recording", QVariant(), QVariant(), QVariant(), QStringList()},
+	};
+}
+
+QVariant USBVideoSource::settingValue(const QString& key) const
+{
+	return m_settingsMap.value(key);
+}
+
+bool USBVideoSource::setSettingValue(const QString& key, const QVariant& value)
+{
+	m_settingsMap.insert(key, value);
+	return true; // TODO: 
+}
+
+void USBVideoSource::resetSettings()
+{
+	// TODO: implement
+}
+
+bool USBVideoSource::openOsSettings()
+{
+	// TOOD: make this work on multiple systems, NOT just Windows w/ dshow
+	#ifndef Q_OS_WINDOWS
+	LoggingController::warning("Cannot open OS settings, as only Windows is supported at this time.");
+	return false;
+	#endif
+
+	// check if ffmpeg installed
+	if (QStandardPaths::findExecutable("ffmpeg").isEmpty()) {
+		LoggingController::warning("Could not find FFMPEG for OS video settings");
+		return false;
+	}
+
+	QString procName = "ffmpeg";
+	QString videoName = QString::fromStdString(this->name());
+	QStringList args;
+	args << "-f" << "dshow"
+		<< "-show_video_device_dialog" << "true"
+		<< "-i" << QString("video=%1").arg(videoName);
+	QProcess* proc = new QProcess(this);
+	connect(proc, &QProcess::finished, proc, &QProcess::deleteLater);
+	proc->start(procName, args);
+	return true;
+}
